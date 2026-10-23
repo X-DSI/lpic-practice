@@ -1,0 +1,13 @@
+# Rule-bearing paths. Changes here need an approving review from the maintainer
+# before they can merge (docs/PROTOCOL.md §8). Everything else merges on green CI.
+
+/AGENTS.md          @X-DSI
+/CLAUDE.md          @X-DSI
+/docs/PROTOCOL.md   @X-DSI
+
+# Decided ADRs only. docs/adr/proposed/ is deliberately not owned.
+/docs/adr/*.md      @X-DSI
+
+/.agents/           @X-DSI
+/.claude/           @X-DSI
+/.github/           @X-DSI
