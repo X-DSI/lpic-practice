@@ -1,0 +1,1 @@
+- Handoff for the content build (YAML → JSON) and engine core, and a proposed ADR for all-or-nothing scoring.
