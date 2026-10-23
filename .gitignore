@@ -2,18 +2,32 @@
 *.local.md
 .claude/settings.local.json
 
+# LPI Learning Materials and any derived working files — never commit
+# (docs/adr/2026-10-22-content-licensing-and-sources.md)
+sources/
+*.pdf
+
+# Build output
+build/
+dist/
+*.egg-info/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+
+# Local data
+*.sqlite
+*.sqlite3
+*.db
+
 # OS / editor
 .DS_Store
 Thumbs.db
 *.swp
 .idea/
 .vscode/
-
-# Python
-__pycache__/
-*.py[cod]
-.venv/
-.pytest_cache/
-dist/
-build/
-*.egg-info/

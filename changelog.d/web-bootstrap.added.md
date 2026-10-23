@@ -1,0 +1,5 @@
+- ADRs from the first planning session: technology stack, content format and question schema, mock exam composition, content licensing; plus an ADR licensing code and content under MIT.
+- JSON Schemas in `schemas/`: `objectives`, `question-file`, `mock-exam` (schema_version 1).
+- Exam objectives and weights for 101-500 and 102-500 (objectives version 5.0), taken from the LPI Learning Materials.
+- Difficulty rubric and per-mock difficulty mix.
+- `tools/validate.py` content validator, with example questions, run in CI by a new `content` job.

@@ -1,0 +1,52 @@
+# Exam 101-500 objectives — extracted from the LPI Learning Materials.
+# Weights and lesson counts verified against the material; weights sum to 60.
+schema_version: 1
+exam: "101"
+exam_code: 101-500
+certification: LPIC-1
+objectives_version: "5.0"
+material:
+  title: "LPI Learning Materials 101-500"
+  version: "2025-03-12"
+  url: https://learning.lpi.org
+exam_format:
+  questions: 60
+  duration_minutes: 90
+  pass_score: 500
+  score_range: [200, 800]
+topics:
+  - id: "101"
+    title: "System Architecture"
+    objectives:
+      - { id: "101.1", weight: 2, lessons: 1, title: "Determine and configure hardware settings" }
+      - { id: "101.2", weight: 3, lessons: 1, title: "Boot the system" }
+      - { id: "101.3", weight: 3, lessons: 1, title: "Change runlevels / boot targets and shutdown or reboot system" }
+  - id: "102"
+    title: "Linux Installation and Package Management"
+    objectives:
+      - { id: "102.1", weight: 2, lessons: 1, title: "Design hard disk layout" }
+      - { id: "102.2", weight: 2, lessons: 1, title: "Install a boot manager" }
+      - { id: "102.3", weight: 1, lessons: 1, title: "Manage shared libraries" }
+      - { id: "102.4", weight: 3, lessons: 1, title: "Use Debian package management" }
+      - { id: "102.5", weight: 3, lessons: 1, title: "Use RPM and YUM package management" }
+      - { id: "102.6", weight: 1, lessons: 1, title: "Linux as a virtualization guest" }
+  - id: "103"
+    title: "GNU and Unix Commands"
+    objectives:
+      - { id: "103.1", weight: 4, lessons: 2, title: "Work on the command line" }
+      - { id: "103.2", weight: 2, lessons: 1, title: "Process text streams using filters" }
+      - { id: "103.3", weight: 4, lessons: 2, title: "Perform basic file management" }
+      - { id: "103.4", weight: 4, lessons: 2, title: "Use streams, pipes and redirects" }
+      - { id: "103.5", weight: 4, lessons: 2, title: "Create, monitor and kill processes" }
+      - { id: "103.6", weight: 2, lessons: 1, title: "Modify process execution priorities" }
+      - { id: "103.7", weight: 3, lessons: 2, title: "Search text files using regular expressions" }
+      - { id: "103.8", weight: 3, lessons: 1, title: "Basic file editing" }
+  - id: "104"
+    title: "Devices, Linux Filesystems, Filesystem Hierarchy Standard"
+    objectives:
+      - { id: "104.1", weight: 2, lessons: 1, title: "Create partitions and filesystems" }
+      - { id: "104.2", weight: 2, lessons: 1, title: "Maintain the integrity of filesystems" }
+      - { id: "104.3", weight: 3, lessons: 1, title: "Control mounting and unmounting of filesystems" }
+      - { id: "104.5", weight: 3, lessons: 1, title: "Manage file permissions and ownership" }
+      - { id: "104.6", weight: 2, lessons: 1, title: "Create and change hard and symbolic links" }
+      - { id: "104.7", weight: 2, lessons: 1, title: "Find system files and place files in the correct location" }

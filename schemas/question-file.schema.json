@@ -1,0 +1,180 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/X-DSI/lpic-practice/schemas/question-file.schema.json",
+  "title": "LPIC question file",
+  "description": "All questions for one exam objective. See docs/adr/2026-10-22-content-format-and-question-schema.md.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "exam", "objective", "questions"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "exam": { "$ref": "#/$defs/exam" },
+    "objective": { "$ref": "#/$defs/objective" },
+    "questions": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/question" }
+    }
+  },
+  "$defs": {
+    "exam": { "enum": ["101", "102", "201", "202"] },
+    "objective": { "type": "string", "pattern": "^\\d{3}\\.\\d{1,2}$" },
+    "question_id": {
+      "type": "string",
+      "pattern": "^(101|102|201|202)-\\d{3}\\.\\d{1,2}-\\d{4}$"
+    },
+    "option": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "text"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-h]$" },
+        "text": { "type": "string", "minLength": 1 },
+        "rationale": {
+          "type": "string",
+          "description": "Why this option is right or wrong. Shown after answering."
+        }
+      }
+    },
+    "fill_in": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["accepted", "match"],
+      "properties": {
+        "accepted": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 },
+          "description": "Every acceptable answer. For match=regex, each entry is a full-match regex."
+        },
+        "match": {
+          "enum": ["exact", "normalized", "regex"],
+          "description": "normalized = trim and collapse internal whitespace before comparing."
+        },
+        "case_sensitive": { "type": "boolean", "default": true }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["material", "material_version", "objective", "lesson"],
+      "properties": {
+        "material": {
+          "type": "string",
+          "examples": ["LPI Learning Materials 101-500"]
+        },
+        "material_version": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "Version date printed in the material's footer."
+        },
+        "objective": { "$ref": "#/$defs/objective" },
+        "lesson": { "type": "integer", "minimum": 1 },
+        "section": {
+          "type": "string",
+          "description": "Section heading within the lesson, for locating — not quoted content."
+        }
+      }
+    },
+    "verify": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["command"],
+      "description": "Optional shell check run in a disposable container to prove a command answer works.",
+      "properties": {
+        "image": { "type": "string", "default": "debian:stable-slim" },
+        "setup": { "type": "array", "items": { "type": "string" } },
+        "command": { "type": "string", "minLength": 1 },
+        "expect": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "exit_code": { "type": "integer", "default": 0 },
+            "stdout_contains": { "type": "string" },
+            "stdout_regex": { "type": "string" }
+          }
+        }
+      }
+    },
+    "review_entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stage", "by", "date", "result"],
+      "properties": {
+        "stage": { "enum": ["pass1", "pass2", "human"] },
+        "by": { "type": "string", "minLength": 1 },
+        "date": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+        "result": { "enum": ["ok", "fixed", "rejected"] },
+        "notes": { "type": "string" }
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status"],
+      "properties": {
+        "status": { "enum": ["draft", "pass1", "pass2", "approved"] },
+        "history": { "type": "array", "items": { "$ref": "#/$defs/review_entry" } }
+      }
+    },
+    "question": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "difficulty", "pool", "stem", "explanation", "source", "review"],
+      "properties": {
+        "id": { "$ref": "#/$defs/question_id" },
+        "type": { "enum": ["single_choice", "multi_choice", "fill_in"] },
+        "difficulty": { "type": "integer", "minimum": 1, "maximum": 5 },
+        "pool": { "enum": ["practice", "holdout"] },
+        "stem": { "type": "string", "minLength": 10 },
+        "exhibit": { "type": "string" },
+        "options": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 8,
+          "items": { "$ref": "#/$defs/option" }
+        },
+        "answer": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^[a-h]$" }
+        },
+        "select_count": { "type": "integer", "minimum": 2 },
+        "fill_in": { "$ref": "#/$defs/fill_in" },
+        "explanation": { "type": "string", "minLength": 10 },
+        "source": { "$ref": "#/$defs/source" },
+        "verify": { "$ref": "#/$defs/verify" },
+        "review": { "$ref": "#/$defs/review" },
+        "tags": { "type": "array", "uniqueItems": true, "items": { "type": "string" } },
+        "retired": { "type": "boolean", "default": false }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "type": { "const": "single_choice" } } },
+          "then": {
+            "required": ["options", "answer"],
+            "properties": { "answer": { "maxItems": 1 } },
+            "not": { "anyOf": [{ "required": ["fill_in"] }, { "required": ["select_count"] }] }
+          }
+        },
+        {
+          "if": { "properties": { "type": { "const": "multi_choice" } } },
+          "then": {
+            "required": ["options", "answer", "select_count"],
+            "properties": { "answer": { "minItems": 2 } },
+            "not": { "required": ["fill_in"] }
+          }
+        },
+        {
+          "if": { "properties": { "type": { "const": "fill_in" } } },
+          "then": {
+            "required": ["fill_in"],
+            "not": { "anyOf": [{ "required": ["options"] }, { "required": ["answer"] }, { "required": ["select_count"] }] }
+          }
+        }
+      ]
+    }
+  }
+}

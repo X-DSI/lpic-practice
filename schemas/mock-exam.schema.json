@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/X-DSI/lpic-practice/schemas/mock-exam.schema.json",
+  "title": "LPIC mock exam manifest",
+  "description": "One mock exam: an ordered list of holdout question IDs. See docs/adr/2026-10-22-mock-exam-composition.md. Weight and mix totals are checked by tools/validate.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "id", "exam", "number", "duration_minutes", "difficulty_mix", "questions"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "id": { "type": "string", "pattern": "^(101|102|201|202)-mock-(0[1-9]|10)$" },
+    "exam": { "enum": ["101", "102", "201", "202"] },
+    "number": { "type": "integer", "minimum": 1, "maximum": 10 },
+    "title": { "type": "string" },
+    "duration_minutes": { "type": "integer", "minimum": 1, "default": 90 },
+    "assembly_seed": {
+      "type": "integer",
+      "description": "Seed used by the assembler, so the manifest can be reproduced."
+    },
+    "difficulty_mix": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["1", "2", "3", "4", "5"],
+      "patternProperties": { "^[1-5]$": { "type": "integer", "minimum": 0 } },
+      "description": "Target count of questions per difficulty level; sums to the question count."
+    },
+    "questions": {
+      "type": "array",
+      "minItems": 60,
+      "maxItems": 60,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^(101|102|201|202)-\\d{3}\\.\\d{1,2}-\\d{4}$"
+      }
+    }
+  }
+}

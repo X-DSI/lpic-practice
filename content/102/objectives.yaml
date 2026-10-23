@@ -1,0 +1,54 @@
+# Exam 102-500 objectives — extracted from the LPI Learning Materials.
+# Weights and lesson counts verified against the material; weights sum to 60.
+schema_version: 1
+exam: "102"
+exam_code: 102-500
+certification: LPIC-1
+objectives_version: "5.0"
+material:
+  title: "LPI Learning Materials 102-500"
+  version: "2024-12-27"
+  url: https://learning.lpi.org
+exam_format:
+  questions: 60
+  duration_minutes: 90
+  pass_score: 500
+  score_range: [200, 800]
+topics:
+  - id: "105"
+    title: "Shells and Shell Scripting"
+    objectives:
+      - { id: "105.1", weight: 4, lessons: 3, title: "Customize and use the shell environment" }
+      - { id: "105.2", weight: 4, lessons: 2, title: "Customize or write simple scripts" }
+  - id: "106"
+    title: "User Interfaces and Desktops"
+    objectives:
+      - { id: "106.1", weight: 2, lessons: 1, title: "Install and configure X11" }
+      - { id: "106.2", weight: 1, lessons: 1, title: "Graphical Desktops" }
+      - { id: "106.3", weight: 1, lessons: 1, title: "Accessibility" }
+  - id: "107"
+    title: "Administrative Tasks"
+    objectives:
+      - { id: "107.1", weight: 5, lessons: 2, title: "Manage user and group accounts and related system files" }
+      - { id: "107.2", weight: 4, lessons: 2, title: "Automate system administration tasks by scheduling jobs" }
+      - { id: "107.3", weight: 3, lessons: 1, title: "Localisation and internationalisation" }
+  - id: "108"
+    title: "Essential System Services"
+    objectives:
+      - { id: "108.1", weight: 3, lessons: 2, title: "Maintain system time" }
+      - { id: "108.2", weight: 4, lessons: 2, title: "System logging" }
+      - { id: "108.3", weight: 3, lessons: 1, title: "Mail Transfer Agent (MTA) basics" }
+      - { id: "108.4", weight: 2, lessons: 1, title: "Manage printers and printing" }
+  - id: "109"
+    title: "Networking Fundamentals"
+    objectives:
+      - { id: "109.1", weight: 4, lessons: 2, title: "Fundamentals of internet protocols" }
+      - { id: "109.2", weight: 4, lessons: 2, title: "Persistent network configuration" }
+      - { id: "109.3", weight: 4, lessons: 2, title: "Basic network troubleshooting" }
+      - { id: "109.4", weight: 2, lessons: 1, title: "Configure client side DNS" }
+  - id: "110"
+    title: "Security"
+    objectives:
+      - { id: "110.1", weight: 3, lessons: 1, title: "Perform security administration tasks" }
+      - { id: "110.2", weight: 3, lessons: 1, title: "Setup host security" }
+      - { id: "110.3", weight: 4, lessons: 2, title: "Securing data with encryption" }
