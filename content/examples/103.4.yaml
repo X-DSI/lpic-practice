@@ -1,0 +1,49 @@
+# Schema examples — not exam content. IDs 9000+ are reserved for examples.
+schema_version: 1
+exam: "101"
+objective: "103.4"
+questions:
+  - id: 101-103.4-9001
+    type: multi_choice
+    difficulty: 4
+    pool: practice
+    stem: >
+      In Bash, which TWO commands send both the standard output and the standard
+      error of `cmd` into the file `out.log`?
+    select_count: 2
+    options:
+      - id: a
+        text: "`cmd > out.log 2>&1`"
+        rationale: Correct. stdout goes to the file first, then stderr is duplicated onto it.
+      - id: b
+        text: "`cmd &> out.log`"
+        rationale: Correct. Bash shorthand for redirecting both streams to one file.
+      - id: c
+        text: "`cmd 2>&1 > out.log`"
+        rationale: Wrong. Redirections apply left to right, so stderr is pointed at the terminal before stdout moves to the file.
+      - id: d
+        text: "`cmd 2> out.log`"
+        rationale: Wrong. Only stderr goes to the file; stdout still goes to the terminal.
+    answer: [a, b]
+    explanation: >
+      Redirections are processed left to right. `> out.log 2>&1` first points
+      stdout at the file and then makes stderr a copy of stdout. Reversing the
+      order copies stderr from the terminal before stdout moves. `&>` is Bash's
+      shorthand for the correct form.
+    source:
+      material: LPI Learning Materials 101-500
+      material_version: "2025-03-12"
+      objective: "103.4"
+      lesson: 1
+    verify:
+      command: >
+        bash -c 'cmd(){ echo out; echo err >&2; };
+        cmd > /tmp/x 2>&1; a=$(wc -l < /tmp/x);
+        cmd &> /tmp/y;     b=$(wc -l < /tmp/y);
+        (cmd 2>&1 > /tmp/z) > /dev/null; c=$(wc -l < /tmp/z);
+        echo "$a$b$c"'
+      expect:
+        stdout_contains: "221"
+    review:
+      status: draft
+    tags: [redirection, stderr, bash]

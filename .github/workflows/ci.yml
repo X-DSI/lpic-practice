@@ -11,3 +11,14 @@ jobs:
     uses: X-DSI/agent-workflow/.github/workflows/commit-identity.yml@v0.0.1-alpha
     with:
       agent-workflow-ref: v0.0.1-alpha
+
+  content:
+    name: Validate content
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install jsonschema pyyaml
+      - run: python tools/validate.py

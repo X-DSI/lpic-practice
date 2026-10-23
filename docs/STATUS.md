@@ -12,10 +12,13 @@
       maintainer only.
 - [ ] Turn on auto-merge and automatic branch deletion.
 - [ ] Invite the agent machine account as a collaborator with the **Write** role.
+- [ ] Ask `learning@lpi.org` whether publishing original questions keyed to their objectives is
+      acceptable (open question in the content-licensing ADR).
 
 ## Open handoffs
 
-None.
+None. Next likely handoff: YAML → JSON build pipeline and an `engine/` skeleton with answer
+matching, once the first objective's questions exist.
 
 ## Proposed ADRs awaiting acceptance
 

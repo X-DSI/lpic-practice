@@ -1,0 +1,64 @@
+# Schema examples — not exam content. IDs 9000+ are reserved for examples.
+schema_version: 1
+exam: "101"
+objective: "104.6"
+questions:
+  - id: 101-104.6-9001
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: Which statement about hard links on a Linux system is true?
+    options:
+      - id: a
+        text: A hard link cannot point to a file on a different filesystem.
+        rationale: Correct. A hard link is another directory entry for the same inode, and inode numbers are only meaningful within one filesystem.
+      - id: b
+        text: Regular users can create hard links to directories with `ln`.
+        rationale: Wrong. `ln` refuses to hard-link directories, to prevent loops in the directory tree.
+      - id: c
+        text: A hard link has a different inode number from the file it links to.
+        rationale: Wrong. Both names share one inode; that is what makes them hard links.
+      - id: d
+        text: Deleting the original file name makes the hard link unusable.
+        rationale: Wrong. The data stays until the last link is removed; that describes a symbolic link.
+    answer: [a]
+    explanation: >
+      A hard link is simply another name for an existing inode. Because inodes are
+      local to one filesystem, hard links cannot cross filesystem boundaries, and the
+      file's data survives until its link count drops to zero.
+    source:
+      material: LPI Learning Materials 101-500
+      material_version: "2025-03-12"
+      objective: "104.6"
+      lesson: 1
+    review:
+      status: draft
+    tags: [ln, inode, hard-link]
+
+  - id: 101-104.6-9002
+    type: fill_in
+    difficulty: 3
+    pool: practice
+    stem: Type the option for `ls` that displays the inode number of each file.
+    fill_in:
+      accepted: ["-i", "--inode"]
+      match: normalized
+      case_sensitive: true
+    explanation: >
+      `ls -i` (long form `--inode`) prints each file's inode number before its name,
+      which is how you confirm that two names are hard links to the same file.
+    source:
+      material: LPI Learning Materials 101-500
+      material_version: "2025-03-12"
+      objective: "104.6"
+      lesson: 1
+    verify:
+      setup:
+        - touch /tmp/a && ln /tmp/a /tmp/b
+      command: ls -i /tmp/a /tmp/b | awk '{print $1}' | uniq | wc -l
+      expect:
+        exit_code: 0
+        stdout_contains: "1"
+    review:
+      status: draft
+    tags: [ls, inode]
