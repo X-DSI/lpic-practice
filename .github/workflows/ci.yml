@@ -1,0 +1,13 @@
+name: ci
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  commit-identity:
+    uses: X-DSI/agent-workflow/.github/workflows/commit-identity.yml@v0.0.1-alpha
+    with:
+      agent-workflow-ref: v0.0.1-alpha

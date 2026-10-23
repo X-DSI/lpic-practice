@@ -1,0 +1,1 @@
+- Adopt the agent-workflow protocol (`v0.0.1-alpha`): `AGENTS.md`, `CLAUDE.md`, `CONTRIBUTING.md`, `docs/PROTOCOL.md`, ADR, handoff and status folders, `CODEOWNERS`, and a CI job enforcing commit identity.

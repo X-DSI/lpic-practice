@@ -1,0 +1,12 @@
+# Changelog
+
+All notable changes to lpic-practice are documented here. The format follows
+[Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project uses
+[Semantic Versioning](https://semver.org/).
+
+Unreleased changes are collected as fragments in [`changelog.d/`](changelog.d/) and assembled into
+this file when a version is tagged.
+
+## [Unreleased]
+
+See `changelog.d/`.
