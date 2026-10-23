@@ -8,7 +8,7 @@ adrs:
   - 2026-10-22-content-format-and-question-schema.md
   - 2026-10-22-mock-exam-composition.md
   - proposed/2026-10-23-all-or-nothing-scoring.md
-plan_pr: null
+plan_pr: 3
 impl_pr: null
 review: auto
 ---
