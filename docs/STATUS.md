@@ -17,9 +17,12 @@
 
 ## Open handoffs
 
-None. Next likely handoff: YAML → JSON build pipeline and an `engine/` skeleton with answer
-matching, once the first objective's questions exist.
+| Handoff | Status | Assignee |
+|---|---|---|
+| [Content build and engine core](handoff/2026-10-23-build-and-engine-core.md) | open | agent:any |
 
 ## Proposed ADRs awaiting acceptance
 
-None.
+| ADR | Needed by |
+|---|---|
+| [Score every question all-or-nothing](adr/proposed/2026-10-23-all-or-nothing-scoring.md) | build-and-engine-core handoff |
