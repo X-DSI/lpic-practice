@@ -1,13 +1,13 @@
 ---
-title: Content build (YAML → JSON) and engine core — loading, answer matching, practice pool
+title: Content build (YAML → JSON) and engine core — loading, answer matching, scoring, practice pool
 status: open
 assignee: agent:any
-base_sha: 39155d7
+base_sha: 1d32636
 adrs:
   - 2026-10-22-technology-stack.md
   - 2026-10-22-content-format-and-question-schema.md
   - 2026-10-22-mock-exam-composition.md
-  - proposed/2026-10-23-all-or-nothing-scoring.md
+  - proposed/2026-10-24-lpi-style-scoring.md
 plan_pr: 3
 impl_pr: null
 review: auto
@@ -15,8 +15,8 @@ review: auto
 
 ## Goal
 Give the project its first application code: a shared Python engine that loads the validated
-question bank, compiles it to JSON for the interfaces, grades an answer to any question type, and
-returns the practice pool. The CLI and web UI will be thin layers over this.
+question bank, compiles it to JSON for the interfaces, grades an answer to any question type, turns
+a set of results into LPI-style scores, and returns the practice pool. The CLI and web UI will be thin layers over this.
 
 ## Scope
 **In:**
@@ -30,18 +30,23 @@ returns the practice pool. The CLI and web UI will be thin layers over this.
 - **Answer matching** — one function that takes a question and a response and returns correct or
   not, for all three types:
   - `single_choice`: the one selected option ID equals `answer[0]`.
-  - `multi_choice`: all-or-nothing set equality (proposed scoring ADR).
+  - `multi_choice`: all-or-nothing set equality (proposed LPI-style scoring ADR).
   - `fill_in`, per `fill_in.match` and `fill_in.case_sensitive` (default `true`):
     - `exact` — string equality.
     - `normalized` — trim both ends and collapse internal runs of whitespace to one space, on both
       the response and each accepted answer, then compare.
     - `regex` — each accepted entry is a pattern that must match the **whole** response
       (`re.fullmatch`); `case_sensitive: false` adds `re.IGNORECASE`.
+- **Scoring** — per the proposed LPI-style scoring ADR: raw score (correct ÷ questions), a
+  breakdown by objective and by topic, and the 200–800 scaled estimate with the pass point `P = 0.65`
+  held as one named constant. Compare `correct` against the pass point with integer or exact
+  arithmetic (e.g. `fractions.Fraction`), so 39/60 is exactly at the pass point and scores 500.
 - **Practice pool** — a function returning the questions eligible for CLI drills for an exam,
   optionally filtered by objective: excludes `pool: holdout` and `retired: true`.
 - Tests for all of the above, and a CI job running `ruff` and `pytest`.
 
-**Out:** the Textual CLI, the web UI, SQLite, the mock assembler, results/weak-area reports,
+**Out:** the Textual CLI, the web UI, SQLite, the mock assembler, weak-area recommendations and any
+results display,
 running `verify` blocks in containers, and any content generation.
 
 ## Acceptance criteria
@@ -53,6 +58,9 @@ running `verify` blocks in containers, and any content generation.
       superset are wrong; `" ls   -i "` matches accepted `"ls -i"` under `normalized`; `"LS -I"`
       does not unless `case_sensitive: false`; a regex accepted answer does not match a response
       that merely contains it — check: `pytest tests/test_matching.py`
+- [ ] Scoring follows the ADR, including: 0/60 → 200, 39/60 → 500 and a likely pass, 38/60 → below
+      500 and not a pass, 60/60 → 800; per-objective and per-topic counts add up to the totals —
+      check: `pytest tests/test_scoring.py`
 - [ ] Build writes `build/content/101.json` and `build/content/102.json`, and two consecutive builds
       produce byte-identical files — check: `pytest tests/test_build.py`
 - [ ] Build exits non-zero and writes no files when content is invalid — check:
@@ -84,7 +92,7 @@ running `verify` blocks in containers, and any content generation.
 - Any change to `schemas/` or to an Accepted ADR.
 - Any change to the meaning of existing content files.
 - Adding a runtime dependency beyond those listed.
-- If the scoring ADR is still `Proposed` when you finish, implement it anyway and flag it in the
+- If the LPI-style scoring ADR is still `Proposed` when you finish, implement it anyway and flag it in the
   Outcome; if it has been rejected, stop and ask.
 
 ## Attached content
