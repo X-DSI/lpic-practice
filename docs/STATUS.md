@@ -22,7 +22,7 @@
 
 | Handoff | Status | Assignee |
 |---|---|---|
-| [Content build and engine core](handoff/2026-10-23-build-and-engine-core.md) | open | agent:any |
+| [Content build and engine core](handoff/2026-10-23-build-and-engine-core.md) | in-progress | X-DSI-agent |
 
 ## Proposed ADRs awaiting acceptance
 

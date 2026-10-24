@@ -1,7 +1,7 @@
 ---
 title: Content build (YAML → JSON) and engine core — loading, answer matching, scoring, practice pool
-status: open
-assignee: agent:any
+status: in-progress
+assignee: X-DSI-agent
 base_sha: 1d32636
 adrs:
   - 2026-10-22-technology-stack.md
