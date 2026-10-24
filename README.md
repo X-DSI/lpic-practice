@@ -7,8 +7,8 @@ later, LPIC-2 (201, 202) exams.
 - **Browser mock exams** — 10 timed mock exams per exam (60 questions, 90 minutes),
   graded from easiest (mock 1) to hardest (mock 10), with per-objective results.
 
-> Status: **planning**. The architecture, stack and content schema are decided
-> (see `docs/adr/`). No application code yet.
+> Status: **early**. The shared engine (`engine/`) loads, grades and scores the question bank;
+> the terminal and browser interfaces are not built yet.
 
 ## Repository layout
 
@@ -29,7 +29,8 @@ lpic-practice/
 │   ├── adr/             # Architecture Decision Records
 │   ├── handoff/         # Planning → implementation work orders
 │   └── difficulty-rubric.md
-├── engine/              # (planned) Python core: selection, matching, scoring
+├── engine/              # Python core: loading, matching, scoring, selection, build
+├── tests/               # pytest suite with synthetic fixture banks
 ├── cli/                 # (planned) Textual terminal practice
 └── web/                 # (planned) FastAPI + Jinja + htmx mock exams
 ```
@@ -45,12 +46,17 @@ lpic-practice/
 | [Adopt agent-workflow](docs/adr/2026-10-23-adopt-agent-workflow.md) | Decisions, handoffs and status live in the repo; every change is a PR |
 | [MIT license](docs/adr/2026-10-23-mit-license.md) | Code and original content under MIT |
 
-## Validating content
+## Development
 
 ```bash
-pip install jsonschema pyyaml
-python tools/validate.py            # validates everything under content/
+pip install -e ".[dev]"
+python tools/validate.py            # validate everything under content/
+python -m engine.build              # compile content to build/content/<exam>.json
+pytest                              # run the tests
+ruff check . && ruff format --check .
 ```
+
+The build output is one JSON file per exam; its layout is documented in `engine/build.py`.
 
 ## Contributing
 

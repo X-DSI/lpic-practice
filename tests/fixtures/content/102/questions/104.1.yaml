@@ -1,0 +1,19 @@
+# Synthetic fixture questions — not exam content.
+schema_version: 1
+exam: "102"
+objective: "104.1"
+questions:
+  - id: 102-104.1-0001
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: Fixture single-choice question for the second exam.
+    options:
+      - { id: a, text: "Fixture option A — with a non-ASCII dash" }
+      - { id: b, text: Fixture option B }
+      - { id: c, text: Fixture option C }
+      - { id: d, text: Fixture option D }
+    answer: [a]
+    explanation: Fixture explanation for the second exam.
+    source: { material: Fixture material, material_version: "2000-01-01", objective: "104.1", lesson: 1 }
+    review: { status: draft }
