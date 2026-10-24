@@ -1,0 +1,501 @@
+# 102.3 Manage shared libraries — weight 1 → 10 holdout + 5 practice.
+# Original questions written from LPI Learning Materials 101-500, objective 102.3, lesson 1.
+schema_version: 1
+exam: "101"
+objective: "102.3"
+questions:
+  # ---------------------------------------------------------------- holdout (mock exams only)
+
+  - id: 101-102.3-0001
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: What does the `ldd` command report when given the path of a program?
+    options:
+      - id: a
+        text: Every shared library currently loaded in memory on the system
+        rationale: Wrong. ldd looks at one program's dependencies, not at what the whole system has loaded.
+      - id: b
+        text: The shared libraries the program needs at run time, and where each one resolves
+        rationale: Correct. ldd lists a program's shared library dependencies and the file each one resolves to.
+      - id: c
+        text: The functions the program exports to other programs
+        rationale: Wrong. Exported symbols are shown by tools such as nm or readelf, not ldd.
+      - id: d
+        text: The software package that installed the program
+        rationale: Wrong. That is a package manager query (dpkg -S, rpm -qf), not ldd.
+    answer: [b]
+    explanation: >
+      ldd prints the shared libraries a program or shared object depends on, and the path each one
+      resolves to on this system (or "not found"). It is the first tool to reach for when a program
+      will not start because of a missing library.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.3", lesson: 1, section: Searching for the Dependencies of a Particular Executable }
+    verify:
+      command: ldd /bin/ls
+      expect: { exit_code: 0, stdout_contains: "libc.so.6" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude, date: "2026-10-25", result: fixed, notes: "Option order changed so correct answers are spread across positions. verify block passed (Ubuntu 24.04)." }
+    tags: [ldd]
+
+  - id: 101-102.3-0002
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: Which of these file names is most likely a **static** library?
+    options:
+      - id: a
+        text: "`libgeo.a`"
+        rationale: Correct. Static libraries (archives of object files) conventionally end in .a.
+      - id: b
+        text: "`libgeo.so.4`"
+        rationale: Wrong. The .so.<version> pattern is a shared library's soname.
+      - id: c
+        text: "`libgeo.so.4.2.1`"
+        rationale: Wrong. This is a shared library file carrying its full version number.
+      - id: d
+        text: "`ld.so.cache`"
+        rationale: Wrong. This is the dynamic linker's cache of known shared libraries, not a library.
+    answer: [a]
+    explanation: >
+      Static libraries end in .a and are copied into a program when it is linked. Shared libraries
+      contain .so ("shared object"), usually followed by a version number.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.3", lesson: 1, section: Shared Object File Naming Conventions }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude, date: "2026-10-25", result: fixed, notes: "Option order changed so correct answers are spread across positions." }
+    tags: [static-library, naming]
+
+  - id: 101-102.3-0003
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      A vendor tool keeps its libraries in `/opt/vendor/lib`. Without root access and without
+      changing any system configuration, how do you let the tool find those libraries when you run
+      it from your current shell?
+    options:
+      - id: a
+        text: Add `/opt/vendor/lib` to the `PATH` environment variable
+        rationale: Wrong. PATH is searched for commands to run, not for shared libraries.
+      - id: b
+        text: Add `/opt/vendor/lib` to `/etc/ld.so.conf`
+        rationale: Wrong. That changes system configuration, needs root, and also needs ldconfig to be run.
+      - id: c
+        text: Add `/opt/vendor/lib` to the `LD_LIBRARY_PATH` environment variable
+        rationale: Correct. The dynamic linker also searches the directories listed in LD_LIBRARY_PATH, which any user can set for their own session.
+      - id: d
+        text: Run `ldd /opt/vendor/lib`
+        rationale: Wrong. ldd only reports dependencies; it changes nothing about where libraries are found.
+    answer: [c]
+    explanation: >
+      LD_LIBRARY_PATH holds a colon-separated list of extra directories that the dynamic linker
+      searches before its usual locations. Any user can set it, and it only affects the shell that
+      sets it and the processes started from there.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.3", lesson: 1, section: Configuration of Shared Library Paths }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude, date: "2026-10-25", result: fixed, notes: "Explanation reworded; it was too close to a sentence in the lesson." }
+        - { stage: pass2, by: claude, date: "2026-10-25", result: fixed, notes: "Option order changed so correct answers are spread across positions. LD_LIBRARY_PATH vs PATH behaviour reproduced with a test library." }
+    tags: [LD_LIBRARY_PATH]
+
+  - id: 101-102.3-0004
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      Which file does the dynamic linker read at program start-up to quickly find shared libraries
+      in the configured directories?
+    options:
+      - id: a
+        text: "`/etc/ld.so.conf`"
+        rationale: Wrong. This lists directories for ldconfig to scan; the linker uses the cache built from it.
+      - id: b
+        text: "`/etc/ld.so.conf.d/libc.conf`"
+        rationale: Wrong. This is one of the configuration fragments ldconfig reads, not the cache.
+      - id: c
+        text: "`/etc/ld.so.preload`"
+        rationale: Wrong. This lists libraries to load into every program first; it is not the lookup cache.
+      - id: d
+        text: "`/etc/ld.so.cache`"
+        rationale: Correct. ldconfig builds this binary cache from the configured directories, and the dynamic linker consults it.
+    answer: [d]
+    explanation: >
+      The configuration files in /etc/ld.so.conf and /etc/ld.so.conf.d/ say which directories to use.
+      ldconfig scans them and writes /etc/ld.so.cache, which the dynamic linker reads at run time.
+      That is why ldconfig must be re-run after the configuration changes.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.3", lesson: 1, section: Configuration of Shared Library Paths }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude, date: "2026-10-25", result: fixed, notes: "Option order changed so correct answers are spread across positions." }
+    tags: [ld.so.cache, ldconfig]
+
+  - id: 101-102.3-0005
+    type: fill_in
+    difficulty: 3
+    pool: holdout
+    stem: >
+      Type the `ldconfig` option that prints the directories and libraries stored in the current
+      linker cache.
+    fill_in:
+      accepted: ["-p", "--print-cache", "ldconfig -p", "ldconfig --print-cache"]
+      match: normalized
+      case_sensitive: true
+    explanation: >
+      `ldconfig -p` (long form `--print-cache`) lists every library in /etc/ld.so.cache with the path
+      it resolves to. Piping it to grep is a quick way to see whether the system knows a library.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.3", lesson: 1, section: Configuration of Shared Library Paths }
+    verify:
+      command: ldconfig -p | head -n 1
+      expect: { exit_code: 0, stdout_contains: "libs found in cache" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude, date: "2026-10-25", result: fixed, notes: "Also accept the full command (ldconfig -p, ldconfig --print-cache)." }
+        - { stage: pass2, by: claude, date: "2026-10-25", result: ok, notes: "verify block passed; matching tested: -p, --print-cache, ldconfig -p accepted; -P, -v, ldconfig rejected." }
+    tags: [ldconfig]
+
+  - id: 101-102.3-0006
+    type: multi_choice
+    difficulty: 3
+    pool: holdout
+    stem: Which **TWO** statements about static and shared libraries are true?
+    select_count: 2
+    options:
+      - id: a
+        text: A statically linked program does not need the library file to be present when it runs.
+        rationale: Correct. The library code was copied into the program when it was linked.
+      - id: b
+        text: A shared library is only needed while the program is being linked, not while it runs.
+        rationale: Wrong. That describes a static library; a shared library must be available at run time.
+      - id: c
+        text: One copy of a shared library in memory can be used by several running programs.
+        rationale: Correct. This sharing is one of the main reasons shared libraries save resources.
+      - id: d
+        text: Statically linked programs are usually smaller than the same programs linked dynamically.
+        rationale: Wrong. They are usually larger, because the library code is embedded in each program.
+    answer: [a, c]
+    explanation: >
+      Static linking copies library code into the program: no run-time dependency, but larger
+      binaries. Dynamic linking only records a reference: smaller programs and one shared copy in
+      memory, but the library must be present whenever the program runs.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.3", lesson: 1, section: Concept of Shared Libraries }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude, date: "2026-10-25", result: fixed, notes: "Option order changed so correct answers are spread across positions." }
+    tags: [static-library, shared-library]
+
+  - id: 101-102.3-0007
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      You are not root. The program `/opt/acme/bin/acmed` fails to start, and you get the output
+      below. The library file `/opt/acme/lib/libacme.so.1` exists. Which command lets the program
+      start from your current shell?
+    exhibit: |
+      $ /opt/acme/bin/acmed
+      /opt/acme/bin/acmed: error while loading shared libraries: libacme.so.1: cannot open shared object file: No such file or directory
+      $ ldd /opt/acme/bin/acmed | grep acme
+              libacme.so.1 => not found
+    options:
+      - id: a
+        text: "`LD_LIBRARY_PATH=/opt/acme/lib /opt/acme/bin/acmed`"
+        rationale: Correct. Setting LD_LIBRARY_PATH for the command adds /opt/acme/lib to the linker's search for that run, with no root needed.
+      - id: b
+        text: "`ldconfig -p /opt/acme/lib && /opt/acme/bin/acmed`"
+        rationale: Wrong. -p only prints the existing cache; it does not add the directory, and changing the cache needs root anyway.
+      - id: c
+        text: "`ldd -u /opt/acme/bin/acmed`"
+        rationale: Wrong. This lists unused direct dependencies; it does not help the program find a missing one.
+      - id: d
+        text: "`PATH=$PATH:/opt/acme/lib /opt/acme/bin/acmed`"
+        rationale: Wrong. PATH is only used to find commands; the dynamic linker ignores it.
+    answer: [a]
+    explanation: >
+      "not found" means the dynamic linker searched its configured directories and the cache without
+      finding libacme.so.1. A user can extend the search for one command by putting LD_LIBRARY_PATH in
+      front of it. The permanent, system-wide fix is a file in /etc/ld.so.conf.d/ plus ldconfig,
+      which needs root.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.3", lesson: 1, section: Configuration of Shared Library Paths }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude, date: "2026-10-25", result: fixed, notes: "Option order changed so correct answers are spread across positions. Scenario reproduced with a test library: LD_LIBRARY_PATH prefix runs it; PATH and ldconfig -p <dir> do not. Soname link must exist for LD_LIBRARY_PATH to work, as stated in the stem." }
+    tags: [LD_LIBRARY_PATH, ldd, troubleshooting]
+
+  - id: 101-102.3-0008
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      An administrator tries to register `/opt/acme/lib` system-wide, but the program still cannot
+      find its library. Based on the output below, what is the most likely cause?
+    exhibit: |
+      $ cat /etc/ld.so.conf.d/acme.conf
+      lib
+      $ sudo ldconfig
+      $ ldd /opt/acme/bin/acmed | grep acme
+              libacme.so.1 => not found
+    options:
+      - id: a
+        text: "`ldconfig` must be run without `sudo` so that it uses the administrator's environment."
+        rationale: Wrong. ldconfig needs root to write /etc/ld.so.cache; running it with sudo is correct.
+      - id: b
+        text: The configuration file must list the library directory as an absolute path.
+        rationale: Correct. "lib" is a relative path, resolved against whatever directory ldconfig runs in, so /opt/acme/lib is never scanned. The line should read /opt/acme/lib.
+      - id: c
+        text: Files in `/etc/ld.so.conf.d/` must end in `.cache` to be read.
+        rationale: Wrong. ld.so.conf normally includes /etc/ld.so.conf.d/*.conf, so .conf is the right suffix.
+      - id: d
+        text: "`ldd` only searches the directories in `LD_LIBRARY_PATH`."
+        rationale: Wrong. ldd reports what the dynamic linker would find, which includes the cache built by ldconfig.
+    answer: [b]
+    explanation: >
+      Files under /etc/ld.so.conf.d/ hold absolute paths of library directories, one per line.
+      ldconfig does not reject a relative entry: it looks for it relative to its current directory,
+      exits successfully, and the library never reaches the cache. Writing the absolute path and
+      re-running ldconfig fixes it.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.3", lesson: 1, section: Configuration of Shared Library Paths }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude, date: "2026-10-25", result: fixed, notes: "Explanation corrected: a relative entry is resolved against the current directory, ldconfig still exits 0." }
+        - { stage: pass2, by: claude, date: "2026-10-25", result: fixed, notes: "Option order changed so correct answers are spread across positions. Scenario reproduced: relative entry gives \"Can't stat lib\" only under -v; plain ldconfig exits 0 and the library stays not found." }
+    tags: [ld.so.conf, ldconfig, troubleshooting]
+
+  - id: 101-102.3-0009
+    type: multi_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      Which **TWO** commands list the shared libraries that the program `/usr/bin/report` was linked
+      against?
+    select_count: 2
+    options:
+      - id: a
+        text: "`ldd -u /usr/bin/report`"
+        rationale: Wrong. -u shows only the unused direct dependencies, often nothing at all, not the full list.
+      - id: b
+        text: "`ldd /usr/bin/report`"
+        rationale: Correct. ldd lists the program's shared library dependencies and where each one resolves.
+      - id: c
+        text: "`ldconfig -v /usr/bin/report`"
+        rationale: Wrong. ldconfig processes library directories and rebuilds the cache; it does not read a program's dependencies.
+      - id: d
+        text: "`readelf -d /usr/bin/report | grep NEEDED`"
+        rationale: Correct. Each NEEDED entry in the dynamic section names a library the program was linked against.
+    answer: [b, d]
+    explanation: >
+      ldd asks the dynamic linker which libraries a program needs. The same list is recorded in the
+      program's ELF dynamic section as NEEDED entries, which readelf -d (or objdump -p) can show
+      without involving the linker at all.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.3", lesson: 1, section: Searching for the Dependencies of a Particular Executable }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude, date: "2026-10-25", result: fixed, notes: "Option order changed so correct answers are spread across positions. ldd and readelf -d | grep NEEDED both list the dependencies; ldd -u printed nothing; ldconfig -v <program> lists no dependencies." }
+    tags: [ldd, readelf, NEEDED]
+
+  - id: 101-102.3-0010
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      An update replaced `libacme.so.1.4.2` with `libacme.so.1.5.0` in `/opt/acme/lib`, which is
+      already listed in `/etc/ld.so.conf.d/acme.conf`. Programs linked against `libacme.so.1` now
+      fail to start. What restores them?
+    exhibit: |
+      $ ls -l /opt/acme/lib
+      lrwxrwxrwx 1 root root    16 Oct 24 18:53 libacme.so.1 -> libacme.so.1.4.2
+      -rwxr-xr-x 1 root root 15104 Oct 24 18:59 libacme.so.1.5.0
+    options:
+      - id: a
+        text: Run `ldd` on each affected program to relink it against the new version.
+        rationale: Wrong. ldd only reports dependencies; it never changes programs or links.
+      - id: b
+        text: Set `LD_LIBRARY_PATH=/opt/acme/lib` for the affected programs.
+        rationale: Wrong. The directory is already being searched; the problem is that libacme.so.1 points at a file that no longer exists.
+      - id: c
+        text: Nothing; the dynamic linker follows the newest version automatically the next time the programs start.
+        rationale: Wrong. The linker opens libacme.so.1, which is now a dangling link until something updates it.
+      - id: d
+        text: Run `ldconfig` as root, which repoints `libacme.so.1` to the new file and refreshes the cache.
+        rationale: Correct. ldconfig creates the soname links for the libraries it finds and rebuilds /etc/ld.so.cache.
+    answer: [d]
+    explanation: >
+      Programs record the soname (libacme.so.1), not the full file name. The soname is a symbolic link
+      to the real file, and ldconfig maintains those links and the cache. After a library file is
+      added or replaced, run ldconfig.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.3", lesson: 1, section: Configuration of Shared Library Paths }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude, date: "2026-10-25", result: fixed, notes: "Option \"rename 1.5.0 to 1.4.2\" would also restore the programs (two right answers); replaced with an LD_LIBRARY_PATH distractor." }
+        - { stage: pass2, by: claude, date: "2026-10-25", result: fixed, notes: "Option order changed so correct answers are spread across positions. Scenario reproduced: after replacing the file, LD_LIBRARY_PATH still fails (exit 127); ldconfig repoints libacme.so.1 to 1.5.0 and the program runs." }
+    tags: [ldconfig, soname, symlink]
+
+  # --------------------------------------------------------------------------- practice (CLI)
+
+  - id: 101-102.3-0011
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: Which directory is a standard location for system shared libraries?
+    options:
+      - id: a
+        text: "`/usr/share`"
+        rationale: Wrong. /usr/share holds architecture-independent data such as documentation and icons.
+      - id: b
+        text: "`/var/lib`"
+        rationale: Wrong. Despite the name, /var/lib holds programs' variable state data, not libraries.
+      - id: c
+        text: "`/usr/lib`"
+        rationale: Correct. /usr/lib (with /lib, /lib64 and /usr/local/lib) is a standard library location.
+      - id: d
+        text: "`/etc/ld.so.conf.d`"
+        rationale: Wrong. This holds configuration files that list library directories, not libraries.
+    answer: [c]
+    explanation: >
+      Shared libraries normally live in /lib, /lib32, /lib64, /usr/lib and /usr/local/lib (on
+      Debian-family systems often in a multiarch subdirectory such as /usr/lib/x86_64-linux-gnu).
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.3", lesson: 1, section: Shared Object File Naming Conventions }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude, date: "2026-10-25", result: fixed, notes: "Option order changed so correct answers are spread across positions." }
+    tags: [library-locations, fhs]
+
+  - id: 101-102.3-0012
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: >
+      What resolves a dynamically linked program's references to its shared libraries when the
+      program starts?
+    options:
+      - id: a
+        text: The dynamic linker, `ld.so` / `ld-linux.so`
+        rationale: Correct. The dynamic linker loads the needed libraries and resolves the references at run time.
+      - id: b
+        text: "`ldd`"
+        rationale: Wrong. ldd only reports what would be loaded; it is not involved in starting programs.
+      - id: c
+        text: "`ldconfig`"
+        rationale: Wrong. ldconfig prepares links and the cache in advance; it does not run when a program starts.
+      - id: d
+        text: "`modprobe`"
+        rationale: Wrong. modprobe loads kernel modules, not user-space shared libraries.
+    answer: [a]
+    explanation: >
+      When a dynamically linked program runs, the dynamic linker (ld.so, or ld-linux.so on Linux)
+      finds each needed library using LD_LIBRARY_PATH, the cache and default directories, and maps it
+      into the process.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.3", lesson: 1, section: Configuration of Shared Library Paths }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude, date: "2026-10-25", result: fixed, notes: "Option order changed so correct answers are spread across positions." }
+    tags: [ld.so, dynamic-linker]
+
+  - id: 101-102.3-0013
+    type: fill_in
+    difficulty: 3
+    pool: practice
+    stem: Type the command that rebuilds `/etc/ld.so.cache` and the shared library links.
+    fill_in:
+      accepted: ['(sudo\s+)?((/usr)?/s?bin/)?ldconfig']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      ldconfig reads /etc/ld.so.conf and the files it includes, updates the soname links in those
+      directories and writes /etc/ld.so.cache. It needs root, so it is often run with sudo.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.3", lesson: 1, section: Configuration of Shared Library Paths }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude, date: "2026-10-25", result: ok, notes: "Matching tested: ldconfig, sudo ldconfig, /sbin/ldconfig, sudo /usr/sbin/ldconfig accepted; ldconfig -p, LDCONFIG, ldd, sudoldconfig rejected." }
+    tags: [ldconfig]
+
+  - id: 101-102.3-0014
+    type: single_choice
+    difficulty: 3
+    pool: practice
+    stem: >
+      `LD_LIBRARY_PATH` is not set in your Bash session. Which command sets it so that programs you
+      launch from this shell also see it?
+    options:
+      - id: a
+        text: "`set LD_LIBRARY_PATH=/opt/vendor/lib`"
+        rationale: Wrong. In Bash, set changes shell options and positional parameters; this does not set the variable.
+      - id: b
+        text: "`export LD_LIBRARY_PATH=/opt/vendor/lib`"
+        rationale: Correct. export marks the variable for the environment of every child process.
+      - id: c
+        text: "`echo /opt/vendor/lib >> $LD_LIBRARY_PATH`"
+        rationale: Wrong. This tries to append text to a file named by the variable's value, which is empty.
+      - id: d
+        text: "`LD_LIBRARY_PATH=/opt/vendor/lib`"
+        rationale: Wrong. A new variable set this way stays a shell variable; child processes do not receive it.
+    answer: [b]
+    explanation: >
+      Only exported variables are passed to child processes. A plain assignment creates a shell
+      variable unless the name was already exported. To make the setting permanent, put the export
+      line in a startup file such as ~/.bashrc.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.3", lesson: 1, section: Configuration of Shared Library Paths }
+    verify:
+      command: >
+        bash -c 'unset LD_LIBRARY_PATH; LD_LIBRARY_PATH=/x; bash -c "echo [\$LD_LIBRARY_PATH]";
+        export LD_LIBRARY_PATH=/x; bash -c "echo [\$LD_LIBRARY_PATH]"' | tr -d '\n'
+      expect: { exit_code: 0, stdout_contains: "[][/x]" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude, date: "2026-10-25", result: fixed, notes: "Option order changed so correct answers are spread across positions. verify block passed: plain assignment not inherited, export inherited." }
+    tags: [LD_LIBRARY_PATH, export, environment]
+
+  - id: 101-102.3-0015
+    type: multi_choice
+    difficulty: 3
+    pool: practice
+    stem: Which **TWO** lines are valid in `/etc/ld.so.conf`?
+    select_count: 2
+    options:
+      - id: a
+        text: "`include /etc/ld.so.conf.d/*.conf`"
+        rationale: Correct. This is how ld.so.conf pulls in the fragment files; most systems have just this line.
+      - id: b
+        text: "`export /opt/vendor/lib`"
+        rationale: Wrong. export is a shell builtin; ld.so.conf is not a shell script.
+      - id: c
+        text: "`LD_LIBRARY_PATH=/opt/vendor/lib`"
+        rationale: Wrong. This is shell syntax for an environment variable, not ld.so.conf syntax.
+      - id: d
+        text: "`/opt/vendor/lib`"
+        rationale: Correct. An absolute library directory on its own line is the basic entry format.
+    answer: [a, d]
+    explanation: >
+      /etc/ld.so.conf lists library directories as absolute paths, one per line, and can include other
+      files. Modern systems keep only an include line and put real entries under /etc/ld.so.conf.d/.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.3", lesson: 1, section: Configuration of Shared Library Paths }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude, date: "2026-10-25", result: fixed, notes: "Option order changed so correct answers are spread across positions." }
+    tags: [ld.so.conf]
