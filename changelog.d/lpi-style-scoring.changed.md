@@ -1,0 +1,1 @@
+- Proposed scoring now follows LPI: all-or-nothing items, with mock results reported on the 200–800 scale (500 to pass, conservative pass point). The engine handoff now includes scoring.

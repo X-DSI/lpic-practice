@@ -7,11 +7,14 @@
 
 ## Maintainer actions pending
 
-- [ ] Protect `main` with a ruleset: require a pull request with 0 approvals, **Require review from
-      Code Owners**, require the `ci` checks, block force pushes and deletions, bypass for the
-      maintainer only.
-- [ ] Turn on auto-merge and automatic branch deletion.
-- [ ] Invite the agent machine account as a collaborator with the **Write** role.
+- [x] Protect `main` with a ruleset (PR required, 0 approvals, Code Owner review, no force pushes or
+      deletions) — active since 2026-10-23.
+- [ ] Add `Validate content` to the ruleset's required status checks. Only
+      `commit-identity / Commit identity` is required today, so invalid content could still merge.
+- [ ] Confirm the ruleset's bypass list contains only the maintainer (not visible to the agent
+      account).
+- [x] Turn on auto-merge and automatic branch deletion.
+- [x] Invite the agent machine account (`X-DSI-agent`) as a collaborator with the **Write** role.
 - [ ] Ask `learning@lpi.org` whether publishing original questions keyed to their objectives is
       acceptable (open question in the content-licensing ADR).
 
@@ -25,4 +28,4 @@
 
 | ADR | Needed by |
 |---|---|
-| [Score every question all-or-nothing](adr/proposed/2026-10-23-all-or-nothing-scoring.md) | build-and-engine-core handoff |
+| [Score like LPI — all-or-nothing items, 200–800 scale, 500 to pass](adr/proposed/2026-10-24-lpi-style-scoring.md) | build-and-engine-core handoff |
