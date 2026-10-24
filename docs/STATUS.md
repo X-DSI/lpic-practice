@@ -29,3 +29,11 @@
 | ADR | Needed by |
 |---|---|
 | [Score like LPI — all-or-nothing items, 200–800 scale, 500 to pass](adr/proposed/2026-10-24-lpi-style-scoring.md) | build-and-engine-core handoff |
+| [Generate questions one objective per PR, two recorded checks, human sign-off](adr/proposed/2026-10-25-question-generation-workflow.md) | every content PR |
+
+## Question bank
+
+| Exam | Objectives done | Questions | Target |
+|---|---|---|---|
+| 101 | 102.3 (in review) | 15 (10 holdout, 5 practice) | 900 (600 holdout, 300 practice) |
+| 102 | — | 0 | 900 |
