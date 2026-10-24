@@ -1,6 +1,6 @@
 ---
 title: Content build (YAML → JSON) and engine core — loading, answer matching, scoring, practice pool
-status: in-progress
+status: done
 assignee: X-DSI-agent
 base_sha: 1d32636
 adrs:
@@ -9,7 +9,7 @@ adrs:
   - 2026-10-22-mock-exam-composition.md
   - proposed/2026-10-24-lpi-style-scoring.md
 plan_pr: 3
-impl_pr: null
+impl_pr: 5
 review: auto
 ---
 
@@ -97,3 +97,63 @@ running `verify` blocks in containers, and any content generation.
 
 ## Attached content
 None.
+
+## Outcome
+**Status:** done  
+**Commits:** 0d5b45c..6c35dc1 (plus this Outcome) · **PR:** #5 ·
+**CI run:** [https://github.com/X-DSI/lpic-practice/actions/runs/40122351456](https://github.com/X-DSI/lpic-practice/actions/runs/40122351456)
+
+Drift check: `git diff 1d32636..origin/main` touches only this handoff and the proposed scoring
+ADR (planning PR #4, which replaced `2026-10-23-all-or-nothing-scoring.md` with
+`2026-10-24-lpi-style-scoring.md`). `schemas/`, `content/`, `tools/` and the Accepted ADRs are
+unchanged, so the plan still applies as written.
+
+### Verified acceptance criteria
+- [x] `pip install -e ".[dev]"` installs the engine and dev tools — step "Run pip install -e .[dev]"
+      of the `Lint and test engine` job in the CI run above
+- [x] All tests pass — `pytest` in the same job: 52 passed on Python 3.12
+- [x] Code is lint- and format-clean — `ruff check .` and `ruff format --check .` in the same job
+- [x] Existing content still validates — `python tools/validate.py` in the `Validate content` job
+- [x] Single-, multi- and fill-in matching behave as specified — `tests/test_matching.py` (20
+      tests) in the same `pytest` run, covering every listed case
+- [x] Scoring follows the ADR — `tests/test_scoring.py` (18 tests): 0/60 → 200, 38/60 → 492 and
+      not a pass, 39/60 → 500 and a likely pass, 60/60 → 800; breakdowns add up to the totals
+- [x] Build writes `101.json` and `102.json`, and two builds are byte-identical —
+      `tests/test_build.py` (fixture bank); the job's `python -m engine.build` step also builds the
+      real `content/` and writes both files
+- [x] Build exits non-zero and writes no files when content is invalid — `tests/test_build.py`,
+      including that an earlier build's output is left untouched
+- [x] The practice pool never contains holdout or retired questions — `tests/test_selection.py`
+- [x] CI runs `ruff` and `pytest` on pull requests — the new `Lint and test engine` job in the
+      CI run above
+
+### Unverified (manual) criteria
+- None.
+
+### Not met
+- None.
+
+### Deviations
+- **The LPI-style scoring ADR is still `Proposed`.** Implemented anyway, as this handoff instructs.
+- **Pass cap.** A result below the pass point is capped at 499. Rounding alone would turn 37/57
+  (0.649, scaled 499.6) into 500, a "likely pass" below `P`. With the cap, `scaled >= 500` and
+  `likely_pass` always agree; a test checks this for every total up to 300.
+- Validation moved into `engine/validation.py` (allowed by "Implementer may decide").
+  `tools/validate.py` is a thin wrapper; its output and exit codes were compared with the old
+  script on broken content and are identical.
+- `practice_pool()` raises `ValueError` for an objective the exam doesn't have, instead of
+  returning an empty list, so a typo can't silently produce an empty drill.
+- The engine reads `schemas/` and `content/` from the repository checkout, so it is meant to be
+  installed editable (`pip install -e`), as the acceptance criteria do.
+- `AGENTS.md` and `README.md` now list the install, build, test and lint commands (AGENTS.md
+  asked for commands to be added as they arrive).
+
+### New decisions
+- None. The pass cap is an interpretation of point 3 of the proposed scoring ADR; the planner may
+  want to write it into the ADR before accepting it.
+
+### Questions for the planner
+- Accept the LPI-style scoring ADR (with or without the pass cap), and add the note to
+  `2026-10-22-mock-exam-composition.md` point 7 that the ADR calls for.
+- Should the maintainer add `Lint and test engine` to the ruleset's required checks, alongside
+  `Validate content` (already pending in `docs/STATUS.md`)?
