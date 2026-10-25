@@ -33,9 +33,10 @@ questions:
       missing ones.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: The Debian Package Tool (dpkg) }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [dpkg]
 
   - id: 101-102.4-0002
@@ -62,9 +63,10 @@ questions:
       /etc/apt/sources.list.d/. After changing them, run apt-get update to fetch the new indexes.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: The Sources List }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [sources.list]
 
   - id: 101-102.4-0003
@@ -93,9 +95,10 @@ questions:
       dependencies. It calls dpkg underneath to do the actual installation.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Advanced Package Tool (apt) }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [apt-get, dpkg]
 
   - id: 101-102.4-0004
@@ -124,9 +127,10 @@ questions:
       configuration again, so you can change the answers you gave when it was installed.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Reconfiguring Installed Packages }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. Verified live on dpkg 1.22.6 / apt 2.8.3." }
     tags: [dpkg-reconfigure]
 
   - id: 101-102.4-0005
@@ -153,9 +157,10 @@ questions:
       name_upstreamversion-revision_architecture.deb.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Introduction }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [deb]
 
   - id: 101-102.4-0006
@@ -185,9 +190,10 @@ questions:
       command: dpkg -L dpkg
       expect: { exit_code: 0, stdout_contains: "/usr/bin/dpkg" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. Verified live on dpkg 1.22.6 / apt 2.8.3." }
     tags: [dpkg]
 
   - id: 101-102.4-0007
@@ -219,9 +225,10 @@ questions:
       command: dpkg -S /usr/bin/dpkg-query
       expect: { exit_code: 0, stdout_contains: "dpkg: /usr/bin/dpkg-query" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [dpkg, dpkg-query]
 
   - id: 101-102.4-0008
@@ -250,9 +257,10 @@ questions:
       the "rc" state. dpkg -P removes everything, configuration included.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Removing Packages }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Rationale for -R corrected: dpkg exits with 'need an action option' (tested)." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. Verified live on dpkg 1.22.6 / apt 2.8.3." }
     tags: [dpkg, remove]
 
   - id: 101-102.4-0009
@@ -281,9 +289,10 @@ questions:
       "name - short description" for each match. apt search does the same with friendlier output.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Searching for Packages }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [apt-cache]
 
   - id: 101-102.4-0010
@@ -312,9 +321,10 @@ questions:
       subdirectory) before installing them. apt-get clean (or apt clean) deletes them all.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: The Local Cache }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [apt-get, cache]
 
   - id: 101-102.4-0011
@@ -343,9 +353,10 @@ questions:
       files too. With dpkg the equivalent is dpkg -P (--purge).
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Installing and Removing Packages }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. Reviewer noted a minor giveaway (both correct options contain purge); left unchanged because a purge-free distractor such as autoremove --purge would risk a second right answer." }
     tags: [apt-get, purge]
 
   - id: 101-102.4-0012
@@ -366,9 +377,10 @@ questions:
       offers. It installs or upgrades nothing.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Updating the Package Index }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [apt-get, update]
 
   - id: 101-102.4-0013
@@ -387,9 +399,10 @@ questions:
       keeps the configuration files. -P can also purge a package that was already removed with -r.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Removing Packages }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [dpkg, purge]
 
   - id: 101-102.4-0014
@@ -418,9 +431,10 @@ questions:
       Adding --installed limits rdepends to installed packages.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Searching for Packages }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [apt-cache, dependencies]
 
   - id: 101-102.4-0015
@@ -450,9 +464,10 @@ questions:
       is what dpkg -r leaves behind; dpkg -P mutt would clear it.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Removing Packages }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [dpkg, package-state]
 
   - id: 101-102.4-0016
@@ -485,9 +500,10 @@ questions:
       command: dpkg -s bash
       expect: { exit_code: 0, stdout_regex: "(?m)^Version: " }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Rationale for option d reworded (YAML colon issue; content unchanged)." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. Verified live on dpkg 1.22.6 / apt 2.8.3." }
     tags: [dpkg, apt-cache]
 
   - id: 101-102.4-0017
@@ -499,7 +515,7 @@ questions:
       `apt-get`, type the complete command (without a package name) that installs the missing
       dependencies and finishes configuring the package.
     fill_in:
-      accepted: ['(sudo\s+)?((/usr)?/bin/)?apt-get\s+(install\s+(-f|--fix-broken)|(-f|--fix-broken)\s+install)']
+      accepted: ['(sudo\s+)?((/usr)?/bin/)?apt-get(\s+(-y|--yes|--assume-yes))*\s+((install(\s+(-y|--yes|--assume-yes))*\s+(-f|--fix-broken|-fy|-yf))|((-f|--fix-broken|-fy|-yf)(\s+(-y|--yes|--assume-yes))*\s+install))(\s+(-y|--yes|--assume-yes))*']
       match: regex
       case_sensitive: true
     explanation: >
@@ -508,9 +524,10 @@ questions:
       half-installed one. apt install -f does the same.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Fixing Broken Dependencies }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Regex extended to accept -y/--yes/--assume-yes anywhere and combined -fy/-yf; still rejects apt-get -f, apt-get install, apt-get install -f pkg, apt install -f." }
     tags: [apt-get, dependencies]
 
   - id: 101-102.4-0018
@@ -540,9 +557,10 @@ questions:
       uses main, restricted, universe and multiverse.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: The Sources List }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Explanation: contrib depends on software outside main, not only non-free software." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [sources.list, components]
 
   - id: 101-102.4-0019
@@ -571,9 +589,10 @@ questions:
       Use dpkg -c FILE to see which files it would install.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Getting Package Information }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Rationale for apt-cache show clarified: a bare file name is looked up as a package name (apt-cache show ./file.deb does work)." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. Verified live on dpkg 1.22.6 / apt 2.8.3." }
     tags: [dpkg]
 
   - id: 101-102.4-0020
@@ -618,9 +637,10 @@ questions:
       dependency and running dpkg --configure cowsay) completes the job.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Dealing with Dependencies }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. Verified live on dpkg 1.22.6 / apt 2.8.3." }
     tags: [dpkg, dependencies, package-state]
 
   - id: 101-102.4-0021
@@ -628,8 +648,8 @@ questions:
     difficulty: 4
     pool: holdout
     stem: >
-      You no longer need `libgeo` or the tool that uses it. Removing the library alone fails as
-      shown in the exhibit. Which command removes `libgeo` and leaves no broken dependencies?
+      Removing the library alone fails as shown in the exhibit. You then run
+      `dpkg -r --force-depends libgeo`. What is the state of the two packages afterwards?
     exhibit: |
       # dpkg -r libgeo
       dpkg: dependency problems prevent removal of libgeo:
@@ -641,28 +661,30 @@ questions:
        libgeo
     options:
       - id: a
-        text: "`dpkg -r --force-depends libgeo`"
-        rationale: Wrong. This removes libgeo but leaves geo-tools installed with an unmet dependency.
+        text: Both libgeo and geo-tools are removed, because dpkg removes dependants automatically
+        rationale: Wrong. dpkg only removes the packages named on the command line; removing dependants automatically is something APT does.
       - id: b
-        text: "`dpkg -r libgeo geo-tools`"
-        rationale: Correct. When both are removed in one run, nothing installed is left depending on libgeo.
+        text: libgeo is removed and geo-tools stays installed (ii) with an unmet dependency
+        rationale: Correct. dpkg prints "dependency problems, but removing anyway as you requested", removes libgeo and leaves geo-tools as it was.
       - id: c
-        text: "`dpkg -P libgeo`"
-        rationale: Wrong. Purging runs the same dependency check and fails for the same reason.
+        text: libgeo stays installed and geo-tools is removed instead
+        rationale: Wrong. dpkg never removes a package that was not named; libgeo is the one removed.
       - id: d
-        text: "`dpkg -r libgeo && dpkg -r geo-tools`"
-        rationale: Wrong. The first command fails exactly as in the exhibit, so && never runs the second.
+        text: libgeo is removed and geo-tools is set back to unpacked (iU) until the dependency returns
+        rationale: Wrong. dpkg does not change geo-tools' state; it stays ii, now with a broken dependency.
     answer: [b]
     explanation: >
-      dpkg will not remove a package that another installed package still depends on, unless the
-      dependent package is removed in the same operation (or first). Forcing the removal works but
-      leaves the system with broken dependencies.
+      --force-depends turns the dependency error into a warning, so dpkg removes libgeo anyway. It
+      does not touch geo-tools, which keeps its ii state but now has an unmet dependency; apt-get
+      check or apt-get install -f will report or try to repair it. Removing both in one dpkg -r
+      run avoids the breakage.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Removing Packages }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
-    tags: [dpkg, dependencies, remove]
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Rewritten: stem restated Guided Exercise 3. Now asks for the package states after dpkg -r --force-depends (geo-tools stays ii, verified live). needs re-check" }
+    tags: [dpkg, dependencies, remove, force]
 
   - id: 101-102.4-0022
     type: single_choice
@@ -689,7 +711,7 @@ questions:
         rationale: Correct. dpkg -S only knows installed packages, while apt-file uses the repositories' Contents indexes.
       - id: d
         text: The file exists but was created by hand, so dpkg has no record of it
-        rationale: Wrong. If the file had been created by hand, apt-file would not tie it to two packages; its results come from repository indexes, not the local disk.
+        rationale: Wrong. Nothing in the exhibit shows the file exists, and apt-file answers from the repositories' Contents indexes, not from the local disk, so a hand-made file cannot explain its result.
     answer: [c]
     explanation: >
       dpkg -S searches the file lists of installed packages only. apt-file search uses the Contents
@@ -697,9 +719,10 @@ questions:
       installed. Here hello is simply not installed.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Listing Package Contents and Finding Files }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Correct option shortened so it is not the longest." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Option d rationale was false; replaced with a true statement about apt-file using Contents indexes." }
     tags: [apt-file, dpkg-query]
 
   - id: 101-102.4-0023
@@ -718,9 +741,10 @@ questions:
       format. dpkg -L only works for installed packages.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Listing Installed Packages and Package Contents }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [dpkg]
 
   - id: 101-102.4-0024
@@ -751,9 +775,10 @@ questions:
       ubuntu.sources. Files with other extensions are ignored.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: The /etc/apt/sources.list.d Directory }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. Verified live on dpkg 1.22.6 / apt 2.8.3." }
     tags: [sources.list]
 
   - id: 101-102.4-0025
@@ -771,7 +796,7 @@ questions:
         text: It points APT at source packages, which commands like `apt-get source` can download
         rationale: Correct. deb-src lines provide source package indexes, used by apt-get source and build-dep.
       - id: b
-        text: "`bookworm` names the distribution release the packages are built for"
+        text: "`bookworm` names the distribution release (suite or codename) the line refers to"
         rationale: Correct. The third field is the distribution (codename or suite).
       - id: c
         text: After an index update, `apt-get install` can install ready-to-run programs from main and contrib through this line
@@ -786,9 +811,10 @@ questions:
       Run apt-get update after any change.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: The Sources List }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Option b reworded: the field is the suite or codename the line refers to." }
     tags: [sources.list, deb-src]
 
   - id: 101-102.4-0026
@@ -825,9 +851,10 @@ questions:
       still upgrades everything upgradable, as a simulated run (-s) shows.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Upgrading Packages }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. Verified live on dpkg 1.22.6 / apt 2.8.3." }
     tags: [apt-get, upgrade]
 
   - id: 101-102.4-0027
@@ -857,9 +884,10 @@ questions:
       as ./file.deb or /tmp/file.deb. APT then resolves and downloads the dependencies as usual.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Installing and Removing Packages }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. Verified live on dpkg 1.22.6 / apt 2.8.3." }
     tags: [apt-get, deb]
 
   - id: 101-102.4-0028
@@ -890,9 +918,10 @@ questions:
       dpkg call works in any order.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Dealing with Dependencies }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. Verified live on dpkg 1.22.6 / apt 2.8.3." }
     tags: [dpkg, dependencies]
 
   - id: 101-102.4-0029
@@ -916,9 +945,10 @@ questions:
       narrows results quickly.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Searching for Packages }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [apt-cache]
 
   - id: 101-102.4-0030
@@ -953,9 +983,10 @@ questions:
       "missing" for deleted files. Reinstalling the package restores a damaged non-config file.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Getting Package Information }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. Verified live on dpkg 1.22.6 / apt 2.8.3." }
     tags: [dpkg, integrity]
 
   # --------------------------------------------------------------------------- practice (CLI)
@@ -985,9 +1016,10 @@ questions:
       installed.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Searching for Packages }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Distractors lengthened so the correct option is not the longest." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [apt-cache]
 
   - id: 101-102.4-0032
@@ -1015,9 +1047,10 @@ questions:
       apt-cache.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Advanced Package Tool (apt) }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Distractor a lengthened so the correct option is not the longest." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [apt]
 
   - id: 101-102.4-0033
@@ -1044,9 +1077,10 @@ questions:
       removes them.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: The Local Cache }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [cache]
 
   - id: 101-102.4-0034
@@ -1076,9 +1110,10 @@ questions:
       adding one.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: The /etc/apt/sources.list.d Directory }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [sources.list]
 
   - id: 101-102.4-0035
@@ -1110,9 +1145,10 @@ questions:
       command: dpkg --get-selections dpkg
       expect: { exit_code: 0, stdout_regex: "^dpkg\\s+install" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [dpkg]
 
   - id: 101-102.4-0036
@@ -1131,9 +1167,10 @@ questions:
       the new answers. It works for any package that configures itself through debconf.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Reconfiguring Installed Packages }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [dpkg-reconfigure]
 
   - id: 101-102.4-0037
@@ -1147,6 +1184,7 @@ questions:
       # apt-get remove libtext-charwidth-perl
       Reading package lists... Done
       Building dependency tree... Done
+      Reading state information... Done
       The following packages will be REMOVED:
         cowsay libtext-charwidth-perl
       0 upgraded, 0 newly installed, 2 to remove and 0 not upgraded.
@@ -1170,9 +1208,10 @@ questions:
       removing takes away the packages that need it. Always read the list before answering Y.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Installing and Removing Packages }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Exhibit completed with the Reading state information line apt-get prints." }
     tags: [apt-get, dependencies]
 
   - id: 101-102.4-0038
@@ -1201,9 +1240,10 @@ questions:
       depends on them any more, apt-get autoremove (or apt autoremove) removes them.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Installing and Removing Packages }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [apt-get, autoremove]
 
   - id: 101-102.4-0039
@@ -1233,9 +1273,10 @@ questions:
       (community, free) and multiverse (unsupported, non-free or restricted by law).
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: The Sources List }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [sources.list, components]
 
   - id: 101-102.4-0040
@@ -1265,9 +1306,10 @@ questions:
       once apt-file is installed.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Listing Package Contents and Finding Files }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. Verified live on dpkg 1.22.6 / apt 2.8.3." }
     tags: [apt-file]
 
   - id: 101-102.4-0041
@@ -1306,9 +1348,10 @@ questions:
       version it knows with its source and priority. *** marks the installed version.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Upgrading Packages }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [apt-cache]
 
   - id: 101-102.4-0042
@@ -1337,9 +1380,10 @@ questions:
       -l and -S are dpkg-query actions that read the database of installed packages.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Getting Package Information }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [dpkg]
 
   - id: 101-102.4-0043
@@ -1347,26 +1391,30 @@ questions:
     difficulty: 5
     pool: practice
     stem: >
-      `dpkg -r oldlib` fails because another installed package depends on `oldlib`. Type the
-      narrowest `dpkg` force option that turns this dependency error into a warning, so the removal
-      goes ahead.
+      `dpkg -i geo-tools_2.0-1_all.deb` leaves geo-tools unconfigured because `libgeo` is not
+      installed. You know the library is provided outside dpkg's control. Type the narrowest `dpkg`
+      force option that turns this dependency error into a warning so the package is configured
+      anyway.
     fill_in:
       accepted:
         - '--force-depends'
-        - '(sudo\s+)?((/usr)?/bin/)?dpkg\s+(-r|--remove|-P|--purge)\s+--force-depends(\s+(?!-)\S+)*'
-        - '(sudo\s+)?((/usr)?/bin/)?dpkg\s+--force-depends\s+(-r|--remove|-P|--purge)(\s+(?!-)\S+)*'
+        - '(sudo\s+)?((/usr)?/bin/)?dpkg\s+(-i|--install)\s+--force-depends\s+\S+\.deb'
+        - '(sudo\s+)?((/usr)?/bin/)?dpkg\s+--force-depends\s+(-i|--install)\s+\S+\.deb'
       match: regex
       case_sensitive: true
     explanation: >
       dpkg's force options are --force-THING; --force-depends turns dependency problems into
-      warnings. A bare --force is rejected ("--force option takes a value"). The result is a
-      package with an unmet dependency, so use it only when you know why.
-    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Removing Packages }
+      warnings, so dpkg -i --force-depends prints "dependency problems, but configuring anyway as
+      you requested" and the package ends up ii. A bare --force is rejected ("--force option takes
+      a value"). dpkg's database still records the unmet dependency, so APT will complain until it
+      is satisfied.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Dealing with Dependencies }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
-    tags: [dpkg, force]
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Rewritten: stem restated Explorational Exercise 3. Now about dpkg -i --force-depends configuring anyway (verified live, package ends ii); accepted patterns use -i/--install with a .deb. needs re-check" }
+    tags: [dpkg, force, dependencies]
 
   - id: 101-102.4-0044
     type: single_choice
@@ -1395,9 +1443,10 @@ questions:
       path to find the single owner of one file.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Finding Out Which Package Owns a Specific File }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Correct option shortened so it is not the longest." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [dpkg, dpkg-query]
 
   - id: 101-102.4-0045
@@ -1426,7 +1475,8 @@ questions:
       package files that are no longer in any repository, so the cache keeps current versions.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: The Local Cache }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. Reviewer suggested difficulty 4; kept at 5 to hold the holdout split. autoclean semantics match the apt-get man page." }
     tags: [apt-get, cache]
