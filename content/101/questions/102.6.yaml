@@ -31,9 +31,10 @@ questions:
       Workstation). KVM is often described as both, since it is a Linux kernel module.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.6", lesson: 1, section: Virtualization Overview }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [hypervisor, xen, type-1]
 
   - id: 101-102.6-0002
@@ -61,9 +62,10 @@ questions:
       much less overhead.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.6", lesson: 1, section: Containers }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Correct option shortened; it was the longest (length giveaway)." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [container, virtual-machine]
 
   - id: 101-102.6-0003
@@ -94,9 +96,10 @@ questions:
       timezone, users, SSH keys, packages and more.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.6", lesson: 1, section: Preconfiguring Cloud Systems }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [cloud-init]
 
   - id: 101-102.6-0004
@@ -126,9 +129,10 @@ questions:
       and network performance; this mix is called hybrid virtualization.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.6", lesson: 1, section: Types of Virtual Machines }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Correct option shortened; it was the longest (length giveaway)." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [guest-drivers, virtio, kvm]
 
   - id: 101-102.6-0005
@@ -142,13 +146,13 @@ questions:
         text: A fully virtualized guest needs a modified kernel that knows about the hypervisor.
         rationale: Wrong. A fully virtualized guest runs an unmodified OS and does not know it is virtualized.
       - id: b
-        text: A paravirtualized guest knows it is virtualized and uses special drivers for the hypervisor.
+        text: A paravirtualized guest is built to cooperate with the hypervisor it runs on.
         rationale: Correct. Paravirtualized guests use a modified kernel and guest drivers that cooperate with the hypervisor.
       - id: c
         text: Paravirtualized guests usually perform worse than fully virtualized ones.
         rationale: Wrong. The guest drivers avoid hardware emulation, so paravirtualized guests usually perform better.
       - id: d
-        text: A hybrid guest is an unmodified OS that uses paravirtualized storage and network drivers.
+        text: A hybrid guest runs a stock kernel but adds hypervisor-aware drivers for disks and NICs.
         rationale: Correct. Hybrid virtualization adds paravirtualized I/O drivers to a fully virtualized guest.
     answer: [b, d]
     explanation: >
@@ -157,9 +161,10 @@ questions:
       faster. Hybrid: a fully virtualized guest with paravirtualized disk and network drivers.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.6", lesson: 1, section: Types of Virtual Machines }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Options b and d reworded further from the lesson text. Reviewer suggested difficulty 2; kept at 3 to hold the 2-2-2-2-2 split." }
     tags: [full-virtualization, paravirtualization, hybrid]
 
   - id: 101-102.6-0006
@@ -167,8 +172,8 @@ questions:
     difficulty: 3
     pool: holdout
     stem: >
-      Type the absolute path of the file under `/etc` that holds the system's unique machine ID, used
-      by systemd and (directly or through a link) by D-Bus.
+      Type the absolute path of the file that `systemd-machine-id-setup` creates to hold the system's
+      unique 32-character machine ID, which D-Bus also uses directly or through a link.
     fill_in:
       accepted: ["/etc/machine-id"]
       match: normalized
@@ -179,9 +184,10 @@ questions:
       symbolic link to /etc/machine-id. Clones of one template must each get a new ID.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.6", lesson: 1, section: The D-Bus Machine ID }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Stem reworded so it no longer names /etc (giveaway); now refers to the file systemd-machine-id-setup creates." }
     tags: [machine-id, d-bus]
 
   - id: 101-102.6-0007
@@ -189,39 +195,45 @@ questions:
     difficulty: 4
     pool: holdout
     stem: >
-      The guest `web01` has been running for weeks. Based on the output below, why does its disk image
-      take up only 3.1 GB on the host while the guest sees a 40 GB disk?
+      The guest `web01` has been running for weeks. Based on the output below, which statement best
+      explains how its disk image is stored on the host?
     exhibit: |
-      host$ ls -lh /var/lib/libvirt/images/web01.img
-      -rw------- 1 root root 3.1G Oct 20 09:12 /var/lib/libvirt/images/web01.img
-      web01$ lsblk /dev/vda
-      NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
-      vda    252:0    0   40G  0 disk
-      ├─vda1 252:1    0    1G  0 part /boot
-      └─vda2 252:2    0   39G  0 part /
+      host$ du -h --apparent-size /var/lib/libvirt/images/web01.img
+      3.1G	/var/lib/libvirt/images/web01.img
+      host$ du -h /var/lib/libvirt/images/web01.img
+      3.1G	/var/lib/libvirt/images/web01.img
+      web01$ lsblk -o NAME,SIZE,TYPE,MOUNTPOINTS /dev/vda
+      NAME   SIZE TYPE MOUNTPOINTS
+      vda     40G disk
+      ├─vda1   1G part /boot
+      └─vda2  39G part /
     options:
       - id: a
         text: The guest's partitions only cover 3.1 GB of its disk.
-        rationale: Wrong. lsblk shows vda1 and vda2 together covering the full 40 GB.
+        rationale: Wrong. lsblk shows vda1 and vda2 together covering the full 40 GB disk.
       - id: b
-        text: The image is a raw file with all its space preallocated.
-        rationale: Wrong. A raw image always shows its full 40 GB size in ls -l; preallocated, it also uses 40 GB on the host.
+        text: The image is a sparse raw file whose unused blocks are not allocated.
+        rationale: Wrong. A raw file's size always equals the virtual disk size, so its apparent size would be 40G; only du (allocated space) would be smaller.
       - id: c
         text: The image is thin-provisioned and grows as data is written.
-        rationale: Correct. A copy-on-write format such as qcow2 has a fixed upper limit but only uses host space for data actually written.
+        rationale: Correct. A copy-on-write format such as qcow2 has a fixed upper limit but its file only grows as the guest writes data.
       - id: d
-        text: The hypervisor keeps the rest of the guest's disk in host RAM.
-        rationale: Wrong. Guest disk contents are stored in the image file; host RAM is not used as backing for unwritten disk space.
+        text: The image is a raw file with all its space preallocated.
+        rationale: Wrong. A preallocated raw image would show 40G both as its apparent size and in du.
     answer: [c]
     explanation: >
       Copy-on-write (thin-provisioned) images, such as QEMU's qcow2, present their full virtual size to
-      the guest but start small and grow as the guest writes data. Raw images take their full size up
-      front, which avoids the cost of growing the file during writes.
+      the guest but start small and grow as the guest writes data, so `ls -l` shows only what has been
+      written. A raw image's file size always equals the virtual disk size; whether it also uses that
+      much host space depends on preallocation (a fully preallocated raw image does, and avoids the
+      cost of growing the file during writes; a sparse raw image shows the full size in `ls -l` but
+      less in `du`).
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.6", lesson: 1, section: Example Virtual Machine Disk Storage }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Explanation was false (default raw images are sparse); replaced. Exhibit reshaped to du --apparent-size / du / lsblk (was close to the lesson's ls -lh vs lsblk); options reworked: sparse raw and preallocated raw distractors. Checked with qemu-img create: raw 40G = 40G apparent / 4K du, qcow2 = 193K / 196K. Needs re-check." }
     tags: [disk-image, qcow2, thin-provisioning]
 
   - id: 101-102.6-0008
@@ -255,9 +267,10 @@ questions:
       stay the same.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.6", lesson: 1, section: Working with Virtual Machine Templates }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [template, clone, machine-id, ssh-host-keys]
 
   - id: 101-102.6-0009
@@ -297,9 +310,10 @@ questions:
       /etc/machine-id) before generating the new ID.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.6", lesson: 1, section: The D-Bus Machine ID }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Scenario rewritten: systemd-machine-id-setup (systemd 255) copies a regular-file /var/lib/dbus/machine-id, so the original exhibit (new ID in /etc, old ID in D-Bus) could not happen. Reproduced with --root in a temp dir." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. Reproduced with systemd-machine-id-setup --root on systemd 255." }
     tags: [machine-id, d-bus, systemd-machine-id-setup, troubleshooting]
 
   - id: 101-102.6-0010
@@ -307,7 +321,7 @@ questions:
     difficulty: 5
     pool: holdout
     stem: >
-      Your servers were cloned from one template and share SSH host keys. On one clone you have
+      Your servers were cloned from one template and share SSH host keys. On the clone `web02` you have
       deleted `/etc/ssh/ssh_host_*`. Which command, run as root, creates new host keys of every
       default type in `/etc/ssh`?
     options:
@@ -331,9 +345,10 @@ questions:
       the old key will warn that the host identification changed.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.6", lesson: 1, section: Working with Virtual Machine Templates }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Stem names the clone web02, matching the hostnames in the options. ssh-keygen -A tested." }
     tags: [ssh-host-keys, ssh-keygen, clone]
 
   # --------------------------------------------------------------------------- practice (CLI)
@@ -362,9 +377,10 @@ questions:
       Type-1 (bare-metal) hypervisors manage the hardware themselves.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.6", lesson: 1, section: Virtualization Overview }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [hypervisor, virtualbox, type-2]
 
   - id: 101-102.6-0012
@@ -393,9 +409,10 @@ questions:
       priced by size and speed) and networking (subnets, routes, firewalls, DNS, VPN links).
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.6", lesson: 1, section: Deploying Virtual Machines to the Cloud }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [iaas, block-storage]
 
   - id: 101-102.6-0013
@@ -424,9 +441,10 @@ questions:
       host kernel and are isolated with namespaces and cgroups.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.6", lesson: 1, section: Containers }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [container, cgroups, application-container, linux-container]
 
   - id: 101-102.6-0014
@@ -446,9 +464,10 @@ questions:
       such as hostname, users, packages and timezone.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.6", lesson: 1, section: Preconfiguring Cloud Systems }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [cloud-init, cloud-config]
 
   - id: 101-102.6-0015
@@ -478,7 +497,8 @@ questions:
       exit status.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.6", lesson: 1, section: Containers }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [systemd-detect-virt, container]
