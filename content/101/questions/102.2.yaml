@@ -34,9 +34,10 @@ questions:
       the right place to look but not the right place to edit.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: Configuring GRUB 2 }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [grub2, grub.cfg]
 
   - id: 101-102.2-0002
@@ -64,9 +65,10 @@ questions:
       still meet GRUB Legacy on old machines, which is why the exam covers both.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: GRUB Legacy vs. GRUB 2 }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [grub-legacy, grub2]
 
   - id: 101-102.2-0003
@@ -96,9 +98,10 @@ questions:
       configuration from /boot/grub.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: "Where is the Bootloader?" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Correct option shortened so it is no longer the longest." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [mbr, bios]
 
   - id: 101-102.2-0004
@@ -128,9 +131,10 @@ questions:
       (build configuration). A GRUB entry loads the first two.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: Contents of the Boot Partition }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [boot-partition, vmlinuz]
 
   - id: 101-102.2-0005
@@ -161,9 +165,10 @@ questions:
       placed there end up in every regenerated grub.cfg.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: Managing Menu Entries }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Correct option shortened so it is no longer the longest." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [grub2, grub.d, 40_custom]
 
   - id: 101-102.2-0006
@@ -183,9 +188,10 @@ questions:
       `menuentry "<text>" { ... }` block instead.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: Configuring GRUB Legacy Menu Entries and Settings }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [grub-legacy, menu.lst]
 
   - id: 101-102.2-0007
@@ -213,9 +219,10 @@ questions:
       partition is (hd0,1) there.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: Configuring GRUB Legacy Menu Entries and Settings }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [grub-legacy, device-naming]
 
   - id: 101-102.2-0008
@@ -246,9 +253,10 @@ questions:
       generator step. GRUB 2 uses a generated grub.cfg instead.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: Configuring GRUB Legacy Menu Entries and Settings }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [grub-legacy, menu.lst, grub.conf]
 
   - id: 101-102.2-0009
@@ -279,9 +287,10 @@ questions:
       update-grub only produce grub.cfg.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: Installing GRUB 2 }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. update-grub/grub-mkconfig behaviour checked in the scripts." }
     tags: [grub-install, mbr]
 
   - id: 101-102.2-0010
@@ -291,10 +300,10 @@ questions:
     stem: >
       You booted a broken BIOS machine from a live USB stick and mounted its separate boot
       partition on `/mnt/target`. By default `grub-install` would copy GRUB's files into the live
-      system's own `/boot/grub`. Type the `grub-install` long option that makes it use the mounted
+      system's own `/boot/grub`. Type the GRUB 2 `grub-install` long option that makes it use the mounted
       boot partition instead (you may include its value).
     fill_in:
-      accepted: ['((sudo\s+)?((/usr)?/s?bin/)?grub2?-install\s+)?--boot-directory((=|\s+)(?!-|/dev/)\S+(\s+/dev/\S+)?)?']
+      accepted: ['((sudo\s+)?((/usr)?/s?bin/)?grub2?-install\s+(/dev/\S+\s+)?)?--boot-directory((=|\s+)/mnt/target/?(\s+/dev/\S+)?)?']
       match: regex
       case_sensitive: true
     explanation: >
@@ -303,9 +312,10 @@ questions:
       /dev/sda. Without the option, files go to the running system's /boot/grub.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: Installing GRUB 2 }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Regex tightened: a device argument is only accepted after a directory value, so '--boot-directory /dev/sda' is rejected." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Regex now only accepts /mnt/target as the value and allows device-first order; stem says GRUB 2 grub-install." }
     tags: [grub-install, rescue]
 
   - id: 101-102.2-0011
@@ -336,9 +346,10 @@ questions:
       is why generated entries usually locate the filesystem by UUID instead.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: Managing Menu Entries }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [grub2, device-naming]
 
   - id: 101-102.2-0012
@@ -369,9 +380,10 @@ questions:
       (--label) or a file it contains. The kernel's own `root=` parameter is a separate thing.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: Managing Menu Entries }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. Commands checked against GRUB 2 command.lst and the GRUB Legacy manual." }
     tags: [grub2, search, uuid]
 
   - id: 101-102.2-0013
@@ -400,9 +412,10 @@ questions:
       that contain that file; you then pass the result to `root` and install with `setup`.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: Installing GRUB Legacy from a GRUB Shell }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. Commands checked against GRUB 2 command.lst and the GRUB Legacy manual." }
     tags: [grub-legacy, grub-shell]
 
   - id: 101-102.2-0014
@@ -437,9 +450,10 @@ questions:
       root=/dev/sda3 use Linux names and are copied unchanged.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: Configuring GRUB Legacy Menu Entries and Settings }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [grub-legacy, grub2, device-naming, menuentry]
 
   - id: 101-102.2-0015
@@ -475,9 +489,10 @@ questions:
       GRUB 2 uses the same `chainloader +1` command.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: Chainloading other Operating Systems }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [grub-legacy, chainloading]
 
   - id: 101-102.2-0016
@@ -506,9 +521,10 @@ questions:
       firmware loads grubx64.efi (grubia32.efi on 32-bit) from the EFI System Partition.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: "Where is the Bootloader?" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. Embedding message confirmed in grub-install." }
     tags: [grub2, mbr, gpt, uefi]
 
   - id: 101-102.2-0017
@@ -519,7 +535,7 @@ questions:
       At the GRUB 2 `grub>` prompt, `ls` printed `(proc) (hd0) (hd0,gpt1) (hd0,gpt2)`. Type the
       command that lists the files and directories at the top of the second partition.
     fill_in:
-      accepted: ['ls(\s+-[lha]+)*\s+\(hd0,(gpt)?2\)/']
+      accepted: ['ls(\s+(-[lha]+|--(long|human-readable|all)))*\s+\(hd0,(gpt)?2\)/']
       match: regex
       case_sensitive: true
     explanation: >
@@ -528,9 +544,10 @@ questions:
       partition, such as its filesystem type and UUID. (hd0,2) without the gpt prefix also works.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: Booting from the GRUB 2 Shell }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Regex also accepts the long ls options --long, --human-readable and --all." }
     tags: [grub2, grub-shell]
 
   - id: 101-102.2-0018
@@ -538,8 +555,9 @@ questions:
     difficulty: 5
     pool: holdout
     stem: >
-      A BIOS machine stops at the `grub rescue>` prompt. `ls` shows `(hd0) (hd0,msdos1)`; the root
-      filesystem is `/dev/sda1`, and the kernel and initrd are `/boot/vmlinuz` and
+      A BIOS machine stops at the `grub rescue>` prompt because its embedded prefix points to a
+      partition that no longer exists. `ls` shows `(hd0) (hd0,msdos1)`; the root filesystem is
+      `/dev/sda1`, and the kernel and initrd are `/boot/vmlinuz` and
       `/boot/initrd.img` on it. Which sequence of commands boots the system?
     options:
       - id: a
@@ -561,9 +579,10 @@ questions:
       (with a Linux root= parameter), initrd and boot, in that order.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: Booting from the Rescue Shell }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Stem now states why the rescue prompt appears (prefix points to a partition that no longer exists)." }
     tags: [grub2, grub-rescue]
 
   - id: 101-102.2-0019
@@ -601,9 +620,10 @@ questions:
       write that partition's boot sector instead.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: Installing GRUB Legacy from a GRUB Shell }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. Judged original: tests reading find output, not the lesson's recipe." }
     tags: [grub-legacy, grub-shell, setup]
 
   - id: 101-102.2-0020
@@ -646,9 +666,10 @@ questions:
       `chmod +x /etc/grub.d/45_backup` and another update-grub fix it.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: Managing Menu Entries }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. test -x gate confirmed in grub-mkconfig." }
     tags: [grub2, grub.d, update-grub]
 
   # --------------------------------------------------------------------------- practice (CLI)
@@ -677,9 +698,10 @@ questions:
       starts the kernel. GRUB can also offer several kernels or operating systems in a menu.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: Introduction }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Correct option shortened so it is no longer the longest." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [boot-loader]
 
   - id: 101-102.2-0022
@@ -687,8 +709,8 @@ questions:
     difficulty: 1
     pool: practice
     stem: >
-      The GRUB 2 menu is on screen and you want a prompt where you can type commands such as `ls`.
-      Which key do you press?
+      A server's GRUB 2 menu is on screen. Before choosing an entry, you want to run `ls` to see
+      which disks and partitions GRUB can find. Which key do you press?
     options:
       - id: a
         text: "`e`"
@@ -708,9 +730,10 @@ questions:
       same key works in GRUB Legacy. Esc returns to the menu.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: Interacting with GRUB 2 }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Stem reworded away from the lesson exercise; options unchanged." }
     tags: [grub2, grub-shell]
 
   - id: 101-102.2-0023
@@ -729,9 +752,10 @@ questions:
       is implied at the end of the block; at the prompt you type it yourself.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: Booting from the GRUB 2 Shell }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [grub2, grub-shell]
 
   - id: 101-102.2-0024
@@ -760,9 +784,10 @@ questions:
       variables) with their memory addresses, which helps make sense of a panic or oops.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: Contents of the Boot Partition }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [boot-partition, System.map]
 
   - id: 101-102.2-0025
@@ -793,9 +818,10 @@ questions:
       or an unsupported filesystem or compression.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: The /boot Partition }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [boot-partition]
 
   - id: 101-102.2-0026
@@ -825,9 +851,10 @@ questions:
       default for the next boot.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: Configuring GRUB 2 }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Distractor d lengthened so the correct option is no longer the longest." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [grub2, GRUB_DEFAULT]
 
   - id: 101-102.2-0027
@@ -854,9 +881,10 @@ questions:
       Disks count from 0 and partitions from 1, so (hd0,gpt2) is usually /dev/sda2.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: Booting from the GRUB 2 Shell }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [grub2, device-naming, gpt]
 
   - id: 101-102.2-0028
@@ -877,9 +905,10 @@ questions:
       documents spell the command `chainload`, but GRUB's command is `chainloader`.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: Chainloading other Operating Systems }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. Commands checked against GRUB 2 command.lst and the GRUB Legacy manual." }
     tags: [chainloading, grub-legacy, grub2]
 
   - id: 101-102.2-0029
@@ -913,9 +942,10 @@ questions:
       then load the initrd and run boot.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: Booting from the GRUB 2 Shell }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [grub2, grub-shell, device-naming]
 
   - id: 101-102.2-0030
@@ -944,7 +974,8 @@ questions:
       is a separate step done with grub-mkconfig or update-grub.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: Installing GRUB 2 }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [grub-install]
