@@ -30,9 +30,10 @@ questions:
       name, not a file name, and refuses if other installed packages still depend on it.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: "Installing, Upgrading and Removing Packages" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [rpm, rpm-e]
 
   - id: 101-102.5-0002
@@ -62,9 +63,10 @@ questions:
       enabled= and gpgcheck=.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Managing Software Repositories }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [yum, yum.repos.d]
 
   - id: 101-102.5-0003
@@ -93,9 +95,10 @@ questions:
       their dependencies from configured repositories, much like yum/dnf on Red Hat systems.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Zypper }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked. Checked against dnf4/dnf5/zypper docs and source." }
     tags: [zypper]
 
   - id: 101-102.5-0004
@@ -122,9 +125,10 @@ questions:
       name-version-release.arch string per package, often piped to grep to look for one package.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Listing Installed Packages }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Removed a verify block that needed the rpm package, which stock debian:stable-slim lacks." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [rpm, rpm-qa]
 
   - id: 101-102.5-0005
@@ -152,9 +156,10 @@ questions:
       same way, and repositories are still defined in /etc/yum.repos.d/.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: DNF }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked. Checked against dnf4/dnf5/zypper docs and source." }
     tags: [dnf, yum]
 
   - id: 101-102.5-0006
@@ -184,9 +189,10 @@ questions:
       example, belongs to bind-utils). If no package owns the file, rpm says so.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Finding Out Which Package Owns a Specific File }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked. Tested with rpm 4.18 in a private --root." }
     tags: [rpm, rpm-qf]
 
   - id: 101-102.5-0007
@@ -215,9 +221,10 @@ questions:
       package needed and installs them in one transaction, asking for confirmation first.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: YellowDog Updater Modified (YUM) }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [yum, install]
 
   - id: 101-102.5-0008
@@ -225,8 +232,8 @@ questions:
     difficulty: 2
     pool: holdout
     stem: >
-      On openSUSE, which command downloads the current metadata for all enabled repositories, so
-      that zypper knows about the latest package versions?
+      Which command makes zypper download fresh repository metadata now, so newly published
+      packages become visible?
     options:
       - id: a
         text: "`zypper refresh`"
@@ -247,9 +254,10 @@ questions:
       Repositories with auto-refresh turned on are also refreshed automatically before use.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Updating the Package Index }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Stem reworded away from the lesson's wording." }
     tags: [zypper, refresh]
 
   - id: 101-102.5-0009
@@ -258,7 +266,7 @@ questions:
     pool: holdout
     stem: >
       A CentOS user needs a program to convert HEIC photos but does not know which package provides
-      one. Which command lists packages whose name or summary contains `heic`?
+      one. Which command searches the repositories for `heic` in package names and summaries?
     options:
       - id: a
         text: "`yum info heic`"
@@ -279,9 +287,10 @@ questions:
       descriptions and URLs.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Searching for Packages }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Stem reworded away from the lesson's wording." }
     tags: [yum, search]
 
   - id: 101-102.5-0010
@@ -315,9 +324,10 @@ questions:
       an update. rpm alone only works with package files you already have.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: "Installing, Upgrading and Removing Packages" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked. Tested with rpm 4.18 in a private --root." }
     tags: [yum, zypper, update]
 
   - id: 101-102.5-0011
@@ -347,9 +357,10 @@ questions:
       package file that is not installed.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Getting Package Information }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [rpm, rpm-qi]
 
   - id: 101-102.5-0012
@@ -380,9 +391,10 @@ questions:
       not to confuse zypper's package commands with its repository commands (ar, rr, mr, lr).
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: "Installing, Upgrading and Removing Packages" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked. Checked against dnf4/dnf5/zypper docs and source." }
     tags: [yum, zypper, remove]
 
   - id: 101-102.5-0013
@@ -412,9 +424,10 @@ questions:
       cache lives under /var/cache/dnf instead.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Managing Software Repositories }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [yum, clean]
 
   - id: 101-102.5-0014
@@ -444,9 +457,10 @@ questions:
       verbose output and hash-mark progress bars to either one.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: "Installing, Upgrading and Removing Packages" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked. Tested with rpm 4.18 in a private --root." }
     tags: [rpm, rpm-F, rpm-U]
 
   - id: 101-102.5-0015
@@ -475,9 +489,10 @@ questions:
       add the dependent packages to the removal and show you the list before going ahead.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: "Installing, Upgrading and Removing Packages" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked. Checked against dnf4/dnf5/zypper docs and source." }
     tags: [rpm, zypper, yum, remove]
 
   - id: 101-102.5-0016
@@ -507,9 +522,10 @@ questions:
       database.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: DNF }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked. Checked against dnf4/dnf5/zypper docs and source." }
     tags: [dnf, repoquery]
 
   - id: 101-102.5-0017
@@ -543,9 +559,10 @@ questions:
       --add-repo fetch and save it.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Managing Software Repositories }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [yum, yum.repos.d, yum-config-manager]
 
   - id: 101-102.5-0018
@@ -553,10 +570,10 @@ questions:
     difficulty: 3
     pool: holdout
     stem: >
-      On openSUSE, type the `zypper` command that shows which package updates are available,
-      without installing anything.
+      On openSUSE, type the `zypper` command that reports pending package updates but changes
+      nothing.
     fill_in:
-      accepted: ['((sudo\s+)?((/usr)?/bin/)?zypper\s+)?(list-updates|lu)(\s+(-a|--all))?']
+      accepted: ['(sudo\s+)?((/usr)?/bin/)?zypper\s+(list-updates|lu)(\s+(-a|--all))?']
       match: regex
       case_sensitive: true
     explanation: >
@@ -564,9 +581,10 @@ questions:
       `-a` also lists newer versions that cannot be installed right now.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: "Installing, Upgrading and Removing Packages" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Bare-subcommand form no longer accepted (full zypper command required); stem reworded." }
     tags: [zypper, list-updates]
 
   - id: 101-102.5-0019
@@ -578,7 +596,7 @@ questions:
       Type the complete `rpm` command that lists the files this package file contains.
     fill_in:
       accepted:
-        - '(sudo\s+)?((/usr)?/bin/)?rpm\s+(?=(?:(?:-[qlp]+|--query|--list|--package)\s+)*(?:-[lp]*q[qlp]*|--query)\s)(?=(?:(?:-[qlp]+|--query|--list|--package)\s+)*(?:-[qp]*l[qlp]*|--list)\s)(?=(?:(?:-[qlp]+|--query|--list|--package)\s+)*(?:-[ql]*p[qlp]*|--package)\s)(?:(?:-[qlp]+|--query|--list|--package)\s+){1,3}(\./)?tmux-3\.3a-3\.el9\.x86_64\.rpm'
+        - '(sudo\s+)?((/usr)?/bin/)?rpm\s+(?=(?:(?:-[qlpv]+|--query|--list|--package)\s+)*(?:-[lp]*q[qlpv]*|--query)\s)(?=(?:(?:-[qlpv]+|--query|--list|--package)\s+)*(?:-[qp]*l[qlpv]*|--list)\s)(?=(?:(?:-[qlpv]+|--query|--list|--package)\s+)*(?:-[ql]*p[qlpv]*|--package)\s)(?:(?:-[qlpv]+|--query|--list|--package)\s+){1,3}(\./)?tmux-3\.3a-3\.el9\.x86_64\.rpm'
       match: regex
       case_sensitive: true
     explanation: >
@@ -586,9 +604,10 @@ questions:
       `rpm -qlp tmux-3.3a-3.el9.x86_64.rpm`. The letters can be given in any order or separately.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Getting Package Information }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Regex rewritten: the first version rejected clustered forms such as -qlp and -qpl." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Regex now also accepts v in the option cluster (e.g. rpm -qlpv FILE)." }
     tags: [rpm, rpm-qlp]
 
   - id: 101-102.5-0020
@@ -620,9 +639,10 @@ questions:
       marks a configuration file, where local edits are normal.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: The RPM Package Manager (rpm) }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked. Tested with rpm 4.18 in a private --root." }
     tags: [rpm, rpm-V, integrity]
 
   - id: 101-102.5-0021
@@ -630,36 +650,40 @@ questions:
     difficulty: 4
     pool: holdout
     stem: >
-      On a CentOS 7 host, `yum repolist all` prints the output in the exhibit. Which command
-      disables the Extras repository permanently?
+      A CentOS 7 host has the file `/etc/yum.repos.d/acme.repo` shown in the exhibit. Which command
+      disables this repository permanently?
     exhibit: |
-      repo id                    repo name                    status
-      base/7/x86_64              CentOS-7 - Base              enabled: 10,072
-      extras/7/x86_64            CentOS-7 - Extras            enabled:    518
-      centosplus/7/x86_64        CentOS-7 - Plus              disabled
+      [acme-stable]
+      name=ACME Monitoring Agents
+      baseurl=https://pkgs.acme.example/el7/stable/
+      enabled=1
+      gpgcheck=1
+      gpgkey=https://pkgs.acme.example/RPM-GPG-KEY-acme
     options:
       - id: a
-        text: "`yum-config-manager --disable extras`"
-        rationale: Correct. The repo id is the part before the first slash, and yum-config-manager saves the change to its .repo file.
+        text: "`yum-config-manager --disable acme-stable`"
+        rationale: Correct. The repo id is the [section] name, and yum-config-manager writes enabled=0 for that id into the .repo file.
       - id: b
-        text: "`yum-config-manager --disable extras/7/x86_64`"
-        rationale: Wrong. The /7/x86_64 suffix is the release and architecture yum adds to the display; it is not part of the id.
+        text: "`yum-config-manager --disable 'ACME Monitoring Agents'`"
+        rationale: Wrong. name= is only a human-readable description; yum-config-manager selects repositories by id.
       - id: c
-        text: "`yum repolist disabled extras`"
-        rationale: Wrong. repolist only displays repositories; it changes nothing.
+        text: "`yum-config-manager --disable acme`"
+        rationale: Wrong. acme is the file name, not a repo id, so no repository matches it.
       - id: d
-        text: "`yum --disablerepo=extras update`"
+        text: "`yum --disablerepo=acme-stable update`"
         rationale: Wrong. --disablerepo affects only that one yum run; the repository stays enabled in its .repo file.
     answer: [a]
     explanation: >
-      yum shows repo ids with $releasever/$basearch appended. Configuration commands take the plain
-      id, which is the [section] name in the .repo file. yum-config-manager --disable sets
-      enabled=0 there, so the change survives future runs.
+      In a .repo file the text in square brackets is the repository id; name= is a description and
+      the file name is irrelevant (one file may hold several repositories). Commands such as
+      yum-config-manager --enable/--disable and --enablerepo/--disablerepo take the id.
+      yum-config-manager --disable saves enabled=0, so the change survives future runs.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Managing Software Repositories }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Needs re-check. Exhibit changed to a .repo file whose [section] id differs from its name= line and file name; same tested fact (yum-config-manager takes repo ids)." }
     tags: [yum, yum-config-manager, repolist]
 
   - id: 101-102.5-0022
@@ -686,7 +710,7 @@ questions:
         text: "Run `yum install ./reportgen-3.4-1.el9.x86_64.rpm`"
         rationale: Correct. yum installs the local file and pulls the missing dependencies from the repositories.
       - id: d
-        text: "Use `yum provides` to find the packages supplying the missing items, install them, then repeat the `rpm -i`"
+        text: "Install the providers found with `yum provides`, then rerun `rpm -i`"
         rationale: Correct. Once the providing packages are installed, rpm's dependency check passes.
       - id: e
         text: "Run `rpm -qpR reportgen-3.4-1.el9.x86_64.rpm`"
@@ -698,9 +722,10 @@ questions:
       with yum provides (whatprovides) and install them before retrying rpm.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Dealing with Dependencies }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Option d shortened; it was the longest option and a giveaway." }
     tags: [rpm, yum, dependencies]
 
   - id: 101-102.5-0023
@@ -712,7 +737,7 @@ questions:
       package `chrony`.
     fill_in:
       accepted:
-        - '(sudo\s+)?((/usr)?/bin/)?rpm\s+(-qc|-cq|-q\s+-c|-c\s+-q|(-q|--query)\s+--configfiles|--configfiles\s+(-q|--query)|--query\s+-c)\s+chrony'
+        - '(sudo\s+)?((/usr)?/bin/)?rpm\s+(-qcv?|-cqv?|-q\s+-c|-c\s+-q|(-q|--query)\s+--configfiles|--configfiles\s+(-q|--query)|--query\s+-c|-c\s+--query)\s+chrony'
       match: regex
       case_sensitive: true
     explanation: >
@@ -721,9 +746,10 @@ questions:
       same for documentation files.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Getting Package Information }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Regex also accepts -qcv/-cqv and -c --query." }
     tags: [rpm, rpm-qc]
 
   - id: 101-102.5-0024
@@ -744,9 +770,10 @@ questions:
       refreshes that repository's metadata before using it.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Managing Software Repositories }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Dropped the accepted form with the option after the alias; zypper argument order could not be tested here." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked. Checked against dnf4/dnf5/zypper docs and source." }
     tags: [zypper, modifyrepo]
 
   - id: 101-102.5-0025
@@ -780,9 +807,10 @@ questions:
       broken system.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: "Installing, Upgrading and Removing Packages" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked. Tested with rpm 4.18 in a private --root." }
     tags: [rpm, rpm-e, dependencies]
 
   - id: 101-102.5-0026
@@ -795,7 +823,7 @@ questions:
       directory, creating subdirectories as needed.
     fill_in:
       accepted:
-        - '(sudo\s+)?((/usr)?/bin/)?rpm2cpio\s+(<\s*)?(\./)?tree-2\.1\.0-1\.x86_64\.rpm\s*\|\s*(sudo\s+)?((/usr)?/bin/)?cpio(?=(?:\s+(?:-[idmvu]+|--extract|--make-directories|--preserve-modification-time|--verbose|--unconditional))+\s*$)(?=.*(?:\s-[dmvu]*i|\s--extract))(?=.*(?:\s-[imvu]*d|\s--make-directories))(?:\s+(?:-[idmvu]+|--extract|--make-directories|--preserve-modification-time|--verbose|--unconditional))+'
+        - '(sudo\s+)?((/usr)?/bin/)?rpm2cpio\s+(<\s*)?(\./)?tree-2\.1\.0-1\.x86_64\.rpm\s*\|\s*(sudo\s+)?((/usr)?/bin/)?cpio(?=(?:\s+(?:-[idmvu]+|--extract|--make-directories|--preserve-modification-time|--verbose|--unconditional|--quiet|--no-absolute-filenames))+\s*$)(?=.*(?:\s-[dmvu]*i|\s--extract))(?=.*(?:\s-[imvu]*d|\s--make-directories))(?:\s+(?:-[idmvu]+|--extract|--make-directories|--preserve-modification-time|--verbose|--unconditional|--quiet|--no-absolute-filenames))+'
       match: regex
       case_sensitive: true
     explanation: >
@@ -805,9 +833,10 @@ questions:
       current directory.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: The RPM Package Manager (rpm) }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "cpio alternations also accept --quiet and --no-absolute-filenames." }
     tags: [rpm2cpio, cpio]
 
   - id: 101-102.5-0027
@@ -841,9 +870,10 @@ questions:
       Checking --whatrequires before a removal shows what would break.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Dealing with Dependencies }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked. Checked against dnf4/dnf5/zypper docs and source." }
     tags: [rpm, dnf, dependencies, whatrequires]
 
   - id: 101-102.5-0028
@@ -874,9 +904,10 @@ questions:
       by --force). The high-level tools offer the same through `yum downgrade` / `dnf downgrade`.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: "Installing, Upgrading and Removing Packages" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked. Tested with rpm 4.18 in a private --root." }
     tags: [rpm, rpm-U, oldpackage]
 
   - id: 101-102.5-0029
@@ -907,9 +938,10 @@ questions:
       rpm --import. `rpm -V` is the opposite check: installed files against the database.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Getting Package Information }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Option a rationale reworded: rpm -qp does warn about bad/unknown signatures, so it no longer claims it reports nothing." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [rpm, rpm-K, signatures, integrity]
 
   - id: 101-102.5-0030
@@ -947,9 +979,10 @@ questions:
       `--enablerepo=internal-tools` for a single command.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Managing Software Repositories }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [yum, yum.repos.d, repo-file]
 
   # --------------------------------------------------------------------------- practice (CLI)
@@ -978,9 +1011,10 @@ questions:
       progress bar. -U and -F are the upgrade modes.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: "Installing, Upgrading and Removing Packages" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [rpm, rpm-i]
 
   - id: 101-102.5-0032
@@ -1007,9 +1041,10 @@ questions:
       lu (list-updates), ref (refresh), lr (repos), ar/rr/mr for repository management.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Zypper }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Option d rationale no longer claims zypper lacks any file-listing feature." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked. Checked against dnf4/dnf5/zypper docs and source." }
     tags: [zypper, install]
 
   - id: 101-102.5-0033
@@ -1040,9 +1075,10 @@ questions:
       appended to /etc/yum.conf. dnf uses the same .repo directory.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Managing Software Repositories }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [yum, yum.conf, yum.repos.d]
 
   - id: 101-102.5-0034
@@ -1050,7 +1086,8 @@ questions:
     difficulty: 1
     pool: practice
     stem: >
-      Which yum command shows a package's version, architecture, size, repository and description?
+      You want a package's size, origin repository and full description before installing it.
+      Which yum command shows them?
     options:
       - id: a
         text: "`yum search`"
@@ -1070,9 +1107,10 @@ questions:
       installed or only available in a repository.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Getting Information About a Package }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Stem reworded away from the lesson's wording." }
     tags: [yum, info]
 
   - id: 101-102.5-0035
@@ -1101,9 +1139,10 @@ questions:
       used with mr (modifyrepo), rr (removerepo) and ref (refresh).
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Managing Software Repositories }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked. Checked against dnf4/dnf5/zypper docs and source." }
     tags: [zypper, repos]
 
   - id: 101-102.5-0036
@@ -1136,9 +1175,10 @@ questions:
       the package files you give it, after checking that their dependencies are already present.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Dealing with Dependencies }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked. Checked against dnf4/dnf5/zypper docs and source." }
     tags: [dnf, zypper, install]
 
   - id: 101-102.5-0037
@@ -1147,7 +1187,7 @@ questions:
     pool: practice
     stem: Type the complete `rpm` command that removes the installed package `tftp`.
     fill_in:
-      accepted: ['(sudo\s+)?((/usr)?/bin/)?rpm\s+((-ev*|-v+e|--erase)(\s+-v+)?|-v+\s+(-e|--erase))\s+tftp']
+      accepted: ['(sudo\s+)?((/usr)?/bin/)?rpm\s+((-e[vh]*|-[vh]+e[vh]*|--erase)(\s+-[vh]+)?|-[vh]+\s+(-e|--erase))\s+tftp']
       match: regex
       case_sensitive: true
     explanation: >
@@ -1155,9 +1195,10 @@ questions:
       It fails if other installed packages depend on it.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: "Installing, Upgrading and Removing Packages" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Regex also accepts h with v in the option cluster (e.g. -evh, -vh -e)." }
     tags: [rpm, rpm-e]
 
   - id: 101-102.5-0038
@@ -1184,9 +1225,10 @@ questions:
       --all shows both.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Managing Software Repositories }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked. Checked against dnf4/dnf5/zypper docs and source." }
     tags: [dnf, repolist]
 
   - id: 101-102.5-0039
@@ -1215,9 +1257,10 @@ questions:
       disabled and -f turns auto-refresh on. Later, `zypper mr -e nightly` enables it.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Adding and Removing Repositories }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked. Checked against dnf4/dnf5/zypper docs and source." }
     tags: [zypper, addrepo]
 
   - id: 101-102.5-0040
@@ -1245,9 +1288,10 @@ questions:
       options can be grouped, so -Uvh is the same as -U -v -h.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: "Installing, Upgrading and Removing Packages" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Option d rationale no longer uses a literal hash sign, which YAML parsed as a comment." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [rpm, rpm-U]
 
   - id: 101-102.5-0041
@@ -1262,13 +1306,15 @@ questions:
       match: regex
       case_sensitive: true
     explanation: >
-      `yum repolist` alone shows only enabled repositories. Add `all` (dnf also accepts `--all`) to
-      include disabled ones, with a status column for each.
+      `yum repolist` alone shows only enabled repositories. `yum repolist all` includes disabled
+      ones on yum 3 and dnf 4; dnf 4 and dnf 5 also accept `--all`, and dnf 5 accepts only that
+      form.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Managing Software Repositories }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Explanation corrected: dnf 5 takes only --all, not a positional all." }
     tags: [yum, repolist]
 
   - id: 101-102.5-0042
@@ -1285,7 +1331,7 @@ questions:
     options:
       - id: a
         text: gimp-help is installed, but an older version
-        rationale: Wrong. An empty status means the package is not installed; a different installed version would show v.
+        rationale: Wrong. An empty status means no version of gimp-help is installed; in this summary view any installed version would show i or i+.
       - id: b
         text: gimp was requested by a user; gimp-lang came in automatically
         rationale: Correct. i+ marks a package installed on request, i one installed automatically by the resolver.
@@ -1298,13 +1344,15 @@ questions:
     answer: [b]
     explanation: >
       The S column of zypper search shows i+ (installed by user request), i (installed
-      automatically as a dependency), v (another version installed) or nothing (not installed).
-      `zypper se -i` limits the output to installed packages and `-u` to packages not installed.
+      automatically as a dependency) or nothing (not installed); the detailed view (`zypper se -s`)
+      can also show v when a different version is installed. `zypper se -i` limits the output to
+      installed packages and `-u` to packages not installed.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Searching for Packages }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Option a rationale and explanation corrected: v appears only in the detailed view (se -s)." }
     tags: [zypper, search]
 
   - id: 101-102.5-0043
@@ -1333,9 +1381,10 @@ questions:
       including "is needed by (installed) ..." lines, without touching the system.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: "Installing, Upgrading and Removing Packages" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked. Tested with rpm 4.18 in a private --root." }
     tags: [rpm, rpm-e, dependencies]
 
   - id: 101-102.5-0044
@@ -1366,9 +1415,10 @@ questions:
       setting for good.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Managing Software Repositories }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [yum, enablerepo]
 
   - id: 101-102.5-0045
@@ -1397,7 +1447,8 @@ questions:
       the head of the output shows what changed most recently.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Listing Installed Packages }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [rpm, rpm-qa]
