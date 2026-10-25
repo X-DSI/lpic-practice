@@ -46,7 +46,9 @@ likely more lenient than the real exam.
    `P` (fraction of questions correct):
    - raw ≤ P: `scaled = 200 + 300 × raw / P`
    - raw > P: `scaled = 500 + 300 × (raw − P) / (1 − P)`
-   - rounded to the nearest integer; `scaled ≥ 500` is shown as a likely pass.
+   - rounded to the nearest integer, except that a result below `P` is capped at 499, so rounding
+     can never show 500 for a score under the pass point (e.g. 37/57 would otherwise round to 500);
+   - `scaled ≥ 500` is shown as a likely pass, which is then always the same as `raw ≥ P`.
 4. **`P = 0.65`**, held as one named constant in the engine. This is our assumption, not LPI's
    number: it sits above the 50% a linear mapping implies and errs towards caution. It can be
    changed in one place if better information appears.

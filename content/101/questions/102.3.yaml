@@ -38,6 +38,7 @@ questions:
       history:
         - { stage: pass1, by: claude, date: "2026-10-25", result: ok }
         - { stage: pass2, by: claude, date: "2026-10-25", result: fixed, notes: "Option order changed so correct answers are spread across positions. verify block passed (Ubuntu 24.04)." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked, no change." }
     tags: [ldd]
 
   - id: 101-102.3-0002
@@ -68,6 +69,7 @@ questions:
       history:
         - { stage: pass1, by: claude, date: "2026-10-25", result: ok }
         - { stage: pass2, by: claude, date: "2026-10-25", result: fixed, notes: "Option order changed so correct answers are spread across positions." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked, no change." }
     tags: [static-library, naming]
 
   - id: 101-102.3-0003
@@ -102,6 +104,7 @@ questions:
       history:
         - { stage: pass1, by: claude, date: "2026-10-25", result: fixed, notes: "Explanation reworded; it was too close to a sentence in the lesson." }
         - { stage: pass2, by: claude, date: "2026-10-25", result: fixed, notes: "Option order changed so correct answers are spread across positions. LD_LIBRARY_PATH vs PATH behaviour reproduced with a test library." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key. Overlaps 0007 in concept; kept because a weight-1 objective puts one question in each mock, so they never appear together." }
     tags: [LD_LIBRARY_PATH]
 
   - id: 101-102.3-0004
@@ -135,6 +138,7 @@ questions:
       history:
         - { stage: pass1, by: claude, date: "2026-10-25", result: ok }
         - { stage: pass2, by: claude, date: "2026-10-25", result: fixed, notes: "Option order changed so correct answers are spread across positions." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked, no change." }
     tags: [ld.so.cache, ldconfig]
 
   - id: 101-102.3-0005
@@ -145,8 +149,8 @@ questions:
       Type the `ldconfig` option that prints the directories and libraries stored in the current
       linker cache.
     fill_in:
-      accepted: ["-p", "--print-cache", "ldconfig -p", "ldconfig --print-cache"]
-      match: normalized
+      accepted: ['((sudo\s+)?((/usr)?/s?bin/)?ldconfig\s+)?(-p|--print-cache)']
+      match: regex
       case_sensitive: true
     explanation: >
       `ldconfig -p` (long form `--print-cache`) lists every library in /etc/ld.so.cache with the path
@@ -160,6 +164,7 @@ questions:
       history:
         - { stage: pass1, by: claude, date: "2026-10-25", result: fixed, notes: "Also accept the full command (ldconfig -p, ldconfig --print-cache)." }
         - { stage: pass2, by: claude, date: "2026-10-25", result: ok, notes: "verify block passed; matching tested: -p, --print-cache, ldconfig -p accepted; -P, -v, ldconfig rejected." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Answered cold, matches key. Accepted forms made consistent with 0013 (sudo, full path, full command); now regex." }
     tags: [ldconfig]
 
   - id: 101-102.3-0006
@@ -192,6 +197,7 @@ questions:
       history:
         - { stage: pass1, by: claude, date: "2026-10-25", result: ok }
         - { stage: pass2, by: claude, date: "2026-10-25", result: fixed, notes: "Option order changed so correct answers are spread across positions." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked, no change." }
     tags: [static-library, shared-library]
 
   - id: 101-102.3-0007
@@ -232,6 +238,7 @@ questions:
       history:
         - { stage: pass1, by: claude, date: "2026-10-25", result: ok }
         - { stage: pass2, by: claude, date: "2026-10-25", result: fixed, notes: "Option order changed so correct answers are spread across positions. Scenario reproduced with a test library: LD_LIBRARY_PATH prefix runs it; PATH and ldconfig -p <dir> do not. Soname link must exist for LD_LIBRARY_PATH to work, as stated in the stem." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; scenario reproduced with a separate test library. Suggested difficulty 3; kept at 4 (interpreting the loader error plus ldd output)." }
     tags: [LD_LIBRARY_PATH, ldd, troubleshooting]
 
   - id: 101-102.3-0008
@@ -271,7 +278,8 @@ questions:
       status: pass2
       history:
         - { stage: pass1, by: claude, date: "2026-10-25", result: fixed, notes: "Explanation corrected: a relative entry is resolved against the current directory, ldconfig still exits 0." }
-        - { stage: pass2, by: claude, date: "2026-10-25", result: fixed, notes: "Option order changed so correct answers are spread across positions. Scenario reproduced: relative entry gives \"Can't stat lib\" only under -v; plain ldconfig exits 0 and the library stays not found." }
+        - { stage: pass2, by: claude, date: "2026-10-25", result: fixed, notes: "Option order changed so correct answers are spread across positions. Scenario reproduced: plain ldconfig exits 0 and the library stays not found." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; scenario reproduced. A relative entry is resolved against ldconfig's working directory; ldconfig exits 0 either way." }
     tags: [ld.so.conf, ldconfig, troubleshooting]
 
   - id: 101-102.3-0009
@@ -279,34 +287,37 @@ questions:
     difficulty: 5
     pool: holdout
     stem: >
-      Which **TWO** commands list the shared libraries that the program `/usr/bin/report` was linked
-      against?
+      `/usr/bin/report` is linked against `libchart.so.2`, and `libchart.so.2` itself needs
+      `libm.so.6`. Which **TWO** commands list only the libraries that `report` was linked against
+      directly, without `libm.so.6`?
     select_count: 2
     options:
       - id: a
         text: "`ldd -u /usr/bin/report`"
-        rationale: Wrong. -u shows only the unused direct dependencies, often nothing at all, not the full list.
+        rationale: Wrong. -u shows only direct dependencies the program doesn't use, usually nothing, not the full direct list.
       - id: b
-        text: "`ldd /usr/bin/report`"
-        rationale: Correct. ldd lists the program's shared library dependencies and where each one resolves.
-      - id: c
-        text: "`ldconfig -v /usr/bin/report`"
-        rationale: Wrong. ldconfig processes library directories and rebuilds the cache; it does not read a program's dependencies.
-      - id: d
         text: "`readelf -d /usr/bin/report | grep NEEDED`"
-        rationale: Correct. Each NEEDED entry in the dynamic section names a library the program was linked against.
+        rationale: Correct. Each NEEDED entry in the ELF dynamic section names a library the program itself was linked against.
+      - id: c
+        text: "`ldd /usr/bin/report`"
+        rationale: Wrong. ldd resolves the whole dependency tree, so it also lists libm.so.6, plus linux-vdso and the dynamic linker.
+      - id: d
+        text: "`objdump -p /usr/bin/report | grep NEEDED`"
+        rationale: Correct. objdump -p prints the same dynamic-section NEEDED entries as readelf -d.
     answer: [b, d]
     explanation: >
-      ldd asks the dynamic linker which libraries a program needs. The same list is recorded in the
-      program's ELF dynamic section as NEEDED entries, which readelf -d (or objdump -p) can show
-      without involving the linker at all.
+      ldd asks the dynamic linker to resolve the program and prints every shared object that would be
+      loaded: direct dependencies, the libraries those pull in, linux-vdso and the dynamic linker
+      itself. The program file only records its direct dependencies, as NEEDED entries in its ELF
+      dynamic section, which readelf -d and objdump -p read without involving the linker.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.3", lesson: 1, section: Searching for the Dependencies of a Particular Executable }
     review:
       status: pass2
       history:
         - { stage: pass1, by: claude, date: "2026-10-25", result: ok }
-        - { stage: pass2, by: claude, date: "2026-10-25", result: fixed, notes: "Option order changed so correct answers are spread across positions. ldd and readelf -d | grep NEEDED both list the dependencies; ldd -u printed nothing; ldconfig -v <program> lists no dependencies." }
-    tags: [ldd, readelf, NEEDED]
+        - { stage: pass2, by: claude, date: "2026-10-25", result: fixed, notes: "Option order changed so correct answers are spread across positions. Superseded by the independent review below (question reworked)." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Explanation was false: ldd also lists indirect dependencies, vdso and the dynamic linker, while NEEDED lists direct ones only. Reworked to ask for direct-only dependencies (key readelf -d / objdump -p NEEDED). Reproduced with a test program whose library pulls in libm: readelf and objdump show libchart.so.2 and libc.so.6 only; ldd adds libm, vdso and ld-linux; ldd -u prints nothing. Re-checked after the rework." }
+    tags: [ldd, readelf, objdump, NEEDED]
 
   - id: 101-102.3-0010
     type: single_choice
@@ -331,8 +342,8 @@ questions:
         text: Nothing; the dynamic linker follows the newest version automatically the next time the programs start.
         rationale: Wrong. The linker opens libacme.so.1, which is now a dangling link until something updates it.
       - id: d
-        text: Run `ldconfig` as root, which repoints `libacme.so.1` to the new file and refreshes the cache.
-        rationale: Correct. ldconfig creates the soname links for the libraries it finds and rebuilds /etc/ld.so.cache.
+        text: Run `ldconfig` as root.
+        rationale: Correct. ldconfig repoints the soname link libacme.so.1 to the newest matching file and rebuilds /etc/ld.so.cache.
     answer: [d]
     explanation: >
       Programs record the soname (libacme.so.1), not the full file name. The soname is a symbolic link
@@ -344,6 +355,7 @@ questions:
       history:
         - { stage: pass1, by: claude, date: "2026-10-25", result: fixed, notes: "Option \"rename 1.5.0 to 1.4.2\" would also restore the programs (two right answers); replaced with an LD_LIBRARY_PATH distractor." }
         - { stage: pass2, by: claude, date: "2026-10-25", result: fixed, notes: "Option order changed so correct answers are spread across positions. Scenario reproduced: after replacing the file, LD_LIBRARY_PATH still fails (exit 127); ldconfig repoints libacme.so.1 to 1.5.0 and the program runs." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Answered cold, matches key; scenario reproduced. Correct option shortened to remove a length giveaway. Suggested difficulty 4; kept at 5 (dangling link in the exhibit plus a plausible LD_LIBRARY_PATH distractor)." }
     tags: [ldconfig, soname, symlink]
 
   # --------------------------------------------------------------------------- practice (CLI)
@@ -376,6 +388,7 @@ questions:
       history:
         - { stage: pass1, by: claude, date: "2026-10-25", result: ok }
         - { stage: pass2, by: claude, date: "2026-10-25", result: fixed, notes: "Option order changed so correct answers are spread across positions." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked, no change." }
     tags: [library-locations, fhs]
 
   - id: 101-102.3-0012
@@ -409,6 +422,7 @@ questions:
       history:
         - { stage: pass1, by: claude, date: "2026-10-25", result: ok }
         - { stage: pass2, by: claude, date: "2026-10-25", result: fixed, notes: "Option order changed so correct answers are spread across positions." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked, no change." }
     tags: [ld.so, dynamic-linker]
 
   - id: 101-102.3-0013
@@ -417,7 +431,7 @@ questions:
     pool: practice
     stem: Type the command that rebuilds `/etc/ld.so.cache` and the shared library links.
     fill_in:
-      accepted: ['(sudo\s+)?((/usr)?/s?bin/)?ldconfig']
+      accepted: ['(sudo\s+)?((/usr)?/s?bin/)?ldconfig(\s+(-v|--verbose))?']
       match: regex
       case_sensitive: true
     explanation: >
@@ -429,6 +443,7 @@ questions:
       history:
         - { stage: pass1, by: claude, date: "2026-10-25", result: ok }
         - { stage: pass2, by: claude, date: "2026-10-25", result: ok, notes: "Matching tested: ldconfig, sudo ldconfig, /sbin/ldconfig, sudo /usr/sbin/ldconfig accepted; ldconfig -p, LDCONFIG, ldd, sudoldconfig rejected." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Answered cold, matches key. Also accepts ldconfig -v / --verbose, which rebuild the cache too." }
     tags: [ldconfig]
 
   - id: 101-102.3-0014
@@ -447,7 +462,7 @@ questions:
         rationale: Correct. export marks the variable for the environment of every child process.
       - id: c
         text: "`echo /opt/vendor/lib >> $LD_LIBRARY_PATH`"
-        rationale: Wrong. This tries to append text to a file named by the variable's value, which is empty.
+        rationale: Wrong. >> redirects into a file, not a variable. With LD_LIBRARY_PATH unset, Bash reports "ambiguous redirect" and nothing is set.
       - id: d
         text: "`LD_LIBRARY_PATH=/opt/vendor/lib`"
         rationale: Wrong. A new variable set this way stays a shell variable; child processes do not receive it.
@@ -467,6 +482,7 @@ questions:
       history:
         - { stage: pass1, by: claude, date: "2026-10-25", result: ok }
         - { stage: pass2, by: claude, date: "2026-10-25", result: fixed, notes: "Option order changed so correct answers are spread across positions. verify block passed: plain assignment not inherited, export inherited." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Answered cold, matches key. Rationale for the >> option corrected: Bash reports \"ambiguous redirect\"." }
     tags: [LD_LIBRARY_PATH, export, environment]
 
   - id: 101-102.3-0015
@@ -498,4 +514,5 @@ questions:
       history:
         - { stage: pass1, by: claude, date: "2026-10-25", result: ok }
         - { stage: pass2, by: claude, date: "2026-10-25", result: fixed, notes: "Option order changed so correct answers are spread across positions." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked, no change." }
     tags: [ld.so.conf]
