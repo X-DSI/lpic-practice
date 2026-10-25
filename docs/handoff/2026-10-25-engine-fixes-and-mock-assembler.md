@@ -1,7 +1,7 @@
 ---
 title: Engine fixes, pass2-ready mocks, and the mock assembler
-status: open
-assignee: agent:any
+status: in-progress
+assignee: X-DSI-agent
 base_sha: ee19572
 adrs:
   - 2026-10-22-mock-exam-composition.md
