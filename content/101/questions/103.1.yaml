@@ -368,7 +368,7 @@ questions:
       status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
-        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Scenario rewritten (mirrored Explorational Ex. 2): now asks why grep on ~/.bash_history misses a command from the running session. Needs re-check." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Scenario rewritten (mirrored Explorational Ex. 2): now asks why grep on ~/.bash_history misses a command from the running session. Re-checked cold by the reviewer: matches key." }
     tags: [history]
 
   - id: 101-103.1-0012
@@ -1007,7 +1007,8 @@ questions:
     difficulty: 4
     pool: holdout
     stem: >
-      You saved your own wrapper script as `$HOME/bin/ls`. Which command makes typing `ls` run that
+      You created `$HOME/bin`, which is not yet in your PATH, and saved your own wrapper script there as
+      `$HOME/bin/ls`. Which command makes typing `ls` run that
       wrapper instead of `/usr/bin/ls`, while every other command is still found as before?
     options:
       - id: a
@@ -1038,7 +1039,7 @@ questions:
       status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
-        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Stem and options replaced (restated lesson 2 Guided Ex. 1): wrapper $HOME/bin/ls must override /usr/bin/ls; verify block added. Needs re-check." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Stem and options replaced (restated lesson 2 Guided Ex. 1): wrapper $HOME/bin/ls must override /usr/bin/ls; verify block added. Re-checked cold by the reviewer: matches key; stem now states $HOME/bin is not yet in PATH (Ubuntu ~/.profile adds it at login if it exists)." }
     tags: [PATH, export, quoting]
 
   - id: 101-103.1-0032
@@ -1055,7 +1056,7 @@ questions:
         rationale: Correct. A command given with a path is run directly, without a PATH search.
       - id: b
         text: "`which date`"
-        rationale: Wrong. which is itself an external program found through PATH, so it is not found either, and it would only print a path.
+        rationale: Wrong. which only reports where a program is and never runs it; here it is usually not even found itself, and in any case it searches the same broken PATH.
       - id: c
         text: "`PATH=/usr/bin:/bin date`"
         rationale: Correct. The PATH assignment in front of the command is used to find date for this one command.
@@ -1065,8 +1066,8 @@ questions:
     answer: [a, c]
     explanation: >
       With a useless PATH the shell cannot locate external programs by name. Giving the full path, or a
-      PATH value for a single command, still works. Setting PATH correctly again (or opening a new
-      shell) restores normal behaviour.
+      PATH value for a single command, still works. Setting PATH correctly again (or starting a new login session) restores normal behaviour; a child
+      shell would inherit the broken value.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 2, section: Finding Your Environment Variables }
     verify:
       command: >-
@@ -1076,7 +1077,7 @@ questions:
       status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
-        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Scenario changed from unset PATH/ls to PATH=/nonexistent/date (was close to Guided Ex. 2); options re-tested. Needs re-check." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Scenario changed from unset PATH/ls to PATH=/nonexistent/date (was close to Guided Ex. 2); options re-tested. Re-checked cold by the reviewer: matches key; explanation and which rationale corrected." }
     tags: [PATH, invoking-commands]
 
   - id: 101-103.1-0033
