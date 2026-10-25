@@ -29,7 +29,7 @@ lpic-practice/
 │   ├── adr/             # Architecture Decision Records
 │   ├── handoff/         # Planning → implementation work orders
 │   └── difficulty-rubric.md
-├── engine/              # Python core: loading, matching, scoring, selection, build
+├── engine/              # Python core: loading, matching, scoring, selection, build, mock assembly
 ├── tests/               # pytest suite with synthetic fixture banks
 ├── cli/                 # (planned) Textual terminal practice
 └── web/                 # (planned) FastAPI + Jinja + htmx mock exams
@@ -52,6 +52,7 @@ lpic-practice/
 pip install -e ".[dev]"
 python tools/validate.py            # validate everything under content/
 python -m engine.build              # compile content to build/content/<exam>.json
+python -m engine.assemble 101       # assemble content/101/mocks/mock-01…10.yaml from the holdout bank
 pytest                              # run the tests
 ruff check . && ruff format --check .
 ```

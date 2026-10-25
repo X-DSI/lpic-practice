@@ -21,6 +21,9 @@ EXAMS = ("101", "102", "201", "202")
 EXAM_TOTAL_WEIGHT = 60
 MIX_TOLERANCE = 2  # mock-exam-composition ADR: assembler may deviate by at most ±2 per level
 EXAMPLE_ID_FLOOR = 9000
+# Question-generation-workflow ADR, point 9: holdout questions are approved only after their mock is
+# taken, so mocks may use questions that passed both checks.
+MOCK_READY_STATUSES = ("pass2", "approved")
 
 
 def load_schema(name: str) -> Draft202012Validator:
@@ -203,8 +206,8 @@ def check_mock(data, path: Path, report: Report, bank: dict[str, dict], weights:
             report.error(path, f"{qid}: mock questions must have pool 'holdout'")
         if q.get("retired"):
             report.error(path, f"{qid}: question is retired")
-        if strict and q["review"]["status"] != "approved":
-            report.error(path, f"{qid}: not approved (status '{q['review']['status']}')")
+        if strict and q["review"]["status"] not in MOCK_READY_STATUSES:
+            report.error(path, f"{qid}: not pass2 or approved (status '{q['review']['status']}')")
         per_objective[q["source"]["objective"]] += 1
         per_level[q["difficulty"]] += 1
 

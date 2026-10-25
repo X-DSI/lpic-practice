@@ -52,8 +52,9 @@ Everything is driven by a question bank in `content/`, validated against the JSO
 |---|---|
 | Install the engine and dev tools | `pip install -e ".[dev]"` |
 | Validate all content | `python tools/validate.py` |
-| Validate, requiring mock questions to be approved | `python tools/validate.py --strict` |
+| Validate, requiring mock questions to be `pass2` or `approved` | `python tools/validate.py --strict` |
 | Build content to `build/content/<exam>.json` | `python -m engine.build` |
+| Assemble the 10 mock exams for an exam | `python -m engine.assemble <exam> [--seed N]` |
 | Test | `pytest` |
 | Lint and format check | `ruff check . && ruff format --check .` |
 | Check commit identity locally | `git clone --depth 1 -b v0.0.1-alpha https://github.com/X-DSI/agent-workflow /tmp/aw && bash /tmp/aw/.github/scripts/check-commit-identity.sh origin/main HEAD` |

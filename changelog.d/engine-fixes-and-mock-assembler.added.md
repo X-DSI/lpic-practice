@@ -1,0 +1,4 @@
+- `python -m engine.assemble <exam> [--seed N]` builds the 10 mock exams from the holdout bank: `weight` questions per objective, no question reused, each mock's difficulty within ±2 of the rubric's table, byte-identical for the same bank and seed. If the bank can't fill them it writes nothing and names the shortfall per objective and difficulty level.
+- `python tools/validate.py --strict` accepts mock questions that are `pass2` as well as `approved` (question-generation-workflow ADR, point 9).
+- A single-choice response that isn't a string (e.g. `["b"]`) raises `TypeError` instead of silently counting as wrong.
+- Regex fill-in answers ignore leading and trailing whitespace in the response.
