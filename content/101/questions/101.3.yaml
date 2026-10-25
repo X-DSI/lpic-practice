@@ -30,9 +30,10 @@ questions:
       it. That is also why neither may ever be configured as the default runlevel.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: SysVinit }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. SysV behaviour checked against upstream sysvinit man pages (no sysvinit on Ubuntu 24.04)." }
     tags: [runlevels, sysvinit]
 
   - id: 101-101.3-0002
@@ -60,9 +61,10 @@ questions:
       all go through it.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: systemd }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [systemctl, systemd]
 
   - id: 101-101.3-0003
@@ -89,9 +91,10 @@ questions:
       contain symbolic links to those scripts, so one script can serve several runlevels.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: SysVinit }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. SysV behaviour checked against upstream sysvinit man pages (no sysvinit on Ubuntu 24.04)." }
     tags: [init.d, sysvinit]
 
   - id: 101-101.3-0004
@@ -119,9 +122,10 @@ questions:
       /etc/acpi/events/. On systemd systems, systemd-logind can handle many of the same events.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: systemd }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [acpid, power-management]
 
   - id: 101-101.3-0005
@@ -148,9 +152,10 @@ questions:
       multi-user.target, runlevel5.target to graphical.target, runlevel1.target to rescue.target.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: systemd }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [targets, runlevels]
 
   - id: 101-101.3-0006
@@ -178,9 +183,10 @@ questions:
       kernel command line overrides it.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: SysVinit }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. SysV behaviour checked against upstream sysvinit man pages (no sysvinit on Ubuntu 24.04)." }
     tags: [inittab, initdefault]
 
   - id: 101-101.3-0007
@@ -209,9 +215,10 @@ questions:
       to every logged-in user's terminal. shutdown uses the same mechanism for its warnings.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: Shutdown and Restart }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [wall]
 
   - id: 101-101.3-0008
@@ -241,9 +248,10 @@ questions:
       hibernate keep the session so it can be resumed.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: Shutdown and Restart }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [systemctl, poweroff]
 
   - id: 101-101.3-0009
@@ -276,9 +284,10 @@ questions:
       command: bash -c 'kill -l 15'
       expect: { exit_code: 0, stdout_contains: "TERM" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [signals, kill]
 
   - id: 101-101.3-0010
@@ -305,9 +314,10 @@ questions:
       take precedence over them, so local changes go there and survive package upgrades.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: systemd }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [unit-files, systemd]
 
   - id: 101-101.3-0011
@@ -334,9 +344,10 @@ questions:
       same result. Root privileges (or a polkit rule allowing it) are needed.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: Shutdown and Restart }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [systemctl, reboot]
 
   - id: 101-101.3-0012
@@ -365,9 +376,10 @@ questions:
       --type=service or --type=target to narrow it. list-units shows what is loaded and running now.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: systemd }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [systemctl, list-unit-files]
 
   - id: 101-101.3-0013
@@ -396,9 +408,10 @@ questions:
       (minutes from now) or hh:mm (24-hour clock time). The message goes to all logged-in users.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: Shutdown and Restart }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [shutdown]
 
   - id: 101-101.3-0014
@@ -409,7 +422,7 @@ questions:
       On a SysV init system you have just edited `/etc/inittab`. Type the command that makes `init`
       read the file again without changing the current runlevel.
     fill_in:
-      accepted: ['(sudo\s+)?((/usr)?/s?bin/)?(telinit|init)\s+[qQ]', '(sudo\s+)?((/usr)?/bin/)?kill\s+(-HUP|-SIGHUP|-1|-s\s+(HUP|SIGHUP))\s+1']
+      accepted: ['(sudo\s+)?((/usr)?/s?bin/)?(telinit|init)\s+[qQ]', '(sudo\s+)?((/usr)?/bin/)?kill\s+(-(?i:(SIG)?HUP)|-1|-s\s+(?i:(SIG)?HUP)|-n\s+(1|(?i:(SIG)?HUP)))\s+1']
       match: regex
       case_sensitive: true
     explanation: >
@@ -418,9 +431,10 @@ questions:
       has the same effect.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: SysVinit }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "kill pattern widened (-n 1/HUP, SIGHUP, case-insensitive signal name, -s SIGHUP)." }
     tags: [telinit, inittab]
 
   - id: 101-101.3-0015
@@ -454,9 +468,10 @@ questions:
       systemd.unit= kernel parameter only affect booting.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: systemd }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [rescue, isolate, telinit]
 
   - id: 101-101.3-0016
@@ -476,9 +491,10 @@ questions:
       shutdown.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: Shutdown and Restart }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Explanation: removed an unverified claim that -k also blocks logins." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [shutdown]
 
   - id: 101-101.3-0017
@@ -507,9 +523,10 @@ questions:
       masked. Whether it is running now is a separate question for is-active.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: systemd }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. is-enabled exit codes tested with systemctl --root." }
     tags: [systemctl, is-enabled]
 
   - id: 101-101.3-0018
@@ -540,9 +557,10 @@ questions:
       runlevel 1.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: SysVinit }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. SysV behaviour checked against upstream sysvinit man pages (no sysvinit on Ubuntu 24.04)." }
     tags: [runlevel]
 
   - id: 101-101.3-0019
@@ -554,7 +572,7 @@ questions:
       starting what that target needs and stopping every unit it does not need:
       `systemctl ______ graphical.target`
     fill_in:
-      accepted: ['isolate', '(sudo\s+)?((/usr)?/s?bin/)?systemctl\s+isolate\s+graphical(\.target)?']
+      accepted: ['isolate', 'isolate\s+graphical(\.target)?', '(sudo\s+)?((/usr)?/s?bin/)?systemctl\s+isolate\s+graphical(\.target)?']
       match: regex
       case_sensitive: true
     explanation: >
@@ -563,9 +581,10 @@ questions:
       no suffix is given, .target is assumed.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: systemd }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Also accept 'isolate graphical[.target]' without the systemctl prefix." }
     tags: [isolate, targets]
 
   - id: 101-101.3-0020
@@ -602,9 +621,10 @@ questions:
       them within each group.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: SysVinit }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. SysV behaviour checked against upstream sysvinit man pages (no sysvinit on Ubuntu 24.04)." }
     tags: [rc.d, sysvinit]
 
   - id: 101-101.3-0021
@@ -638,9 +658,10 @@ questions:
       Switching runlevel with telinit leaves the default (initdefault) unchanged.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: SysVinit }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. SysV behaviour checked against upstream sysvinit man pages (no sysvinit on Ubuntu 24.04)." }
     tags: [inittab, respawn, telinit]
 
   - id: 101-101.3-0022
@@ -672,9 +693,10 @@ questions:
       running state changes with start and stop.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: systemd }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [systemctl, enable, acpid]
 
   - id: 101-101.3-0023
@@ -705,9 +727,10 @@ questions:
       kernel parameter can override it for a single boot.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: systemd }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [inittab, set-default, troubleshooting]
 
   - id: 101-101.3-0024
@@ -741,9 +764,10 @@ questions:
       (set-default). Neither command does the other's job.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: systemd }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [isolate, set-default, targets]
 
   - id: 101-101.3-0025
@@ -754,7 +778,7 @@ questions:
       Type a `shutdown` command that reboots the machine at 22:00 tonight. A warning message is
       optional.
     fill_in:
-      accepted: ['(sudo\s+)?((/usr)?/s?bin/)?shutdown\s+(-r|--reboot)\s+22:00(\s+.+)?']
+      accepted: ['(sudo\s+)?((/usr)?/s?bin/)?shutdown\s+(-r|--reboot)\s+22:00(\s+(?!-)\S+)*']
       match: regex
       case_sensitive: true
     explanation: >
@@ -763,9 +787,10 @@ questions:
       with shutdown -c.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: Shutdown and Restart }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Pattern no longer accepts trailing options (systemd shutdown permutes options, e.g. '-r 22:00 -h')." }
     tags: [shutdown]
 
   - id: 101-101.3-0026
@@ -795,13 +820,14 @@ questions:
     answer: [b, e]
     explanation: >
       For a single boot, the target is chosen on the kernel command line: systemd.unit=<target>, or
-      the SysV-style shorthands (single, s, S, 1 for rescue; 2–5 for runlevelN.target). emergency
+      the SysV-style shorthands (rescue, single, s, S, 1 for rescue; 2–5 for runlevelN.target). emergency
       (or -b) gives emergency.target, which starts even less than rescue mode.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: systemd }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Explanation now lists rescue among the rescue-mode keywords." }
     tags: [kernel-parameters, rescue, systemd.unit]
 
   - id: 101-101.3-0027
@@ -828,12 +854,15 @@ questions:
     explanation: >
       systemd starts ctrl-alt-del.target when it gets the Ctrl+Alt+Del signal, and that unit is
       normally an alias for reboot.target. Masking it is the usual way to disable the keys. Under
-      SysV init the ctrlaltdel entry in /etc/inittab decides what happens.
+      SysV init the ctrlaltdel entry in /etc/inittab decides what happens. Even with the target
+      masked, pressing the keys more than 7 times within 2 seconds still forces a reboot unless
+      CtrlAltDelBurstAction=none is set in /etc/systemd/system.conf.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: SysVinit }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Explanation adds the Ctrl+Alt+Del burst (>7 presses in 2 s) and CtrlAltDelBurstAction=none." }
     tags: [ctrlaltdel, mask]
 
   - id: 101-101.3-0028
@@ -863,9 +892,10 @@ questions:
       warning. The SysV shutdown needed a time and, without -h or -r, went to single-user mode.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: Shutdown and Restart }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Option a rationale shortened and made plainer." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. Default action and +1 time confirmed in systemd 255 shutdown(8)." }
     tags: [shutdown, systemd]
 
   - id: 101-101.3-0029
@@ -898,9 +928,10 @@ questions:
       processes with SIGTERM followed by SIGKILL. Without -r or -H, systemd's shutdown powers off.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: Shutdown and Restart }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. Default action and +1 time confirmed in systemd 255 shutdown(8)." }
     tags: [shutdown, nologin, signals]
 
   - id: 101-101.3-0030
@@ -920,9 +951,10 @@ questions:
       equivalent file.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: Shutdown and Restart }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. SysV behaviour checked against upstream sysvinit man pages (no sysvinit on Ubuntu 24.04)." }
     tags: [shutdown.allow, ctrlaltdel]
 
   # --------------------------------------------------------------------------- practice (CLI)
@@ -951,9 +983,10 @@ questions:
       it suitable for maintenance. On systemd the equivalent is rescue.target.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: SysVinit }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. SysV behaviour checked against upstream sysvinit man pages (no sysvinit on Ubuntu 24.04)." }
     tags: [runlevels, single-user]
 
   - id: 101-101.3-0032
@@ -980,9 +1013,10 @@ questions:
       is runlevel 3 plus a graphical login.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: systemd }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [targets, runlevels]
 
   - id: 101-101.3-0033
@@ -1009,9 +1043,10 @@ questions:
       status to 0 only when it is active, which is handy in scripts.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: systemd }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [systemctl, is-active]
 
   - id: 101-101.3-0034
@@ -1038,9 +1073,10 @@ questions:
       start, stop and status). Ubuntu replaced it with systemd in 2015.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: Upstart }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [upstart, initctl]
 
   - id: 101-101.3-0035
@@ -1069,9 +1105,10 @@ questions:
       hibernate (suspend to disk) survives a complete loss of power.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: systemd }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [suspend, power-management]
 
   - id: 101-101.3-0036
@@ -1100,9 +1137,10 @@ questions:
       installed to handle these events instead, logind's handling has to stay out of its way.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: systemd }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [logind, power-management]
 
   - id: 101-101.3-0037
@@ -1131,9 +1169,10 @@ questions:
       boot. A service usually needs both start and enable (or enable --now).
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: systemd }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [systemctl, enable, start]
 
   - id: 101-101.3-0038
@@ -1160,9 +1199,10 @@ questions:
       24-hour clock.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: Shutdown and Restart }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [shutdown]
 
   - id: 101-101.3-0039
@@ -1191,9 +1231,10 @@ questions:
       virtual consoles: when a user logs out and getty ends, init starts a fresh one.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: SysVinit }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. SysV behaviour checked against upstream sysvinit man pages (no sysvinit on Ubuntu 24.04)." }
     tags: [inittab, respawn]
 
   - id: 101-101.3-0040
@@ -1220,9 +1261,10 @@ questions:
       tells init how and when to run the process.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: SysVinit }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. SysV behaviour checked against upstream sysvinit man pages (no sysvinit on Ubuntu 24.04)." }
     tags: [inittab]
 
   - id: 101-101.3-0041
@@ -1256,9 +1298,10 @@ questions:
       lasts one boot; saved in the boot loader configuration it applies every time.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: systemd }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [set-default, kernel-parameters]
 
   - id: 101-101.3-0042
@@ -1289,9 +1332,10 @@ questions:
       single-user mode; warn users with wall before you do it.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: SysVinit }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. SysV behaviour checked against upstream sysvinit man pages (no sysvinit on Ubuntu 24.04)." }
     tags: [telinit, single-user]
 
   - id: 101-101.3-0043
@@ -1322,9 +1366,10 @@ questions:
       .target, and others such as .timer, .path and .swap.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: systemd }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [units, systemd]
 
   - id: 101-101.3-0044
@@ -1333,7 +1378,7 @@ questions:
     pool: practice
     stem: Type the command that sends a message to the terminals of all logged-in users.
     fill_in:
-      accepted: ['(sudo\s+)?((/usr)?/s?bin/)?wall(\s+.+)?']
+      accepted: ['(sudo\s+)?((/usr)?/s?bin/)?wall(\s+.+)?', '.*\|\s*((/usr)?/s?bin/)?wall']
       match: regex
       case_sensitive: true
     explanation: >
@@ -1341,9 +1386,10 @@ questions:
       before a runlevel change or other disruptive maintenance.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: Shutdown and Restart }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Also accept piped input to wall (e.g. echo msg | wall)." }
     tags: [wall]
 
   - id: 101-101.3-0045
@@ -1354,7 +1400,7 @@ questions:
       Fill in the `systemctl` subcommand that makes `graphical.target` the target the system boots
       into: `systemctl ______ graphical.target`
     fill_in:
-      accepted: ['set-default', '(sudo\s+)?((/usr)?/s?bin/)?systemctl\s+set-default\s+graphical(\.target)?']
+      accepted: ['set-default', 'set-default\s+graphical(\.target)?', '(sudo\s+)?((/usr)?/s?bin/)?systemctl\s+set-default\s+graphical(\.target)?']
       match: regex
       case_sensitive: true
     explanation: >
@@ -1362,7 +1408,8 @@ questions:
       boot; to switch now as well, use systemctl isolate.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: systemd }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Also accept 'set-default graphical[.target]' without the systemctl prefix." }
     tags: [set-default]
