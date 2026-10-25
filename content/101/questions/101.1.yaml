@@ -1,0 +1,910 @@
+# 101.1 Determine and configure hardware settings — weight 2 → 20 holdout + 10 practice.
+# Original questions written from LPI Learning Materials 101-500, objective 101.1, lesson 1.
+schema_version: 1
+exam: "101"
+objective: "101.1"
+questions:
+  # ---------------------------------------------------------------- holdout (mock exams only)
+
+  - id: 101-101.1-0001
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: Which command lists the devices attached to the PCI bus, such as disk controllers and graphics cards?
+    options:
+      - id: a
+        text: "`lsusb`"
+        rationale: Wrong. lsusb lists devices on the USB bus, not the PCI bus.
+      - id: b
+        text: "`lsmod`"
+        rationale: Wrong. lsmod lists the kernel modules that are loaded, not the hardware that was detected.
+      - id: c
+        text: "`lspci`"
+        rationale: Correct. lspci lists every device the kernel found on the PCI bus, onboard or in a slot.
+      - id: d
+        text: "`lsblk`"
+        rationale: Wrong. lsblk lists block devices (disks and partitions), not PCI devices in general.
+    answer: [c]
+    explanation: >
+      lspci (from the pciutils package) shows each PCI device with its bus address and a description.
+      PCI devices include parts built onto the motherboard as well as expansion cards.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Commands for Inspection }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [lspci]
+
+  - id: 101-101.1-0002
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: Where is sysfs, the pseudo-filesystem that exposes devices, drivers and buses, normally mounted?
+    options:
+      - id: a
+        text: "`/sys`"
+        rationale: Correct. sysfs is mounted on /sys, and udev reads device details from it.
+      - id: b
+        text: "`/proc`"
+        rationale: Wrong. /proc is where procfs is mounted; it holds process and general kernel information.
+      - id: c
+        text: "`/dev`"
+        rationale: Wrong. /dev holds device files that programs open, not the sysfs device tree.
+      - id: d
+        text: "`/run`"
+        rationale: Wrong. /run is a tmpfs for runtime data of programs, not sysfs.
+    answer: [a]
+    explanation: >
+      sysfs is a kernel-generated pseudo-filesystem mounted on /sys. It describes devices, drivers
+      and buses, and is the source udev uses when it sets up device files.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Information Files and Device Files }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [sysfs, /sys]
+
+  - id: 101-101.1-0003
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: What does the `lsmod` command show?
+    options:
+      - id: a
+        text: Every kernel module installed on disk for the running kernel
+        rationale: Wrong. Installed modules live under /lib/modules/<version>; lsmod shows only those loaded now.
+      - id: b
+        text: The hardware detected on the PCI and USB buses
+        rationale: Wrong. That is what lspci and lsusb show.
+      - id: c
+        text: The parameters a given module accepts
+        rationale: Wrong. modinfo shows a module's parameters.
+      - id: d
+        text: The kernel modules currently loaded, with their size and users
+        rationale: Correct. lsmod lists loaded modules with their memory size and the modules or users that hold them.
+    answer: [d]
+    explanation: >
+      lsmod formats the contents of /proc/modules: one line per loaded module with its name, size in
+      bytes and a "Used by" column (use count and dependent modules).
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Commands for Inspection }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [lsmod, kernel-module]
+
+  - id: 101-101.1-0004
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      A desktop's onboard audio chip is never used and should be switched off so completely that the
+      operating system does not even see it, and `lspci` no longer lists it. How is this done?
+    options:
+      - id: a
+        text: Add `blacklist snd_hda_intel` to a file in `/etc/modprobe.d/`
+        rationale: Wrong. This only keeps the driver from loading automatically; the chip is still on the bus and lspci still lists it.
+      - id: b
+        text: Disable the integrated audio in the firmware (BIOS/UEFI) setup utility
+        rationale: Correct. Integrated peripherals switched off in the firmware are not presented to the operating system at all.
+      - id: c
+        text: Run `modprobe -r snd_hda_intel`
+        rationale: Wrong. This unloads the driver until it is loaded again; the device itself is still detected.
+      - id: d
+        text: Delete the audio device files under `/dev/snd/`
+        rationale: Wrong. The hardware is still detected, and udev recreates the device files.
+    answer: [b]
+    explanation: >
+      Integrated peripherals are enabled or disabled in the firmware setup utility that opens when a
+      key such as Del, F2 or F12 is pressed at power-on. Linux-side measures only control the driver;
+      the device is still detected on the bus.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Device Activation }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [bios, uefi, integrated-peripherals]
+
+  - id: 101-101.1-0005
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      You suspect a network card is generating an unusually high number of interrupts. Which file
+      shows, for each interrupt line, how many interrupts each CPU has handled and which device uses it?
+    options:
+      - id: a
+        text: "`/proc/ioports`"
+        rationale: Wrong. This lists the I/O port address ranges that drivers have registered.
+      - id: b
+        text: "`/proc/dma`"
+        rationale: Wrong. This lists the registered DMA channels.
+      - id: c
+        text: "`/proc/cpuinfo`"
+        rationale: Wrong. This describes each CPU (model, flags, bugs), not interrupt counts.
+      - id: d
+        text: "`/proc/interrupts`"
+        rationale: Correct. It has one column of counts per CPU and names the device on each interrupt line.
+    answer: [d]
+    explanation: >
+      /proc/interrupts is regenerated each time it is read, so reading it twice a few seconds apart
+      shows which interrupt lines, and therefore which devices, are busiest.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Information Files and Device Files }
+    verify:
+      command: head -n 1 /proc/interrupts
+      expect: { exit_code: 0, stdout_contains: "CPU0" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [/proc/interrupts, irq]
+
+  - id: 101-101.1-0006
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      A laptop has a single SD card inserted in its built-in MMC/SD slot (not a USB card reader).
+      Which device file is the first partition on that card?
+    options:
+      - id: a
+        text: "`/dev/mmcblk0p1`"
+        rationale: Correct. The first MMC/SD device is mmcblk0, and its partitions take a p plus a number starting at 1.
+      - id: b
+        text: "`/dev/mmcblk1p1`"
+        rationale: Wrong. That is the first partition of a second MMC/SD device; numbering starts at 0.
+      - id: c
+        text: "`/dev/mmcblk0p0`"
+        rationale: Wrong. Partition numbers start at 1, not 0.
+      - id: d
+        text: "`/dev/mmcblk0`"
+        rationale: Wrong. That is the whole card, not a partition on it.
+    answer: [a]
+    explanation: >
+      MMC/SD devices are named mmcblk<N>, counting from 0, and partitions add p<M>, counting from 1.
+      NVMe devices use a similar p suffix (nvme0n1p1). SATA, SCSI and USB disks use sdX1 instead.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Storage Devices }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [/dev, mmcblk, device-naming]
+
+  - id: 101-101.1-0007
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: Which command loads a kernel module by name and also loads any modules it depends on?
+    options:
+      - id: a
+        text: "`insmod`"
+        rationale: Wrong. insmod inserts one module file and does not resolve its dependencies.
+      - id: b
+        text: "`lsmod`"
+        rationale: Wrong. lsmod only lists modules that are already loaded.
+      - id: c
+        text: "`modprobe`"
+        rationale: Correct. modprobe looks up the module's dependencies and loads them first.
+      - id: d
+        text: "`modinfo`"
+        rationale: Wrong. modinfo describes a module but never loads it.
+    answer: [c]
+    explanation: >
+      modprobe, part of the kmod tools, uses the dependency list built by depmod to load a module
+      together with whatever it needs. With -r it unloads a module and any of its dependencies that
+      are no longer used.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Commands for Inspection }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [modprobe, kmod]
+
+  - id: 101-101.1-0008
+    type: fill_in
+    difficulty: 2
+    pool: holdout
+    stem: >
+      Type the command (no options needed) that lists the USB devices currently connected, one line
+      per device with its bus number, device number and vendor:product ID.
+    fill_in:
+      accepted: ['(sudo\s+)?((/usr)?/s?bin/)?lsusb']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      lsusb (from usbutils) prints one line per USB device in the form "Bus 001 Device 004: ID
+      vvvv:pppp Name". The root hubs of the USB controllers are listed as devices too.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Commands for Inspection }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [lsusb]
+
+  - id: 101-101.1-0009
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: Which `lspci` option adds the kernel driver handling each device, and the modules able to handle it, to the listing?
+    options:
+      - id: a
+        text: "`-t`"
+        rationale: Wrong. -t draws the PCI buses and bridges as a tree.
+      - id: b
+        text: "`-k`"
+        rationale: Correct. -k adds "Kernel driver in use" and "Kernel modules" lines for each device.
+      - id: c
+        text: "`-n`"
+        rationale: Wrong. -n shows numeric vendor and device IDs instead of names.
+      - id: d
+        text: "`-D`"
+        rationale: Wrong. -D always shows the PCI domain number in each address.
+    answer: [b]
+    explanation: >
+      `lspci -k` shows which driver is bound to each device and which installed modules claim support
+      for it. Combined with -s <address> it narrows the output to one device.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Commands for Inspection }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [lspci]
+
+  - id: 101-101.1-0010
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      A wireless receiver has the USB ID `046d:c52b`. Which `lsusb` option limits the output to
+      devices with that vendor and product ID?
+    options:
+      - id: a
+        text: "`-d 046d:c52b`"
+        rationale: Correct. -d selects devices by vendor:product ID, given in hexadecimal.
+      - id: b
+        text: "`-s 046d:c52b`"
+        rationale: Wrong. -s selects by bus and device number (decimal), not by ID.
+      - id: c
+        text: "`-D 046d:c52b`"
+        rationale: Wrong. -D expects a device file path such as /dev/bus/usb/001/004.
+      - id: d
+        text: "`-t 046d:c52b`"
+        rationale: Wrong. -t prints the whole USB tree and takes no ID argument.
+    answer: [a]
+    explanation: >
+      lsusb -d vendor:[product] filters by USB ID; adding -v prints that device's full descriptors.
+      To pick a device by its position instead, use -s bus:devnum.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Commands for Inspection }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [lsusb]
+
+  - id: 101-101.1-0011
+    type: multi_choice
+    difficulty: 3
+    pool: holdout
+    stem: Which **TWO** lines are valid directives in a file under `/etc/modprobe.d/`?
+    select_count: 2
+    options:
+      - id: a
+        text: "`options snd_hda_intel power_save=1`"
+        rationale: Correct. "options <module> <param>=<value>" sets parameters used whenever modprobe loads the module.
+      - id: b
+        text: "`modprobe -r snd_hda_intel`"
+        rationale: Wrong. This is a shell command, not a configuration directive.
+      - id: c
+        text: "`snd_hda_intel.power_save=1`"
+        rationale: Wrong. module.param=value is the syntax for the kernel command line, not for modprobe.d files.
+      - id: d
+        text: "`blacklist floppy`"
+        rationale: Correct. "blacklist <module>" stops the module from being loaded automatically through its aliases.
+    answer: [a, d]
+    explanation: >
+      Files ending in .conf in /etc/modprobe.d/ hold directives such as options, blacklist, alias and
+      install. They are read every time modprobe runs, so they also apply at the next boot.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Commands for Inspection }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [modprobe.d, blacklist, module-parameters]
+
+  - id: 101-101.1-0012
+    type: fill_in
+    difficulty: 3
+    pool: holdout
+    stem: Type the full path of the file under `/proc` that lists the DMA channels currently registered.
+    fill_in:
+      accepted: ['(cat\s+)?/proc/dma']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      /proc/dma lists the registered ISA DMA channels. Its neighbours /proc/ioports and
+      /proc/interrupts cover I/O port ranges and interrupt lines, the other classic hardware resources.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Information Files and Device Files }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [/proc/dma, dma]
+
+  - id: 101-101.1-0013
+    type: multi_choice
+    difficulty: 3
+    pool: holdout
+    stem: Which **TWO** device files represent a whole disk rather than a partition?
+    select_count: 2
+    options:
+      - id: a
+        text: "`/dev/sda3`"
+        rationale: Wrong. This is the third partition of the first SCSI-style disk.
+      - id: b
+        text: "`/dev/nvme0n1`"
+        rationale: Correct. This is namespace 1 of the first NVMe controller, the whole disk; partitions add p<number>.
+      - id: c
+        text: "`/dev/sdb`"
+        rationale: Correct. sdb without a number is the whole second SCSI-style disk.
+      - id: d
+        text: "`/dev/mmcblk0p2`"
+        rationale: Wrong. This is the second partition of the first MMC/SD device.
+      - id: e
+        text: "`/dev/nvme0n1p1`"
+        rationale: Wrong. The p1 suffix makes this the first partition of the NVMe disk.
+    answer: [b, c]
+    explanation: >
+      sd disks number their partitions directly (sdb1). NVMe and MMC names already end in a digit,
+      so partitions get a p before their number (nvme0n1p1, mmcblk0p2). In nvme0n1 the n1 is the
+      namespace, not a partition.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Storage Devices }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [/dev, device-naming, nvme]
+
+  - id: 101-101.1-0014
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      Based on the `lsmod` output below, which module could `modprobe -r` remove right now without
+      first removing or stopping anything else that uses it?
+    exhibit: |
+      $ lsmod
+      Module                  Size  Used by
+      snd_hda_codec_realtek 188416  1
+      snd_hda_intel          57344  3
+      snd_hda_codec         204800  2 snd_hda_codec_realtek,snd_hda_intel
+      snd_pcm               196608  4 snd_hda_codec,snd_hda_intel
+      snd                   135168 12 snd_pcm,snd_hda_codec,snd_hda_intel
+      uvcvideo              139264  0
+    options:
+      - id: a
+        text: "`snd`"
+        rationale: Wrong. Its use count is 12, and other loaded modules such as snd_pcm depend on it.
+      - id: b
+        text: "`snd_hda_codec_realtek`"
+        rationale: Wrong. Its use count is 1, so something still holds a reference to it.
+      - id: c
+        text: "`snd_hda_intel`"
+        rationale: Wrong. Its use count is 3, so it is still in use.
+      - id: d
+        text: "`uvcvideo`"
+        rationale: Correct. A use count of 0 means nothing currently holds the module.
+    answer: [d]
+    explanation: >
+      The number in "Used by" is the module's use count, followed by the loaded modules that depend on
+      it. modprobe -r refuses to unload a module whose count is not 0 ("Module ... is in use").
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Commands for Inspection }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [lsmod, modprobe]
+
+  - id: 101-101.1-0015
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      After installing the vendor's proprietary graphics driver and rebooting, an administrator runs
+      the command below. What does the output show?
+    exhibit: |
+      $ lspci -k -s 01:00.0
+      01:00.0 VGA compatible controller: NVIDIA Corporation TU117 [GeForce GTX 1650] (rev a1)
+              Subsystem: ASUSTeK Computer Inc. Device 8758
+              Kernel driver in use: nouveau
+              Kernel modules: nouveau, nvidia_drm, nvidia
+    options:
+      - id: a
+        text: The proprietary nvidia module is driving the card
+        rationale: Wrong. "Kernel driver in use" names nouveau, so nouveau is bound to the card.
+      - id: b
+        text: The card was not detected, so no driver could be bound
+        rationale: Wrong. lspci lists the card and shows a driver in use, so it was detected.
+      - id: c
+        text: The nvidia modules are installed and match the card, but nouveau is bound to it
+        rationale: Correct. "Kernel modules" lists every installed module that supports the card; "Kernel driver in use" shows the one actually bound.
+      - id: d
+        text: All three listed modules are driving the card together
+        rationale: Wrong. Only one driver is bound to a device; the other names are only candidates.
+    answer: [c]
+    explanation: >
+      "Kernel modules" lists the installed modules that claim the device, and "Kernel driver in use"
+      shows the one bound to it. To let nvidia take over, keep nouveau from loading (for example a
+      blacklist entry in /etc/modprobe.d/) and reboot.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Commands for Inspection }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [lspci, kernel-module, nouveau]
+
+  - id: 101-101.1-0016
+    type: fill_in
+    difficulty: 4
+    pool: holdout
+    stem: >
+      You want to see only the parameters the `e1000e` module accepts, without its author, license,
+      aliases and other fields. Type the `modinfo` option that does this.
+    fill_in:
+      accepted: ['((sudo\s+)?((/usr)?/s?bin/)?modinfo\s+)?(-p|--parameters)(\s+e1000e)?']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      `modinfo -p e1000e` (long form --parameters) prints only the parm entries: each parameter's
+      name, description and type. Without options modinfo prints every field of the module.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Commands for Inspection }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [modinfo, module-parameters]
+
+  - id: 101-101.1-0017
+    type: multi_choice
+    difficulty: 4
+    pool: holdout
+    stem: Which **TWO** statements about `/proc` and `/sys` are true?
+    select_count: 2
+    options:
+      - id: a
+        text: Their contents are generated by the kernel in memory and are not stored on any disk partition.
+        rationale: Correct. Both are pseudo-filesystems that exist only while the system runs.
+      - id: b
+        text: Values written to files under /sys are kept and applied again after a reboot.
+        rationale: Wrong. sysfs lives in memory; anything written there is lost at shutdown unless a boot script or udev rule sets it again.
+      - id: c
+        text: /proc also holds information about running processes, while /sys is organized around devices, drivers and buses.
+        rationale: Correct. /proc has a directory per process plus kernel data; /sys is dedicated to the device model.
+      - id: d
+        text: They are ordinary directories on the root filesystem that the kernel rewrites every few seconds.
+        rationale: Wrong. They are separate mounts (procfs and sysfs) whose files are generated when they are read.
+    answer: [a, c]
+    explanation: >
+      procfs (/proc) and sysfs (/sys) are pseudo-filesystems: the kernel produces their contents on
+      demand from memory. Tools such as lspci, lsusb and lsmod read much of their data from them.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Information Files and Device Files }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [/proc, /sys, pseudo-filesystem]
+
+  - id: 101-101.1-0018
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      An administrator wants the `nouveau` module never to be loaded and creates the file shown below.
+      Yet the module loads when the command below is run. Why?
+    exhibit: |
+      $ cat /etc/modprobe.d/nouveau.conf
+      blacklist nouveau
+      $ sudo modprobe nouveau
+      $ lsmod | grep '^nouveau'
+      nouveau              2949120  0
+    options:
+      - id: a
+        text: Blacklist entries are only read from a file named exactly blacklist.conf
+        rationale: Wrong. modprobe reads every file ending in .conf in /etc/modprobe.d/; the file name is free.
+      - id: b
+        text: A blacklist entry only stops loading through aliases, not a request by module name
+        rationale: Correct. blacklist makes modprobe ignore the module's aliases (as used for automatic loading); naming the module explicitly still loads it.
+      - id: c
+        text: Changes in /etc/modprobe.d/ take effect only after depmod has been run
+        rationale: Wrong. modprobe reads its configuration files every time it runs; depmod builds the dependency list, not the configuration.
+      - id: d
+        text: The blacklist line must give the full path of the module's .ko file
+        rationale: Wrong. blacklist takes a module name, not a file path.
+    answer: [b]
+    explanation: >
+      blacklist prevents automatic loading, which works through aliases such as a device's modalias.
+      An explicit modprobe by name, or another module that depends on it, still loads it. To block
+      it completely, add a line such as "install nouveau /bin/false".
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Commands for Inspection }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [blacklist, modprobe.d, nouveau]
+
+  - id: 101-101.1-0019
+    type: multi_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      `snd_hda_intel` is built as a loadable module. Which **TWO** actions make it load with
+      `power_save=1` on every boot from now on?
+    select_count: 2
+    options:
+      - id: a
+        text: Run `modprobe snd_hda_intel power_save=1` once as root
+        rationale: Wrong. Parameters given on the command line apply only to that load; they are not saved.
+      - id: b
+        text: Add `options snd_hda_intel power_save=1` to `/etc/modprobe.d/audio.conf`
+        rationale: Correct. Any .conf file in /etc/modprobe.d/ is read by modprobe every time it loads the module.
+      - id: c
+        text: Add `options snd_hda_intel power_save=1` to a new file `/etc/modprobe.d/audio`
+        rationale: Wrong. modprobe only reads files in /etc/modprobe.d/ whose names end in .conf; this file is ignored.
+      - id: d
+        text: Append `snd_hda_intel.power_save=1` to the kernel command line
+        rationale: Correct. modprobe also reads module.param=value entries from the kernel command line (/proc/cmdline).
+      - id: e
+        text: Run `modinfo -p snd_hda_intel power_save=1` once as root
+        rationale: Wrong. modinfo only displays information about a module; it never changes settings.
+    answer: [b, d]
+    explanation: >
+      Persistent module parameters belong in an "options" line in a .conf file under /etc/modprobe.d/,
+      or on the kernel command line as module.param=value, which also works for drivers built into
+      the kernel. Parameters typed after modprobe last only for that one load.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Commands for Inspection }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Shortened correct option d so it is not the longest option." }
+    tags: [module-parameters, modprobe.d]
+
+  - id: 101-101.1-0020
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      The distribution ships `/usr/lib/udev/rules.d/60-serial.rules`. You want to replace that file
+      with your own version, so none of the original rules run, in a way that is permanent and
+      survives package updates. What do you do?
+    options:
+      - id: a
+        text: Create `/etc/udev/rules.d/60-serial.rules` with your rules
+        rationale: Correct. A file in /etc/udev/rules.d/ with the same name replaces the packaged one, which is then not read.
+      - id: b
+        text: Create `/etc/udev/rules.d/99-serial.rules` with your rules
+        rationale: Wrong. A different name adds a second file; the original 60-serial.rules is still processed.
+      - id: c
+        text: Create `/run/udev/rules.d/60-serial.rules` with your rules
+        rationale: Wrong. /run is a tmpfs, so the override is lost at the next reboot.
+      - id: d
+        text: Edit `/usr/lib/udev/rules.d/60-serial.rules` directly
+        rationale: Wrong. Files under /usr/lib belong to the package and are overwritten when it is updated.
+    answer: [a]
+    explanation: >
+      udev reads rules files from /usr/lib/udev/rules.d (distribution), /run/udev/rules.d (runtime)
+      and /etc/udev/rules.d (local administrator). Files are processed in name order, and a file in
+      /etc replaces a file with the same name elsewhere, so local changes go in /etc/udev/rules.d.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Information Files and Device Files }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [udev, udev-rules]
+
+  # --------------------------------------------------------------------------- practice (CLI)
+
+  - id: 101-101.1-0021
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: In Linux, what is the piece of software that lets the kernel control a particular kind of hardware usually called?
+    options:
+      - id: a
+        text: A device file
+        rationale: Wrong. A device file in /dev is how programs reach a device, not the code that controls it.
+      - id: b
+        text: A kernel module (driver)
+        rationale: Correct. Drivers are usually kernel modules, loaded when matching hardware is found.
+      - id: c
+        text: A udev rule
+        rationale: Wrong. udev rules decide how device files are named and set up; they do not drive the hardware.
+      - id: d
+        text: A firmware setup utility
+        rationale: Wrong. That is the BIOS/UEFI configuration program, which runs before the operating system.
+    answer: [b]
+    explanation: >
+      A device can be detected (lspci or lsusb list it) and still not work until the matching kernel
+      module is loaded. Drivers may come with the kernel or from a separate source such as the vendor.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Commands for Inspection }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [kernel-module, driver]
+
+  - id: 101-101.1-0022
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: >
+      Before installing a hypervisor, you want to check whether the CPU advertises the hardware
+      virtualization flags (vmx or svm). Which file do you read?
+    options:
+      - id: a
+        text: "`/proc/interrupts`"
+        rationale: Wrong. This shows interrupt counts per CPU and device, not CPU features.
+      - id: b
+        text: "`/proc/ioports`"
+        rationale: Wrong. This lists registered I/O port ranges.
+      - id: c
+        text: "`/proc/modules`"
+        rationale: Wrong. This lists loaded kernel modules; lsmod formats it.
+      - id: d
+        text: "`/proc/cpuinfo`"
+        rationale: Correct. Each CPU's entry includes a flags line listing the features it supports.
+    answer: [d]
+    explanation: >
+      /proc/cpuinfo describes every CPU the kernel found: model, speed, cache, feature flags, and on
+      current kernels also a bugs line with known hardware flaws. `grep -E 'vmx|svm' /proc/cpuinfo`
+      answers the question directly.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Information Files and Device Files }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [/proc/cpuinfo]
+
+  - id: 101-101.1-0023
+    type: fill_in
+    difficulty: 4
+    pool: practice
+    stem: >
+      `lsusb -t` shows the line below for a webcam, under the root hub of bus 2. Type the `lsusb`
+      command that shows only this device's ID line, selecting it by bus and device number.
+    exhibit: |
+      /:  Bus 002.Port 001: Dev 001, Class=root_hub, Driver=xhci_hcd/4p, 480M
+          |__ Port 002: Dev 007, If 0, Class=Video, Driver=uvcvideo, 480M
+    fill_in:
+      accepted: ['(sudo\s+)?((/usr)?/s?bin/)?lsusb(\s+(-v|--verbose))?\s+-s\s*0*2:0*7(\s+(-v|--verbose))?']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      lsusb -s bus:devnum selects a device by position, with both numbers in decimal (leading zeros
+      are fine), so `lsusb -s 2:7` or `lsusb -s 002:007`. -d would select by vendor:product ID instead.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Commands for Inspection }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Exhibit changed to the current usbutils lsusb -t format (three-digit bus, port and device numbers)." }
+    tags: [lsusb]
+
+  - id: 101-101.1-0024
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: In which directory are the device files that programs open to read and write disks, such as `sda` and `nvme0n1`?
+    options:
+      - id: a
+        text: "`/dev`"
+        rationale: Correct. Device files (block and character devices) live in /dev, created by udev.
+      - id: b
+        text: "`/sys/block`"
+        rationale: Wrong. Its entries describe block devices in sysfs; they are not the device files programs open.
+      - id: c
+        text: "`/proc/partitions`"
+        rationale: Wrong. This is a single file listing partitions and their sizes, not a directory of device files.
+      - id: d
+        text: "`/boot`"
+        rationale: Wrong. /boot holds the kernel, initramfs and boot loader files.
+    answer: [a]
+    explanation: >
+      Every device a program can open appears as a file under /dev. Storage devices are block devices
+      there, for example /dev/sda for a disk and /dev/sda1 for its first partition.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Storage Devices }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [/dev, block-device]
+
+  - id: 101-101.1-0025
+    type: single_choice
+    difficulty: 3
+    pool: practice
+    stem: Which `lsusb` option shows how the connected USB devices hang off hubs and ports, as a tree with the driver of each interface?
+    options:
+      - id: a
+        text: "`-v`"
+        rationale: Wrong. -v prints detailed descriptors for each device, not a tree.
+      - id: b
+        text: "`-D`"
+        rationale: Wrong. -D examines a single device given by its device file.
+      - id: c
+        text: "`-t`"
+        rationale: Correct. -t (--tree) prints the physical USB hierarchy, with class, driver and speed per interface.
+      - id: d
+        text: "`-s`"
+        rationale: Wrong. -s selects devices by bus and device number.
+    answer: [c]
+    explanation: >
+      `lsusb -t` is the quickest way to see which hub port a device is on, its speed, and whether a
+      driver (for example usbhid or btusb) has claimed each interface.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Commands for Inspection }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [lsusb]
+
+  - id: 101-101.1-0026
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: What is D-Bus?
+    options:
+      - id: a
+        text: The pseudo-filesystem in which the kernel describes devices
+        rationale: Wrong. That is sysfs, mounted on /sys.
+      - id: b
+        text: The daemon that creates device files in /dev
+        rationale: Wrong. That is udev (systemd-udevd on most distributions).
+      - id: c
+        text: The hardware bus that USB controllers are attached to
+        rationale: Wrong. D-Bus is software; USB controllers usually sit on the PCI bus.
+      - id: d
+        text: A message bus that lets processes exchange messages and signals
+        rationale: Correct. Services use D-Bus to talk to each other, for example to tell desktop programs a disk was plugged in.
+    answer: [d]
+    explanation: >
+      D-Bus is an inter-process communication system with a system bus and per-session buses. The
+      kernel reports a new device, udev sets it up, and services then announce it over D-Bus so
+      programs such as a file manager can react.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Information Files and Device Files }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [dbus]
+
+  - id: 101-101.1-0027
+    type: multi_choice
+    difficulty: 3
+    pool: practice
+    stem: Which **TWO** statements about udev are true?
+    select_count: 2
+    options:
+      - id: a
+        text: It creates device files in /dev when the kernel reports a device.
+        rationale: Correct. udev receives the kernel's device events and creates and names the files in /dev according to its rules.
+      - id: b
+        text: It is a kernel module that has to be loaded with modprobe.
+        rationale: Wrong. udev runs in user space as a daemon (systemd-udevd); it is not a kernel module.
+      - id: c
+        text: It handles devices present at boot as well as devices plugged in later.
+        rationale: Correct. udev covers both coldplug (devices found at start-up) and hotplug (devices added while running).
+      - id: d
+        text: It reads all device information from /proc/udev.
+        rationale: Wrong. There is no /proc/udev; udev gets device details from kernel events and sysfs in /sys.
+    answer: [a, c]
+    explanation: >
+      udev listens for kernel device events, looks up device details in /sys, applies its rules and
+      creates the matching files in /dev. It processes devices present at start-up and ones added later.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Information Files and Device Files }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [udev, hotplug, coldplug]
+
+  - id: 101-101.1-0028
+    type: single_choice
+    difficulty: 3
+    pool: practice
+    stem: In the `lsmod` line below, what does the number `12` mean?
+    exhibit: |
+      Module                  Size  Used by
+      snd                   135168  12 snd_seq,snd_timer,snd_pcm,snd_hda_codec,snd_hda_intel
+    options:
+      - id: a
+        text: The module's size in kilobytes
+        rationale: Wrong. Size is the second column, in bytes (135168).
+      - id: b
+        text: The module's use count, the number of references held on it
+        rationale: Correct. The first value under "Used by" is the use count, followed by the dependent modules.
+      - id: c
+        text: The number of parameters the module accepts
+        rationale: Wrong. lsmod does not show parameters; modinfo -p does.
+      - id: d
+        text: The number of sound devices the module drives
+        rationale: Wrong. lsmod does not count devices; the number counts references on the module.
+    answer: [b]
+    explanation: >
+      The use count can be higher than the number of names listed, because users other than modules,
+      such as open device files, also hold references. A module can only be unloaded at count 0.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Commands for Inspection }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [lsmod]
+
+  - id: 101-101.1-0029
+    type: multi_choice
+    difficulty: 2
+    pool: practice
+    stem: Which **TWO** of these commands are part of the kmod package for working with kernel modules?
+    select_count: 2
+    options:
+      - id: a
+        text: "`lspci`"
+        rationale: Wrong. lspci comes from pciutils.
+      - id: b
+        text: "`lsmod`"
+        rationale: Correct. lsmod is one of the kmod tools.
+      - id: c
+        text: "`lsusb`"
+        rationale: Wrong. lsusb comes from usbutils.
+      - id: d
+        text: "`modprobe`"
+        rationale: Correct. modprobe is one of the kmod tools.
+    answer: [b, d]
+    explanation: >
+      kmod provides lsmod, modprobe, modinfo, insmod, rmmod and depmod for listing, loading,
+      unloading and inspecting kernel modules. lspci and lsusb inspect hardware and come from
+      separate packages.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Commands for Inspection }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [kmod, lsmod, modprobe]
+
+  - id: 101-101.1-0030
+    type: fill_in
+    difficulty: 3
+    pool: practice
+    stem: >
+      The PC speaker beeps annoyingly. Type the line to put in `/etc/modprobe.d/nobeep.conf` so that
+      the `pcspkr` module is no longer loaded automatically.
+    fill_in:
+      accepted: ["blacklist pcspkr"]
+      match: normalized
+      case_sensitive: true
+    explanation: >
+      "blacklist pcspkr" makes modprobe ignore the module's aliases, so it is no longer loaded when
+      the hardware is detected. Run `modprobe -r pcspkr` to remove the copy already loaded.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Commands for Inspection }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [blacklist, modprobe.d]
