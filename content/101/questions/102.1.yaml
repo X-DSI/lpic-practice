@@ -30,9 +30,10 @@ questions:
       mount point; once mounted, everything on the filesystem is reached through paths below it.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: Mount Points }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Option b lengthened so the correct option is not the longest." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [mount-point]
 
   - id: 101-102.1-0002
@@ -61,9 +62,10 @@ questions:
       /var/spool, caches in /var/cache and application state in /var/lib.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: Variable Data (/var) }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [var]
 
   - id: 101-102.1-0003
@@ -76,8 +78,8 @@ questions:
         text: ext4
         rationale: Wrong. ext4 is a common Linux root filesystem, but UEFI firmware is only required to read FAT.
       - id: b
-        text: FAT (vfat on Linux)
-        rationale: Correct. The ESP is formatted with a FAT filesystem so that the firmware itself can read the boot loaders on it.
+        text: FAT
+        rationale: Correct. The ESP is formatted with FAT so the firmware itself can read it; Linux mounts it with the vfat driver.
       - id: c
         text: XFS
         rationale: Wrong. XFS is a Linux data filesystem that UEFI firmware does not read.
@@ -90,9 +92,10 @@ questions:
       FAT-formatted. Linux mounts it with the vfat driver.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: The EFI System Partition (ESP) }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Option b text shortened to FAT, rationale mentions vfat, so it does not give away the new 0011." }
     tags: [esp, uefi]
 
   - id: 101-102.1-0004
@@ -122,9 +125,10 @@ questions:
       partition without formatting it, so users' data and settings are kept.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: Keeping Things Separated }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [home, separate-partitions]
 
   - id: 101-102.1-0005
@@ -153,9 +157,10 @@ questions:
       into a volume group, and logical volumes taken from that pool can use space on all of them.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: LVM }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [lvm]
 
   - id: 101-102.1-0006
@@ -180,9 +185,10 @@ questions:
       command: mkswap /tmp/swap.img
       expect: { exit_code: 0, stdout_contains: "Setting up swapspace" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [swap, mkswap]
 
   - id: 101-102.1-0007
@@ -190,31 +196,32 @@ questions:
     difficulty: 2
     pool: holdout
     stem: >
-      You need to attach a spare internal partition by hand for a one-off copy and will detach it
-      afterwards. By convention, under which directory should you mount it?
+      On an Ubuntu desktop, user `carol` plugs in a USB flash drive whose filesystem label is `BACKUP`.
+      The desktop mounts it automatically. Where does it typically appear?
     options:
       - id: a
-        text: "`/mnt`"
-        rationale: Correct. /mnt is the conventional place for filesystems an administrator mounts temporarily by hand.
+        text: "`/media/carol/BACKUP`"
+        rationale: Correct. Desktop environments using udisks2 mount removable media under /media/USER/LABEL on Ubuntu and Debian.
       - id: b
-        text: "`/media`"
-        rationale: Wrong. /media is meant for removable media, which desktop environments usually mount automatically.
+        text: "`/mnt/BACKUP`"
+        rationale: Wrong. /mnt is for filesystems an administrator mounts by hand.
       - id: c
-        text: "`/srv`"
-        rationale: Wrong. /srv holds data served by the system, such as web or FTP content.
+        text: "`/mnt/usb/carol/BACKUP`"
+        rationale: Wrong. Automatic mounts do not go under /mnt.
       - id: d
-        text: "`/opt`"
-        rationale: Wrong. /opt is for add-on software packages.
+        text: "`/srv/carol/BACKUP`"
+        rationale: Wrong. /srv holds data the system serves.
     answer: [a]
     explanation: >
-      Any existing directory can be a mount point, but convention keeps manual, temporary mounts under
-      /mnt and removable media under /media (or /run/media on some distributions).
+      Removable media is auto-mounted under /media/USER/LABEL (Fedora and RHEL use
+      /run/media/USER/LABEL); manual temporary mounts conventionally go under /mnt.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: Mount Points }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
-    tags: [mount-point, mnt]
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Replaced: restated Guided Exercise 4; now an auto-mount (/media/USER/LABEL) question. Needs re-check." }
+    tags: [mount-point, media, removable-media]
 
   - id: 101-102.1-0008
     type: single_choice
@@ -240,9 +247,10 @@ questions:
       loads the kernel and initial RAM disk, all from /boot.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: The Boot Partition (/boot) }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Option a lengthened so the correct option is not the longest." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [boot]
 
   - id: 101-102.1-0009
@@ -271,9 +279,10 @@ questions:
       Partition; fdisk and gdisk show it as "EFI System" (gdisk short code EF00).
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: The EFI System Partition (ESP) }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. GUIDs verified with sfdisk." }
     tags: [esp, gpt]
 
   - id: 101-102.1-0010
@@ -305,9 +314,10 @@ questions:
       independently of the operating system.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: Variable Data (/var) }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [var, separate-partitions]
 
   - id: 101-102.1-0011
@@ -315,23 +325,24 @@ questions:
     difficulty: 3
     pool: holdout
     stem: >
-      On a UEFI system installed with a GRUB-based distribution such as Debian, Ubuntu or RHEL, the ESP
-      is listed in `/etc/fstab`. Type the mount point that belongs in the blank.
+      On a UEFI system, the ESP is listed in `/etc/fstab`. Type the filesystem type that belongs in
+      the blank.
     exhibit: |
-      UUID=9C1E-2A7F  ________  vfat  umask=0077  0  1
+      UUID=9C1E-2A7F  /boot/efi  ________  umask=0077  0  1
     fill_in:
-      accepted: ['/boot/efi/?']
+      accepted: ['vfat']
       match: regex
       case_sensitive: true
     explanation: >
-      These distributions mount the ESP at /boot/efi; GRUB's EFI binaries then sit under
-      /boot/efi/EFI/<distribution>/. (Some systemd-boot setups use /efi or /boot instead.)
+      The ESP holds a FAT filesystem, which Linux mounts with the vfat driver (long file names
+      supported). Its usual mount point on GRUB-based distributions is /boot/efi.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: The EFI System Partition (ESP) }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
-    tags: [esp, fstab]
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Replaced: restated Guided Exercise 3; now blanks the fstab type field (vfat). Needs re-check." }
+    tags: [esp, fstab, vfat]
 
   - id: 101-102.1-0012
     type: single_choice
@@ -360,9 +371,10 @@ questions:
       8–64 GB, and advises against hibernation above 64 GB.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: Swap }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. RHEL 9/10 swap table checked." }
     tags: [swap, sizing]
 
   - id: 101-102.1-0013
@@ -393,9 +405,10 @@ questions:
       in files, and more than one swap area can be in use at once.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: Swap }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [swap, swap-file]
 
   - id: 101-102.1-0014
@@ -437,9 +450,10 @@ questions:
       free until an administrator assigns it.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: Variable Data (/var) }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Correct option shortened; it was the longest." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [var, lvm, lsblk]
 
   - id: 101-102.1-0015
@@ -468,14 +482,15 @@ questions:
         rationale: Correct. GRUB must read the kernel from a filesystem it understands, so /boot goes on one it supports.
     answer: [c, e]
     explanation: >
-      A separate /boot is needed when the boot loader cannot read the root filesystem: an unsupported
-      filesystem type, or encryption or compression it cannot handle. It is also chosen for safety, so
-      the system can still start when / is damaged.
+      GRUB has to read the kernel and initial RAM disk itself. If it has no driver for the root
+      filesystem, or cannot unlock how / is encrypted, those files go on a small /boot it can read.
+      Some admins also separate /boot so the system can still start when / is damaged.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: The Boot Partition (/boot) }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Explanation rewritten." }
     tags: [boot, separate-partitions]
 
   - id: 101-102.1-0016
@@ -486,7 +501,7 @@ questions:
       A volume group was created with the default physical extent size. A logical volume in it is
       allocated exactly 250 extents. How large is the logical volume, in MiB? Type the number.
     fill_in:
-      accepted: ['1000(\s*(mib|m|mb))?']
+      accepted: ['1,?000(\.0+)?(\s*(mib|m|mb))?']
       match: regex
       case_sensitive: false
     explanation: >
@@ -494,9 +509,10 @@ questions:
       4 MiB, so 250 extents give 1000 MiB. Growing or shrinking an LV means adding or removing extents.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: LVM }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Pattern now also accepts 1,000 and 1000.0 forms." }
     tags: [lvm, extents]
 
   - id: 101-102.1-0017
@@ -527,9 +543,10 @@ questions:
       physical disk failure.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: Variable Data (/var) }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [var, design]
 
   - id: 101-102.1-0018
@@ -569,9 +586,10 @@ questions:
       filesystem too) — no data has to move.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: LVM }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Option c lengthened so the correct option is not the longest." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. LV creation untestable here (no device-mapper); documented behaviour." }
     tags: [lvm, extents, vgdisplay]
 
   - id: 101-102.1-0019
@@ -605,9 +623,10 @@ questions:
       fixed.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: The EFI System Partition (ESP) }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [esp, mbr]
 
   - id: 101-102.1-0020
@@ -637,9 +656,10 @@ questions:
       LBA-capable BIOSes removed the limit.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: The Boot Partition (/boot) }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [boot, chs, bios]
 
   # --------------------------------------------------------------------------- practice (CLI)
@@ -649,7 +669,7 @@ questions:
     difficulty: 1
     pool: practice
     stem: >
-      A disk is divided into sections, each with a start and end sector recorded in an MBR or GPT table
+      A disk is divided into sections, each with its location and size recorded in an MBR or GPT table
       at the beginning of the disk. What is each section called?
     options:
       - id: a
@@ -670,9 +690,10 @@ questions:
       holds a filesystem, swap, or an LVM physical volume.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: Introduction }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Stem reworded (location and size instead of start and end sector)." }
     tags: [partitions]
 
   - id: 101-102.1-0022
@@ -701,9 +722,10 @@ questions:
       and logical volumes are taken from the group. The LV is what gets a filesystem.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: LVM }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [lvm]
 
   - id: 101-102.1-0023
@@ -736,9 +758,10 @@ questions:
       device-mapper device. Either can be used with mkfs, mount or /etc/fstab.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: LVM }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. LV creation untestable here (no device-mapper); documented behaviour." }
     tags: [lvm, dev-mapper]
 
   - id: 101-102.1-0024
@@ -767,9 +790,10 @@ questions:
       That is one reason servers often put /var on a filesystem of its own. Both locations can be changed.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: Variable Data (/var) }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [var, apache]
 
   - id: 101-102.1-0025
@@ -798,9 +822,10 @@ questions:
       filesystem but cannot be reached through that path while something is mounted over it.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: Mount Points }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Option b lengthened so the correct option is not the longest." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [mount-point]
 
   - id: 101-102.1-0026
@@ -812,16 +837,16 @@ questions:
       how much swap should it get?
     options:
       - id: a
-        text: 64 GB
+        text: At least 64 GB
         rationale: Wrong. Twice RAM is the old rule of thumb, and Red Hat applies 2x only below 2 GB of RAM.
       - id: b
-        text: 48 GB
+        text: At least 48 GB
         rationale: Wrong. 1.5x RAM is the figure for 8–64 GB of RAM when hibernation is needed.
       - id: c
         text: At least 4 GB
         rationale: Correct. For 8–64 GB of RAM without hibernation, Red Hat recommends at least 4 GB.
       - id: d
-        text: 32 GB
+        text: At least 32 GB
         rationale: Wrong. Swap equal to RAM is the figure for 2–8 GB of RAM without hibernation.
     answer: [c]
     explanation: >
@@ -829,9 +854,10 @@ questions:
       upward. Workloads such as databases may need a vendor-specific figure.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: Swap }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "All options made floors (At least ...) so the key is not the only one phrased differently. RHEL 9/10 swap table checked." }
     tags: [swap, sizing]
 
   - id: 101-102.1-0027
@@ -858,9 +884,10 @@ questions:
       0xEF on MBR), not by its position, and Linux usually mounts it at /boot/efi.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: The EFI System Partition (ESP) }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Option b lengthened so the correct option is not the longest." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [esp]
 
   - id: 101-102.1-0028
@@ -871,7 +898,7 @@ questions:
       You run `vgcreate vg0 /dev/sdb1` without the `-s` option. What physical extent size, in MiB, does
       the new volume group use? Type the number.
     fill_in:
-      accepted: ['4(\s*(mib|m|mb))?']
+      accepted: ['4(\.0+)?(\s*(mib|m|mb))?']
       match: regex
       case_sensitive: false
     explanation: >
@@ -879,9 +906,10 @@ questions:
       shows "PE Size 4.00 MiB". Logical volume sizes are multiples of this extent size.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: LVM }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Pattern now also accepts 4.0 / 4.00 forms." }
     tags: [lvm, extents]
 
   - id: 101-102.1-0029
@@ -903,9 +931,10 @@ questions:
       command: getent passwd root
       expect: { exit_code: 0, stdout_contains: ":/root:" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [home, root]
 
   - id: 101-102.1-0030
@@ -916,8 +945,8 @@ questions:
     select_count: 2
     options:
       - id: a
-        text: The directory must exist before a filesystem can be mounted on it
-        rationale: Correct. mount fails with "mount point does not exist" if the directory is missing.
+        text: Without extra options, `mount` fails when the target directory is missing
+        rationale: "Correct. mount reports 'mount point does not exist'. Only with --mkdir (util-linux 2.39+) or X-mount.mkdir does it create the directory first."
       - id: b
         text: A swap partition can be mounted at `/swap` to browse its contents
         rationale: Wrong. Swap has no filesystem to browse; it is activated with swapon, and mount rejects it.
@@ -936,7 +965,8 @@ questions:
       for removable media) make administration easier but are not enforced.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: Mount Points }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Option a reworded: mount fails without extra options; --mkdir / X-mount.mkdir noted in rationale." }
     tags: [mount-point]
