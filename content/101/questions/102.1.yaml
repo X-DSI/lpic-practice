@@ -1,0 +1,942 @@
+# 102.1 Design hard disk layout — weight 2 → 20 holdout + 10 practice.
+# Original questions written from LPI Learning Materials 101-500, objective 102.1, lesson 1.
+schema_version: 1
+exam: "101"
+objective: "102.1"
+questions:
+  # ---------------------------------------------------------------- holdout (mock exams only)
+
+  - id: 101-102.1-0001
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: In Linux disk layout, what is a mount point?
+    options:
+      - id: a
+        text: A device file under `/dev` that stands for one partition
+        rationale: Wrong. That describes a device node such as /dev/sda2; the mount point is where its filesystem is attached.
+      - id: b
+        text: The partition table entry recording the first and last sectors of a partition
+        rationale: Wrong. Partition table entries hold start and end sectors and the type; they say nothing about where a filesystem appears.
+      - id: c
+        text: An existing directory where a filesystem's contents become reachable
+        rationale: Correct. Mounting attaches a filesystem to a directory in the tree, and its files then appear under that directory.
+      - id: d
+        text: A label written inside the filesystem's superblock
+        rationale: Wrong. That is a filesystem label, which can be used to find the filesystem but is not where it is attached.
+    answer: [c]
+    explanation: >
+      A filesystem must be attached to a directory before its files can be used. That directory is the
+      mount point; once mounted, everything on the filesystem is reached through paths below it.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: Mount Points }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Option b lengthened so the correct option is not the longest." }
+    tags: [mount-point]
+
+  - id: 101-102.1-0002
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: >
+      Logs, mail and print spools, and application caches grow and shrink while a system runs. Under
+      which top-level directory are they kept?
+    options:
+      - id: a
+        text: "`/var`"
+        rationale: Correct. /var holds variable data that the system writes during operation, such as /var/log, /var/spool and /var/cache.
+      - id: b
+        text: "`/usr`"
+        rationale: Wrong. /usr holds installed programs, libraries and shared read-only data.
+      - id: c
+        text: "`/opt`"
+        rationale: Wrong. /opt is for add-on software packages installed as self-contained trees.
+      - id: d
+        text: "`/srv`"
+        rationale: Wrong. /srv is meant for data a site serves (for example by FTP or HTTP), not for logs and caches.
+    answer: [a]
+    explanation: >
+      /var is the home of data that changes during normal operation: logs in /var/log, queues in
+      /var/spool, caches in /var/cache and application state in /var/lib.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: Variable Data (/var) }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [var]
+
+  - id: 101-102.1-0003
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: Which filesystem type is used on the EFI System Partition (ESP) of a UEFI machine?
+    options:
+      - id: a
+        text: ext4
+        rationale: Wrong. ext4 is a common Linux root filesystem, but UEFI firmware is only required to read FAT.
+      - id: b
+        text: FAT (vfat on Linux)
+        rationale: Correct. The ESP is formatted with a FAT filesystem so that the firmware itself can read the boot loaders on it.
+      - id: c
+        text: XFS
+        rationale: Wrong. XFS is a Linux data filesystem that UEFI firmware does not read.
+      - id: d
+        text: Btrfs
+        rationale: Wrong. Btrfs is a Linux filesystem that UEFI firmware does not read.
+    answer: [b]
+    explanation: >
+      UEFI firmware loads boot loaders from the ESP, and the specification defines that partition as
+      FAT-formatted. Linux mounts it with the vfat driver.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: The EFI System Partition (ESP) }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [esp, uefi]
+
+  - id: 101-102.1-0004
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      You are setting up a family PC. Next year you plan to wipe and reinstall the distribution, and
+      want the family's documents, photos and desktop settings to survive untouched. Which directory
+      should get its own partition?
+    options:
+      - id: a
+        text: "`/var`"
+        rationale: Wrong. /var holds logs, caches and service data, not users' personal files.
+      - id: b
+        text: "`/usr`"
+        rationale: Wrong. /usr holds installed software, which a reinstall replaces anyway.
+      - id: c
+        text: "`/boot`"
+        rationale: Wrong. /boot holds the kernel and boot loader files, which the reinstall rewrites.
+      - id: d
+        text: "`/home`"
+        rationale: Correct. Regular users' home directories, with their files and settings, live under /home; a separate partition can be kept during a reinstall.
+    answer: [d]
+    explanation: >
+      With /home on its own partition, the installer can format / and reuse the existing /home
+      partition without formatting it, so users' data and settings are kept.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: Keeping Things Separated }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [home, separate-partitions]
+
+  - id: 101-102.1-0005
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      A server has two disks, each with one free partition. You want a single filesystem that uses the
+      space of both partitions. Which of these makes that possible?
+    options:
+      - id: a
+        text: An extended partition
+        rationale: Wrong. An extended partition is an MBR container for logical partitions, and it lives on one disk only.
+      - id: b
+        text: An LVM volume group
+        rationale: Correct. Both partitions can become physical volumes in one volume group, and a logical volume carved from it can span both disks.
+      - id: c
+        text: A GPT partition table
+        rationale: Wrong. A partition table describes the partitions of one disk; no partition can span two disks.
+      - id: d
+        text: A swap file
+        rationale: Wrong. A swap file provides swap space inside an existing filesystem; it does not join devices together.
+    answer: [b]
+    explanation: >
+      A partition always lies on a single disk. LVM pools physical volumes from any number of disks
+      into a volume group, and logical volumes taken from that pool can use space on all of them.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: LVM }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [lvm]
+
+  - id: 101-102.1-0006
+    type: fill_in
+    difficulty: 2
+    pool: holdout
+    stem: >
+      You created partition `/dev/sdc2` for swap and set its partition type. Before `swapon` can
+      activate it, a utility must write a swap signature to it. Type the name of that utility.
+    fill_in:
+      accepted: ['(sudo\s+)?((/usr)?/s?bin/)?mkswap(\s+/dev/sdc2)?']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      `mkswap` initializes a partition (or a file) as a Linux swap area. After that, `swapon` activates
+      it, or an /etc/fstab entry activates it at boot. A swap area is never mounted like a filesystem.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: Swap }
+    verify:
+      setup:
+        - dd if=/dev/zero of=/tmp/swap.img bs=1M count=1 status=none
+        - chmod 600 /tmp/swap.img
+      command: mkswap /tmp/swap.img
+      expect: { exit_code: 0, stdout_contains: "Setting up swapspace" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [swap, mkswap]
+
+  - id: 101-102.1-0007
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      You need to attach a spare internal partition by hand for a one-off copy and will detach it
+      afterwards. By convention, under which directory should you mount it?
+    options:
+      - id: a
+        text: "`/mnt`"
+        rationale: Correct. /mnt is the conventional place for filesystems an administrator mounts temporarily by hand.
+      - id: b
+        text: "`/media`"
+        rationale: Wrong. /media is meant for removable media, which desktop environments usually mount automatically.
+      - id: c
+        text: "`/srv`"
+        rationale: Wrong. /srv holds data served by the system, such as web or FTP content.
+      - id: d
+        text: "`/opt`"
+        rationale: Wrong. /opt is for add-on software packages.
+    answer: [a]
+    explanation: >
+      Any existing directory can be a mount point, but convention keeps manual, temporary mounts under
+      /mnt and removable media under /media (or /run/media on some distributions).
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: Mount Points }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [mount-point, mnt]
+
+  - id: 101-102.1-0008
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: What does a Linux system keep in `/boot`?
+    options:
+      - id: a
+        text: Log messages that the system wrote while it was starting up
+        rationale: Wrong. Boot-time messages go to the journal or to files under /var/log.
+      - id: b
+        text: The scripts that start services at boot
+        rationale: Wrong. Service definitions live in /etc and /usr/lib (systemd units, or /etc/init.d scripts on SysV systems).
+      - id: c
+        text: Kernel images, initial RAM disks and boot loader files
+        rationale: Correct. /boot holds what the boot loader needs to start the system, including its own files such as /boot/grub.
+      - id: d
+        text: The firmware's NVRAM boot settings
+        rationale: Wrong. UEFI variables are stored in the firmware's NVRAM; Linux exposes them under /sys/firmware/efi, not /boot.
+    answer: [c]
+    explanation: >
+      The boot loader reads its configuration and modules (for GRUB 2, /boot/grub or /boot/grub2), then
+      loads the kernel and initial RAM disk, all from /boot.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: The Boot Partition (/boot) }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Option a lengthened so the correct option is not the longest." }
+    tags: [boot]
+
+  - id: 101-102.1-0009
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      A GPT disk has a partition whose type GUID is `C12A7328-F81F-11D2-BA4B-00A0C93EC93B`. What kind of
+      partition is it?
+    options:
+      - id: a
+        text: Linux swap
+        rationale: Wrong. Linux swap uses the type GUID 0657FD6D-A4AB-43C4-84E5-0933C84B4F4F.
+      - id: b
+        text: Linux LVM
+        rationale: Wrong. Linux LVM uses the type GUID E6D6D379-F507-44C2-A23C-238F2A3DF928.
+      - id: c
+        text: Linux filesystem
+        rationale: Wrong. A generic Linux filesystem partition uses the type GUID 0FC63DAF-8483-4772-8E79-3D69D8477DE4.
+      - id: d
+        text: EFI System Partition
+        rationale: Correct. C12A7328-F81F-11D2-BA4B-00A0C93EC93B marks the ESP on GPT disks.
+    answer: [d]
+    explanation: >
+      GPT identifies partition types with GUIDs. C12A7328-F81F-11D2-BA4B-00A0C93EC93B is the EFI System
+      Partition; fdisk and gdisk show it as "EFI System" (gdisk short code EF00).
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: The EFI System Partition (ESP) }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [esp, gpt]
+
+  - id: 101-102.1-0010
+    type: multi_choice
+    difficulty: 3
+    pool: holdout
+    stem: Which **TWO** are good reasons to put `/var` on its own filesystem?
+    select_count: 2
+    options:
+      - id: a
+        text: A service that logs without limit fills `/var`, not the root filesystem
+        rationale: Correct. When /var is separate, runaway writes to /var/log or /var/tmp exhaust only that filesystem, and / keeps its free space.
+      - id: b
+        text: GRUB reads the kernel from `/var/lib/grub`, so it needs a simple filesystem
+        rationale: Wrong. GRUB loads the kernel from /boot; /var plays no part in booting the kernel.
+      - id: c
+        text: The firmware reads files from `/var` before the kernel starts
+        rationale: Wrong. Firmware reads the ESP (UEFI) or the boot sector (BIOS), never /var.
+      - id: d
+        text: Web or database data under it can later get more room, or its own disk, without changing `/`
+        rationale: Correct. Data such as /var/www or /var/lib/mysql can grow on its own filesystem, which can be resized or moved to another disk.
+      - id: e
+        text: The distribution can be reinstalled without erasing users' personal files
+        rationale: Wrong. Personal files are under /home; that is the reason to separate /home, not /var.
+    answer: [a, d]
+    explanation: >
+      /var is written to constantly. Keeping it separate protects the root filesystem from filling up,
+      and lets busy server data (web content, databases) be sized, grown or placed on another disk
+      independently of the operating system.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: Variable Data (/var) }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [var, separate-partitions]
+
+  - id: 101-102.1-0011
+    type: fill_in
+    difficulty: 3
+    pool: holdout
+    stem: >
+      On a UEFI system installed with a GRUB-based distribution such as Debian, Ubuntu or RHEL, the ESP
+      is listed in `/etc/fstab`. Type the mount point that belongs in the blank.
+    exhibit: |
+      UUID=9C1E-2A7F  ________  vfat  umask=0077  0  1
+    fill_in:
+      accepted: ['/boot/efi/?']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      These distributions mount the ESP at /boot/efi; GRUB's EFI binaries then sit under
+      /boot/efi/EFI/<distribution>/. (Some systemd-boot setups use /efi or /boot instead.)
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: The EFI System Partition (ESP) }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [esp, fstab]
+
+  - id: 101-102.1-0012
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      A workstation has 6 GB of RAM and must be able to hibernate. Following Red Hat's swap sizing
+      guidance for RHEL, how much swap should it get?
+    options:
+      - id: a
+        text: 6 GB
+        rationale: Wrong. Swap equal to RAM is the recommendation for 2–8 GB of RAM without hibernation.
+      - id: b
+        text: 12 GB
+        rationale: Correct. For 2–8 GB of RAM with hibernation, the guidance is twice the amount of RAM.
+      - id: c
+        text: 18 GB
+        rationale: Wrong. Three times RAM is the hibernation figure for machines with less than 2 GB of RAM.
+      - id: d
+        text: 9 GB
+        rationale: Wrong. One and a half times RAM is the hibernation figure for 8–64 GB of RAM.
+    answer: [b]
+    explanation: >
+      Hibernation writes the contents of RAM to swap, so it needs more swap than normal operation.
+      Red Hat's table recommends, with hibernation, 3x RAM below 2 GB, 2x RAM for 2–8 GB, 1.5x RAM for
+      8–64 GB, and advises against hibernation above 64 GB.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: Swap }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [swap, sizing]
+
+  - id: 101-102.1-0013
+    type: multi_choice
+    difficulty: 3
+    pool: holdout
+    stem: Which **TWO** statements about Linux swap space are true?
+    select_count: 2
+    options:
+      - id: a
+        text: A swap partition can be mounted on a directory to inspect the pages stored in it
+        rationale: Wrong. Swap has no filesystem; mount refuses it with "unknown filesystem type 'swap'".
+      - id: b
+        text: A regular file can provide swap space, not only a partition
+        rationale: Correct. Linux supports swap files, which are a quick way to add swap without repartitioning.
+      - id: c
+        text: Several swap areas can be active at the same time
+        rationale: Correct. The kernel can use multiple swap areas at once, each with its own priority.
+      - id: d
+        text: A swap partition must be formatted with ext4 before `mkswap` is run on it
+        rationale: Wrong. mkswap writes the swap signature to the raw partition; no filesystem is created first.
+      - id: e
+        text: The kernel refuses swap smaller than twice the amount of RAM
+        rationale: Wrong. "Twice the RAM" is an old rule of thumb; the kernel accepts swap of any reasonable size.
+    answer: [b, c]
+    explanation: >
+      Swap is prepared with mkswap and activated with swapon, never mounted. It can live in partitions or
+      in files, and more than one swap area can be in use at once.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: Swap }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [swap, swap-file]
+
+  - id: 101-102.1-0014
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      A process on this server writes to `/var/log` until `/var` reports 100% used. Which statement is
+      true?
+    exhibit: |
+      $ lsblk
+      NAME           MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
+      sda              8:0    0  120G  0 disk
+      ├─sda1           8:1    0  512M  0 part /boot/efi
+      ├─sda2           8:2    0    1G  0 part /boot
+      └─sda3           8:3    0  118G  0 part
+        ├─vg0-root   252:0    0   30G  0 lvm  /
+        ├─vg0-var    252:1    0   40G  0 lvm  /var
+        └─vg0-swap   252:2    0    8G  0 lvm  [SWAP]
+      sdb              8:16   0  500G  0 disk
+      └─sdb1           8:17   0  500G  0 part /home
+    options:
+      - id: a
+        text: "`/home` fills up as well, because it shares a volume group with `/var`"
+        rationale: Wrong. /home is on sdb1, a plain partition outside vg0, and each filesystem has its own fixed size anyway.
+      - id: b
+        text: The free space left in `vg0` is added to `/var` automatically
+        rationale: Wrong. An ordinary logical volume only grows when an administrator extends it (lvextend) and its filesystem.
+      - id: c
+        text: "`/` keeps its free space, since `/var` is a separate logical volume"
+        rationale: Correct. vg0-var holds its own filesystem, so filling it does not consume space on vg0-root.
+      - id: d
+        text: The machine can no longer boot, because `/boot` lives inside `vg0`
+        rationale: Wrong. /boot is on sda2, a plain partition outside the volume group, and a full /var does not touch it.
+    answer: [c]
+    explanation: >
+      Each logical volume is a separate block device with its own filesystem and a fixed number of
+      extents. A full /var LV leaves / and /home unaffected; the 40 GB still unallocated in vg0 stays
+      free until an administrator assigns it.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: Variable Data (/var) }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Correct option shortened; it was the longest." }
+    tags: [var, lvm, lsblk]
+
+  - id: 101-102.1-0015
+    type: multi_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      GRUB 2 can usually load the kernel straight from the root filesystem. In which **TWO** situations
+      do you need a separate `/boot` partition?
+    select_count: 2
+    options:
+      - id: a
+        text: Whenever the system uses GRUB 2, as it cannot read files from `/`
+        rationale: Wrong. GRUB 2 reads common filesystems such as ext4, XFS and Btrfs, and LVM, so a separate /boot is optional in most setups.
+      - id: b
+        text: Whenever the kernel image is larger than the ESP
+        rationale: Wrong. On a GRUB system the kernel is normally not kept on the ESP at all; its size does not decide whether /boot is separate.
+      - id: c
+        text: The root filesystem is encrypted with a method the boot loader cannot unlock
+        rationale: Correct. If GRUB cannot decrypt /, the kernel and initial RAM disk must sit on an unencrypted /boot.
+      - id: d
+        text: The disk uses GPT, which requires `/boot` to be partition number 1
+        rationale: Wrong. GPT places no requirement on which partition holds /boot, or that it exists at all.
+      - id: e
+        text: The root filesystem uses a type the boot loader has no driver for
+        rationale: Correct. GRUB must read the kernel from a filesystem it understands, so /boot goes on one it supports.
+    answer: [c, e]
+    explanation: >
+      A separate /boot is needed when the boot loader cannot read the root filesystem: an unsupported
+      filesystem type, or encryption or compression it cannot handle. It is also chosen for safety, so
+      the system can still start when / is damaged.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: The Boot Partition (/boot) }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [boot, separate-partitions]
+
+  - id: 101-102.1-0016
+    type: fill_in
+    difficulty: 4
+    pool: holdout
+    stem: >
+      A volume group was created with the default physical extent size. A logical volume in it is
+      allocated exactly 250 extents. How large is the logical volume, in MiB? Type the number.
+    fill_in:
+      accepted: ['1000(\s*(mib|m|mb))?']
+      match: regex
+      case_sensitive: false
+    explanation: >
+      An LV's size is the extent size times the number of extents. LVM's default physical extent size is
+      4 MiB, so 250 extents give 1000 MiB. Growing or shrinking an LV means adding or removing extents.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: LVM }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [lvm, extents]
+
+  - id: 101-102.1-0017
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      A new MariaDB server has two disks. You want two things: a database that fills its storage must
+      not leave the operating system without free space, and a failure of the disk holding the
+      database must not damage the operating system's files. Which layout meets both goals?
+    options:
+      - id: a
+        text: "`/` on disk 1; `/var/lib/mysql` as its own filesystem on disk 2"
+        rationale: Correct. The database has its own filesystem (so it cannot fill /) on a different disk (so losing that disk leaves / intact).
+      - id: b
+        text: "`/` and `/var/lib/mysql` as separate partitions on disk 1; disk 2 as swap"
+        rationale: Wrong. This meets the space goal, but a failure of disk 1 takes the operating system down with the database.
+      - id: c
+        text: "`/boot` on disk 1; `/` on disk 2 with the database inside it"
+        rationale: Wrong. The database can fill /, and a failure of disk 2 destroys both the database and the root filesystem.
+      - id: d
+        text: "`/` on disk 1 with the database inside it; `/home` on disk 2"
+        rationale: Wrong. The database can still fill /, and it shares disk 1 with the operating system.
+    answer: [a]
+    explanation: >
+      /var/lib/mysql is the default MySQL/MariaDB data directory. Giving it a separate filesystem
+      isolates its space use, and putting that filesystem on another disk adds protection against a
+      physical disk failure.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: Variable Data (/var) }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [var, design]
+
+  - id: 101-102.1-0018
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      The logical volume `/dev/vgdata/files` needs 50 GiB more space. A new, empty disk `/dev/sdc` has
+      just been installed. Which approach grows the logical volume?
+    exhibit: |
+      # vgdisplay vgdata
+        --- Volume group ---
+        VG Name               vgdata
+        Format                lvm2
+        VG Size               <100.00 GiB
+        PE Size               4.00 MiB
+        Total PE              25599
+        Alloc PE / Size       25599 / <100.00 GiB
+        Free  PE / Size       0 / 0
+    options:
+      - id: a
+        text: Run `lvextend` on the logical volume, then grow its filesystem
+        rationale: Wrong. vgdata has 0 free extents, so lvextend has nothing to allocate and fails.
+      - id: b
+        text: Recreate `vgdata` with an 8 MiB extent size to double its capacity
+        rationale: Wrong. Extent size changes the allocation unit, not the total space the physical volumes provide.
+      - id: c
+        text: Create a filesystem on `/dev/sdc` and mount it on a new subdirectory below the logical volume's mount point
+        rationale: Wrong. This adds space in a subdirectory but leaves the logical volume exactly the same size.
+      - id: d
+        text: Make `/dev/sdc` a physical volume, add it to `vgdata`, then extend the LV and its filesystem
+        rationale: Correct. pvcreate, vgextend and lvextend (plus a filesystem resize) add the new disk's extents to the pool and give them to the LV.
+    answer: [d]
+    explanation: >
+      An LV can only grow with free extents from its volume group. When the VG is full, add a new
+      physical volume to it (pvcreate, vgextend), then extend the LV (lvextend, with -r to resize the
+      filesystem too) — no data has to move.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: LVM }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Option c lengthened so the correct option is not the longest." }
+    tags: [lvm, extents, vgdisplay]
+
+  - id: 101-102.1-0019
+    type: multi_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      A UEFI machine boots from a disk with an MBR (DOS) partition table. Which **TWO** statements about
+      its EFI System Partition are true?
+    select_count: 2
+    options:
+      - id: a
+        text: Its partition type ID is `0xEF`
+        rationale: Correct. On MBR disks the ESP is marked with the one-byte type ID 0xEF.
+      - id: b
+        text: Its type is `C12A7328-F81F-11D2-BA4B-00A0C93EC93B`
+        rationale: Wrong. That is the ESP type GUID on GPT disks; MBR partition entries only hold a one-byte type ID.
+      - id: c
+        text: It must be the first partition on the disk
+        rationale: Wrong. The ESP is often first by convention, but firmware finds it by its type, not its position.
+      - id: d
+        text: It must be formatted with ext4 so that GRUB can read it
+        rationale: Wrong. The firmware reads the ESP, and it is formatted with FAT.
+      - id: e
+        text: It holds a FAT filesystem
+        rationale: Correct. The ESP is FAT-formatted whether the disk uses MBR or GPT.
+    answer: [a, e]
+    explanation: >
+      The ESP's filesystem (FAT) is the same on both partitioning schemes; only the type marker differs:
+      ID 0xEF on MBR, GUID C12A7328-F81F-11D2-BA4B-00A0C93EC93B on GPT. Its position on the disk is not
+      fixed.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: The EFI System Partition (ESP) }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [esp, mbr]
+
+  - id: 101-102.1-0020
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      On legacy BIOS PCs, installers traditionally placed `/boot` near the start of the disk and made
+      sure it ended before cylinder 1024. What was the reason?
+    options:
+      - id: a
+        text: MBR partition entries cannot describe a partition that starts past cylinder 1024
+        rationale: Wrong. MBR entries also store a 32-bit LBA start and size, so partitions far beyond cylinder 1024 can be described.
+      - id: b
+        text: Old BIOS disk routines used CHS addressing and could not read past cylinder 1024
+        rationale: Correct. The boot loader used BIOS calls to load the kernel, so the kernel had to lie where CHS addressing could reach.
+      - id: c
+        text: The ext2 filesystem cannot store files beyond cylinder 1024
+        rationale: Wrong. ext2's limits are expressed in blocks and are far larger; it knows nothing about cylinders.
+      - id: d
+        text: The kernel cannot read past cylinder 1024 until its initramfs loads a disk driver
+        rationale: Wrong. Once running, the kernel uses its own drivers and LBA addressing; the limit applied to the BIOS, before the kernel ran.
+    answer: [b]
+    explanation: >
+      The original PC BIOS addressed disks by cylinder, head and sector, with at most 1024 cylinders.
+      A boot loader relying on it could only load files below that boundary, so /boot was kept there.
+      LBA-capable BIOSes removed the limit.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: The Boot Partition (/boot) }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [boot, chs, bios]
+
+  # --------------------------------------------------------------------------- practice (CLI)
+
+  - id: 101-102.1-0021
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: >
+      A disk is divided into sections, each with a start and end sector recorded in an MBR or GPT table
+      at the beginning of the disk. What is each section called?
+    options:
+      - id: a
+        text: A filesystem
+        rationale: Wrong. A filesystem is the structure created inside a section to organize files and directories.
+      - id: b
+        text: A partition
+        rationale: Correct. A partition is a logical division of a disk, described in the partition table.
+      - id: c
+        text: A volume group
+        rationale: Wrong. A volume group is an LVM pool built from one or more physical volumes, not a table entry.
+      - id: d
+        text: A mount point
+        rationale: Wrong. A mount point is a directory where a filesystem is attached.
+    answer: [b]
+    explanation: >
+      Disks are divided into partitions, recorded in a partition table (MBR or GPT). Each partition then
+      holds a filesystem, swap, or an LVM physical volume.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: Introduction }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [partitions]
+
+  - id: 101-102.1-0022
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: >
+      Which order shows how LVM layers are built, from the block device up to the volume you format
+      with a filesystem?
+    options:
+      - id: a
+        text: Logical volume → volume group → physical volume
+        rationale: Wrong. This is the stack upside down.
+      - id: b
+        text: Volume group → physical volume → logical volume
+        rationale: Wrong. A volume group is made from physical volumes, so they must come first.
+      - id: c
+        text: Physical volume → logical volume → volume group
+        rationale: Wrong. Logical volumes are carved from a volume group, so the group comes before them.
+      - id: d
+        text: Physical volume → volume group → logical volume
+        rationale: Correct. Block devices become PVs, PVs are pooled into a VG, and LVs are allocated from the VG.
+    answer: [d]
+    explanation: >
+      A partition or disk is initialized as a physical volume, PVs are combined into a volume group,
+      and logical volumes are taken from the group. The LV is what gets a filesystem.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: LVM }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [lvm]
+
+  - id: 101-102.1-0023
+    type: multi_choice
+    difficulty: 3
+    pool: practice
+    stem: >
+      A logical volume named `pgsql` is created in the volume group `data`. Which **TWO** paths refer to
+      its block device?
+    select_count: 2
+    options:
+      - id: a
+        text: "`/dev/pgsql/data`"
+        rationale: Wrong. The directory is named after the volume group and the entry after the logical volume, not the other way round.
+      - id: b
+        text: "`/dev/data/pgsql`"
+        rationale: Correct. LVM creates /dev/VGNAME/LVNAME for each active logical volume.
+      - id: c
+        text: "`/dev/mapper/pgsql-data`"
+        rationale: Wrong. Device-mapper names put the volume group first, as VGNAME-LVNAME.
+      - id: d
+        text: "`/dev/mapper/data-pgsql`"
+        rationale: Correct. The device-mapper node is named VGNAME-LVNAME, and /dev/data/pgsql points to the same device.
+      - id: e
+        text: "`/dev/lvm/data/pgsql`"
+        rationale: Wrong. LVM does not create a /dev/lvm directory.
+    answer: [b, d]
+    explanation: >
+      An active LV appears as /dev/VGNAME/LVNAME and as /dev/mapper/VGNAME-LVNAME; both name the same
+      device-mapper device. Either can be used with mkfs, mount or /etc/fstab.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: LVM }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [lvm, dev-mapper]
+
+  - id: 101-102.1-0024
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: >
+      You are sizing filesystems for a new Apache web server and need to know where its default document
+      root lives. Which directory is it on most distributions?
+    options:
+      - id: a
+        text: "`/srv/www`"
+        rationale: Wrong. Some admins choose /srv for served data, but it is not Apache's packaged default on Debian or RHEL.
+      - id: b
+        text: "`/var/lib/apache2`"
+        rationale: Wrong. On Debian this holds Apache's internal state, not web content.
+      - id: c
+        text: "`/var/www/html`"
+        rationale: Correct. Debian, Ubuntu and RHEL-family Apache packages use /var/www/html as the default document root.
+      - id: d
+        text: "`/home/www`"
+        rationale: Wrong. /home is for users' home directories; Apache does not serve from /home/www by default.
+    answer: [c]
+    explanation: >
+      Web content lives under /var by default (/var/www/html), as do database files (/var/lib/mysql).
+      That is one reason servers often put /var on a filesystem of its own. Both locations can be changed.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: Variable Data (/var) }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [var, apache]
+
+  - id: 101-102.1-0025
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: >
+      The directory `/srv/data` contains a file `report.txt`. You then mount a new filesystem on
+      `/srv/data`. What happens to `report.txt`?
+    options:
+      - id: a
+        text: It is hidden until the filesystem is unmounted, then visible again
+        rationale: Correct. The mounted filesystem covers the directory's original contents without changing them.
+      - id: b
+        text: It is deleted from the parent filesystem as soon as the mount takes place
+        rationale: Wrong. Mounting never deletes the files underneath; they stay on the parent filesystem.
+      - id: c
+        text: It is copied into the newly mounted filesystem
+        rationale: Wrong. Mount copies nothing; the new filesystem shows only its own contents.
+      - id: d
+        text: It is moved into the new filesystem's `lost+found` directory
+        rationale: Wrong. lost+found is used by fsck for recovered orphaned files, not by mount.
+    answer: [a]
+    explanation: >
+      A mount point should normally be empty. If it is not, the old files stay on the underlying
+      filesystem but cannot be reached through that path while something is mounted over it.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: Mount Points }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Option b lengthened so the correct option is not the longest." }
+    tags: [mount-point]
+
+  - id: 101-102.1-0026
+    type: single_choice
+    difficulty: 3
+    pool: practice
+    stem: >
+      A server with 32 GB of RAM will never hibernate. Following Red Hat's swap sizing guidance for RHEL,
+      how much swap should it get?
+    options:
+      - id: a
+        text: 64 GB
+        rationale: Wrong. Twice RAM is the old rule of thumb, and Red Hat applies 2x only below 2 GB of RAM.
+      - id: b
+        text: 48 GB
+        rationale: Wrong. 1.5x RAM is the figure for 8–64 GB of RAM when hibernation is needed.
+      - id: c
+        text: At least 4 GB
+        rationale: Correct. For 8–64 GB of RAM without hibernation, Red Hat recommends at least 4 GB.
+      - id: d
+        text: 32 GB
+        rationale: Wrong. Swap equal to RAM is the figure for 2–8 GB of RAM without hibernation.
+    answer: [c]
+    explanation: >
+      Without hibernation, large-memory systems need only modest swap: at least 4 GB from 8 GB of RAM
+      upward. Workloads such as databases may need a vendor-specific figure.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: Swap }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [swap, sizing]
+
+  - id: 101-102.1-0027
+    type: single_choice
+    difficulty: 3
+    pool: practice
+    stem: Which statement about the EFI System Partition is true?
+    options:
+      - id: a
+        text: It is formatted with ext4
+        rationale: Wrong. The ESP uses a FAT filesystem so the firmware can read it.
+      - id: b
+        text: It is read only by legacy BIOS firmware, never by UEFI firmware
+        rationale: Wrong. The ESP exists for UEFI firmware; legacy BIOS boots from code in the MBR instead.
+      - id: c
+        text: Linux mounts it at `/boot/grub`
+        rationale: Wrong. /boot/grub holds GRUB's files; the ESP is mounted elsewhere, commonly at /boot/efi.
+      - id: d
+        text: It does not have to be the first partition on the disk
+        rationale: Correct. It is often first by convention, but the firmware locates it by its partition type.
+    answer: [d]
+    explanation: >
+      The ESP is a FAT partition holding UEFI boot loaders. It is identified by its type (GUID on GPT,
+      0xEF on MBR), not by its position, and Linux usually mounts it at /boot/efi.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: The EFI System Partition (ESP) }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Option b lengthened so the correct option is not the longest." }
+    tags: [esp]
+
+  - id: 101-102.1-0028
+    type: fill_in
+    difficulty: 3
+    pool: practice
+    stem: >
+      You run `vgcreate vg0 /dev/sdb1` without the `-s` option. What physical extent size, in MiB, does
+      the new volume group use? Type the number.
+    fill_in:
+      accepted: ['4(\s*(mib|m|mb))?']
+      match: regex
+      case_sensitive: false
+    explanation: >
+      Unless -s (--physicalextentsize) or lvm.conf says otherwise, LVM uses 4 MiB extents; vgdisplay
+      shows "PE Size 4.00 MiB". Logical volume sizes are multiples of this extent size.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: LVM }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [lvm, extents]
+
+  - id: 101-102.1-0029
+    type: fill_in
+    difficulty: 2
+    pool: practice
+    stem: >
+      You are planning a separate `/home` partition. Which directory holds the superuser's home, and so
+      is **not** stored on that partition? Type the full path.
+    fill_in:
+      accepted: ['/root/?']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      Regular users' home directories are under /home, but root's home is /root, which stays on the root
+      filesystem so the administrator can work even if /home is not mounted.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: The /home Partition }
+    verify:
+      command: getent passwd root
+      expect: { exit_code: 0, stdout_contains: ":/root:" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [home, root]
+
+  - id: 101-102.1-0030
+    type: multi_choice
+    difficulty: 4
+    pool: practice
+    stem: Which **TWO** statements about mount points are true?
+    select_count: 2
+    options:
+      - id: a
+        text: The directory must exist before a filesystem can be mounted on it
+        rationale: Correct. mount fails with "mount point does not exist" if the directory is missing.
+      - id: b
+        text: A swap partition can be mounted at `/swap` to browse its contents
+        rationale: Wrong. Swap has no filesystem to browse; it is activated with swapon, and mount rejects it.
+      - id: c
+        text: Any existing directory can serve as a mount point, not only those under `/mnt` or `/media`
+        rationale: Correct. /mnt and /media are conventions; a filesystem can be mounted on any directory.
+      - id: d
+        text: Mounting a filesystem on a directory deletes the files already in it
+        rationale: Wrong. Existing files are only hidden while the mount is active; they return after unmounting.
+      - id: e
+        text: Internal disks must be mounted under `/media`
+        rationale: Wrong. /media is a convention for removable media; internal disks can be mounted anywhere.
+    answer: [a, c]
+    explanation: >
+      A mount point is just an existing directory. Conventions (/mnt for manual temporary mounts, /media
+      for removable media) make administration easier but are not enforced.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: Mount Points }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [mount-point]
