@@ -21,8 +21,14 @@
 
 ## Open handoffs
 
-None. [Content build and engine core](handoff/2026-10-23-build-and-engine-core.md) is done
-(PR #5); its Outcome has questions for the planner.
+These two can run in parallel, in separate sessions.
+
+| Handoff | Status | Assignee |
+|---|---|---|
+| [Engine fixes, pass2-ready mocks, and the mock assembler](handoff/2026-10-25-engine-fixes-and-mock-assembler.md) | open | agent:any |
+| [Terminal practice app](handoff/2026-10-25-practice-cli.md) | open | agent:any |
+
+Done: [Content build and engine core](handoff/2026-10-23-build-and-engine-core.md) (PR #5).
 
 ## Proposed ADRs awaiting acceptance
 
@@ -35,5 +41,5 @@ None. [Content build and engine core](handoff/2026-10-23-build-and-engine-core.m
 
 | Exam | Objectives done | Questions | Target |
 |---|---|---|---|
-| 101 | 102.3 (trial batch, PR #6) | 15 (10 holdout, 5 practice) | 900 (600 holdout, 300 practice) |
+| 101 | 102.3 (PR #6); topic 101 in progress | 15 (10 holdout, 5 practice) | 900 (600 holdout, 300 practice) |
 | 102 | — | 0 | 900 |
