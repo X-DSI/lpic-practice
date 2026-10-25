@@ -33,9 +33,10 @@ questions:
       set to the current time.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 1, section: Creating files with touch }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [touch]
 
   - id: 101-103.3-0002
@@ -65,9 +66,10 @@ questions:
       `fileA.txt` but not `file.txt` or `file10.txt`.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 1, section: The Question Mark }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [globbing, wildcards]
 
   - id: 101-103.3-0003
@@ -94,9 +96,10 @@ questions:
       expect a directory to be empty. To delete a directory with its contents, use rm -r.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 1, section: Removing Directories with rmdir }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [rmdir]
 
   - id: 101-103.3-0004
@@ -126,9 +129,10 @@ questions:
       sockets).
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: Using Criteria to Speed Search }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [find]
 
   - id: 101-103.3-0005
@@ -157,9 +161,10 @@ questions:
       and others). -f names the archive file; adding -v to -t gives an ls -l style listing.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: The tar Command (Archiving and Compresssion) }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [tar]
 
   - id: 101-103.3-0006
@@ -188,9 +193,10 @@ questions:
       The bzip2 equivalents are bzip2 and bunzip2.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: Compressing with tar }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Rationale for the tar option corrected: a tiny gzipped text file makes tar exit 0 with nothing extracted, so it now says tar does not restore the file." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [gzip, gunzip]
 
   - id: 101-103.3-0007
@@ -222,9 +228,10 @@ questions:
       command: sh -c 'printf "hello\n" > /tmp/v.txt && gzip -c /tmp/v.txt > /tmp/v.gz && od -An -tx1 -N2 /tmp/v.gz'
       expect: { exit_code: 0, stdout_contains: "1f 8b" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [file]
 
   - id: 101-103.3-0008
@@ -256,9 +263,10 @@ questions:
       command: sh -c 'mkdir -p /tmp/v/app/logs/2026 && test -d /tmp/v/app/logs/2026 && echo created'
       expect: { exit_code: 0, stdout_contains: "created" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [mkdir]
 
   - id: 101-103.3-0009
@@ -287,9 +295,10 @@ questions:
       into it; otherwise the destination is taken as the new name.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 1, section: Moving Files with mv }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [mv]
 
   - id: 101-103.3-0010
@@ -318,9 +327,10 @@ questions:
       and `..` entries; ls -A shows them without `.` and `..`.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 1, section: Using ls to List Files }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [ls, hidden-files]
 
   - id: 101-103.3-0011
@@ -349,9 +359,10 @@ questions:
       -r, -R and --recursive all copy the directory and its whole tree.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 1, section: Recursive Copy with cp -r }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [cp, recursion]
 
   - id: 101-103.3-0012
@@ -364,14 +375,14 @@ questions:
     select_count: 2
     options:
       - id: a
-        text: "`tar -xf /root/backup.tar /opt/build`"
+        text: "`tar -xvf /root/backup.tar /opt/build`"
         rationale: 'Wrong. A name after the archive is read as a member to extract; tar reports "/opt/build: Not found in archive".'
       - id: b
         text: "`tar -xf /root/backup.tar -C /opt/build`"
         rationale: Correct. -C (--directory) makes tar change to /opt/build before extracting.
       - id: c
-        text: "`tar -cf /opt/build /root/backup.tar`"
-        rationale: Wrong. This tries to create a new archive named /opt/build containing backup.tar; it extracts nothing.
+        text: "`tar -cf /opt/build/backup /root/backup.tar`"
+        rationale: Wrong. This creates a new archive named /opt/build/backup that contains backup.tar; it extracts nothing.
       - id: d
         text: "`cd /opt/build && tar -xf /root/backup.tar`"
         rationale: Correct. tar extracts into the current directory, so changing there first works too.
@@ -381,9 +392,10 @@ questions:
       let tar do it with -C DIR (long form --directory=DIR).
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: Extracting an Archive }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Option lengths evened out (a now -xvf, c now creates /opt/build/backup)." }
     tags: [tar]
 
   - id: 101-103.3-0013
@@ -412,9 +424,10 @@ questions:
       `find ~ -iname '*.jpg'` also finds photo.JPG.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: Using Criteria to Speed Search }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [find]
 
   - id: 101-103.3-0014
@@ -445,9 +458,10 @@ questions:
       command: sh -c 'printf abc > /tmp/in.img && dd if=/tmp/in.img of=/tmp/out.img status=none && cat /tmp/out.img'
       expect: { exit_code: 0, stdout_contains: "abc" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [dd]
 
   - id: 101-103.3-0015
@@ -459,8 +473,8 @@ questions:
       `big.log` is created.
     fill_in:
       accepted:
-        - '(sudo\s+)?((/usr)?/bin/)?(bunzip2(\s+(-k|-v|--keep|--verbose))*|bzip2\s+(-d|--decompress|-d[kv]+|-[kv]+d[kv]*))(\s+(\./)?big\.log\.bz2)?'
-        - '(sudo\s+)?((/usr)?/bin/)?bzcat\s+(\./)?big\.log\.bz2\s*>\s*(\./)?big\.log'
+        - '(sudo\s+)?((/usr)?/bin/)?(bunzip2|bzip2(?=.*\s(-[kvf]*d[kvf]*|--decompress)(\s|$)))(\s+(-[dkvf]+|--decompress|--keep|--verbose|--force))*\s+(\./)?big\.log\.bz2'
+        - '(sudo\s+)?((/usr)?/bin/)?(bzcat|bunzip2\s+-c|bzip2\s+(-dc|-cd|-d\s+-c|-c\s+-d))\s+(\./)?big\.log\.bz2\s*>\s*(\./)?big\.log'
       match: regex
       case_sensitive: true
     explanation: >
@@ -468,9 +482,10 @@ questions:
       removes the .bz2 file. bzcat big.log.bz2 > big.log does the same while keeping the original.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: Compressing with tar }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Fill-in regex rewritten: file name now required, more -d/-k/-f/-c forms accepted, bzcat/-c redirection forms accepted." }
     tags: [bzip2, bunzip2]
 
   - id: 101-103.3-0016
@@ -502,9 +517,10 @@ questions:
       delete cannot be undone, check the path first; -i adds a prompt for each item.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 1, section: Recursive Deletion with rm -r }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [rm, recursion]
 
   - id: 101-103.3-0017
@@ -517,7 +533,7 @@ questions:
     fill_in:
       accepted:
         - '(-a|--time(=|\s+)(atime|access|use))'
-        - '(sudo\s+)?((/usr)?/bin/)?touch\s+(-a|--time(=|\s+)(atime|access|use))(\s+(?!-)\S+)+'
+        - '(sudo\s+)?((/usr)?/bin/)?touch\s+(-a|--time(=|\s+)(atime|access|use))(\s+(?!-)\S+)*'
       match: regex
       case_sensitive: true
     explanation: >
@@ -525,9 +541,10 @@ questions:
       modification time; --time=atime (or access, use) is the long equivalent of -a.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 1, section: Creating files with touch }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Full-command pattern now also accepts the option without a file name." }
     tags: [touch, timestamps]
 
   - id: 101-103.3-0018
@@ -535,21 +552,22 @@ questions:
     difficulty: 3
     pool: holdout
     stem: >
-      The command `tar -c_f logs.tar.bz2 logs/` should create a bzip2-compressed archive. Type the
-      letter that belongs in place of the underscore.
+      Type the single-letter `tar` option that makes tar compress with **xz** when creating an
+      archive such as `logs.tar.xz`.
     fill_in:
-      accepted: ['-?j', '--bzip2']
+      accepted: ['-?J', '--xz']
       match: regex
       case_sensitive: true
     explanation: >
-      GNU tar compresses while it archives: -z uses gzip, -j uses bzip2 and -J uses xz. The full
-      command is `tar -cjf logs.tar.bz2 logs/`.
+      GNU tar picks the compressor by option: -z gzip, -j bzip2, -J xz. `tar -cJf logs.tar.xz logs/`
+      creates an xz-compressed archive.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: Compressing with tar }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
-    tags: [tar, bzip2]
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Stem changed from bzip2 (restated lesson 2 Guided Exercise 2) to xz; accepted -J/--xz; explanation rewritten. Needs re-check." }
+    tags: [tar, xz]
 
   - id: 101-103.3-0019
     type: multi_choice
@@ -588,9 +606,10 @@ questions:
       command: sh -c 'mkdir -p /tmp/g && cd /tmp/g && touch data.csv data7.csv data77.csv dataX.csv && echo data[0-9].csv data[!A-Z].csv'
       expect: { exit_code: 0, stdout_regex: "^data7\\.csv data7\\.csv\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; reviewer suggested difficulty 4, kept at 3 for the holdout split." }
     tags: [globbing, wildcards]
 
   - id: 101-103.3-0020
@@ -617,9 +636,10 @@ questions:
       512-byte blocks). `+n` means more than n units, `-n` less than n units, plain `n` exactly n.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: Locating Files by Size }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [find, size]
 
   - id: 101-103.3-0021
@@ -647,9 +667,10 @@ questions:
       fraction. A minus sign means less than, a plus sign more than, and no sign exactly.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: Locating Files by Modification Time }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [find, mtime]
 
   - id: 101-103.3-0022
@@ -678,9 +699,10 @@ questions:
       input, which is why find is its usual partner: `find DIR | cpio -o > FILE`.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: The cpio Command }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [cpio]
 
   - id: 101-103.3-0023
@@ -693,7 +715,7 @@ questions:
     fill_in:
       accepted:
         - '(-p|--parents|-pv|-vp)'
-        - '(sudo\s+)?((/usr)?/bin/)?mkdir\s+(-p|--parents|-pv|-vp)(\s+(?!-)\S+)+'
+        - '(sudo\s+)?((/usr)?/bin/)?mkdir\s+(-p|--parents|-pv|-vp)(\s+(?!-)\S+)*'
       match: regex
       case_sensitive: true
     explanation: >
@@ -701,9 +723,10 @@ questions:
       missing or the directory exists.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 1, section: Creating Directories with mkdir }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Full-command pattern now also accepts the option without a directory name." }
     tags: [mkdir]
 
   - id: 101-103.3-0024
@@ -736,12 +759,13 @@ questions:
       output to standard output with -c and redirect it yourself.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: Compressing with tar }
     verify:
-      command: sh -c 'cd /tmp && seq 100 > a.log && gzip -k a.log && seq 100 > b.log && gzip -c b.log > b.log.gz && ls a.log a.log.gz b.log b.log.gz'
+      command: sh -c 'cd /tmp && seq 100 > a.log && gzip -kf a.log && seq 100 > b.log && gzip -c b.log > b.log.gz && ls a.log a.log.gz b.log b.log.gz'
       expect: { exit_code: 0 }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "verify uses gzip -kf so it can run twice." }
     tags: [gzip]
 
   - id: 101-103.3-0025
@@ -773,9 +797,10 @@ questions:
       Plain rm, with or without -f, does not remove directories.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 1, section: Recursive Deletion with rm -r }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [rm, rmdir]
 
   - id: 101-103.3-0026
@@ -804,9 +829,10 @@ questions:
       any other file, so ls -ld shows its own permission string, owner, size and date.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 1, section: Using ls to List Files }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [ls]
 
   - id: 101-103.3-0027
@@ -845,9 +871,10 @@ questions:
       command: sh -c 'mkdir -p /tmp/c/site /tmp/c/backup && touch /tmp/c/site/index.html && cd /tmp/c && cp -r site backup && ls backup/site'
       expect: { exit_code: 0, stdout_contains: "index.html" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [cp, recursion]
 
   - id: 101-103.3-0028
@@ -863,8 +890,8 @@ questions:
     select_count: 2
     options:
       - id: a
-        text: "`?eport?.txt`"
-        rationale: Wrong. The second ? accepts a letter as well, so reportA.txt is listed too.
+        text: "`[a-z]eport[0-9].txt`"
+        rationale: Wrong. [a-z] covers lowercase letters only, so Report2.txt is missed.
       - id: b
         text: "`[rR]eport[0-9].txt`"
         rationale: Correct. One of r or R, then exactly one digit; report.txt, report12.txt and reportA.txt do not fit.
@@ -875,20 +902,21 @@ questions:
         text: "`*eport[0-9]*.txt`"
         rationale: Wrong. The trailing * lets report12.txt match as well.
       - id: e
-        text: "`[Rr]eport*.txt`"
-        rationale: Wrong. * also matches nothing, A or 12, so all five files are listed.
+        text: "`?eport?.txt`"
+        rationale: Wrong. The second ? accepts a letter as well, so reportA.txt is listed too.
     answer: [b, c]
     explanation: >
       Bracket expressions match exactly one character from a set or range and can be combined with
       ? and *. Here the first character must be r or R and exactly one digit must follow "eport".
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 1, section: Combining Wildcards }
     verify:
-      command: sh -c 'mkdir -p /tmp/r && cd /tmp/r && touch Report2.txt report.txt report1.txt report12.txt reportA.txt && echo [rR]eport[0-9].txt && echo [Rr]eport[12].txt'
+      command: sh -c 'export LC_ALL=C; mkdir -p /tmp/r && cd /tmp/r && touch Report2.txt report.txt report1.txt report12.txt reportA.txt && echo [rR]eport[0-9].txt && echo [Rr]eport[12].txt'
       expect: { exit_code: 0, stdout_regex: "^Report2\\.txt report1\\.txt\\nReport2\\.txt report1\\.txt\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Options rebalanced so the correct ones are not the two longest; verify runs with LC_ALL=C." }
     tags: [globbing, wildcards]
 
   - id: 101-103.3-0029
@@ -919,9 +947,10 @@ questions:
       match; `+` ends it and collects many matches into a single run, much like xargs.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: Acting on the Result Set }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [find, exec]
 
   - id: 101-103.3-0030
@@ -954,9 +983,10 @@ questions:
       the last member in place. A compressed archive has to be decompressed first, or recreated.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: Compressing with tar }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Correct option shortened; it was the longest option." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [tar, gzip]
 
   - id: 101-103.3-0031
@@ -979,9 +1009,10 @@ questions:
       command: sh -c 'head -c 4096 /dev/urandom > /tmp/disk && dd if=/tmp/disk of=/tmp/mbr.bin bs=512 count=1 status=none && wc -c < /tmp/mbr.bin'
       expect: { exit_code: 0, stdout_regex: "^\\s*512\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [dd]
 
   - id: 101-103.3-0032
@@ -1007,12 +1038,14 @@ questions:
     answer: [d]
     explanation: >
       By default mv overwrites silently. -i prompts first, -f forces overwriting, and -n refuses to
-      overwrite. If several of these are given, the last one wins.
+      overwrite. If several of these are given, the last one wins. When it skips, coreutils 9.4
+      prints `mv: not replacing 'final.txt'` and exits with status 1.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 1, section: Moving Files with mv }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Explanation notes the coreutils 9.4 not-replacing message and exit status 1." }
     tags: [mv]
 
   - id: 101-103.3-0033
@@ -1049,9 +1082,10 @@ questions:
       command: sh -c 'mkdir -p /tmp/s/site && echo hi > /tmp/s/site/index.html && cd /tmp/s && tar -cf - site | gzip > site.tar.gz && tar -tzf site.tar.gz'
       expect: { exit_code: 0, stdout_contains: "site/index.html" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [tar, gzip]
 
   - id: 101-103.3-0034
@@ -1090,9 +1124,10 @@ questions:
       command: sh -c 'mkdir -p /tmp/f/img && cd /tmp/f && touch diagram.png img/logo.png && find . -name *.png'
       expect: { exit_code: 0, stdout_regex: "^\\./diagram\\.png\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [find, globbing, quoting]
 
   - id: 101-103.3-0035
@@ -1133,9 +1168,10 @@ questions:
       command: sh -c 'mkdir -p /tmp/z && cd /tmp/z && true > e && head -c 512 /dev/zero > s && find . -type f -size -1M'
       expect: { exit_code: 0, stdout_regex: "^\\./e\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Correct option shortened (was longest); explanation now gives -1048576c as the exact form, since -1024k also rounds." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [find, size]
 
   - id: 101-103.3-0036
@@ -1173,9 +1209,10 @@ questions:
       directories in the list (plain `find web`), they come first and are made from the archive.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: The cpio Command }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [cpio]
 
   - id: 101-103.3-0037
@@ -1213,9 +1250,10 @@ questions:
       command: sh -c 'mkdir -p /tmp/h/src/sub /tmp/h/dst && cd /tmp/h && touch src/main src/.env src/sub/.hidden && cp -r src/* dst/ && test ! -e dst/.env && test -e dst/sub/.hidden && echo ok'
       expect: { exit_code: 0, stdout_contains: "ok" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [cp, globbing, hidden-files]
 
   - id: 101-103.3-0038
@@ -1240,9 +1278,10 @@ questions:
       command: sh -c 'mkdir -p /tmp/m && cd /tmp/m && touch -d "10 days ago 12 hours ago" a105 && touch -d "11 days ago 12 hours ago" a115 && find . -type f -mtime +10'
       expect: { exit_code: 0, stdout_regex: "^\\./a115\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Regex also accepts the test after -type f in a full find command." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [find, mtime]
 
   - id: 101-103.3-0039
@@ -1276,9 +1315,10 @@ questions:
       command: sh -c 'mkdir -p /tmp/w/s && cd /tmp/w && touch s/f && cp -r s t && cp -r s t && find t | sort'
       expect: { exit_code: 0, stdout_regex: "^t\\nt/f\\nt/s\\nt/s/f\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Correct option shortened; it was the longest option." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [cp, recursion]
 
   - id: 101-103.3-0040
@@ -1310,9 +1350,10 @@ questions:
       command: sh -c 'cd /tmp && head -c 4096 /dev/urandom > disk.img && dd if=disk.img of=part.bin bs=512 skip=2 count=2 status=none && head -c 2048 disk.img | tail -c 1024 | cmp - part.bin && echo same'
       expect: { exit_code: 0, stdout_contains: "same" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [dd]
 
   # --------------------------------------------------------------------------- practice (CLI)
@@ -1341,9 +1382,10 @@ questions:
       `a.conf`, `sshd.conf` and `.conf`-ending names of any length (hidden files excepted).
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 1, section: The Asterisk }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [globbing, wildcards]
 
   - id: 101-103.3-0042
@@ -1366,13 +1408,14 @@ questions:
         rationale: Wrong. touch creates empty files or updates timestamps.
     answer: [c]
     explanation: >
-      Linux has no separate basic rename command in the 103.3 toolset: `mv old new` renames, and
-      `mv file dir/` moves a file into another directory.
+      mv does both jobs: `mv old new` renames a file, and `mv file dir/` moves it into another
+      directory.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 1, section: Moving Files with mv }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Explanation reworded." }
     tags: [mv]
 
   - id: 101-103.3-0043
@@ -1401,42 +1444,46 @@ questions:
       the way (conv=). Its operand=value syntax sets it apart from most commands.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: The dd Command }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [dd]
 
   - id: 101-103.3-0044
     type: single_choice
     difficulty: 1
     pool: practice
-    stem: In the listing shown, what does the `d` at the start of the `scripts` line tell you?
+    stem: In the listing shown, which entry is a block device?
     exhibit: |
       $ ls -l
-      drwxr-xr-x 2 maria maria 4096 Mar  3 09:12 scripts
-      -rw-r--r-- 1 maria maria  220 Mar  3 09:10 todo.txt
+      lrwxrwxrwx 1 root root    7 Mar  3 09:12 lib -> usr/lib
+      crw--w---- 1 root tty  4, 1 Mar  3 09:10 tty1
+      drwxr-xr-x 2 root root 4096 Mar  3 09:12 scripts
+      brw-rw---- 1 root disk 8, 0 Mar  3 09:10 sda
     options:
       - id: a
-        text: It is a regular file
-        rationale: Wrong. Regular files show a - in that position, like todo.txt.
+        text: "`lib`"
+        rationale: Wrong. The l marks a symbolic link.
       - id: b
-        text: It is a symbolic link
-        rationale: Wrong. Symbolic links show an l.
+        text: "`tty1`"
+        rationale: Wrong. The c marks a character device.
       - id: c
-        text: It is a character device
-        rationale: Wrong. Character devices show a c, as /dev/null does.
+        text: "`scripts`"
+        rationale: Wrong. The d marks a directory.
       - id: d
-        text: It is a directory
-        rationale: Correct. A leading d marks a directory.
+        text: "`sda`"
+        rationale: Correct. A leading b marks a block device.
     answer: [d]
     explanation: >
       The first character of a long listing gives the file type: - regular file, d directory,
       l symbolic link, c character device, b block device, p named pipe, s socket.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 1, section: Using ls to List Files }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Stem, exhibit and options replaced (old one restated lesson 1 Guided Exercise 1); now asks for the block device. Needs re-check." }
     tags: [ls]
 
   - id: 101-103.3-0045
@@ -1463,9 +1510,10 @@ questions:
       the archive name, followed by what to archive.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: Compressing with tar }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [tar, gzip]
 
   - id: 101-103.3-0046
@@ -1492,9 +1540,10 @@ questions:
       before overwriting.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 1, section: Deleting Files with rm }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [rm]
 
   - id: 101-103.3-0047
@@ -1525,9 +1574,10 @@ questions:
       version.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: Compressing with tar }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Rationale for the tar option corrected (tar does not restore the file, rather than always failing)." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [gzip, gunzip]
 
   - id: 101-103.3-0048
@@ -1553,9 +1603,10 @@ questions:
       find does not follow symbolic links by default, so -type l reports the links themselves.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: Using Criteria to Speed Search }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [find]
 
   - id: 101-103.3-0049
@@ -1576,9 +1627,10 @@ questions:
       case: ls -r reverses the sort order instead.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 1, section: Recursive Listing with ls -R }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [ls, recursion]
 
   - id: 101-103.3-0050
@@ -1589,7 +1641,7 @@ questions:
       Type the `find` option, with its value, that limits the search to the starting directory and
       the entries directly inside it, without going into subdirectories.
     fill_in:
-      accepted: ['(find(\s+(?!-)\S+)?\s+)?-maxdepth\s+1']
+      accepted: ['(find(\s+(?!-)\S+)*\s+)?-maxdepth\s+1']
       match: regex
       case_sensitive: true
     explanation: >
@@ -1597,9 +1649,10 @@ questions:
       itself and 1 adds its direct entries. Put it before the tests to avoid a warning.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: Using Criteria to Speed Search }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Regex prefix allows find with several non-option words." }
     tags: [find]
 
   - id: 101-103.3-0051
@@ -1627,9 +1680,10 @@ questions:
       Placing it first in the pattern tests the first character of the name.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 1, section: Bracketed Characters }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [globbing, wildcards]
 
   - id: 101-103.3-0052
@@ -1660,9 +1714,10 @@ questions:
       against another file's modification time. -atime and -ctime test access and status-change times.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: Locating Files by Modification Time }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [find, mtime]
 
   - id: 101-103.3-0053
@@ -1674,7 +1729,7 @@ questions:
       extracting them.
     fill_in:
       accepted:
-        - 'tar\s+(-?(t|tv|vt)f\s*(\./)?site\.tar|(-t|--list)(\s+(-v|--verbose))?\s+(-f\s*|--file(=|\s+))(\./)?site\.tar|(-f\s*|--file(=|\s+))(\./)?site\.tar\s+(-t|--list)(\s+(-v|--verbose))?)'
+        - '(sudo\s+)?((/usr)?/bin/)?tar\s+(-?(t|tv|vt)f\s*(\./)?site\.tar|(-t|--list)(\s+(-v|--verbose))?\s+(-f\s*|--file(=|\s+))(\./)?site\.tar|(-f\s*|--file(=|\s+))(\./)?site\.tar\s+(-t|--list)(\s+(-v|--verbose))?)'
       match: regex
       case_sensitive: true
     explanation: >
@@ -1685,9 +1740,10 @@ questions:
       command: sh -c 'mkdir -p /tmp/l/site && cd /tmp/l && touch site/a && tar -cf site.tar site && tar -tf site.tar'
       expect: { exit_code: 0, stdout_contains: "site/a" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Regex accepts sudo and full path prefixes." }
     tags: [tar]
 
   - id: 101-103.3-0054
@@ -1716,9 +1772,10 @@ questions:
       output in copy-out mode (-o). -d creates leading directories during extraction.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: The cpio Command }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [cpio]
 
   - id: 101-103.3-0055
@@ -1751,9 +1808,10 @@ questions:
       command: sh -c 'mkdir -p /tmp/b && cd /tmp/b && touch abc bag bg big big2 bog.txt && echo [ab]?g*'
       expect: { exit_code: 0, stdout_regex: "^bag big big2 bog\\.txt\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [globbing, wildcards]
 
   - id: 101-103.3-0056
@@ -1765,13 +1823,13 @@ questions:
     select_count: 2
     options:
       - id: a
-        text: "`mv docs a.txt b.txt`"
-        rationale: Wrong. The last argument is the destination; b.txt is not a directory, so mv fails.
+        text: "`mv -t a.txt b.txt docs`"
+        rationale: Wrong. -t takes the next argument, a.txt, as the target directory; it is not a directory, so mv fails.
       - id: b
         text: "`mv a.txt b.txt docs/`"
         rationale: Correct. With several sources, the last argument must be a directory, and docs is one.
       - id: c
-        text: "`cp a.txt b.txt docs`"
+        text: "`cp -r a.txt b.txt docs/`"
         rationale: Wrong. This copies the files; the originals stay where they are.
       - id: d
         text: "`mv a.txt,b.txt docs`"
@@ -1785,9 +1843,10 @@ questions:
       destination comes first, which is handy with xargs or find -exec … +.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 1, section: Moving Files with mv }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Option lengths evened out (a now mv -t with the wrong target, c now cp -r)." }
     tags: [mv]
 
   - id: 101-103.3-0057
@@ -1822,9 +1881,10 @@ questions:
       command: sh -c 'tar -cf /tmp/e.tar /etc/hostname 2>/dev/null; mkdir -p /tmp/rs && cd /tmp/rs && tar -xf /tmp/e.tar && ls etc'
       expect: { exit_code: 0, stdout_contains: "hostname" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [tar]
 
   - id: 101-103.3-0058
@@ -1862,9 +1922,10 @@ questions:
       that files inside subdirectories are included.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: The cpio Command }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [cpio]
 
   - id: 101-103.3-0059
@@ -1901,14 +1962,15 @@ questions:
       command: sh -c 'mkdir -p /tmp/a/sub/deeper && cd /tmp/a && touch x.tmp sub/y.tmp sub/deeper/z.tmp keep.txt && find . -type f -name "*.tmp" -delete && find . -type f'
       expect: { exit_code: 0, stdout_regex: "^\\./keep\\.txt\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [find, delete]
 
   - id: 101-103.3-0060
     type: single_choice
-    difficulty: 5
+    difficulty: 4
     pool: practice
     stem: >
       A colleague uses `find /etc -name '*.conf' -mtime 7` to list configuration files changed
@@ -1925,14 +1987,15 @@ questions:
         rationale: Wrong. -mtime is modification time; -atime is access time.
       - id: d
         text: The quotes around '*.conf' stop find from expanding the pattern
-        rationale: Wrong. find expands the quoted pattern itself; the quotes only keep the shell from doing it.
+        rationale: Wrong. The quotes only stop the shell from expanding the pattern; find itself matches each name against '*.conf'.
     answer: [b]
     explanation: >
       For -mtime, -n means fewer than n whole days, +n more than n, and plain n exactly n (after
       dropping fractions). "Changed in the last week" is -mtime -7.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: Locating Files by Modification Time }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Correct option shortened; it was the longest option." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Rationale d reworded to be accurate; difficulty 5 -> 4." }
     tags: [find, mtime]
