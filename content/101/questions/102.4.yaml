@@ -1,0 +1,1432 @@
+# 102.4 Use Debian package management — weight 3 → 30 holdout + 15 practice.
+# Original questions written from LPI Learning Materials 101-500, objective 102.4, lesson 1.
+schema_version: 1
+exam: "101"
+objective: "102.4"
+questions:
+  # ---------------------------------------------------------------- holdout (mock exams only)
+
+  - id: 101-102.4-0001
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: >
+      You have downloaded `zoomtool_3.1-2_amd64.deb` to the current directory. What does
+      `dpkg -i zoomtool_3.1-2_amd64.deb` do?
+    options:
+      - id: a
+        text: Installs the package from that file, or upgrades it if an older version is installed
+        rationale: Correct. -i (--install) unpacks and configures the package in the file, replacing any older installed version.
+      - id: b
+        text: Prints the control information (version, dependencies, maintainer) stored in the file
+        rationale: Wrong. That is dpkg -I (capital i, --info).
+      - id: c
+        text: Downloads the package's dependencies from the configured repositories
+        rationale: Wrong. dpkg never downloads anything; resolving dependencies from repositories is APT's job.
+      - id: d
+        text: Checks whether the package named zoomtool is installed and shows its status
+        rationale: Wrong. Status is shown by dpkg -s with a package name, not a file name.
+    answer: [a]
+    explanation: >
+      dpkg -i takes one or more .deb file names. If an older version of the package is installed,
+      it is upgraded; otherwise it is installed fresh. dpkg checks dependencies but does not fetch
+      missing ones.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: The Debian Package Tool (dpkg) }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [dpkg]
+
+  - id: 101-102.4-0002
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: Which file is APT's traditional main list of repositories to fetch packages from?
+    options:
+      - id: a
+        text: "`/etc/apt/apt.conf`"
+        rationale: Wrong. apt.conf holds APT configuration options, not the list of repositories.
+      - id: b
+        text: "`/var/lib/dpkg/status`"
+        rationale: Wrong. This is dpkg's database of installed packages and their states.
+      - id: c
+        text: "`/etc/apt/sources.list`"
+        rationale: Correct. sources.list (plus files in /etc/apt/sources.list.d/) tells APT where packages come from.
+      - id: d
+        text: "`/var/cache/apt/archives`"
+        rationale: Wrong. This directory caches downloaded .deb files; it is not a list of repositories.
+    answer: [c]
+    explanation: >
+      APT reads repository definitions from /etc/apt/sources.list and from files in
+      /etc/apt/sources.list.d/. After changing them, run apt-get update to fetch the new indexes.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: The Sources List }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [sources.list]
+
+  - id: 101-102.4-0003
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: >
+      On a Debian system, which tool fetches a package from the configured repositories and
+      automatically installs the other packages it needs?
+    options:
+      - id: a
+        text: "`dpkg`"
+        rationale: Wrong. dpkg reports missing dependencies but cannot fetch or install them by itself.
+      - id: b
+        text: "`dpkg-query`"
+        rationale: Wrong. dpkg-query only reads dpkg's database (status, file lists, searches).
+      - id: c
+        text: "`dpkg-reconfigure`"
+        rationale: Wrong. It re-runs the configuration of a package that is already installed.
+      - id: d
+        text: "`apt-get`"
+        rationale: Correct. apt-get downloads packages from repositories and resolves dependencies automatically.
+    answer: [d]
+    explanation: >
+      APT (apt-get, apt-cache, apt) is the front end that works with repositories and resolves
+      dependencies. It calls dpkg underneath to do the actual installation.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Advanced Package Tool (apt) }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [apt-get, dpkg]
+
+  - id: 101-102.4-0004
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: >
+      When a package was installed you answered its set-up questions wrongly. Which utility lets you
+      go through that package's configuration questions again?
+    options:
+      - id: a
+        text: "`apt-get install --reinstall`"
+        rationale: Wrong. Reinstalling unpacks the files again but does not normally ask questions that have already been answered.
+      - id: b
+        text: "`dpkg-reconfigure`"
+        rationale: Correct. dpkg-reconfigure re-runs the configuration of an installed package, asking its debconf questions again.
+      - id: c
+        text: "`dpkg --configure`"
+        rationale: Wrong. This configures packages that are unpacked but not yet configured; an already configured package is not reconfigured.
+      - id: d
+        text: "`apt-cache show`"
+        rationale: Wrong. apt-cache show only displays package information.
+    answer: [b]
+    explanation: >
+      dpkg-reconfigure PACKAGE (for example dpkg-reconfigure tzdata) runs the package's
+      configuration again, so you can change the answers you gave when it was installed.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Reconfiguring Installed Packages }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [dpkg-reconfigure]
+
+  - id: 101-102.4-0005
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: Which file name is a Debian binary package that `dpkg -i` can install?
+    options:
+      - id: a
+        text: "`nettool-2.4-1.x86_64.rpm`"
+        rationale: Wrong. .rpm is the RPM package format used by Red Hat-style distributions.
+      - id: b
+        text: "`nettool-2.4.tar.gz`"
+        rationale: Wrong. This is a compressed tar archive, typically source code, not a package dpkg can install.
+      - id: c
+        text: "`nettool_2.4-1.dsc`"
+        rationale: Wrong. A .dsc file describes a Debian source package; it is not installable with dpkg -i.
+      - id: d
+        text: "`nettool_2.4-1_amd64.deb`"
+        rationale: Correct. Debian binary packages use the .deb extension, named name_version_architecture.deb.
+    answer: [d]
+    explanation: >
+      Debian binary packages are .deb files, conventionally named
+      name_upstreamversion-revision_architecture.deb.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Introduction }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [deb]
+
+  - id: 101-102.4-0006
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: The `curl` package is installed. Which command lists every file it put on the system?
+    options:
+      - id: a
+        text: "`dpkg -l curl`"
+        rationale: Wrong. Lower-case -l lists the package with its state, version and description, not its files.
+      - id: b
+        text: "`dpkg -L curl`"
+        rationale: Correct. -L (--listfiles) lists the files that an installed package owns.
+      - id: c
+        text: "`dpkg -c curl`"
+        rationale: Wrong. -c lists the contents of a .deb archive file; given a package name it fails.
+      - id: d
+        text: "`dpkg -I curl`"
+        rationale: Wrong. -I shows control information of a .deb archive file, not an installed package's files.
+    answer: [b]
+    explanation: >
+      dpkg -L PACKAGE (dpkg-query -L) reads the installed package's file list from dpkg's
+      database. For a .deb file that is not installed, use dpkg -c FILE instead.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Listing Installed Packages and Package Contents }
+    verify:
+      command: dpkg -L dpkg
+      expect: { exit_code: 0, stdout_contains: "/usr/bin/dpkg" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [dpkg]
+
+  - id: 101-102.4-0007
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      You want to know which installed package provides the file `/usr/bin/dpkg-query`. Which
+      command tells you?
+    options:
+      - id: a
+        text: "`dpkg -S /usr/bin/dpkg-query`"
+        rationale: Correct. -S (--search) finds the installed package that owns a matching path.
+      - id: b
+        text: "`dpkg -L /usr/bin/dpkg-query`"
+        rationale: Wrong. -L expects a package name and lists its files; it does not search by path.
+      - id: c
+        text: "`apt-cache search /usr/bin/dpkg-query`"
+        rationale: Wrong. apt-cache search matches package names and descriptions, not file paths.
+      - id: d
+        text: "`dpkg -p /usr/bin/dpkg-query`"
+        rationale: Wrong. -p prints available-version details for a package name; it does not search files.
+    answer: [a]
+    explanation: >
+      dpkg -S (same as dpkg-query -S) prints "package: path" for each installed file matching the
+      pattern. It only knows about installed packages.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Finding Out Which Package Owns a Specific File }
+    verify:
+      command: dpkg -S /usr/bin/dpkg-query
+      expect: { exit_code: 0, stdout_contains: "dpkg: /usr/bin/dpkg-query" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [dpkg, dpkg-query]
+
+  - id: 101-102.4-0008
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      You want to uninstall the `fortune-mod` package with dpkg but keep its configuration files in
+      case you reinstall it later. Which command do you use?
+    options:
+      - id: a
+        text: "`dpkg -P fortune-mod`"
+        rationale: Wrong. -P (--purge) removes the configuration files as well.
+      - id: b
+        text: "`dpkg -x fortune-mod`"
+        rationale: Wrong. -x extracts a .deb archive to a directory; it does not uninstall anything.
+      - id: c
+        text: "`dpkg -r fortune-mod`"
+        rationale: Correct. -r (--remove) removes the package but leaves its configuration files on disk.
+      - id: d
+        text: "`dpkg -R fortune-mod`"
+        rationale: Wrong. -R (--recursive) only modifies an action such as -i to process a directory tree; on its own dpkg exits with "need an action option".
+    answer: [c]
+    explanation: >
+      dpkg -r removes a package's files except its configuration files, so the package is left in
+      the "rc" state. dpkg -P removes everything, configuration included.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Removing Packages }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Rationale for -R corrected: dpkg exits with 'need an action option' (tested)." }
+    tags: [dpkg, remove]
+
+  - id: 101-102.4-0009
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      You are looking for a Markdown converter but don't know any package names. Which command
+      searches the names and descriptions of all packages in APT's index for the word "markdown"?
+    options:
+      - id: a
+        text: "`apt-cache show markdown`"
+        rationale: Wrong. show prints the full record of a package called exactly "markdown"; it does not search.
+      - id: b
+        text: "`dpkg -l '*markdown*'`"
+        rationale: Wrong. dpkg -l only knows packages in dpkg's database (installed or previously installed), and matches names only.
+      - id: c
+        text: "`apt-file search markdown`"
+        rationale: Wrong. apt-file searches the file paths inside packages, not package descriptions.
+      - id: d
+        text: "`apt-cache search markdown`"
+        rationale: Correct. apt-cache search matches a pattern against package names and descriptions in the index.
+    answer: [d]
+    explanation: >
+      apt-cache search PATTERN searches the package index (built by apt-get update) and prints
+      "name - short description" for each match. apt search does the same with friendlier output.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Searching for Packages }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [apt-cache]
+
+  - id: 101-102.4-0010
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      `/var/cache/apt/archives` has grown to several gigabytes of downloaded .deb files. Which
+      command empties it?
+    options:
+      - id: a
+        text: "`apt-get clean`"
+        rationale: Correct. clean deletes the downloaded package files from /var/cache/apt/archives and its partial/ directory.
+      - id: b
+        text: "`apt-get autoremove`"
+        rationale: Wrong. autoremove uninstalls automatically installed packages that are no longer needed; it does not empty the download cache.
+      - id: c
+        text: "`apt-get purge`"
+        rationale: Wrong. purge uninstalls named packages with their configuration files; the cache is untouched.
+      - id: d
+        text: "`dpkg --clear-avail`"
+        rationale: Wrong. This erases dpkg's record of available packages, not the downloaded files.
+    answer: [a]
+    explanation: >
+      APT downloads .deb files to /var/cache/apt/archives (partial downloads go to the partial/
+      subdirectory) before installing them. apt-get clean (or apt clean) deletes them all.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: The Local Cache }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [apt-get, cache]
+
+  - id: 101-102.4-0011
+    type: multi_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      Which **TWO** commands uninstall the `nginx` package **and** delete its configuration files?
+    select_count: 2
+    options:
+      - id: a
+        text: "`apt-get remove nginx`"
+        rationale: Wrong. remove leaves the configuration files on the system.
+      - id: b
+        text: "`apt-get purge nginx`"
+        rationale: Correct. purge removes the package together with its configuration files.
+      - id: c
+        text: "`dpkg -r nginx`"
+        rationale: Wrong. dpkg -r also keeps the configuration files; dpkg -P would purge.
+      - id: d
+        text: "`apt-get remove --purge nginx`"
+        rationale: Correct. The --purge option turns a remove into a purge.
+    answer: [b, d]
+    explanation: >
+      With APT, either apt-get purge PKG or apt-get remove --purge PKG removes the configuration
+      files too. With dpkg the equivalent is dpkg -P (--purge).
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Installing and Removing Packages }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [apt-get, purge]
+
+  - id: 101-102.4-0012
+    type: fill_in
+    difficulty: 2
+    pool: holdout
+    stem: >
+      A colleague added a new repository line to `/etc/apt/sources.list`, but `apt-get install`
+      still cannot find its packages. Type the complete command that downloads fresh package
+      indexes from all configured repositories.
+    fill_in:
+      accepted: ['(sudo\s+)?((/usr)?/bin/)?(apt-get|apt)\s+update']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      apt-get update (or apt update) downloads the current package lists from every repository in
+      sources.list and sources.list.d/. Until it runs, APT does not know what the new repository
+      offers. It installs or upgrades nothing.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Updating the Package Index }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [apt-get, update]
+
+  - id: 101-102.4-0013
+    type: fill_in
+    difficulty: 3
+    pool: holdout
+    stem: >
+      Type the `dpkg` option (short or long form) that removes an installed package **together
+      with** its configuration files.
+    fill_in:
+      accepted: ['((sudo\s+)?((/usr)?/bin/)?dpkg\s+)?(-P|--purge)(\s+(?!-)\S+)*']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      dpkg -P (--purge) removes everything, including configuration files. dpkg -r (--remove)
+      keeps the configuration files. -P can also purge a package that was already removed with -r.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Removing Packages }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [dpkg, purge]
+
+  - id: 101-102.4-0014
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      Before removing the `libgeo3` library, you want to see which packages in APT's index declare a
+      dependency **on** it. Which `apt-cache` subcommand shows this?
+    options:
+      - id: a
+        text: "`apt-cache depends libgeo3`"
+        rationale: Wrong. depends lists what libgeo3 itself needs, the opposite direction.
+      - id: b
+        text: "`apt-cache rdepends libgeo3`"
+        rationale: Correct. rdepends lists reverse dependencies, the packages that depend on libgeo3.
+      - id: c
+        text: "`apt-cache policy libgeo3`"
+        rationale: Wrong. policy shows installed and candidate versions and their sources.
+      - id: d
+        text: "`apt-cache search libgeo3`"
+        rationale: Wrong. search matches names and descriptions; it does not follow dependency relationships.
+    answer: [b]
+    explanation: >
+      apt-cache depends PKG shows what PKG needs; apt-cache rdepends PKG shows what needs PKG.
+      Adding --installed limits rdepends to installed packages.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Searching for Packages }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [apt-cache, dependencies]
+
+  - id: 101-102.4-0015
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      In the output of `dpkg -l`, the line for the package `mutt` begins with `rc`. What does that
+      tell you?
+    options:
+      - id: a
+        text: mutt is installed and fully configured
+        rationale: Wrong. A fully installed and configured package shows ii.
+      - id: b
+        text: mutt was unpacked but its configuration step has not run yet
+        rationale: Wrong. Unpacked but unconfigured is shown as iU.
+      - id: c
+        text: mutt was removed, but its configuration files are still on disk
+        rationale: Correct. r = marked for removal (desired state), c = only config files remain (current state).
+      - id: d
+        text: mutt is held at its current version and will not be upgraded
+        rationale: Wrong. A held package shows h in the first column, as in hi.
+    answer: [c]
+    explanation: >
+      The first letter of a dpkg -l line is the desired state (i install, r remove, p purge, h hold),
+      the second the current state (i installed, c config-files, U unpacked, n not installed). "rc"
+      is what dpkg -r leaves behind; dpkg -P mutt would clear it.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Removing Packages }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [dpkg, package-state]
+
+  - id: 101-102.4-0016
+    type: multi_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      Which **TWO** commands show the version of the `bash` package that is currently installed?
+    select_count: 2
+    options:
+      - id: a
+        text: "`dpkg -s bash`"
+        rationale: Correct. dpkg -s prints the installed package's status record, including Status and Version.
+      - id: b
+        text: "`dpkg -L bash`"
+        rationale: Wrong. -L lists the files the package owns; it does not print the version.
+      - id: c
+        text: "`apt-cache policy bash`"
+        rationale: Correct. policy shows the Installed version alongside the Candidate version from the repositories.
+      - id: d
+        text: "`dpkg -S bash`"
+        rationale: Wrong. -S searches installed file paths containing "bash" and prints each owning package with the path, without versions.
+    answer: [a, c]
+    explanation: >
+      dpkg -s PKG reads dpkg's database and shows Status and Version. apt-cache policy PKG shows
+      the Installed version and the Candidate APT would install, which also reveals whether an
+      upgrade is available.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Getting Package Information }
+    verify:
+      command: dpkg -s bash
+      expect: { exit_code: 0, stdout_regex: "(?m)^Version: " }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Rationale for option d reworded (YAML colon issue; content unchanged)." }
+    tags: [dpkg, apt-cache]
+
+  - id: 101-102.4-0017
+    type: fill_in
+    difficulty: 3
+    pool: holdout
+    stem: >
+      `dpkg -i` left a package unconfigured because three dependencies were missing. Using
+      `apt-get`, type the complete command (without a package name) that installs the missing
+      dependencies and finishes configuring the package.
+    fill_in:
+      accepted: ['(sudo\s+)?((/usr)?/bin/)?apt-get\s+(install\s+(-f|--fix-broken)|(-f|--fix-broken)\s+install)']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      apt-get install -f (--fix-broken) with no package names tries to repair broken dependencies:
+      it fetches the missing packages from the repositories and lets dpkg finish configuring the
+      half-installed one. apt install -f does the same.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Fixing Broken Dependencies }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [apt-get, dependencies]
+
+  - id: 101-102.4-0018
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      In a Debian repository, which component holds packages that meet the Debian Free Software
+      Guidelines but depend on software that is not in `main`?
+    options:
+      - id: a
+        text: "`contrib`"
+        rationale: Correct. contrib is free software that needs something outside main to work.
+      - id: b
+        text: "`non-free`"
+        rationale: Wrong. non-free holds packages that do not meet the DFSG themselves.
+      - id: c
+        text: "`universe`"
+        rationale: Wrong. universe is an Ubuntu component (community-maintained open source), not a Debian one.
+      - id: d
+        text: "`main`"
+        rationale: Wrong. main packages are DFSG-free and do not depend on anything outside main.
+    answer: [a]
+    explanation: >
+      Debian's components are main (free, self-contained), contrib (free but depending on
+      software outside main), non-free (not DFSG-free) and, since Debian 12, non-free-firmware. Ubuntu
+      uses main, restricted, universe and multiverse.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: The Sources List }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Explanation: contrib depends on software outside main, not only non-free software." }
+    tags: [sources.list, components]
+
+  - id: 101-102.4-0019
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      A vendor sent you `agent_5.0-1_amd64.deb`. Before installing it, you want to see its version,
+      maintainer and the packages it depends on. Which command shows this?
+    options:
+      - id: a
+        text: "`dpkg -c agent_5.0-1_amd64.deb`"
+        rationale: Wrong. -c lists the files inside the archive, not its control fields.
+      - id: b
+        text: "`dpkg -s agent_5.0-1_amd64.deb`"
+        rationale: Wrong. -s expects the name of an installed package and looks it up in dpkg's database.
+      - id: c
+        text: "`apt-cache show agent_5.0-1_amd64.deb`"
+        rationale: Wrong. Given a bare file name, apt-cache show looks for a package with that name in APT's index and reports that none is found.
+      - id: d
+        text: "`dpkg -I agent_5.0-1_amd64.deb`"
+        rationale: Correct. -I (--info) prints the control information of a .deb file, including Version, Maintainer and Depends.
+    answer: [d]
+    explanation: >
+      dpkg -I FILE (same as dpkg-deb --info) shows a .deb's control fields without installing it.
+      Use dpkg -c FILE to see which files it would install.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Getting Package Information }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Rationale for apt-cache show clarified: a bare file name is looked up as a package name (apt-cache show ./file.deb does work)." }
+    tags: [dpkg]
+
+  - id: 101-102.4-0020
+    type: multi_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      An administrator runs the command shown in the exhibit. Which **TWO** statements about the
+      result are true?
+    exhibit: |
+      # dpkg -i cowsay_3.03+dfsg2-8_all.deb
+      Selecting previously unselected package cowsay.
+      (Reading database ... 40122 files and directories currently installed.)
+      Preparing to unpack cowsay_3.03+dfsg2-8_all.deb ...
+      Unpacking cowsay (3.03+dfsg2-8) ...
+      dpkg: dependency problems prevent configuration of cowsay:
+       cowsay depends on libtext-charwidth-perl; however:
+        Package libtext-charwidth-perl is not installed.
+
+      dpkg: error processing package cowsay (--install):
+       dependency problems - leaving unconfigured
+      Errors were encountered while processing:
+       cowsay
+    select_count: 2
+    options:
+      - id: a
+        text: No files from cowsay were written to disk, because the dependency check failed first.
+        rationale: Wrong. The output shows "Unpacking cowsay", so its files are on disk; only configuration was skipped.
+      - id: b
+        text: cowsay is now unpacked but not configured, and `dpkg -l cowsay` shows it as `iU`.
+        rationale: Correct. "leaving unconfigured" means the package is in the unpacked state, shown as iU.
+      - id: c
+        text: dpkg did not try to obtain libtext-charwidth-perl, because it cannot resolve dependencies.
+        rationale: Correct. dpkg only reports missing dependencies; fetching them is APT's job.
+      - id: d
+        text: Running `apt-get update` will install libtext-charwidth-perl and finish configuring cowsay.
+        rationale: Wrong. update only refreshes package indexes; apt-get install -f would install the dependency.
+    answer: [b, c]
+    explanation: >
+      dpkg unpacks the package and then refuses to configure it while dependencies are missing,
+      leaving it as iU. It never downloads anything. apt-get install -f (or installing the
+      dependency and running dpkg --configure cowsay) completes the job.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Dealing with Dependencies }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [dpkg, dependencies, package-state]
+
+  - id: 101-102.4-0021
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      You no longer need `libgeo` or the tool that uses it. Removing the library alone fails as
+      shown in the exhibit. Which command removes `libgeo` and leaves no broken dependencies?
+    exhibit: |
+      # dpkg -r libgeo
+      dpkg: dependency problems prevent removal of libgeo:
+       geo-tools depends on libgeo (>= 1.0).
+
+      dpkg: error processing package libgeo (--remove):
+       dependency problems - not removing
+      Errors were encountered while processing:
+       libgeo
+    options:
+      - id: a
+        text: "`dpkg -r --force-depends libgeo`"
+        rationale: Wrong. This removes libgeo but leaves geo-tools installed with an unmet dependency.
+      - id: b
+        text: "`dpkg -r libgeo geo-tools`"
+        rationale: Correct. When both are removed in one run, nothing installed is left depending on libgeo.
+      - id: c
+        text: "`dpkg -P libgeo`"
+        rationale: Wrong. Purging runs the same dependency check and fails for the same reason.
+      - id: d
+        text: "`dpkg -r libgeo && dpkg -r geo-tools`"
+        rationale: Wrong. The first command fails exactly as in the exhibit, so && never runs the second.
+    answer: [b]
+    explanation: >
+      dpkg will not remove a package that another installed package still depends on, unless the
+      dependent package is removed in the same operation (or first). Forcing the removal works but
+      leaves the system with broken dependencies.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Removing Packages }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [dpkg, dependencies, remove]
+
+  - id: 101-102.4-0022
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      Look at the exhibit. Why does `apt-file` find an owner for `/usr/bin/hello` when `dpkg -S`
+      does not?
+    exhibit: |
+      $ dpkg -S /usr/bin/hello
+      dpkg-query: no path found matching pattern /usr/bin/hello
+      $ apt-file search /usr/bin/hello
+      hello: /usr/bin/hello
+      hello-traditional: /usr/bin/hello
+    options:
+      - id: a
+        text: dpkg -S needs root privileges to read the package database, so it found nothing
+        rationale: Wrong. Any user can query dpkg's database; the empty result has another cause.
+      - id: b
+        text: dpkg -S only matches file names, so the full path must be shortened to `hello`
+        rationale: Wrong. dpkg -S accepts full paths (and patterns); a full path is the normal usage.
+      - id: c
+        text: hello is not installed; apt-file also covers packages that are not installed
+        rationale: Correct. dpkg -S only knows installed packages, while apt-file uses the repositories' Contents indexes.
+      - id: d
+        text: The file exists but was created by hand, so dpkg has no record of it
+        rationale: Wrong. If the file had been created by hand, apt-file would not tie it to two packages; its results come from repository indexes, not the local disk.
+    answer: [c]
+    explanation: >
+      dpkg -S searches the file lists of installed packages only. apt-file search uses the Contents
+      indexes it downloads with apt-file update, so it also finds files in packages that are not
+      installed. Here hello is simply not installed.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Listing Package Contents and Finding Files }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Correct option shortened so it is not the longest." }
+    tags: [apt-file, dpkg-query]
+
+  - id: 101-102.4-0023
+    type: fill_in
+    difficulty: 4
+    pool: holdout
+    stem: >
+      You have a downloaded `.deb` file that is **not** installed. Type the `dpkg` option (short or
+      long form) that lists the files contained in that archive.
+    fill_in:
+      accepted: ['((sudo\s+)?((/usr)?/bin/)?(dpkg|dpkg-deb)\s+)?(-c|--contents)(\s+(?!-)\S+)*']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      dpkg -c FILE (--contents, passed through to dpkg-deb) lists the archive's files in a tar-like
+      format. dpkg -L only works for installed packages.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Listing Installed Packages and Package Contents }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [dpkg]
+
+  - id: 101-102.4-0024
+    type: multi_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      You add a third-party repository by creating a file in `/etc/apt/sources.list.d/`. With
+      current APT, which **TWO** file names will APT actually read?
+    select_count: 2
+    options:
+      - id: a
+        text: "`vendor.list` (one-line `deb …` format)"
+        rationale: Correct. Files ending in .list use the classic one-line sources.list format.
+      - id: b
+        text: "`vendor.conf` (one-line `deb …` format)"
+        rationale: Wrong. APT ignores files in sources.list.d whose names do not end in .list or .sources.
+      - id: c
+        text: "`vendor.repo` (one-line `deb …` format)"
+        rationale: Wrong. .repo is the yum/dnf convention; APT ignores it.
+      - id: d
+        text: "`vendor.sources` (deb822 `Types:`/`URIs:` format)"
+        rationale: Correct. Files ending in .sources use the multi-line deb822 format, used by default on current Ubuntu and Debian.
+    answer: [a, d]
+    explanation: >
+      APT reads *.list files (one-line format) and *.sources files (deb822 format) from
+      /etc/apt/sources.list.d/. Ubuntu 24.04, for example, ships its own repositories in
+      ubuntu.sources. Files with other extensions are ignored.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: The /etc/apt/sources.list.d Directory }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [sources.list]
+
+  - id: 101-102.4-0025
+    type: multi_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      The line in the exhibit was added to `/etc/apt/sources.list`. Which **TWO** statements about
+      it are true?
+    exhibit: |
+      deb-src http://deb.debian.org/debian bookworm main contrib
+    select_count: 2
+    options:
+      - id: a
+        text: It points APT at source packages, which commands like `apt-get source` can download
+        rationale: Correct. deb-src lines provide source package indexes, used by apt-get source and build-dep.
+      - id: b
+        text: "`bookworm` names the distribution release the packages are built for"
+        rationale: Correct. The third field is the distribution (codename or suite).
+      - id: c
+        text: After an index update, `apt-get install` can install ready-to-run programs from main and contrib through this line
+        rationale: Wrong. Binary packages come from deb lines; a deb-src line provides no installable binaries.
+      - id: d
+        text: APT reads it immediately; no index update is needed before using it
+        rationale: Wrong. apt-get update must run before APT knows what the new line offers.
+    answer: [a, b]
+    explanation: >
+      A one-line entry is: archive type (deb or deb-src), URL, distribution, then one or more
+      components. deb-src lines are only for source packages; binary packages need a deb line.
+      Run apt-get update after any change.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: The Sources List }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [sources.list, deb-src]
+
+  - id: 101-102.4-0026
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      After `apt-get update`, 34 packages can be upgraded (see the exhibit). Change control allows
+      you to upgrade **only** `ca-certificates` today. Which command does that?
+    exhibit: |
+      $ apt list --upgradable
+      Listing...
+      ca-certificates/noble-updates 20260816ubuntu0.24.04.1 all [upgradable from: 20260601~24.04.1]
+      distro-info-data/noble-updates 2026.10.12-0ubuntu0.24.04.1 all [upgradable from: 0.72-0ubuntu0.24.04.1]
+      tmux/noble-updates 3.4-1ubuntu0.2 amd64 [upgradable from: 3.4-1build1]
+      ... (31 more lines)
+    options:
+      - id: a
+        text: "`apt-get install ca-certificates`"
+        rationale: Correct. install on an already installed package upgrades just that package (plus anything it needs) to the candidate version.
+      - id: b
+        text: "`apt-get upgrade ca-certificates`"
+        rationale: Wrong. With current apt-get, upgrade still upgrades every upgradable package; the name does not restrict it.
+      - id: c
+        text: "`apt-get update ca-certificates`"
+        rationale: Wrong. update refreshes the package indexes, does not take package names and upgrades nothing.
+      - id: d
+        text: "`dpkg -i ca-certificates`"
+        rationale: Wrong. dpkg -i expects a .deb file name and does not download packages from repositories.
+    answer: [a]
+    explanation: >
+      apt-get install PKG upgrades an installed package to its candidate version (add
+      --only-upgrade to make sure nothing new gets installed). apt-get upgrade with a package name
+      still upgrades everything upgradable, as a simulated run (-s) shows.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Upgrading Packages }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [apt-get, upgrade]
+
+  - id: 101-102.4-0027
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      `vpnclient_4.2_amd64.deb` is in your current directory. It depends on packages that are
+      available from your configured repositories but not yet installed. Which **single** command
+      installs the file and its dependencies?
+    options:
+      - id: a
+        text: "`dpkg -i vpnclient_4.2_amd64.deb`"
+        rationale: Wrong. dpkg unpacks the file but stops with unmet dependencies; it never fetches them.
+      - id: b
+        text: "`apt-get install vpnclient_4.2_amd64.deb`"
+        rationale: Wrong. Without a path, apt-get treats the argument as a package name and fails with "Unable to locate package".
+      - id: c
+        text: "`apt-get install vpnclient`"
+        rationale: Wrong. This looks for a package named vpnclient in the repositories, not in the local file.
+      - id: d
+        text: "`apt-get install ./vpnclient_4.2_amd64.deb`"
+        rationale: Correct. With a path (here ./), apt-get installs the local file and fetches its dependencies.
+    answer: [d]
+    explanation: >
+      apt-get install (and apt install) accept a local .deb file when it is given as a path, such
+      as ./file.deb or /tmp/file.deb. APT then resolves and downloads the dependencies as usual.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Installing and Removing Packages }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [apt-get, deb]
+
+  - id: 101-102.4-0028
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      `geo-tools` depends on `libgeo`; neither is installed. Both .deb files are in the current
+      directory, and the dependent package is listed **first**. What happens when you run
+      `dpkg -i geo-tools_2.0-1_all.deb libgeo_1.0-1_all.deb`?
+    options:
+      - id: a
+        text: dpkg stops at geo-tools with a dependency error and never processes libgeo
+        rationale: Wrong. dpkg unpacks every file given before configuring, so the order on the command line does not matter here.
+      - id: b
+        text: libgeo is installed, but geo-tools stays unconfigured because it was processed before libgeo
+        rationale: Wrong. Configuration happens after all packages are unpacked, so geo-tools' dependency is met by then.
+      - id: c
+        text: Both packages are unpacked and then configured, so both end up fully installed
+        rationale: Correct. dpkg unpacks all listed packages first, then configures them in dependency order.
+      - id: d
+        text: dpkg refuses to start because the files must be listed in dependency order
+        rationale: Wrong. dpkg has no such rule; it sorts out the configuration order itself.
+    answer: [c]
+    explanation: >
+      dpkg -i with several files unpacks all of them first and then configures them, ordering the
+      configuration by dependencies. Installing a package together with its dependencies in one
+      dpkg call works in any order.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Dealing with Dependencies }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [dpkg, dependencies]
+
+  - id: 101-102.4-0029
+    type: fill_in
+    difficulty: 5
+    pool: holdout
+    stem: >
+      `apt-cache search ssh` returns hundreds of results because it also matches descriptions. Type
+      the `apt-cache` option (short or long form) that limits the search to package names.
+    fill_in:
+      accepted:
+        - '(-n|--names-only)'
+        - '(sudo\s+)?((/usr)?/bin/)?apt-cache\s+(-n|--names-only)\s+search(\s+(?!-)\S+)*'
+        - '(sudo\s+)?((/usr)?/bin/)?apt-cache\s+search\s+(-n|--names-only)(\s+(?!-)\S+)*'
+        - '(sudo\s+)?((/usr)?/bin/)?apt-cache\s+search\s+(?!-)\S+\s+(-n|--names-only)'
+      match: regex
+      case_sensitive: true
+    explanation: >
+      apt-cache search --names-only (-n) PATTERN matches the pattern against package names instead
+      of names and long descriptions. Combined with a regular expression such as '^openssh' it
+      narrows results quickly.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Searching for Packages }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [apt-cache]
+
+  - id: 101-102.4-0030
+    type: multi_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      You check the integrity of the files installed by the `geo-tools` package with `dpkg -V`.
+      Which **TWO** statements about the output in the exhibit are true?
+    exhibit: |
+      # dpkg -V geo-tools
+      ??5?????? c /etc/geo/geo.conf
+      missing     /usr/bin/geoconv
+    select_count: 2
+    options:
+      - id: a
+        text: The `?` characters mean the file's permissions and owner were changed
+        rationale: Wrong. "?" means that check could not be done; dpkg only verifies checksums, so most columns are always "?".
+      - id: b
+        text: "`/usr/bin/geoconv` exists but dpkg could not compute its checksum"
+        rationale: Wrong. "missing" means the file is not on disk at all.
+      - id: c
+        text: The content of `/etc/geo/geo.conf` no longer matches the checksum recorded for it
+        rationale: Correct. A 5 in the third column means the MD5 checksum check failed.
+      - id: d
+        text: The `c` marks `/etc/geo/geo.conf` as a configuration file of the package
+        rationale: Correct. dpkg -V flags conffiles with c, so a changed config file may well be an intended edit.
+    answer: [c, d]
+    explanation: >
+      dpkg -V (--verify) compares installed files with the checksums dpkg recorded. The output uses
+      rpm -V's format: "5" = checksum mismatch, "?" = check not performed, "c" = conffile, and
+      "missing" for deleted files. Reinstalling the package restores a damaged non-config file.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Getting Package Information }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [dpkg, integrity]
+
+  # --------------------------------------------------------------------------- practice (CLI)
+
+  - id: 101-102.4-0031
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: What does `apt-cache show htop` display?
+    options:
+      - id: a
+        text: Its record from APT's index, with version, dependencies and description
+        rationale: Correct. show prints the full package record APT has for htop.
+      - id: b
+        text: The list of files that htop installed on this system, with their full paths
+        rationale: Wrong. That is dpkg -L htop.
+      - id: c
+        text: The htop processes that are currently running, with their process IDs
+        rationale: Wrong. apt-cache only reads package information; ps or pgrep show processes.
+      - id: d
+        text: The repositories configured on the system and when they were last refreshed
+        rationale: Wrong. show describes one package; it does not report on repositories or refresh times.
+    answer: [a]
+    explanation: >
+      apt-cache show PKG (or apt show PKG) prints the package record from APT's index: Version,
+      Depends, Size, checksums, Description and more. It works whether or not the package is
+      installed.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Searching for Packages }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Distractors lengthened so the correct option is not the longest." }
+    tags: [apt-cache]
+
+  - id: 101-102.4-0032
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: How does the `apt` command relate to `apt-get` and `apt-cache`?
+    options:
+      - id: a
+        text: It is an older front end that apt-get replaced, kept only for compatibility
+        rationale: Wrong. apt is the newer tool; apt-get remains available alongside it.
+      - id: b
+        text: It installs only local .deb files, like dpkg
+        rationale: Wrong. apt works with repositories just as apt-get does.
+      - id: c
+        text: It combines their most common commands in one tool with friendlier output
+        rationale: Correct. apt offers install, remove, update, upgrade, search, show and more in one interactive-oriented tool.
+      - id: d
+        text: It is the low-level tool that apt-get calls to unpack packages
+        rationale: Wrong. The low-level tool is dpkg.
+    answer: [c]
+    explanation: >
+      apt bundles the everyday commands of apt-get and apt-cache with progress bars and colour.
+      Its output is not guaranteed to stay stable, so scripts should keep using apt-get and
+      apt-cache.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Advanced Package Tool (apt) }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Distractor a lengthened so the correct option is not the longest." }
+    tags: [apt]
+
+  - id: 101-102.4-0033
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: By default, where does APT store the .deb files it downloads before installing them?
+    options:
+      - id: a
+        text: "`/var/lib/apt/lists`"
+        rationale: Wrong. This holds the downloaded package indexes, not the packages.
+      - id: b
+        text: "`/var/cache/apt/archives`"
+        rationale: Correct. Downloaded .deb files go here; partial downloads go to its partial/ subdirectory.
+      - id: c
+        text: "`/var/lib/dpkg/info`"
+        rationale: Wrong. dpkg keeps per-package file lists and maintainer scripts here.
+      - id: d
+        text: "`/tmp/apt`"
+        rationale: Wrong. APT does not use this directory for its cache.
+    answer: [b]
+    explanation: >
+      /var/cache/apt/archives holds downloaded packages until apt-get clean or apt-get autoclean
+      removes them.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: The Local Cache }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [cache]
+
+  - id: 101-102.4-0034
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: >
+      You want to add a repository in its own one-line-format file rather than editing
+      `/etc/apt/sources.list`. Where do you put it?
+    options:
+      - id: a
+        text: "`/etc/apt/apt.conf.d/vendor.conf`"
+        rationale: Wrong. apt.conf.d holds APT configuration options, not repository lines.
+      - id: b
+        text: "`/etc/apt/preferences.d/vendor`"
+        rationale: Wrong. preferences.d holds pinning rules that set package priorities.
+      - id: c
+        text: "`/etc/apt/sources.list.d/vendor.conf`"
+        rationale: Wrong. The directory is right but APT ignores files there that do not end in .list or .sources.
+      - id: d
+        text: "`/etc/apt/sources.list.d/vendor.list`"
+        rationale: Correct. One-line-format files in sources.list.d must end in .list.
+    answer: [d]
+    explanation: >
+      Each file in /etc/apt/sources.list.d/ ending in .list uses the same syntax as sources.list,
+      which keeps third-party repositories separate and easy to remove. Run apt-get update after
+      adding one.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: The /etc/apt/sources.list.d Directory }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [sources.list]
+
+  - id: 101-102.4-0035
+    type: multi_choice
+    difficulty: 2
+    pool: practice
+    stem: Which **TWO** commands list the packages dpkg knows to be installed on the system?
+    select_count: 2
+    options:
+      - id: a
+        text: "`dpkg --get-selections`"
+        rationale: Correct. It prints every package with its selection state, such as install.
+      - id: b
+        text: "`dpkg -L`"
+        rationale: Wrong. -L needs a package name and lists that package's files.
+      - id: c
+        text: "`apt-cache pkgnames`"
+        rationale: Wrong. pkgnames lists every package name in APT's index, installed or not.
+      - id: d
+        text: "`dpkg -l`"
+        rationale: Correct. Without a pattern it lists the packages in dpkg's database with their state and version.
+    answer: [a, d]
+    explanation: >
+      dpkg -l gives a table with state, version, architecture and description; dpkg
+      --get-selections gives a plain "name selection-state" list that can be saved and later fed to
+      dpkg --set-selections.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Listing Installed Packages and Package Contents }
+    verify:
+      command: dpkg --get-selections dpkg
+      expect: { exit_code: 0, stdout_regex: "^dpkg\\s+install" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [dpkg]
+
+  - id: 101-102.4-0036
+    type: fill_in
+    difficulty: 2
+    pool: practice
+    stem: >
+      A server was set up with the wrong time zone. Type the complete command that runs the
+      configuration dialogue of the `tzdata` package again.
+    fill_in:
+      accepted: ['(sudo\s+)?((/usr)?/s?bin/)?dpkg-reconfigure\s+tzdata']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      dpkg-reconfigure tzdata asks the package's set-up questions again (area and city) and applies
+      the new answers. It works for any package that configures itself through debconf.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Reconfiguring Installed Packages }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [dpkg-reconfigure]
+
+  - id: 101-102.4-0037
+    type: single_choice
+    difficulty: 3
+    pool: practice
+    stem: >
+      You asked APT to remove one library, but it wants to remove a second package too (see the
+      exhibit). Why is `cowsay` in the list?
+    exhibit: |
+      # apt-get remove libtext-charwidth-perl
+      Reading package lists... Done
+      Building dependency tree... Done
+      The following packages will be REMOVED:
+        cowsay libtext-charwidth-perl
+      0 upgraded, 0 newly installed, 2 to remove and 0 not upgraded.
+      Do you want to continue? [Y/n]
+    options:
+      - id: a
+        text: cowsay was installed automatically and is no longer needed
+        rationale: Wrong. Unneeded automatic packages are reported for autoremove, not added to the REMOVED list.
+      - id: b
+        text: The two packages are built from the same source package
+        rationale: Wrong. Sharing a source package does not make APT remove them together.
+      - id: c
+        text: cowsay depends on the library, so it cannot stay installed without it
+        rationale: Correct. APT removes packages that depend on the one being removed, and lists them before asking.
+      - id: d
+        text: remove always deletes every package installed in the same transaction
+        rationale: Wrong. APT has no such rule; only dependencies decide what else is removed.
+    answer: [c]
+    explanation: >
+      APT resolves dependencies in both directions: installing pulls in what a package needs, and
+      removing takes away the packages that need it. Always read the list before answering Y.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Installing and Removing Packages }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [apt-get, dependencies]
+
+  - id: 101-102.4-0038
+    type: single_choice
+    difficulty: 3
+    pool: practice
+    stem: >
+      After removing an application, APT says that several libraries "were automatically installed
+      and are no longer required". Which command removes them?
+    options:
+      - id: a
+        text: "`apt-get autoremove`"
+        rationale: Correct. autoremove removes automatically installed packages that nothing depends on any more.
+      - id: b
+        text: "`apt-get autoclean`"
+        rationale: Wrong. autoclean deletes obsolete .deb files from the download cache, not installed packages.
+      - id: c
+        text: "`apt-get install -f`"
+        rationale: Wrong. -f repairs missing dependencies; it does not remove unneeded ones.
+      - id: d
+        text: "`dpkg --configure -a`"
+        rationale: Wrong. This configures all unpacked but unconfigured packages.
+    answer: [a]
+    explanation: >
+      APT marks packages pulled in as dependencies as "automatically installed". When nothing
+      depends on them any more, apt-get autoremove (or apt autoremove) removes them.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Installing and Removing Packages }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [apt-get, autoremove]
+
+  - id: 101-102.4-0039
+    type: multi_choice
+    difficulty: 3
+    pool: practice
+    stem: >
+      On Ubuntu, which **TWO** components hold software that Canonical does **not** officially
+      support?
+    select_count: 2
+    options:
+      - id: a
+        text: "`main`"
+        rationale: Wrong. main is officially supported open-source software.
+      - id: b
+        text: "`universe`"
+        rationale: Correct. universe is open-source software maintained by the community.
+      - id: c
+        text: "`multiverse`"
+        rationale: Correct. multiverse holds unsupported software that is closed-source or legally restricted.
+      - id: d
+        text: "`restricted`"
+        rationale: Wrong. restricted is officially supported but closed-source, such as some device drivers.
+    answer: [b, c]
+    explanation: >
+      Ubuntu's components: main (supported, free), restricted (supported, proprietary), universe
+      (community, free) and multiverse (unsupported, non-free or restricted by law).
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: The Sources List }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [sources.list, components]
+
+  - id: 101-102.4-0040
+    type: single_choice
+    difficulty: 3
+    pool: practice
+    stem: >
+      You have just installed `apt-file`, but `apt-file search libpng16.so` finds nothing and says
+      the cache is empty. What must you run first?
+    options:
+      - id: a
+        text: "`apt-get update apt-file`"
+        rationale: Wrong. apt-get update takes no package names.
+      - id: b
+        text: "`dpkg-reconfigure apt-file`"
+        rationale: Wrong. Reconfiguring the package does not download any file lists.
+      - id: c
+        text: "`apt-cache search libpng16.so`"
+        rationale: Wrong. This searches names and descriptions; it does not fill apt-file's cache.
+      - id: d
+        text: "`apt-file update`"
+        rationale: Correct. apt-file update (or apt-get update once apt-file is configured) downloads the Contents indexes apt-file searches.
+    answer: [d]
+    explanation: >
+      apt-file searches the Contents indexes (file lists) of repository packages. They must be
+      downloaded first with apt-file update; on current systems apt-get update also fetches them
+      once apt-file is installed.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Listing Package Contents and Finding Files }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [apt-file]
+
+  - id: 101-102.4-0041
+    type: single_choice
+    difficulty: 4
+    pool: practice
+    stem: What does the `apt-cache policy` output in the exhibit tell you?
+    exhibit: |
+      $ apt-cache policy ca-certificates
+      ca-certificates:
+        Installed: 20260601~24.04.1
+        Candidate: 20260816ubuntu0.24.04.1
+        Version table:
+           20260816ubuntu0.24.04.1 500
+              500 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 Packages
+       *** 20260601~24.04.1 100
+              100 /var/lib/dpkg/status
+           20240203 500
+              500 http://archive.ubuntu.com/ubuntu noble/main amd64 Packages
+    options:
+      - id: a
+        text: The package is not installed; 20260816ubuntu0.24.04.1 would be installed
+        rationale: Wrong. "Installed:" shows a version, so the package is installed; (none) would mean it is not.
+      - id: b
+        text: A newer version is available, and an upgrade would install 20260816ubuntu0.24.04.1
+        rationale: Correct. The Candidate is newer than the Installed version, so an upgrade is pending.
+      - id: c
+        text: APT would downgrade the package to 20240203, the version from the release pocket
+        rationale: Wrong. The candidate is the highest-priority, highest version, not the original release.
+      - id: d
+        text: The package is held, because its installed version has priority 100
+        rationale: Wrong. Priority 100 is the normal priority of the installed version from /var/lib/dpkg/status; it does not mean held.
+    answer: [b]
+    explanation: >
+      apt-cache policy shows the installed version, the candidate APT would install, and every
+      version it knows with its source and priority. *** marks the installed version.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Upgrading Packages }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [apt-cache]
+
+  - id: 101-102.4-0042
+    type: multi_choice
+    difficulty: 4
+    pool: practice
+    stem: >
+      Which **TWO** dpkg commands work on a `.deb` **file** that has not been installed?
+    select_count: 2
+    options:
+      - id: a
+        text: "`dpkg -I app_1.0_all.deb`"
+        rationale: Correct. -I shows the archive's control information.
+      - id: b
+        text: "`dpkg -s app_1.0_all.deb`"
+        rationale: Wrong. -s looks up an installed package by name in dpkg's database.
+      - id: c
+        text: "`dpkg -c app_1.0_all.deb`"
+        rationale: Correct. -c lists the files inside the archive.
+      - id: d
+        text: "`dpkg -L app_1.0_all.deb`"
+        rationale: Wrong. -L lists files of an installed package given by name.
+    answer: [a, c]
+    explanation: >
+      -I (--info) and -c (--contents) are passed to dpkg-deb and read the archive itself. -s, -L,
+      -l and -S are dpkg-query actions that read the database of installed packages.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Getting Package Information }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [dpkg]
+
+  - id: 101-102.4-0043
+    type: fill_in
+    difficulty: 5
+    pool: practice
+    stem: >
+      `dpkg -r oldlib` fails because another installed package depends on `oldlib`. Type the
+      narrowest `dpkg` force option that turns this dependency error into a warning, so the removal
+      goes ahead.
+    fill_in:
+      accepted:
+        - '--force-depends'
+        - '(sudo\s+)?((/usr)?/bin/)?dpkg\s+(-r|--remove|-P|--purge)\s+--force-depends(\s+(?!-)\S+)*'
+        - '(sudo\s+)?((/usr)?/bin/)?dpkg\s+--force-depends\s+(-r|--remove|-P|--purge)(\s+(?!-)\S+)*'
+      match: regex
+      case_sensitive: true
+    explanation: >
+      dpkg's force options are --force-THING; --force-depends turns dependency problems into
+      warnings. A bare --force is rejected ("--force option takes a value"). The result is a
+      package with an unmet dependency, so use it only when you know why.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Removing Packages }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [dpkg, force]
+
+  - id: 101-102.4-0044
+    type: single_choice
+    difficulty: 4
+    pool: practice
+    stem: >
+      `dpkg -S passwd` prints lines from seven different packages, including `grub-common` and
+      `vim-runtime`. Why?
+    options:
+      - id: a
+        text: Each of those packages contains its own copy of `/etc/passwd`
+        rationale: Wrong. /etc/passwd is not shipped by any of them; the matches are other paths.
+      - id: b
+        text: dpkg -S also searches packages that are available but not installed
+        rationale: Wrong. dpkg -S only searches installed packages.
+      - id: c
+        text: The argument is a pattern that matches anywhere in installed paths
+        rationale: Correct. Without a full path, dpkg -S matches the string anywhere in the installed file paths.
+      - id: d
+        text: dpkg -S lists every installed package that depends on the passwd package
+        rationale: Wrong. dpkg -S searches file paths, not dependencies.
+    answer: [c]
+    explanation: >
+      dpkg -S treats its argument as a pattern. A bare word such as passwd matches any installed
+      path containing it (for example grub-mkpasswd-pbkdf2 or chgpasswd.8.gz). Give the full
+      path to find the single owner of one file.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: Finding Out Which Package Owns a Specific File }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Correct option shortened so it is not the longest." }
+    tags: [dpkg, dpkg-query]
+
+  - id: 101-102.4-0045
+    type: single_choice
+    difficulty: 5
+    pool: practice
+    stem: >
+      You want to free space in APT's download cache but keep the .deb files that can still be
+      downloaded from your repositories. Which command does that?
+    options:
+      - id: a
+        text: "`apt-get autoclean`"
+        rationale: Correct. autoclean removes only cached package files that can no longer be downloaded, which are mostly outdated versions.
+      - id: b
+        text: "`apt-get clean`"
+        rationale: Wrong. clean empties the whole cache, including files that are still downloadable.
+      - id: c
+        text: "`apt-get autoremove`"
+        rationale: Wrong. autoremove uninstalls unneeded packages; it does not touch the download cache.
+      - id: d
+        text: "`apt-get check`"
+        rationale: Wrong. check updates the package cache and checks for broken dependencies; it deletes nothing.
+    answer: [a]
+    explanation: >
+      apt-get clean deletes everything in /var/cache/apt/archives. apt-get autoclean only deletes
+      package files that are no longer in any repository, so the cache keeps current versions.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.4", lesson: 1, section: The Local Cache }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [apt-get, cache]
