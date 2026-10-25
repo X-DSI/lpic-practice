@@ -10,7 +10,7 @@ questions:
     type: single_choice
     difficulty: 1
     pool: holdout
-    stem: Which command lists the devices attached to the PCI bus, such as disk controllers and graphics cards?
+    stem: A newly fitted network card does not work. Which command shows whether the operating system detected it on the PCI bus at all?
     options:
       - id: a
         text: "`lsusb`"
@@ -30,9 +30,10 @@ questions:
       PCI devices include parts built onto the motherboard as well as expansion cards.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Commands for Inspection }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Stem changed to a troubleshooting scenario (is the new card detected on the PCI bus?)." }
     tags: [lspci]
 
   - id: 101-101.1-0002
@@ -59,9 +60,10 @@ questions:
       and buses, and is the source udev uses when it sets up device files.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Information Files and Device Files }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [sysfs, /sys]
 
   - id: 101-101.1-0003
@@ -88,9 +90,10 @@ questions:
       bytes and a "Used by" column (use count and dependent modules).
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Commands for Inspection }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [lsmod, kernel-module]
 
   - id: 101-101.1-0004
@@ -112,7 +115,7 @@ questions:
         rationale: Wrong. This unloads the driver until it is loaded again; the device itself is still detected.
       - id: d
         text: Delete the audio device files under `/dev/snd/`
-        rationale: Wrong. The hardware is still detected, and udev recreates the device files.
+        rationale: "Wrong. The chip is still detected and its driver still loaded; the device files simply reappear the next time the device is added, for example at the next boot."
     answer: [b]
     explanation: >
       Integrated peripherals are enabled or disabled in the firmware setup utility that opens when a
@@ -120,9 +123,10 @@ questions:
       the device is still detected on the bus.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Device Activation }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Rationale d corrected: deleting /dev/snd files does not stop detection or unload the driver; files reappear when the device is added again." }
     tags: [bios, uefi, integrated-peripherals]
 
   - id: 101-101.1-0005
@@ -154,9 +158,10 @@ questions:
       command: head -n 1 /proc/interrupts
       expect: { exit_code: 0, stdout_contains: "CPU0" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [/proc/interrupts, irq]
 
   - id: 101-101.1-0006
@@ -164,8 +169,8 @@ questions:
     difficulty: 2
     pool: holdout
     stem: >
-      A laptop has a single SD card inserted in its built-in MMC/SD slot (not a USB card reader).
-      Which device file is the first partition on that card?
+      A laptop with no other MMC or eMMC storage has a single SD card inserted in its built-in MMC/SD
+      slot (not a USB card reader). Which device file is the first partition on that card?
     options:
       - id: a
         text: "`/dev/mmcblk0p1`"
@@ -185,9 +190,10 @@ questions:
       NVMe devices use a similar p suffix (nvme0n1p1). SATA, SCSI and USB disks use sdX1 instead.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Storage Devices }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Stem now rules out other MMC/eMMC storage, which would take mmcblk0." }
     tags: [/dev, mmcblk, device-naming]
 
   - id: 101-101.1-0007
@@ -215,9 +221,10 @@ questions:
       are no longer used.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Commands for Inspection }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [modprobe, kmod]
 
   - id: 101-101.1-0008
@@ -236,9 +243,10 @@ questions:
       vvvv:pppp Name". The root hubs of the USB controllers are listed as devices too.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Commands for Inspection }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [lsusb]
 
   - id: 101-101.1-0009
@@ -265,9 +273,10 @@ questions:
       for it. Combined with -s <address> it narrows the output to one device.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Commands for Inspection }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [lspci]
 
   - id: 101-101.1-0010
@@ -296,9 +305,10 @@ questions:
       To pick a device by its position instead, use -s bus:devnum.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Commands for Inspection }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [lsusb]
 
   - id: 101-101.1-0011
@@ -326,9 +336,10 @@ questions:
       install. They are read every time modprobe runs, so they also apply at the next boot.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Commands for Inspection }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [modprobe.d, blacklist, module-parameters]
 
   - id: 101-101.1-0012
@@ -345,9 +356,10 @@ questions:
       /proc/interrupts cover I/O port ranges and interrupt lines, the other classic hardware resources.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Information Files and Device Files }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [/proc/dma, dma]
 
   - id: 101-101.1-0013
@@ -379,9 +391,10 @@ questions:
       namespace, not a partition.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Storage Devices }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [/dev, device-naming, nvme]
 
   - id: 101-101.1-0014
@@ -394,11 +407,11 @@ questions:
     exhibit: |
       $ lsmod
       Module                  Size  Used by
-      snd_hda_codec_realtek 188416  1
+      snd_hda_codec_realtek   188416  1
       snd_hda_intel          57344  3
       snd_hda_codec         204800  2 snd_hda_codec_realtek,snd_hda_intel
       snd_pcm               196608  4 snd_hda_codec,snd_hda_intel
-      snd                   135168 12 snd_pcm,snd_hda_codec,snd_hda_intel
+      snd                   135168  12 snd_pcm,snd_hda_codec,snd_hda_intel
       uvcvideo              139264  0
     options:
       - id: a
@@ -419,9 +432,10 @@ questions:
       it. modprobe -r refuses to unload a module whose count is not 0 ("Module ... is in use").
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Commands for Inspection }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Exhibit uses real lsmod column spacing. Refusal to remove an in-use module confirmed in kmod v31 source." }
     tags: [lsmod, modprobe]
 
   - id: 101-101.1-0015
@@ -439,7 +453,7 @@ questions:
               Kernel modules: nouveau, nvidia_drm, nvidia
     options:
       - id: a
-        text: The proprietary nvidia module is driving the card
+        text: The proprietary nvidia module is driving the card, with nouveau kept as a fallback
         rationale: Wrong. "Kernel driver in use" names nouveau, so nouveau is bound to the card.
       - id: b
         text: The card was not detected, so no driver could be bound
@@ -448,8 +462,8 @@ questions:
         text: The nvidia modules are installed and match the card, but nouveau is bound to it
         rationale: Correct. "Kernel modules" lists every installed module that supports the card; "Kernel driver in use" shows the one actually bound.
       - id: d
-        text: All three listed modules are driving the card together
-        rationale: Wrong. Only one driver is bound to a device; the other names are only candidates.
+        text: All three listed modules are bound to the card and share the work between them
+        rationale: Wrong. Only one driver is bound to a device at a time; the other names are only candidates.
     answer: [c]
     explanation: >
       "Kernel modules" lists the installed modules that claim the device, and "Kernel driver in use"
@@ -457,9 +471,10 @@ questions:
       blacklist entry in /etc/modprobe.d/) and reboot.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Commands for Inspection }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Distractors a and d lengthened so the key is not the longest option." }
     tags: [lspci, kernel-module, nouveau]
 
   - id: 101-101.1-0016
@@ -470,48 +485,62 @@ questions:
       You want to see only the parameters the `e1000e` module accepts, without its author, license,
       aliases and other fields. Type the `modinfo` option that does this.
     fill_in:
-      accepted: ['((sudo\s+)?((/usr)?/s?bin/)?modinfo\s+)?(-p|--parameters)(\s+e1000e)?']
+      accepted: ['((sudo\s+)?((/usr)?/s?bin/)?modinfo\s+)?(e1000e\s+)?(-p|--parameters|-F\s*parm|--field(=|\s+)parm)(\s+e1000e)?']
       match: regex
       case_sensitive: true
     explanation: >
       `modinfo -p e1000e` (long form --parameters) prints only the parm entries: each parameter's
-      name, description and type. Without options modinfo prints every field of the module.
+      name, description and type (-p is shorthand for -F parm). Without options modinfo prints every
+      field of the module.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Commands for Inspection }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Fill-in also accepts -F parm / --field parm and the module name before the option; explanation notes -p is shorthand for -F parm." }
     tags: [modinfo, module-parameters]
 
   - id: 101-101.1-0017
     type: multi_choice
     difficulty: 4
     pool: holdout
-    stem: Which **TWO** statements about `/proc` and `/sys` are true?
+    stem: >
+      On a server whose network interface is `enp3s0`, an administrator follows two symbolic links in
+      sysfs, with the results below. Which **TWO** conclusions are correct?
+    exhibit: |
+      $ readlink /sys/class/net/enp3s0/device
+      ../../../0000:03:00.0
+      $ readlink /sys/class/net/enp3s0/device/driver
+      ../../../../bus/pci/drivers/r8169
     select_count: 2
     options:
       - id: a
-        text: Their contents are generated by the kernel in memory and are not stored on any disk partition.
-        rationale: Correct. Both are pseudo-filesystems that exist only while the system runs.
+        text: The interface belongs to the PCI device at address 03:00.0, which `lspci -s 03:00.0` would describe
+        rationale: Correct. The device link points at the PCI device directory 0000:03:00.0 (domain 0000, bus 03, slot 00, function 0).
       - id: b
-        text: Values written to files under /sys are kept and applied again after a reboot.
-        rationale: Wrong. sysfs lives in memory; anything written there is lost at shutdown unless a boot script or udev rule sets it again.
+        text: r8169 is only a candidate module for the card and has not necessarily been loaded yet
+        rationale: Wrong. A device's driver link exists only while a driver is bound to it, so r8169 is loaded and in use.
       - id: c
-        text: /proc also holds information about running processes, while /sys is organized around devices, drivers and buses.
-        rationale: Correct. /proc has a directory per process plus kernel data; /sys is dedicated to the device model.
+        text: The r8169 driver is bound to the card at this moment
+        rationale: Correct. The driver link of a device points to the driver that is currently bound to it.
       - id: d
-        text: They are ordinary directories on the root filesystem that the kernel rewrites every few seconds.
-        rationale: Wrong. They are separate mounts (procfs and sysfs) whose files are generated when they are read.
+        text: These links are stored on the root filesystem and stay the same even after the card is removed
+        rationale: Wrong. sysfs is generated by the kernel in memory; the links disappear when the device goes away.
+      - id: e
+        text: enp3s0 is a device file that programs open to send packets, like /dev/sda for a disk
+        rationale: Wrong. Network interfaces have no device file in /dev; the entry under /sys/class/net is a sysfs directory.
     answer: [a, c]
     explanation: >
-      procfs (/proc) and sysfs (/sys) are pseudo-filesystems: the kernel produces their contents on
-      demand from memory. Tools such as lspci, lsusb and lsmod read much of their data from them.
+      sysfs links each interface in /sys/class/net to its device, and each bound device to its driver
+      under /sys/bus/<bus>/drivers. Following those links answers "which card is this, and which
+      driver runs it" without lspci, because lspci -k reads the same data.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Information Files and Device Files }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
-    tags: [/proc, /sys, pseudo-filesystem]
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Rewritten: recall-level and close to lesson wording; new version needs re-check" }
+    tags: [/sys, sysfs, kernel-module]
 
   - id: 101-101.1-0018
     type: single_choice
@@ -534,7 +563,7 @@ questions:
         text: A blacklist entry only stops loading through aliases, not a request by module name
         rationale: Correct. blacklist makes modprobe ignore the module's aliases (as used for automatic loading); naming the module explicitly still loads it.
       - id: c
-        text: Changes in /etc/modprobe.d/ take effect only after depmod has been run
+        text: Changes in /etc/modprobe.d/ take effect only after depmod -a has rebuilt the module index
         rationale: Wrong. modprobe reads its configuration files every time it runs; depmod builds the dependency list, not the configuration.
       - id: d
         text: The blacklist line must give the full path of the module's .ko file
@@ -546,9 +575,10 @@ questions:
       it completely, add a line such as "install nouveau /bin/false".
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Commands for Inspection }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Distractor c lengthened to remove a length giveaway. Blacklist behaviour confirmed with kmod dry-run on real 6.8 modules." }
     tags: [blacklist, modprobe.d, nouveau]
 
   - id: 101-101.1-0019
@@ -568,9 +598,9 @@ questions:
         rationale: Correct. Any .conf file in /etc/modprobe.d/ is read by modprobe every time it loads the module.
       - id: c
         text: Add `options snd_hda_intel power_save=1` to a new file `/etc/modprobe.d/audio`
-        rationale: Wrong. modprobe only reads files in /etc/modprobe.d/ whose names end in .conf; this file is ignored.
+        rationale: Wrong. modprobe ignores files in /etc/modprobe.d/ without a .conf suffix, so this file is never read.
       - id: d
-        text: Append `snd_hda_intel.power_save=1` to the kernel command line
+        text: Add `snd_hda_intel.power_save=1` to the kernel command line in the boot loader configuration
         rationale: Correct. modprobe also reads module.param=value entries from the kernel command line (/proc/cmdline).
       - id: e
         text: Run `modinfo -p snd_hda_intel power_save=1` once as root
@@ -582,9 +612,10 @@ questions:
       the kernel. Parameters typed after modprobe last only for that one load.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Commands for Inspection }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Shortened correct option d so it is not the longest option." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Option d restored to name the boot loader configuration; rationale c reworded." }
     tags: [module-parameters, modprobe.d]
 
   - id: 101-101.1-0020
@@ -615,9 +646,10 @@ questions:
       /etc replaces a file with the same name elsewhere, so local changes go in /etc/udev/rules.d.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Information Files and Device Files }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [udev, udev-rules]
 
   # --------------------------------------------------------------------------- practice (CLI)
@@ -646,9 +678,10 @@ questions:
       module is loaded. Drivers may come with the kernel or from a separate source such as the vendor.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Commands for Inspection }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [kernel-module, driver]
 
   - id: 101-101.1-0022
@@ -678,9 +711,10 @@ questions:
       answers the question directly.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Information Files and Device Files }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [/proc/cpuinfo]
 
   - id: 101-101.1-0023
@@ -694,7 +728,7 @@ questions:
       /:  Bus 002.Port 001: Dev 001, Class=root_hub, Driver=xhci_hcd/4p, 480M
           |__ Port 002: Dev 007, If 0, Class=Video, Driver=uvcvideo, 480M
     fill_in:
-      accepted: ['(sudo\s+)?((/usr)?/s?bin/)?lsusb(\s+(-v|--verbose))?\s+-s\s*0*2:0*7(\s+(-v|--verbose))?']
+      accepted: ['(sudo\s+)?((/usr)?/s?bin/)?lsusb\s+-s\s*0*2:0*7']
       match: regex
       case_sensitive: true
     explanation: >
@@ -702,9 +736,10 @@ questions:
       are fine), so `lsusb -s 2:7` or `lsusb -s 002:007`. -d would select by vendor:product ID instead.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Commands for Inspection }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Exhibit changed to the current usbutils lsusb -t format (three-digit bus, port and device numbers)." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Fill-in no longer accepts -v, which prints full descriptors rather than only the ID line." }
     tags: [lsusb]
 
   - id: 101-101.1-0024
@@ -715,7 +750,7 @@ questions:
     options:
       - id: a
         text: "`/dev`"
-        rationale: Correct. Device files (block and character devices) live in /dev, created by udev.
+        rationale: Correct. Device files (block and character devices) live in /dev; the kernel's devtmpfs creates them and udev manages them.
       - id: b
         text: "`/sys/block`"
         rationale: Wrong. Its entries describe block devices in sysfs; they are not the device files programs open.
@@ -731,9 +766,10 @@ questions:
       there, for example /dev/sda for a disk and /dev/sda1 for its first partition.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Storage Devices }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Rationale a: devtmpfs creates /dev nodes, udev manages them." }
     tags: [/dev, block-device]
 
   - id: 101-101.1-0025
@@ -760,14 +796,15 @@ questions:
       driver (for example usbhid or btusb) has claimed each interface.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Commands for Inspection }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [lsusb]
 
   - id: 101-101.1-0026
     type: single_choice
-    difficulty: 2
+    difficulty: 1
     pool: practice
     stem: What is D-Bus?
     options:
@@ -775,7 +812,7 @@ questions:
         text: The pseudo-filesystem in which the kernel describes devices
         rationale: Wrong. That is sysfs, mounted on /sys.
       - id: b
-        text: The daemon that creates device files in /dev
+        text: The daemon that manages device files in /dev
         rationale: Wrong. That is udev (systemd-udevd on most distributions).
       - id: c
         text: The hardware bus that USB controllers are attached to
@@ -790,9 +827,10 @@ questions:
       programs such as a file manager can react.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Information Files and Device Files }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Option b says udev manages (not creates) /dev files; difficulty lowered to 1." }
     tags: [dbus]
 
   - id: 101-101.1-0027
@@ -803,8 +841,8 @@ questions:
     select_count: 2
     options:
       - id: a
-        text: It creates device files in /dev when the kernel reports a device.
-        rationale: Correct. udev receives the kernel's device events and creates and names the files in /dev according to its rules.
+        text: It sets up the entries in /dev (ownership, permissions, symlinks) when the kernel reports a device.
+        rationale: Correct. udev receives the kernel's device events and applies its rules to the device nodes in /dev, adding symlinks and setting permissions.
       - id: b
         text: It is a kernel module that has to be loaded with modprobe.
         rationale: Wrong. udev runs in user space as a daemon (systemd-udevd); it is not a kernel module.
@@ -817,12 +855,13 @@ questions:
     answer: [a, c]
     explanation: >
       udev listens for kernel device events, looks up device details in /sys, applies its rules and
-      creates the matching files in /dev. It processes devices present at start-up and ones added later.
+      sets up the matching entries in /dev. It processes devices present at start-up and ones added later.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Information Files and Device Files }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Option a and explanation updated: devtmpfs creates nodes, udev sets ownership, permissions and symlinks." }
     tags: [udev, hotplug, coldplug]
 
   - id: 101-101.1-0028
@@ -838,7 +877,7 @@ questions:
         text: The module's size in kilobytes
         rationale: Wrong. Size is the second column, in bytes (135168).
       - id: b
-        text: The module's use count, the number of references held on it
+        text: The module's use count (references held on it)
         rationale: Correct. The first value under "Used by" is the use count, followed by the dependent modules.
       - id: c
         text: The number of parameters the module accepts
@@ -852,9 +891,10 @@ questions:
       such as open device files, also hold references. A module can only be unloaded at count 0.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Commands for Inspection }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Correct option b shortened to remove a length giveaway." }
     tags: [lsmod]
 
   - id: 101-101.1-0029
@@ -883,9 +923,10 @@ questions:
       separate packages.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Commands for Inspection }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [kmod, lsmod, modprobe]
 
   - id: 101-101.1-0030
@@ -904,7 +945,8 @@ questions:
       the hardware is detected. Run `modprobe -r pcspkr` to remove the copy already loaded.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.1", lesson: 1, section: Commands for Inspection }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [blacklist, modprobe.d]
