@@ -43,5 +43,5 @@ Done: [Content build and engine core](handoff/2026-10-23-build-and-engine-core.m
 
 | Exam | Objectives done | Questions | Target |
 |---|---|---|---|
-| 101 | 102.3 (PR #6); topic 101 in progress | 15 (10 holdout, 5 practice) | 900 (600 holdout, 300 practice) |
+| 101 | 102.3; topic 101 (101.1–101.3, in review) | 135 (90 holdout, 45 practice) | 900 (600 holdout, 300 practice) |
 | 102 | — | 0 | 900 |

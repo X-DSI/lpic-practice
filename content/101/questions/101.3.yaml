@@ -1,0 +1,1415 @@
+# 101.3 Change runlevels / boot targets and shutdown or reboot system — weight 3 → 30 holdout + 15 practice.
+# Original questions written from LPI Learning Materials 101-500, objective 101.3, lesson 1.
+schema_version: 1
+exam: "101"
+objective: "101.3"
+questions:
+  # ---------------------------------------------------------------- holdout (mock exams only)
+
+  - id: 101-101.3-0001
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: On a SysV init system, switching to which runlevel restarts the machine?
+    options:
+      - id: a
+        text: "0"
+        rationale: Wrong. Runlevel 0 halts or powers off the system; it does not bring it back up.
+      - id: b
+        text: "6"
+        rationale: Correct. Runlevel 6 is the reboot runlevel.
+      - id: c
+        text: "1"
+        rationale: Wrong. Runlevel 1 is single-user (maintenance) mode.
+      - id: d
+        text: "5"
+        rationale: Wrong. Runlevel 5 is normally multi-user mode with a graphical login.
+    answer: [b]
+    explanation: >
+      Runlevels 0 and 6 are the two "transition" runlevels: 0 shuts the machine down and 6 reboots
+      it. That is also why neither may ever be configured as the default runlevel.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: SysVinit }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. SysV behaviour checked against upstream sysvinit man pages (no sysvinit on Ubuntu 24.04)." }
+    tags: [runlevels, sysvinit]
+
+  - id: 101-101.3-0002
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: Which command is the main tool for starting, stopping and enabling units on a systemd system?
+    options:
+      - id: a
+        text: "`journalctl`"
+        rationale: Wrong. journalctl reads the systemd journal (logs); it does not control units.
+      - id: b
+        text: "`initctl`"
+        rationale: Wrong. initctl is the control tool of Upstart, not of systemd.
+      - id: c
+        text: "`loginctl`"
+        rationale: Wrong. loginctl manages user logins and sessions through systemd-logind.
+      - id: d
+        text: "`systemctl`"
+        rationale: Correct. systemctl starts, stops, restarts, enables, disables and queries systemd units.
+    answer: [d]
+    explanation: >
+      systemctl is the front end to the systemd manager. Unit control (start, stop, restart, status),
+      boot-time configuration (enable, disable, set-default) and power actions (reboot, poweroff)
+      all go through it.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: systemd }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [systemctl, systemd]
+
+  - id: 101-101.3-0003
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: In which directory does a SysV init system keep the actual service scripts that runlevels use?
+    options:
+      - id: a
+        text: "`/etc/init.d/`"
+        rationale: Correct. The service scripts live in /etc/init.d/; the per-runlevel directories only link to them.
+      - id: b
+        text: "`/etc/systemd/system/`"
+        rationale: Wrong. This holds the administrator's systemd unit files and links, not SysV scripts.
+      - id: c
+        text: "`/etc/init/`"
+        rationale: Wrong. /etc/init/ held Upstart job files.
+      - id: d
+        text: "`/usr/lib/systemd/system/`"
+        rationale: Wrong. This holds the systemd unit files shipped by packages.
+    answer: [a]
+    explanation: >
+      SysV init runs shell scripts from /etc/init.d/. The directories /etc/rc0.d/ to /etc/rc6.d/
+      contain symbolic links to those scripts, so one script can serve several runlevels.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: SysVinit }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. SysV behaviour checked against upstream sysvinit man pages (no sysvinit on Ubuntu 24.04)." }
+    tags: [init.d, sysvinit]
+
+  - id: 101-101.3-0004
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: What is the job of the `acpid` daemon?
+    options:
+      - id: a
+        text: Running commands at scheduled times
+        rationale: Wrong. Scheduled jobs are handled by cron or atd.
+      - id: b
+        text: Collecting and storing kernel log messages
+        rationale: Wrong. That is the job of the system logger or the systemd journal.
+      - id: c
+        text: Reacting to power events such as a closed lid or low battery
+        rationale: Correct. acpid listens for ACPI events and runs the actions configured for them.
+      - id: d
+        text: Keeping the clock in sync with time servers
+        rationale: Wrong. Time synchronisation is done by an NTP client such as chronyd or systemd-timesyncd.
+    answer: [c]
+    explanation: >
+      acpid is a power management daemon: it receives ACPI events from the kernel (power button,
+      lid switch, AC adapter, battery level) and runs the matching rule, usually from
+      /etc/acpi/events/. On systemd systems, systemd-logind can handle many of the same events.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: systemd }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [acpid, power-management]
+
+  - id: 101-101.3-0005
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: Which systemd target corresponds most closely to SysV runlevel 3?
+    options:
+      - id: a
+        text: "`graphical.target`"
+        rationale: Wrong. graphical.target adds a graphical login and corresponds to runlevel 5.
+      - id: b
+        text: "`rescue.target`"
+        rationale: Wrong. rescue.target is single-user mode, the counterpart of runlevel 1.
+      - id: c
+        text: "`default.target`"
+        rationale: Wrong. default.target is only an alias for whatever target the system boots into.
+      - id: d
+        text: "`multi-user.target`"
+        rationale: Correct. multi-user.target is a full multi-user system without the graphical login, like runlevel 3.
+    answer: [d]
+    explanation: >
+      systemd ships runlevel0.target to runlevel6.target as aliases: runlevel2/3/4.target point to
+      multi-user.target, runlevel5.target to graphical.target, runlevel1.target to rescue.target.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: systemd }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [targets, runlevels]
+
+  - id: 101-101.3-0006
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: Which `/etc/inittab` line makes a SysV system come up in runlevel 2 when no runlevel is given at boot?
+    options:
+      - id: a
+        text: "`id:2:initdefault:`"
+        rationale: Correct. The initdefault action names the default runlevel in the runlevels field.
+      - id: b
+        text: "`l2:2:wait:/etc/init.d/rc 2`"
+        rationale: Wrong. This runs the runlevel-2 scripts when runlevel 2 is entered; it does not choose the default.
+      - id: c
+        text: "`si::sysinit:/etc/init.d/rcS`"
+        rationale: Wrong. This runs the system initialisation script at boot, whatever the runlevel.
+      - id: d
+        text: "`2:23:respawn:/sbin/getty 38400 tty2`"
+        rationale: Wrong. This keeps a login prompt running on tty2 in runlevels 2 and 3.
+    answer: [a]
+    explanation: >
+      inittab entries have the form id:runlevels:action:process. The entry whose action is
+      initdefault sets the default runlevel; its process field is empty. A runlevel passed on the
+      kernel command line overrides it.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: SysVinit }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. SysV behaviour checked against upstream sysvinit man pages (no sysvinit on Ubuntu 24.04)." }
+    tags: [inittab, initdefault]
+
+  - id: 101-101.3-0007
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      You are about to restart the database service and want every logged-in user to see a warning
+      on their terminal first. The machine itself stays up. Which command do you use?
+    options:
+      - id: a
+        text: "`write alice \"Database restart in 5 minutes\"`"
+        rationale: Wrong. write talks to a single user, and it takes the message on standard input, not as an argument.
+      - id: b
+        text: "`mesg y`"
+        rationale: Wrong. mesg only controls whether your own terminal accepts messages from others.
+      - id: c
+        text: "`wall \"Database restart in 5 minutes\"`"
+        rationale: Correct. wall writes the message to the terminals of all logged-in users.
+      - id: d
+        text: "`logger \"Database restart in 5 minutes\"`"
+        rationale: Wrong. logger writes to the system log; users at their terminals do not see it.
+    answer: [c]
+    explanation: >
+      wall ("write all") broadcasts a message, given as an argument, in a file or on standard input,
+      to every logged-in user's terminal. shutdown uses the same mechanism for its warnings.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: Shutdown and Restart }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [wall]
+
+  - id: 101-101.3-0008
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      On a systemd system, which command shuts the machine down completely and switches the power
+      off, without saving the contents of memory?
+    options:
+      - id: a
+        text: "`systemctl suspend`"
+        rationale: Wrong. Suspend keeps the machine in a low-power state with memory still powered.
+      - id: b
+        text: "`systemctl poweroff`"
+        rationale: Correct. poweroff stops all services, shuts down and turns the power off.
+      - id: c
+        text: "`systemctl hibernate`"
+        rationale: Wrong. Hibernate saves memory to disk first so the session can be restored.
+      - id: d
+        text: "`systemctl halt`"
+        rationale: Wrong. halt stops the system but leaves the hardware powered on.
+    answer: [b]
+    explanation: >
+      systemctl poweroff (and the poweroff command, a link to systemctl on most systems) performs a
+      clean shutdown followed by power off. halt stops the CPU without cutting power; suspend and
+      hibernate keep the session so it can be resumed.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: Shutdown and Restart }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [systemctl, poweroff]
+
+  - id: 101-101.3-0009
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      To end a process properly, you first send it the signal that asks it to exit and gives it a
+      chance to clean up. `kill` sends this signal when no signal is named. Which is it?
+    options:
+      - id: a
+        text: "`SIGKILL` (9)"
+        rationale: Wrong. SIGKILL cannot be caught; the process is ended at once without cleaning up. It is the last resort.
+      - id: b
+        text: "`SIGSTOP` (19)"
+        rationale: Wrong. SIGSTOP pauses a process; it does not end it.
+      - id: c
+        text: "`SIGHUP` (1)"
+        rationale: Wrong. SIGHUP reports a closed terminal, and many daemons treat it as "reload configuration".
+      - id: d
+        text: "`SIGTERM` (15)"
+        rationale: Correct. SIGTERM is the polite termination request and the default signal of kill.
+    answer: [d]
+    explanation: >
+      The proper order is SIGTERM first, then SIGKILL only for processes that do not exit. A system
+      shutdown does the same: every process gets SIGTERM, and those still running after a grace
+      period get SIGKILL.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: Shutdown and Restart }
+    verify:
+      command: bash -c 'kill -l 15'
+      expect: { exit_code: 0, stdout_contains: "TERM" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [signals, kill]
+
+  - id: 101-101.3-0010
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: Where are the systemd unit files that come with installed packages normally kept?
+    options:
+      - id: a
+        text: "`/usr/lib/systemd/system/`"
+        rationale: Correct. Packages install their unit files here (on Debian-family systems also reachable as /lib/systemd/system/).
+      - id: b
+        text: "`/etc/systemd/system/`"
+        rationale: Wrong. This is for the administrator's own units, overrides and enablement links.
+      - id: c
+        text: "`/run/systemd/system/`"
+        rationale: Wrong. This holds runtime units that disappear at reboot.
+      - id: d
+        text: "`/etc/init.d/`"
+        rationale: Wrong. This holds SysV init scripts, not systemd unit files.
+    answer: [a]
+    explanation: >
+      Vendor unit files live in /usr/lib/systemd/system/. Files and links in /etc/systemd/system/
+      take precedence over them, so local changes go there and survive package upgrades.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: systemd }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [unit-files, systemd]
+
+  - id: 101-101.3-0011
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: Which command reboots a systemd system straight away?
+    options:
+      - id: a
+        text: "`shutdown -h now`"
+        rationale: Wrong. -h powers the machine off instead of restarting it.
+      - id: b
+        text: "`systemctl halt`"
+        rationale: Wrong. halt stops the system and leaves it halted; it does not restart.
+      - id: c
+        text: "`systemctl reboot`"
+        rationale: Correct. systemctl reboot shuts the system down cleanly and restarts it.
+      - id: d
+        text: "`telinit 0`"
+        rationale: Wrong. Runlevel 0 means shut down (power off), not reboot.
+    answer: [c]
+    explanation: >
+      systemctl reboot is the native systemd command; shutdown -r now, reboot and telinit 6 reach the
+      same result. Root privileges (or a polkit rule allowing it) are needed.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: Shutdown and Restart }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [systemctl, reboot]
+
+  - id: 101-101.3-0012
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      You want a list of every installed systemd unit file together with whether it is enabled to
+      start at boot. Which command gives you that?
+    options:
+      - id: a
+        text: "`systemctl list-units`"
+        rationale: Wrong. list-units shows the units currently loaded in memory and their run state, not boot-time enablement.
+      - id: b
+        text: "`systemctl list-unit-files`"
+        rationale: Correct. list-unit-files lists installed unit files with their state (enabled, disabled, static, masked ...).
+      - id: c
+        text: "`systemctl get-default`"
+        rationale: Wrong. get-default prints only the name of the default target.
+      - id: d
+        text: "`systemctl list-dependencies`"
+        rationale: Wrong. This shows the dependency tree of one unit, default.target if none is given.
+    answer: [b]
+    explanation: >
+      list-unit-files works from the files on disk and shows each one's enablement state; add
+      --type=service or --type=target to narrow it. list-units shows what is loaded and running now.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: systemd }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [systemctl, list-unit-files]
+
+  - id: 101-101.3-0013
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      Which command restarts the machine in 15 minutes and warns logged-in users with the text
+      "Kernel update"?
+    options:
+      - id: a
+        text: "`shutdown -r +15 \"Kernel update\"`"
+        rationale: Correct. -r means reboot, +15 means 15 minutes from now, and the text is sent to users.
+      - id: b
+        text: "`shutdown -h +15 \"Kernel update\"`"
+        rationale: Wrong. -h powers the machine off instead of rebooting.
+      - id: c
+        text: "`shutdown -r 00:15 \"Kernel update\"`"
+        rationale: Wrong. 00:15 is a clock time (a quarter past midnight), not a delay.
+      - id: d
+        text: "`shutdown -k +15 \"Kernel update\"`"
+        rationale: Wrong. -k only sends the warning; the machine is not rebooted.
+    answer: [a]
+    explanation: >
+      shutdown takes an action option, a time and an optional message. The time is either now, +m
+      (minutes from now) or hh:mm (24-hour clock time). The message goes to all logged-in users.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: Shutdown and Restart }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [shutdown]
+
+  - id: 101-101.3-0014
+    type: fill_in
+    difficulty: 3
+    pool: holdout
+    stem: >
+      On a SysV init system you have just edited `/etc/inittab`. Type the command that makes `init`
+      read the file again without changing the current runlevel.
+    fill_in:
+      accepted: ['(sudo\s+)?((/usr)?/s?bin/)?(telinit|init)\s+[qQ]', '(sudo\s+)?((/usr)?/bin/)?kill\s+(-(?i:(SIG)?HUP)|-1|-s\s+(?i:(SIG)?HUP)|-n\s+(1|(?i:(SIG)?HUP)))\s+1']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      telinit q (or Q) tells SysV init to re-examine /etc/inittab. Doing so right after an edit
+      shows mistakes while the system is still running normally. Sending SIGHUP to init (PID 1)
+      has the same effect.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: SysVinit }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "kill pattern widened (-n 1/HUP, SIGHUP, case-insensitive signal name, -s SIGHUP)." }
+    tags: [telinit, inittab]
+
+  - id: 101-101.3-0015
+    type: multi_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      Which **THREE** commands switch a running systemd system into rescue (single-user) mode right
+      away?
+    select_count: 3
+    options:
+      - id: a
+        text: "`systemctl rescue`"
+        rationale: Correct. This verb starts rescue.target and stops the units it does not need.
+      - id: b
+        text: "`systemctl set-default rescue.target`"
+        rationale: Wrong. This only changes the target for the next boot; the running system is not affected.
+      - id: c
+        text: "`systemctl isolate rescue.target`"
+        rationale: Correct. isolate starts the given target and stops everything it does not depend on.
+      - id: d
+        text: "`systemctl enable rescue.target`"
+        rationale: Wrong. rescue.target has no [Install] section, so enable does nothing, and enabling never switches state anyway.
+      - id: e
+        text: "`telinit 1`"
+        rationale: Correct. On systemd, telinit is a compatibility link to systemctl, and runlevel 1 maps to rescue.target.
+    answer: [a, c, e]
+    explanation: >
+      Changing the target of a running system means isolating it: systemctl isolate rescue.target,
+      its shortcut systemctl rescue, or the SysV-style telinit 1 (also s or S). set-default and the
+      systemd.unit= kernel parameter only affect booting.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: systemd }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [rescue, isolate, telinit]
+
+  - id: 101-101.3-0016
+    type: fill_in
+    difficulty: 3
+    pool: holdout
+    stem: >
+      You want to test how users react to a shutdown warning. Type the `shutdown` option that sends
+      the warning message to everyone but does not actually halt, power off or reboot.
+    fill_in:
+      accepted: ['-k', '(sudo\s+)?((/usr)?/s?bin/)?shutdown\s+-k(\s+.+)?']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      shutdown -k ("kidding") goes through the warning part only: the wall message is sent, but the
+      machine keeps running. Use it to check that the warning reaches everyone before a real
+      shutdown.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: Shutdown and Restart }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Explanation: removed an unverified claim that -k also blocks logins." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [shutdown]
+
+  - id: 101-101.3-0017
+    type: multi_choice
+    difficulty: 3
+    pool: holdout
+    stem: Which **TWO** statements about `systemctl is-enabled sshd.service` are true?
+    select_count: 2
+    options:
+      - id: a
+        text: It reports whether the sshd processes are running at this moment.
+        rationale: Wrong. That is what systemctl is-active (or status) reports.
+      - id: b
+        text: It prints the unit file's state, for example enabled, disabled or masked.
+        rationale: Correct. Current systemd versions print the state as well as setting the exit status.
+      - id: c
+        text: It enables the unit if it finds that the unit is currently disabled.
+        rationale: Wrong. is-enabled only queries; systemctl enable makes the change.
+      - id: d
+        text: Its exit status is 0 for an enabled unit and non-zero for a disabled one.
+        rationale: Correct. This makes it easy to test in a shell script, for example with if or &&.
+    answer: [b, d]
+    explanation: >
+      is-enabled answers "will this unit be started at boot?". It prints the state and exits 0 when
+      the unit is enabled (also for states like static or alias) and non-zero when it is disabled or
+      masked. Whether it is running now is a separate question for is-active.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: systemd }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. is-enabled exit codes tested with systemctl --root." }
+    tags: [systemctl, is-enabled]
+
+  - id: 101-101.3-0018
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: The `runlevel` command prints the output shown. What does it tell you?
+    exhibit: |
+      $ runlevel
+      5 1
+    options:
+      - id: a
+        text: The system booted straight into runlevel 1.
+        rationale: Wrong. A system that has not changed runlevel since boot shows N as the first value.
+      - id: b
+        text: The system is currently in runlevel 5.
+        rationale: Wrong. The second value is the current runlevel; 5 is the previous one.
+      - id: c
+        text: The default runlevel has been set to 1.
+        rationale: Wrong. runlevel shows the previous and current runlevels, not the configured default.
+      - id: d
+        text: The system was in runlevel 5 and has been switched to runlevel 1.
+        rationale: Correct. The first value is the previous runlevel and the second the current one.
+    answer: [d]
+    explanation: >
+      runlevel prints two values: previous and current. N in the first position means there has
+      been no change since boot. Here someone switched from the graphical runlevel 5 to single-user
+      runlevel 1.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: SysVinit }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. SysV behaviour checked against upstream sysvinit man pages (no sysvinit on Ubuntu 24.04)." }
+    tags: [runlevel]
+
+  - id: 101-101.3-0019
+    type: fill_in
+    difficulty: 3
+    pool: holdout
+    stem: >
+      Fill in the `systemctl` subcommand that switches the running system to `graphical.target`,
+      starting what that target needs and stopping every unit it does not need:
+      `systemctl ______ graphical.target`
+    fill_in:
+      accepted: ['isolate', 'isolate\s+graphical(\.target)?', '(sudo\s+)?((/usr)?/s?bin/)?systemctl\s+isolate\s+graphical(\.target)?']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      systemctl isolate is the systemd way of changing runlevel on a running system. Only targets
+      that allow it (AllowIsolate=yes, as graphical, multi-user and rescue do) can be isolated. If
+      no suffix is given, .target is assumed.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: systemd }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Also accept 'isolate graphical[.target]' without the systemctl prefix." }
+    tags: [isolate, targets]
+
+  - id: 101-101.3-0020
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      The exhibit shows the contents of `/etc/rc2.d/` on a SysV init system. What does `init` do
+      with these services when the system enters runlevel 2?
+    exhibit: |
+      $ ls -l /etc/rc2.d/
+      lrwxrwxrwx 1 root root 17 Mar  2 10:14 K01apache2 -> ../init.d/apache2
+      lrwxrwxrwx 1 root root 20 Mar  2 10:14 K01nfs-server -> ../init.d/nfs-server
+      lrwxrwxrwx 1 root root 14 Mar  2 10:14 S01cron -> ../init.d/cron
+      lrwxrwxrwx 1 root root 13 Mar  2 10:14 S01ssh -> ../init.d/ssh
+      lrwxrwxrwx 1 root root 17 Mar  2 10:14 S02rsyslog -> ../init.d/rsyslog
+    options:
+      - id: a
+        text: It starts apache2 and nfs-server, and stops cron, ssh and rsyslog.
+        rationale: Wrong. This reverses the meaning of the K and S prefixes.
+      - id: b
+        text: It runs every script in /etc/init.d/ in alphabetical order.
+        rationale: Wrong. Only the scripts linked from the runlevel's directory are used, in the order of their link names.
+      - id: c
+        text: It stops apache2 and nfs-server, and starts cron, ssh and rsyslog.
+        rationale: Correct. Links starting with K are run to stop a service, links starting with S to start one.
+      - id: d
+        text: It starts all five services; the number only sets their order.
+        rationale: Wrong. The number does set the order, but the K prefix means the service is stopped.
+    answer: [c]
+    explanation: >
+      Each /etc/rcN.d/ directory holds links to scripts in /etc/init.d/. On entering runlevel N the
+      K links are called with "stop" and the S links with "start"; the two-digit number orders
+      them within each group.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: SysVinit }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. SysV behaviour checked against upstream sysvinit man pages (no sysvinit on Ubuntu 24.04)." }
+    tags: [rc.d, sysvinit]
+
+  - id: 101-101.3-0021
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      A SysV system has the `/etc/inittab` entries shown. An administrator runs `telinit 5`. Which
+      statement is true while the system is in runlevel 5?
+    exhibit: |
+      id:3:initdefault:
+      1:2345:respawn:/sbin/getty 38400 tty1
+      6:23:respawn:/sbin/getty 38400 tty6
+    options:
+      - id: a
+        text: A login prompt is offered on tty6.
+        rationale: Wrong. The tty6 entry lists only runlevels 2 and 3, so init stops that getty in runlevel 5.
+      - id: b
+        text: If the getty on tty1 exits, init starts a new one.
+        rationale: Correct. The tty1 entry includes runlevel 5 and uses the respawn action.
+      - id: c
+        text: The next boot will also bring the system up in runlevel 5.
+        rationale: Wrong. telinit does not change the initdefault entry, so the next boot uses runlevel 3.
+      - id: d
+        text: The getty on tty6 keeps running and is restarted when it exits.
+        rationale: Wrong. Respawning applies only in the runlevels listed in the entry, 2 and 3.
+    answer: [b]
+    explanation: >
+      The second field of an inittab entry lists the runlevels it applies to. respawn makes init
+      restart the process whenever it ends, but only while the system is in one of those runlevels.
+      Switching runlevel with telinit leaves the default (initdefault) unchanged.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: SysVinit }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. SysV behaviour checked against upstream sysvinit man pages (no sysvinit on Ubuntu 24.04)." }
+    tags: [inittab, respawn, telinit]
+
+  - id: 101-101.3-0022
+    type: multi_choice
+    difficulty: 4
+    pool: holdout
+    stem: An administrator runs the command shown. Which **TWO** statements are true afterwards?
+    exhibit: |
+      # systemctl enable acpid.service
+      Created symlink /etc/systemd/system/multi-user.target.wants/acpid.service → /usr/lib/systemd/system/acpid.service.
+    select_count: 2
+    options:
+      - id: a
+        text: acpid will be started during boot, when multi-user.target is reached.
+        rationale: Correct. The link in multi-user.target.wants/ makes multi-user.target pull in acpid.service.
+      - id: b
+        text: The unit file was copied into /etc/systemd/system/ so it can be edited safely.
+        rationale: Wrong. enable creates a symbolic link to the vendor file; nothing is copied.
+      - id: c
+        text: acpid.service is now masked, so no other unit can start it by mistake.
+        rationale: Wrong. Masking links the unit to /dev/null and is done with systemctl mask, not enable.
+      - id: d
+        text: If acpid was not running before, it is still not running now.
+        rationale: Correct. enable only affects boot; start it with systemctl start or use enable --now.
+    answer: [a, d]
+    explanation: >
+      enable reads the unit's [Install] section (here WantedBy=multi-user.target) and creates the
+      matching .wants/ link in /etc/systemd/system/. It changes what happens at boot only; the
+      running state changes with start and stop.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: systemd }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [systemctl, enable, acpid]
+
+  - id: 101-101.3-0023
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      A colleague wants a systemd server to stop booting into the graphical login. He changed the
+      `/etc/inittab` line to `id:3:initdefault:`, rebooted, and still got the graphical login. What
+      is the right explanation and fix?
+    options:
+      - id: a
+        text: init has not re-read the file; run telinit q and reboot again.
+        rationale: Wrong. On systemd, telinit q only reloads unit files (daemon-reload); /etc/inittab is still ignored.
+      - id: b
+        text: The entry is malformed; it must be written without the trailing colon.
+        rationale: Wrong. The trailing colon (empty process field) is the correct syntax, and systemd does not read the file anyway.
+      - id: c
+        text: The runlevel is passed by GRUB; regenerate the boot loader configuration.
+        rationale: Wrong. Regenerating the GRUB configuration does not take values from /etc/inittab.
+      - id: d
+        text: systemd ignores /etc/inittab; run systemctl set-default multi-user.target.
+        rationale: Correct. systemd boots default.target, which set-default repoints to multi-user.target.
+    answer: [d]
+    explanation: >
+      systemd does not use /etc/inittab. Its default boot target is the link
+      /etc/systemd/system/default.target, which systemctl set-default rewrites. A systemd.unit=
+      kernel parameter can override it for a single boot.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: systemd }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [inittab, set-default, troubleshooting]
+
+  - id: 101-101.3-0024
+    type: multi_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      A systemd workstation is currently at its default, `graphical.target`. You want it to drop to
+      text-only multi-user mode **now**, without rebooting, and to come up in that mode on every
+      future boot. Which **TWO** commands together achieve this?
+    select_count: 2
+    options:
+      - id: a
+        text: "`systemctl enable multi-user.target`"
+        rationale: Wrong. multi-user.target has no [Install] section, so enable changes nothing, and enable never selects the default target.
+      - id: b
+        text: "`systemctl set-default multi-user.target`"
+        rationale: Correct. This repoints default.target, which covers future boots.
+      - id: c
+        text: "`systemctl isolate multi-user.target`"
+        rationale: Correct. This switches the running system and stops the graphical units.
+      - id: d
+        text: "`telinit q`"
+        rationale: Wrong. On systemd this only reloads the manager configuration; the target does not change.
+      - id: e
+        text: "`systemctl start multi-user.target`"
+        rationale: Wrong. multi-user.target is already active as a dependency of graphical.target, and start does not stop the graphical units.
+    answer: [b, c]
+    explanation: >
+      Two separate things are being changed: the running state (isolate) and the boot default
+      (set-default). Neither command does the other's job.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: systemd }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [isolate, set-default, targets]
+
+  - id: 101-101.3-0025
+    type: fill_in
+    difficulty: 4
+    pool: holdout
+    stem: >
+      Type a `shutdown` command that reboots the machine at 22:00 tonight. A warning message is
+      optional.
+    fill_in:
+      accepted: ['(sudo\s+)?((/usr)?/s?bin/)?shutdown\s+(-r|--reboot)\s+22:00(\s+(?!-)\S+)*']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      shutdown -r 22:00 schedules a reboot at that clock time (24-hour format). Anything after the
+      time is sent to logged-in users as the warning message. A pending shutdown can be cancelled
+      with shutdown -c.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: Shutdown and Restart }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Pattern no longer accepts trailing options (systemd shutdown permutes options, e.g. '-r 22:00 -h')." }
+    tags: [shutdown]
+
+  - id: 101-101.3-0026
+    type: multi_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      A systemd machine needs maintenance in single-user (rescue) mode. At the boot loader you edit
+      the kernel command line for this one boot. Which **TWO** additions boot it into rescue mode?
+    select_count: 2
+    options:
+      - id: a
+        text: "`init=rescue.target`"
+        rationale: Wrong. init= names the program to run as PID 1; a target name there is not an executable and the boot fails.
+      - id: b
+        text: "`single`"
+        rationale: Correct. systemd accepts single (as well as s, S and 1) as shorthand for rescue.target.
+      - id: c
+        text: "`emergency`"
+        rationale: Wrong. This boots emergency.target, a more minimal mode than rescue mode.
+      - id: d
+        text: "`runlevel=1`"
+        rationale: Wrong. There is no runlevel= parameter; the bare number 1 would be needed.
+      - id: e
+        text: "`systemd.unit=rescue.target`"
+        rationale: Correct. systemd.unit= chooses the unit to start at boot instead of default.target.
+    answer: [b, e]
+    explanation: >
+      For a single boot, the target is chosen on the kernel command line: systemd.unit=<target>, or
+      the SysV-style shorthands (rescue, single, s, S, 1 for rescue; 2–5 for runlevelN.target). emergency
+      (or -b) gives emergency.target, which starts even less than rescue mode.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: systemd }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Explanation now lists rescue among the rescue-mode keywords." }
+    tags: [kernel-parameters, rescue, systemd.unit]
+
+  - id: 101-101.3-0027
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      On a systemd server, people at the console keep rebooting it by pressing Ctrl+Alt+Del. How do
+      you stop that key combination from rebooting the machine?
+    options:
+      - id: a
+        text: "`systemctl mask ctrl-alt-del.target`"
+        rationale: Correct. Masking links the unit to /dev/null, so systemd has nothing to start when the keys are pressed.
+      - id: b
+        text: "`systemctl disable ctrl-alt-del.target`"
+        rationale: Wrong. ctrl-alt-del.target is a vendor alias of reboot.target; disable leaves that alias in place.
+      - id: c
+        text: Comment out the ctrlaltdel line in /etc/inittab and run telinit q
+        rationale: Wrong. That is the SysV method; systemd does not read /etc/inittab.
+      - id: d
+        text: Create an empty /etc/shutdown.allow file
+        rationale: Wrong. shutdown.allow is used by the SysV shutdown -a option in inittab; systemd does not consult it.
+    answer: [a]
+    explanation: >
+      systemd starts ctrl-alt-del.target when it gets the Ctrl+Alt+Del signal, and that unit is
+      normally an alias for reboot.target. Masking it is the usual way to disable the keys. Under
+      SysV init the ctrlaltdel entry in /etc/inittab decides what happens. Even with the target
+      masked, pressing the keys more than 7 times within 2 seconds still forces a reboot unless
+      CtrlAltDelBurstAction=none is set in /etc/systemd/system.conf.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: SysVinit }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Explanation adds the Ctrl+Alt+Del burst (>7 presses in 2 s) and CtrlAltDelBurstAction=none." }
+    tags: [ctrlaltdel, mask]
+
+  - id: 101-101.3-0028
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      On a current systemd-based distribution, root types `shutdown` with no options and no
+      arguments. What happens?
+    options:
+      - id: a
+        text: The system switches to single-user mode at once.
+        rationale: Wrong. That was the old SysV default; systemd's shutdown powers off, and rescue mode is reached with systemctl rescue.
+      - id: b
+        text: The command fails because a time argument is required.
+        rationale: Wrong. With systemd's shutdown the time is optional.
+      - id: c
+        text: A power-off is scheduled for one minute later and users are warned.
+        rationale: Correct. systemd's shutdown defaults to power off, and a missing time means +1.
+      - id: d
+        text: The system halts immediately but the power stays on.
+        rationale: Wrong. Halt needs -H, and without a time the action is not immediate.
+    answer: [c]
+    explanation: >
+      systemd's shutdown is a compatibility front end to systemctl. Its default action is power off
+      (-P), and when the time is left out it assumes +1, one minute from now, with the usual wall
+      warning. The SysV shutdown needed a time and, without -h or -r, went to single-user mode.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: Shutdown and Restart }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Option a rationale shortened and made plainer." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. Default action and +1 time confirmed in systemd 255 shutdown(8)." }
+    tags: [shutdown, systemd]
+
+  - id: 101-101.3-0029
+    type: multi_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      Root runs `shutdown +10 "Moving to new rack"` on a systemd system. Which **TWO** statements are
+      true?
+    select_count: 2
+    options:
+      - id: a
+        text: Logged-in users receive the text on their terminals as a warning.
+        rationale: Correct. shutdown sends a wall message with the given text, repeated as the time approaches.
+      - id: b
+        text: All processes are sent SIGKILL at once so that the shutdown cannot hang.
+        rationale: Wrong. Processes first get SIGTERM to exit cleanly; SIGKILL is only used for those still running afterwards.
+      - id: c
+        text: From five minutes before the shutdown, new non-root logins are refused.
+        rationale: Correct. systemd creates /run/nologin five minutes before the scheduled time.
+      - id: d
+        text: The machine reboots when the time is reached.
+        rationale: Wrong. With no -r the default action is power off.
+      - id: e
+        text: Once scheduled, the shutdown can no longer be cancelled.
+        rationale: Wrong. A pending shutdown is cancelled with shutdown -c.
+    answer: [a, c]
+    explanation: >
+      A timed shutdown warns users, blocks new logins shortly before the deadline, and then ends
+      processes with SIGTERM followed by SIGKILL. Without -r or -H, systemd's shutdown powers off.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: Shutdown and Restart }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. Default action and +1 time confirmed in systemd 255 shutdown(8)." }
+    tags: [shutdown, nologin, signals]
+
+  - id: 101-101.3-0030
+    type: fill_in
+    difficulty: 5
+    pool: holdout
+    stem: >
+      On a SysV system, the ctrlaltdel entry in `/etc/inittab` runs `shutdown -a -r now`. Type the
+      full path of the file that lists the users allowed to trigger this reboot.
+    fill_in:
+      accepted: ["/etc/shutdown.allow"]
+      match: normalized
+      case_sensitive: true
+    explanation: >
+      With -a, the SysV shutdown checks /etc/shutdown.allow, so that pressing Ctrl+Alt+Del only
+      reboots the machine if an authorised user is logged in on the console. systemd has no
+      equivalent file.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: Shutdown and Restart }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. SysV behaviour checked against upstream sysvinit man pages (no sysvinit on Ubuntu 24.04)." }
+    tags: [shutdown.allow, ctrlaltdel]
+
+  # --------------------------------------------------------------------------- practice (CLI)
+
+  - id: 101-101.3-0031
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: Which SysV runlevel is single-user (maintenance) mode?
+    options:
+      - id: a
+        text: "0"
+        rationale: Wrong. Runlevel 0 shuts the system down.
+      - id: b
+        text: "6"
+        rationale: Wrong. Runlevel 6 reboots the system.
+      - id: c
+        text: "1"
+        rationale: Correct. Runlevel 1 (also called s or S) is single-user mode without networking.
+      - id: d
+        text: "3"
+        rationale: Wrong. Runlevel 3 is full multi-user mode with networking.
+    answer: [c]
+    explanation: >
+      Single-user mode, runlevel 1 (or s/S), runs a minimum of services and no network, which makes
+      it suitable for maintenance. On systemd the equivalent is rescue.target.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: SysVinit }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. SysV behaviour checked against upstream sysvinit man pages (no sysvinit on Ubuntu 24.04)." }
+    tags: [runlevels, single-user]
+
+  - id: 101-101.3-0032
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: "`graphical.target` on a systemd system is the counterpart of which SysV runlevel?"
+    options:
+      - id: a
+        text: "5"
+        rationale: Correct. Runlevel 5 is multi-user mode plus a graphical login, which runlevel5.target maps to graphical.target.
+      - id: b
+        text: "3"
+        rationale: Wrong. Runlevel 3 corresponds to multi-user.target, without the graphical login.
+      - id: c
+        text: "1"
+        rationale: Wrong. Runlevel 1 corresponds to rescue.target.
+      - id: d
+        text: "6"
+        rationale: Wrong. Runlevel 6 corresponds to reboot.target.
+    answer: [a]
+    explanation: >
+      graphical.target pulls in multi-user.target and adds the display manager, just as runlevel 5
+      is runlevel 3 plus a graphical login.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: systemd }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [targets, runlevels]
+
+  - id: 101-101.3-0033
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: What does `systemctl is-active cron.service` print while the cron service is running?
+    options:
+      - id: a
+        text: "`running`"
+        rationale: Wrong. "running" appears in systemctl status output, in brackets after active, not as is-active's answer.
+      - id: b
+        text: "`active`"
+        rationale: Correct. is-active prints active (and exits 0) for a running unit.
+      - id: c
+        text: "`enabled`"
+        rationale: Wrong. enabled is an is-enabled answer about boot-time start, not about running state.
+      - id: d
+        text: "`loaded`"
+        rationale: Wrong. loaded describes whether the unit file has been read, shown by status and list-units.
+    answer: [b]
+    explanation: >
+      is-active prints the unit's active state (active, inactive, failed ...) and sets the exit
+      status to 0 only when it is active, which is handy in scripts.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: systemd }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [systemctl, is-active]
+
+  - id: 101-101.3-0034
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: On an older Ubuntu release that uses Upstart, which command lists the jobs and their state?
+    options:
+      - id: a
+        text: "`systemctl list-units`"
+        rationale: Wrong. This is the systemd command; Upstart systems do not have it.
+      - id: b
+        text: "`chkconfig --list`"
+        rationale: Wrong. chkconfig manages SysV runlevel links on Red Hat-style systems.
+      - id: c
+        text: "`runlevel`"
+        rationale: Wrong. runlevel shows only the previous and current runlevel.
+      - id: d
+        text: "`initctl list`"
+        rationale: Correct. initctl list shows each Upstart job, its state and its PID if it is running.
+    answer: [d]
+    explanation: >
+      Upstart kept its job files in /etc/init/ and was controlled with initctl (plus the shortcuts
+      start, stop and status). Ubuntu replaced it with systemd in 2015.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: Upstart }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [upstart, initctl]
+
+  - id: 101-101.3-0035
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: >
+      You want a laptop to go into low-power mode, keeping everything in RAM so work can continue
+      within seconds. Which command does that?
+    options:
+      - id: a
+        text: "`systemctl suspend`"
+        rationale: Correct. Suspend keeps memory powered and the rest of the machine in a low-power state.
+      - id: b
+        text: "`systemctl hibernate`"
+        rationale: Wrong. Hibernate writes memory to disk and powers off; resuming is slower.
+      - id: c
+        text: "`systemctl poweroff`"
+        rationale: Wrong. poweroff ends the session completely.
+      - id: d
+        text: "`systemctl halt`"
+        rationale: Wrong. halt stops the system; the session is not kept.
+    answer: [a]
+    explanation: >
+      suspend (suspend to RAM) is fast to enter and leave but needs power to keep memory alive.
+      hibernate (suspend to disk) survives a complete loss of power.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: systemd }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [suspend, power-management]
+
+  - id: 101-101.3-0036
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: >
+      Which file configures what systemd does when the laptop lid is closed or the power key is
+      pressed (settings such as `HandleLidSwitch=`)?
+    options:
+      - id: a
+        text: "`/etc/systemd/system.conf`"
+        rationale: Wrong. system.conf configures the systemd manager itself, such as default timeouts.
+      - id: b
+        text: "`/etc/systemd/journald.conf`"
+        rationale: Wrong. journald.conf configures the journal (logging).
+      - id: c
+        text: "`/etc/systemd/logind.conf`"
+        rationale: Correct. systemd-logind handles power and lid keys; drop-ins can also go in /etc/systemd/logind.conf.d/.
+      - id: d
+        text: "`/etc/inittab`"
+        rationale: Wrong. systemd does not read /etc/inittab.
+    answer: [c]
+    explanation: >
+      systemd-logind reacts to power, suspend and lid events according to logind.conf. If acpid is
+      installed to handle these events instead, logind's handling has to stay out of its way.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: systemd }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [logind, power-management]
+
+  - id: 101-101.3-0037
+    type: single_choice
+    difficulty: 3
+    pool: practice
+    stem: >
+      After installing a print server, an admin ran `systemctl start cups.service`. It worked, but
+      after the next reboot cups was not running. Why?
+    options:
+      - id: a
+        text: start only lasts until the next systemctl daemon-reload.
+        rationale: Wrong. daemon-reload re-reads unit files; it does not stop running services.
+      - id: b
+        text: start runs the service now only; enable is needed for it to start at boot.
+        rationale: Correct. Starting and enabling are independent; systemctl enable --now does both.
+      - id: c
+        text: Services are started at boot only if they are listed in /etc/inittab.
+        rationale: Wrong. systemd does not use /etc/inittab.
+      - id: d
+        text: The service should have been started with telinit to make it permanent.
+        rationale: Wrong. telinit changes runlevels; it does not start or enable individual services.
+    answer: [b]
+    explanation: >
+      systemctl start and stop change the running state; enable and disable change what happens at
+      boot. A service usually needs both start and enable (or enable --now).
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: systemd }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [systemctl, enable, start]
+
+  - id: 101-101.3-0038
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: Which `shutdown` time argument means "immediately"?
+    options:
+      - id: a
+        text: "`+1`"
+        rationale: Wrong. +1 means one minute from now.
+      - id: b
+        text: "`00:00`"
+        rationale: Wrong. 00:00 means at midnight.
+      - id: c
+        text: "`+60`"
+        rationale: Wrong. +60 means in an hour.
+      - id: d
+        text: "`now`"
+        rationale: Correct. now (the same as +0) acts at once.
+    answer: [d]
+    explanation: >
+      shutdown accepts now (or +0), +m for m minutes from now, and hh:mm for a time of day on the
+      24-hour clock.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: Shutdown and Restart }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [shutdown]
+
+  - id: 101-101.3-0039
+    type: single_choice
+    difficulty: 3
+    pool: practice
+    stem: What does the action `respawn` mean in the `/etc/inittab` entry shown?
+    exhibit: |
+      3:23:respawn:/sbin/getty 38400 tty3
+    options:
+      - id: a
+        text: Run getty once at boot and wait for it to finish before going on.
+        rationale: Wrong. That describes bootwait (or wait for a runlevel).
+      - id: b
+        text: Run getty when Ctrl+Alt+Del is pressed.
+        rationale: Wrong. That is the ctrlaltdel action.
+      - id: c
+        text: Start getty again whenever it ends, in runlevels 2 and 3.
+        rationale: Correct. respawn makes init restart the process each time it terminates.
+      - id: d
+        text: Run getty during system initialisation, whatever the runlevel.
+        rationale: Wrong. That is the sysinit action.
+    answer: [c]
+    explanation: >
+      respawn is used for processes that must always be there, such as the login prompts on the
+      virtual consoles: when a user logs out and getty ends, init starts a fresh one.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: SysVinit }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. SysV behaviour checked against upstream sysvinit man pages (no sysvinit on Ubuntu 24.04)." }
+    tags: [inittab, respawn]
+
+  - id: 101-101.3-0040
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: In the `/etc/inittab` entry `l3:3:wait:/etc/init.d/rc 3`, which field is `wait`?
+    options:
+      - id: a
+        text: The id field
+        rationale: Wrong. The id is the first field, l3 here.
+      - id: b
+        text: The action field
+        rationale: Correct. The third field is the action; wait means init waits for the process to finish.
+      - id: c
+        text: The runlevels field
+        rationale: Wrong. The runlevels field is the second one, 3 here.
+      - id: d
+        text: The process field
+        rationale: Wrong. The process is the last field, /etc/init.d/rc 3 here.
+    answer: [b]
+    explanation: >
+      Every inittab entry has four colon-separated fields: id:runlevels:action:process. The action
+      tells init how and when to run the process.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: SysVinit }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. SysV behaviour checked against upstream sysvinit man pages (no sysvinit on Ubuntu 24.04)." }
+    tags: [inittab]
+
+  - id: 101-101.3-0041
+    type: multi_choice
+    difficulty: 3
+    pool: practice
+    stem: >
+      Which **TWO** methods make a systemd machine boot into `multi-user.target` on every boot from
+      now on?
+    select_count: 2
+    options:
+      - id: a
+        text: Run systemctl set-default multi-user.target
+        rationale: Correct. This repoints /etc/systemd/system/default.target to multi-user.target.
+      - id: b
+        text: Run systemctl isolate multi-user.target
+        rationale: Wrong. isolate changes the running system only; the next boot uses the default again.
+      - id: c
+        text: "Set `id:3:initdefault:` in /etc/inittab"
+        rationale: Wrong. systemd does not read /etc/inittab.
+      - id: d
+        text: Add systemd.unit=multi-user.target to the kernel parameters saved in the boot loader configuration
+        rationale: Correct. Kernel parameters stored in the boot loader configuration apply to every boot.
+      - id: e
+        text: Run systemctl start multi-user.target
+        rationale: Wrong. start affects only the running system and does not change the default.
+    answer: [a, d]
+    explanation: >
+      The default boot target comes from the default.target link (changed with set-default) unless
+      the kernel command line names another unit with systemd.unit=. Typed once at the boot menu it
+      lasts one boot; saved in the boot loader configuration it applies every time.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: systemd }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [set-default, kernel-parameters]
+
+  - id: 101-101.3-0042
+    type: multi_choice
+    difficulty: 2
+    pool: practice
+    stem: Which **TWO** commands switch a SysV init system to single-user mode?
+    select_count: 2
+    options:
+      - id: a
+        text: "`telinit 6`"
+        rationale: Wrong. Runlevel 6 reboots the system.
+      - id: b
+        text: "`telinit 1`"
+        rationale: Correct. Runlevel 1 is single-user mode.
+      - id: c
+        text: "`telinit S`"
+        rationale: Correct. S (or s) is another name for single-user mode.
+      - id: d
+        text: "`telinit q`"
+        rationale: Wrong. q makes init re-read /etc/inittab without changing runlevel.
+      - id: e
+        text: "`telinit 0`"
+        rationale: Wrong. Runlevel 0 shuts the system down.
+    answer: [b, c]
+    explanation: >
+      telinit (or init) followed by a runlevel switches the running system. 1, s and S all select
+      single-user mode; warn users with wall before you do it.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: SysVinit }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. SysV behaviour checked against upstream sysvinit man pages (no sysvinit on Ubuntu 24.04)." }
+    tags: [telinit, single-user]
+
+  - id: 101-101.3-0043
+    type: multi_choice
+    difficulty: 3
+    pool: practice
+    stem: Which **TWO** of these are systemd unit types?
+    select_count: 2
+    options:
+      - id: a
+        text: runlevel
+        rationale: Wrong. runlevel0.target to runlevel6.target exist, but their type is target.
+      - id: b
+        text: daemon
+        rationale: Wrong. Daemons are run by service units; there is no daemon unit type.
+      - id: c
+        text: socket
+        rationale: Correct. A socket unit listens on a socket and starts the matching service when it is used.
+      - id: d
+        text: target
+        rationale: Correct. A target groups other units so they can be reached as one.
+      - id: e
+        text: process
+        rationale: Wrong. There is no process unit type; processes belong to service or scope units.
+    answer: [c, d]
+    explanation: >
+      The unit type is the suffix of the unit name: .service, .socket, .device, .mount, .automount,
+      .target, and others such as .timer, .path and .swap.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: systemd }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [units, systemd]
+
+  - id: 101-101.3-0044
+    type: fill_in
+    difficulty: 2
+    pool: practice
+    stem: Type the command that sends a message to the terminals of all logged-in users.
+    fill_in:
+      accepted: ['(sudo\s+)?((/usr)?/s?bin/)?wall(\s+.+)?', '.*\|\s*((/usr)?/s?bin/)?wall']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      wall takes the message as an argument, from a file, or on standard input. Use it to warn users
+      before a runlevel change or other disruptive maintenance.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: Shutdown and Restart }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Also accept piped input to wall (e.g. echo msg | wall)." }
+    tags: [wall]
+
+  - id: 101-101.3-0045
+    type: fill_in
+    difficulty: 3
+    pool: practice
+    stem: >
+      Fill in the `systemctl` subcommand that makes `graphical.target` the target the system boots
+      into: `systemctl ______ graphical.target`
+    fill_in:
+      accepted: ['set-default', 'set-default\s+graphical(\.target)?', '(sudo\s+)?((/usr)?/s?bin/)?systemctl\s+set-default\s+graphical(\.target)?']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      set-default rewrites the link /etc/systemd/system/default.target. It takes effect at the next
+      boot; to switch now as well, use systemctl isolate.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.3", lesson: 1, section: systemd }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Also accept 'set-default graphical[.target]' without the systemctl prefix." }
+    tags: [set-default]
