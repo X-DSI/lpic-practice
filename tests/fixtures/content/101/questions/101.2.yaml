@@ -1,0 +1,24 @@
+# Synthetic fixture questions — not exam content.
+schema_version: 1
+exam: "101"
+objective: "101.2"
+questions:
+  - id: 101-101.2-0001
+    type: fill_in
+    difficulty: 3
+    pool: practice
+    stem: Fixture fill-in question answered with a full-match regex.
+    fill_in: { accepted: ['ls\s+-i', 'ls\s+--inode'], match: regex }
+    explanation: Fixture explanation for a regex fill-in item.
+    source: { material: Fixture material, material_version: "2000-01-01", objective: "101.2", lesson: 1 }
+    review: { status: draft }
+
+  - id: 101-101.2-0002
+    type: fill_in
+    difficulty: 2
+    pool: holdout
+    stem: Fixture fill-in question answered with an exact match.
+    fill_in: { accepted: ["fixture-answer"], match: exact }
+    explanation: Fixture explanation for an exact fill-in item.
+    source: { material: Fixture material, material_version: "2000-01-01", objective: "101.2", lesson: 1 }
+    review: { status: draft }

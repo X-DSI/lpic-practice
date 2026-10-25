@@ -1,0 +1,25 @@
+# Synthetic fixture for tests — not real exam objectives.
+schema_version: 1
+exam: "102"
+exam_code: fixture-102
+certification: LPIC-1
+objectives_version: "1.0"
+material:
+  title: "Fixture material"
+  version: "2000-01-01"
+exam_format:
+  questions: 60
+  duration_minutes: 90
+topics:
+  - id: "102"
+    title: "Fixture topic 102"
+    objectives:
+      - { id: "102.1", weight: 10, lessons: 1, title: "Fixture objective 102.1" }
+      - { id: "102.2", weight: 10, lessons: 1, title: "Fixture objective 102.2" }
+      - { id: "102.3", weight: 10, lessons: 1, title: "Fixture objective 102.3" }
+  - id: "104"
+    title: "Fixture topic 104"
+    objectives:
+      - { id: "104.1", weight: 10, lessons: 1, title: "Fixture objective 104.1" }
+      - { id: "104.2", weight: 10, lessons: 1, title: "Fixture objective 104.2" }
+      - { id: "104.3", weight: 10, lessons: 1, title: "Fixture objective 104.3" }

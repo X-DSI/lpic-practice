@@ -1,0 +1,3 @@
+- `engine/` Python package (`pip install -e ".[dev]"`): loads the question bank into typed objects, grades single-choice, multi-choice (all-or-nothing) and fill-in answers (exact, normalized, full-match regex), scores results LPI-style (raw score, per-objective and per-topic breakdowns, 200–800 estimate with the pass point at 65%), and returns the practice pool without holdout or retired questions.
+- `python -m engine.build` compiles validated content to `build/content/<exam>.json`, deterministically; it writes nothing if content is invalid.
+- CI job running `ruff`, `pytest` and the content build.
