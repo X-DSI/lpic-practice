@@ -220,7 +220,7 @@ questions:
       status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
-        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Replaced: restated Guided Exercise 4; now an auto-mount (/media/USER/LABEL) question. Needs re-check." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Replaced: restated Guided Exercise 4; now an auto-mount (/media/USER/LABEL) question. Re-checked cold by the reviewer: matches key." }
     tags: [mount-point, media, removable-media]
 
   - id: 101-102.1-0008
@@ -325,8 +325,8 @@ questions:
     difficulty: 3
     pool: holdout
     stem: >
-      On a UEFI system, the ESP is listed in `/etc/fstab`. Type the filesystem type that belongs in
-      the blank.
+      On a UEFI system, the installer of Debian, Ubuntu or RHEL lists the ESP in `/etc/fstab`. Type
+      the filesystem type that these installers write in the blank.
     exhibit: |
       UUID=9C1E-2A7F  /boot/efi  ________  umask=0077  0  1
     fill_in:
@@ -334,14 +334,15 @@ questions:
       match: regex
       case_sensitive: true
     explanation: >
-      The ESP holds a FAT filesystem, which Linux mounts with the vfat driver (long file names
-      supported). Its usual mount point on GRUB-based distributions is /boot/efi.
+      The ESP holds a FAT filesystem, and installers mount it with the vfat driver, which supports long
+      file names. The older msdos driver also reads FAT but only with 8.3 names, and `auto` would leave
+      the choice to probing, so neither is what installers write. The usual mount point is /boot/efi.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.1", lesson: 1, section: The EFI System Partition (ESP) }
     review:
       status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
-        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Replaced: restated Guided Exercise 3; now blanks the fstab type field (vfat). Needs re-check." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Replaced: restated Guided Exercise 3; now blanks the fstab type field (vfat); stem narrowed to what installers write, since msdos or auto would also mount the ESP. Re-checked cold by the reviewer: matches key." }
     tags: [esp, fstab, vfat]
 
   - id: 101-102.1-0012
