@@ -8,7 +8,7 @@ adrs:
   - 2026-10-22-mock-exam-composition.md
   - proposed/2026-10-24-lpi-style-scoring.md
   - proposed/2026-10-25-question-generation-workflow.md
-plan_pr: null
+plan_pr: 7
 impl_pr: null
 review: auto
 ---
