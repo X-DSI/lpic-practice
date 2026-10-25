@@ -1,0 +1,3 @@
+- `lpic practice`: a Textual terminal app to drill practice questions by objective, as a weighted mix, or by weak areas, with feedback, rationales and an end-of-session summary. Holdout and retired questions are never served.
+- Results storage in a local SQLite database (`engine/store.py`; path from `LPIC_DB` or `$XDG_DATA_HOME`), shared with the future web UI; layout recorded in a Proposed ADR.
+- Question flagging from the feedback screen (fixed reasons, short note without links) and `lpic flags export` to hand flags to the planner as YAML.
