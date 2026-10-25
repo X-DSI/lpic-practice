@@ -1,7 +1,7 @@
 ---
 title: Terminal practice app — drills, results storage, weak areas and question flagging
-status: open
-assignee: agent:any
+status: in-progress
+assignee: X-DSI-agent
 base_sha: ee19572
 adrs:
   - 2026-10-22-technology-stack.md

@@ -26,7 +26,7 @@ These two can run in parallel, in separate sessions.
 | Handoff | Status | Assignee |
 |---|---|---|
 | [Engine fixes, pass2-ready mocks, and the mock assembler](handoff/2026-10-25-engine-fixes-and-mock-assembler.md) | open | agent:any |
-| [Terminal practice app](handoff/2026-10-25-practice-cli.md) | open | agent:any |
+| [Terminal practice app](handoff/2026-10-25-practice-cli.md) | in-progress | X-DSI-agent |
 
 Done: [Content build and engine core](handoff/2026-10-23-build-and-engine-core.md) (PR #5).
 
