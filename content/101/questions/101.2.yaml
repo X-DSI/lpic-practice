@@ -56,7 +56,7 @@ questions:
         rationale: Wrong. BIOS or UEFI firmware runs before the bootloader and plays no part once the kernel is running.
       - id: d
         text: init
-        rationale: Correct. The first user-space program the kernel runs is called init; SysVinit, Upstart and systemd are implementations of it.
+        rationale: Correct. The program that runs as PID 1 from the real root filesystem is called init; SysVinit, Upstart and systemd are implementations of it.
     answer: [d]
     explanation: >
       Starting init as PID 1 is the kernel's final boot step. From there, the init implementation
@@ -67,7 +67,7 @@ questions:
       status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
-        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Stem and explanation reworded away from the lesson's phrasing; key unchanged. Needs re-check." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Stem and explanation reworded away from the lesson's phrasing; key unchanged. Rewrite re-checked cold by the reviewer: matches key." }
     tags: [init]
 
   - id: 101-101.2-0003
@@ -350,7 +350,7 @@ questions:
       status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
-        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Stem now asks what UEFI requires firmware to support (UEFI 2.10 13.3: FAT12/16/32); rationales a and d updated. Exactly two FAT options remain. Needs re-check." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Stem now asks what UEFI requires firmware to support (UEFI 2.10 13.3: FAT12/16/32); rationales a and d updated. Exactly two FAT options remain. Rewrite re-checked cold by the reviewer: matches key." }
     tags: [uefi, esp]
 
   - id: 101-101.2-0012
@@ -541,7 +541,7 @@ questions:
       status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
-        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Stem reworded to the MBR sector layout; rationales b and c made precise. Needs re-check." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Stem reworded to the MBR sector layout; rationales b and c made precise. Rewrite re-checked cold by the reviewer: matches key." }
     tags: [bios, mbr]
 
   - id: 101-101.2-0018
@@ -993,7 +993,7 @@ questions:
       status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
-        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Stem, option a, rationale and explanation reworded away from the lesson's phrasing; key unchanged. Needs re-check." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Stem, option a, rationale and explanation reworded away from the lesson's phrasing; key unchanged. Rewrite re-checked cold by the reviewer: matches key." }
     tags: [bios, firmware]
 
   - id: 101-101.2-0032
@@ -1117,7 +1117,7 @@ questions:
       status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
-        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Scenario rewritten (backup job) so it no longer mirrors the lesson's alternative-boot-medium passage; key unchanged. Needs re-check." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Scenario rewritten (backup job) so it no longer mirrors the lesson's alternative-boot-medium passage; key unchanged. Rewrite re-checked cold by the reviewer: matches key." }
     tags: [logs, var-log]
 
   - id: 101-101.2-0036
