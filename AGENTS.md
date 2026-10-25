@@ -8,8 +8,7 @@ lpic-practice is a practice suite for the Linux Professional Institute LPIC-1 ex
 102-500) and, later, LPIC-2 (201, 202): terminal drills by objective with weak-area targeting, plus
 10 timed browser mock exams per exam, graded from easiest to hardest, with per-objective results.
 Everything is driven by a question bank in `content/`, validated against the JSON Schemas in
-`schemas/`. Status: planning — the stack and content schema are decided (see `docs/adr/`); no
-application code yet.
+`schemas/`. Status: the shared engine (`engine/`) exists; the CLI and web UI are not built yet.
 
 ## Before you do anything
 
@@ -51,8 +50,10 @@ application code yet.
 
 | Task | Command |
 |---|---|
-| Install validator dependencies | `pip install jsonschema pyyaml` |
+| Install the engine and dev tools | `pip install -e ".[dev]"` |
 | Validate all content | `python tools/validate.py` |
 | Validate, requiring mock questions to be approved | `python tools/validate.py --strict` |
-| Build / test | *(no application code yet)* |
+| Build content to `build/content/<exam>.json` | `python -m engine.build` |
+| Test | `pytest` |
+| Lint and format check | `ruff check . && ruff format --check .` |
 | Check commit identity locally | `git clone --depth 1 -b v0.0.1-alpha https://github.com/X-DSI/agent-workflow /tmp/aw && bash /tmp/aw/.github/scripts/check-commit-identity.sh origin/main HEAD` |

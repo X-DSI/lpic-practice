@@ -1,0 +1,76 @@
+# Synthetic fixture questions — not exam content.
+schema_version: 1
+exam: "101"
+objective: "101.1"
+questions:
+  - id: 101-101.1-0001
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: Fixture single-choice question; option b is correct.
+    options:
+      - { id: a, text: Fixture option A }
+      - { id: b, text: Fixture option B }
+      - { id: c, text: Fixture option C }
+      - { id: d, text: Fixture option D }
+    answer: [b]
+    explanation: Fixture explanation for a single-choice item.
+    source: { material: Fixture material, material_version: "2000-01-01", objective: "101.1", lesson: 1 }
+    review: { status: draft }
+
+  - id: 101-101.1-0002
+    type: multi_choice
+    difficulty: 2
+    pool: practice
+    stem: Fixture multi-choice question; options a and c are correct.
+    select_count: 2
+    options:
+      - { id: a, text: Fixture option A }
+      - { id: b, text: Fixture option B }
+      - { id: c, text: Fixture option C }
+      - { id: d, text: Fixture option D }
+    answer: [a, c]
+    explanation: Fixture explanation for a multi-choice item.
+    source: { material: Fixture material, material_version: "2000-01-01", objective: "101.1", lesson: 1 }
+    review: { status: draft }
+
+  - id: 101-101.1-0003
+    type: fill_in
+    difficulty: 3
+    pool: practice
+    stem: Fixture fill-in question answered with a normalized match.
+    fill_in: { accepted: ["ls -i"], match: normalized }
+    explanation: Fixture explanation for a normalized fill-in item.
+    source: { material: Fixture material, material_version: "2000-01-01", objective: "101.1", lesson: 1 }
+    review: { status: draft }
+
+  - id: 101-101.1-0004
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: Fixture holdout question that drills must never show.
+    options:
+      - { id: a, text: Fixture option A }
+      - { id: b, text: Fixture option B }
+      - { id: c, text: Fixture option C }
+      - { id: d, text: Fixture option D }
+    answer: [a]
+    explanation: Fixture explanation for a holdout item.
+    source: { material: Fixture material, material_version: "2000-01-01", objective: "101.1", lesson: 1 }
+    review: { status: draft }
+
+  - id: 101-101.1-0005
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: Fixture retired question that drills must never show.
+    options:
+      - { id: a, text: Fixture option A }
+      - { id: b, text: Fixture option B }
+      - { id: c, text: Fixture option C }
+      - { id: d, text: Fixture option D }
+    answer: [d]
+    explanation: Fixture explanation for a retired item.
+    source: { material: Fixture material, material_version: "2000-01-01", objective: "101.1", lesson: 1 }
+    review: { status: draft }
+    retired: true
