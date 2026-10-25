@@ -29,3 +29,11 @@ None. [Content build and engine core](handoff/2026-10-23-build-and-engine-core.m
 | ADR | Needed by |
 |---|---|
 | [Score like LPI — all-or-nothing items, 200–800 scale, 500 to pass](adr/proposed/2026-10-24-lpi-style-scoring.md) | build-and-engine-core handoff |
+| [Generate questions in topic-sized batches, checked by the writer and an independent agent, signed off in use](adr/proposed/2026-10-25-question-generation-workflow.md) | every content PR |
+
+## Question bank
+
+| Exam | Objectives done | Questions | Target |
+|---|---|---|---|
+| 101 | 102.3 (trial batch, PR #6) | 15 (10 holdout, 5 practice) | 900 (600 holdout, 300 practice) |
+| 102 | — | 0 | 900 |
