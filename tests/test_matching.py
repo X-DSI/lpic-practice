@@ -30,6 +30,12 @@ def test_single_choice(bank_101: Bank) -> None:
     assert not is_correct(q, "")
 
 
+@pytest.mark.parametrize("response", [["b"], ("b",), {"b"}, None])
+def test_single_choice_rejects_a_non_string(bank_101: Bank, response) -> None:
+    with pytest.raises(TypeError):
+        is_correct(bank_101.question("101-101.1-0001"), response)
+
+
 # --- multi choice: all or nothing
 
 
@@ -104,6 +110,21 @@ def test_regex_does_not_match_a_response_that_merely_contains_it(bank_101: Bank)
     assert not is_correct(q, "sudo ls -i")
     assert not is_correct(q, "ls -i /tmp")
     assert not is_correct(q, "ls -il")
+
+
+@pytest.mark.parametrize("response", ["ldconfig", "ldconfig ", " ldconfig", "\tldconfig\n"])
+def test_regex_ignores_outer_whitespace(response: str) -> None:
+    assert is_correct(fill_in("regex", ["ldconfig"]), response)
+
+
+@pytest.mark.parametrize("response", ["sudoldconfig", "sudo ldconfig", "ldconfig -p", "ld config"])
+def test_regex_still_rejects_other_text(response: str) -> None:
+    assert not is_correct(fill_in("regex", ["ldconfig"]), response)
+
+
+def test_regex_leaves_internal_whitespace_to_the_pattern() -> None:
+    assert not is_correct(fill_in("regex", ["ls -i"]), "ls  -i")
+    assert is_correct(fill_in("regex", [r"ls\s+-i"]), " ls  -i ")
 
 
 def test_regex_case_sensitivity() -> None:

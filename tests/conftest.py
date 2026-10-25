@@ -4,6 +4,7 @@ import shutil
 from pathlib import Path
 
 import pytest
+from holdout_bank import write_holdout_bank
 
 from engine.loader import load_exam
 from engine.model import Bank
@@ -22,3 +23,8 @@ def content_copy(tmp_path: Path) -> Path:
     dest = tmp_path / "content"
     shutil.copytree(FIXTURE_CONTENT, dest)
     return dest
+
+
+@pytest.fixture
+def holdout_content(tmp_path: Path) -> Path:
+    return write_holdout_bank(tmp_path / "content")
