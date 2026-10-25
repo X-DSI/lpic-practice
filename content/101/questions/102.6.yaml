@@ -1,0 +1,484 @@
+# 102.6 Linux as a virtualization guest — weight 1 → 10 holdout + 5 practice.
+# Original questions written from LPI Learning Materials 101-500, objective 102.6, lesson 1.
+schema_version: 1
+exam: "101"
+objective: "102.6"
+questions:
+  # ---------------------------------------------------------------- holdout (mock exams only)
+
+  - id: 101-102.6-0001
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: Which of these hypervisors is classed as a Type-1 (bare-metal) hypervisor?
+    options:
+      - id: a
+        text: Oracle VM VirtualBox
+        rationale: Wrong. VirtualBox is a desktop application that runs on top of Linux, macOS or Windows, so it is Type-2.
+      - id: b
+        text: VMware Workstation
+        rationale: Wrong. Workstation is installed as an application on an existing desktop OS, which makes it Type-2.
+      - id: c
+        text: Xen
+        rationale: Correct. The machine boots straight into Xen, which does not need a general-purpose OS underneath it.
+      - id: d
+        text: QEMU without KVM
+        rationale: Wrong. On its own QEMU is a user-space emulator running on a host OS, not a bare-metal hypervisor.
+    answer: [c]
+    explanation: >
+      A Type-1 hypervisor runs directly on the hardware and the machine boots into it (Xen, VMware
+      ESXi). A Type-2 hypervisor is software running on a normal host OS (VirtualBox, VMware
+      Workstation). KVM is often described as both, since it is a Linux kernel module.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.6", lesson: 1, section: Virtualization Overview }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [hypervisor, xen, type-1]
+
+  - id: 101-102.6-0002
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: What is the key architectural difference between a container and a virtual machine?
+    options:
+      - id: a
+        text: Containers share the host's kernel; each VM runs its own kernel.
+        rationale: Correct. A container is isolated processes on the host kernel; a VM emulates a whole computer that runs its own OS kernel.
+      - id: b
+        text: Containers need Intel VT-x or AMD-V, while virtual machines do not.
+        rationale: Wrong. Containers use ordinary kernel features and need no CPU virtualization extensions; hardware-assisted VMs such as KVM guests do.
+      - id: c
+        text: A container emulates a complete set of hardware, including firmware.
+        rationale: Wrong. Emulating firmware, disk controllers and network cards is what a hypervisor does for a VM.
+      - id: d
+        text: Containers can only run on a Type-1 (bare-metal) hypervisor.
+        rationale: Wrong. Containers run on an ordinary Linux kernel, whether on bare metal or inside a VM.
+    answer: [a]
+    explanation: >
+      A VM gets emulated hardware and runs a full OS with its own kernel. A container runs only the
+      software an application needs, isolated on the host's kernel (cgroups, namespaces), so it has
+      much less overhead.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.6", lesson: 1, section: Containers }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Correct option shortened; it was the longest (length giveaway)." }
+    tags: [container, virtual-machine]
+
+  - id: 101-102.6-0003
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      You deploy one Linux image on three different IaaS providers. On each instance's first boot you
+      want a YAML file you supply to set the hostname, create an admin user with your SSH public key
+      and install some packages. Which tool is built for this?
+    options:
+      - id: a
+        text: "`virt-install`"
+        rationale: Wrong. virt-install creates new VMs on a libvirt host; it does not configure a guest from inside on first boot.
+      - id: b
+        text: "`ssh-copy-id`"
+        rationale: Wrong. It copies a public key to a system that is already running; it creates no users and installs nothing.
+      - id: c
+        text: "`dbus-uuidgen`"
+        rationale: Wrong. It generates or reads the D-Bus machine ID; it does no other configuration.
+      - id: d
+        text: "`cloud-init`"
+        rationale: Correct. cloud-init runs early in the first boot, reads cloud-config user data and applies it, on most cloud providers.
+    answer: [d]
+    explanation: >
+      cloud-init is the vendor-neutral way to configure a cloud instance at first boot. The provider
+      passes it user data, typically a cloud-config YAML document, which can set the hostname,
+      timezone, users, SSH keys, packages and more.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.6", lesson: 1, section: Preconfiguring Cloud Systems }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [cloud-init]
+
+  - id: 101-102.6-0004
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      A KVM guest's disk is attached to an emulated IDE controller and its network card is an emulated
+      Intel e1000. Disk and network I/O are slow. Which change helps the guest's I/O the most?
+    options:
+      - id: a
+        text: Enable Intel VT-x in the host's firmware
+        rationale: Wrong. KVM cannot run guests at all without VT-x/AMD-V, so it is already on; it speeds up CPU virtualization, not emulated devices.
+      - id: b
+        text: Use virtio devices and drivers for the disk and NIC
+        rationale: Correct. virtio devices are paravirtualized; the guest drivers talk to the hypervisor directly instead of through emulated hardware.
+      - id: c
+        text: Install the VirtualBox Guest Additions inside the guest
+        rationale: Wrong. Guest Additions are VirtualBox's guest drivers; they do nothing for a guest running on KVM.
+      - id: d
+        text: Generate a new D-Bus machine ID inside the guest
+        rationale: Wrong. The machine ID identifies the installation; it has no effect on device performance.
+    answer: [b]
+    explanation: >
+      Emulating real hardware such as IDE or e1000 costs a lot of work per I/O operation.
+      Paravirtualized (virtio) drivers in an otherwise fully virtualized guest give near-native disk
+      and network performance; this mix is called hybrid virtualization.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.6", lesson: 1, section: Types of Virtual Machines }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Correct option shortened; it was the longest (length giveaway)." }
+    tags: [guest-drivers, virtio, kvm]
+
+  - id: 101-102.6-0005
+    type: multi_choice
+    difficulty: 3
+    pool: holdout
+    stem: Which **TWO** statements about types of virtual machine guests are true?
+    select_count: 2
+    options:
+      - id: a
+        text: A fully virtualized guest needs a modified kernel that knows about the hypervisor.
+        rationale: Wrong. A fully virtualized guest runs an unmodified OS and does not know it is virtualized.
+      - id: b
+        text: A paravirtualized guest knows it is virtualized and uses special drivers for the hypervisor.
+        rationale: Correct. Paravirtualized guests use a modified kernel and guest drivers that cooperate with the hypervisor.
+      - id: c
+        text: Paravirtualized guests usually perform worse than fully virtualized ones.
+        rationale: Wrong. The guest drivers avoid hardware emulation, so paravirtualized guests usually perform better.
+      - id: d
+        text: A hybrid guest is an unmodified OS that uses paravirtualized storage and network drivers.
+        rationale: Correct. Hybrid virtualization adds paravirtualized I/O drivers to a fully virtualized guest.
+    answer: [b, d]
+    explanation: >
+      Full virtualization: unmodified guest, hardware is emulated, needs VT-x/AMD-V on x86.
+      Paravirtualization: the guest is aware of the hypervisor and uses guest drivers, which is
+      faster. Hybrid: a fully virtualized guest with paravirtualized disk and network drivers.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.6", lesson: 1, section: Types of Virtual Machines }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [full-virtualization, paravirtualization, hybrid]
+
+  - id: 101-102.6-0006
+    type: fill_in
+    difficulty: 3
+    pool: holdout
+    stem: >
+      Type the absolute path of the file under `/etc` that holds the system's unique machine ID, used
+      by systemd and (directly or through a link) by D-Bus.
+    fill_in:
+      accepted: ["/etc/machine-id"]
+      match: normalized
+      case_sensitive: true
+    explanation: >
+      /etc/machine-id holds 32 lowercase hexadecimal characters that identify the installation.
+      D-Bus traditionally read /var/lib/dbus/machine-id, which on current systems is usually a
+      symbolic link to /etc/machine-id. Clones of one template must each get a new ID.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.6", lesson: 1, section: The D-Bus Machine ID }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [machine-id, d-bus]
+
+  - id: 101-102.6-0007
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      The guest `web01` has been running for weeks. Based on the output below, why does its disk image
+      take up only 3.1 GB on the host while the guest sees a 40 GB disk?
+    exhibit: |
+      host$ ls -lh /var/lib/libvirt/images/web01.img
+      -rw------- 1 root root 3.1G Oct 20 09:12 /var/lib/libvirt/images/web01.img
+      web01$ lsblk /dev/vda
+      NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
+      vda    252:0    0   40G  0 disk
+      ├─vda1 252:1    0    1G  0 part /boot
+      └─vda2 252:2    0   39G  0 part /
+    options:
+      - id: a
+        text: The guest's partitions only cover 3.1 GB of its disk.
+        rationale: Wrong. lsblk shows vda1 and vda2 together covering the full 40 GB.
+      - id: b
+        text: The image is a raw file with all its space preallocated.
+        rationale: Wrong. A raw image always shows its full 40 GB size in ls -l; preallocated, it also uses 40 GB on the host.
+      - id: c
+        text: The image is thin-provisioned and grows as data is written.
+        rationale: Correct. A copy-on-write format such as qcow2 has a fixed upper limit but only uses host space for data actually written.
+      - id: d
+        text: The hypervisor keeps the rest of the guest's disk in host RAM.
+        rationale: Wrong. Guest disk contents are stored in the image file; host RAM is not used as backing for unwritten disk space.
+    answer: [c]
+    explanation: >
+      Copy-on-write (thin-provisioned) images, such as QEMU's qcow2, present their full virtual size to
+      the guest but start small and grow as the guest writes data. Raw images take their full size up
+      front, which avoids the cost of growing the file during writes.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.6", lesson: 1, section: Example Virtual Machine Disk Storage }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [disk-image, qcow2, thin-provisioning]
+
+  - id: 101-102.6-0008
+    type: multi_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      A template VM is cloned to create twenty servers. Which **TWO** of these must be regenerated on
+      each clone so that every server is unique?
+    select_count: 2
+    options:
+      - id: a
+        text: "`/etc/machine-id`"
+        rationale: Correct. The machine ID must be unique per installation; identical IDs confuse systemd, D-Bus and tools that track machines by it.
+      - id: b
+        text: The admin user's `~/.ssh/authorized_keys`
+        rationale: Wrong. It lists the client public keys allowed to log in; the same admin key on every clone is normal and intended.
+      - id: c
+        text: The SSH host keys, `/etc/ssh/ssh_host_*_key`
+        rationale: Correct. Host keys identify each server to clients; shared keys mean one stolen key impersonates every clone.
+      - id: d
+        text: "`/etc/os-release`"
+        rationale: Wrong. It describes the distribution and version, which really is the same on every clone.
+      - id: e
+        text: "`/etc/ssh/sshd_config`"
+        rationale: Wrong. It is the SSH server's configuration, which can be identical on every clone.
+    answer: [a, c]
+    explanation: >
+      Anything that identifies one installation must be changed on a clone: hostname, MAC address,
+      machine ID and SSH host keys. Configuration and the keys of the people allowed to log in can
+      stay the same.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.6", lesson: 1, section: Working with Virtual Machine Templates }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [template, clone, machine-id, ssh-host-keys]
+
+  - id: 101-102.6-0009
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      On a VM cloned from a template you try to give the clone its own machine ID, but it ends up
+      with the template's ID again, as shown below. What must you do before running
+      `systemd-machine-id-setup` again?
+    exhibit: |
+      # cat /etc/machine-id
+      a3942038ad9d43cba151ebad027d1061
+      # rm /etc/machine-id
+      # systemd-machine-id-setup
+      Initializing machine ID from D-Bus machine ID.
+      # cat /etc/machine-id
+      a3942038ad9d43cba151ebad027d1061
+    options:
+      - id: a
+        text: Run `dbus-uuidgen --ensure` so that D-Bus creates a fresh ID.
+        rationale: Wrong. --ensure only creates an ID when none exists; /var/lib/dbus/machine-id already holds a valid one, so nothing changes.
+      - id: b
+        text: Remove `/var/lib/dbus/machine-id` as well.
+        rationale: Correct. It is a regular file holding the template's ID, and systemd-machine-id-setup copies it; with it gone, a random ID is generated.
+      - id: c
+        text: Use `systemd-machine-id-setup --commit` instead.
+        rationale: Wrong. --commit writes an already active transient ID to disk; it never generates a new ID.
+      - id: d
+        text: Reboot, so that systemd generates the ID during boot.
+        rationale: Wrong. /etc/machine-id now holds a valid ID, so systemd keeps it at boot.
+    answer: [b]
+    explanation: >
+      When /etc/machine-id is missing, systemd-machine-id-setup first reuses the D-Bus machine ID
+      from /var/lib/dbus/machine-id if that is a regular file, and only otherwise generates a random
+      one. On a clone, remove both files (or leave /var/lib/dbus/machine-id as a symbolic link to
+      /etc/machine-id) before generating the new ID.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.6", lesson: 1, section: The D-Bus Machine ID }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Scenario rewritten: systemd-machine-id-setup (systemd 255) copies a regular-file /var/lib/dbus/machine-id, so the original exhibit (new ID in /etc, old ID in D-Bus) could not happen. Reproduced with --root in a temp dir." }
+    tags: [machine-id, d-bus, systemd-machine-id-setup, troubleshooting]
+
+  - id: 101-102.6-0010
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      Your servers were cloned from one template and share SSH host keys. On one clone you have
+      deleted `/etc/ssh/ssh_host_*`. Which command, run as root, creates new host keys of every
+      default type in `/etc/ssh`?
+    options:
+      - id: a
+        text: "`ssh-keygen -R web02`"
+        rationale: Wrong. -R removes a host's entries from a known_hosts file on the client side; it creates no keys.
+      - id: b
+        text: "`ssh-keygen -H`"
+        rationale: Wrong. -H hashes the host names in a known_hosts file; it creates no keys.
+      - id: c
+        text: "`ssh-copy-id -i /root/.ssh/id_ed25519.pub root@web02`"
+        rationale: Wrong. This installs a user's public key in authorized_keys on web02; host keys are untouched.
+      - id: d
+        text: "`ssh-keygen -A`"
+        rationale: Correct. -A generates each default host key type (RSA, ECDSA, Ed25519) that does not yet exist, in /etc/ssh.
+    answer: [d]
+    explanation: >
+      ssh-keygen -A creates every missing default host key pair with the standard file names in
+      /etc/ssh. Many distributions also regenerate them when the openssh-server package is
+      reconfigured, or on first boot through cloud-init. Restart sshd afterwards; clients that knew
+      the old key will warn that the host identification changed.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.6", lesson: 1, section: Working with Virtual Machine Templates }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [ssh-host-keys, ssh-keygen, clone]
+
+  # --------------------------------------------------------------------------- practice (CLI)
+
+  - id: 101-102.6-0011
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: Which of these is a Type-2 hypervisor, running as an application on an existing operating system?
+    options:
+      - id: a
+        text: Oracle VM VirtualBox
+        rationale: Correct. VirtualBox is installed on Linux, macOS or Windows and needs that host OS to run.
+      - id: b
+        text: Xen
+        rationale: Wrong. Xen is a Type-1 hypervisor that the machine boots into directly.
+      - id: c
+        text: VMware ESXi
+        rationale: Wrong. ESXi is a bare-metal (Type-1) hypervisor installed directly on the server.
+      - id: d
+        text: LXC
+        rationale: Wrong. LXC is a container technology, not a hypervisor; containers share the host kernel.
+    answer: [a]
+    explanation: >
+      Type-2 (hosted) hypervisors run as software on a normal OS, which manages the hardware.
+      Type-1 (bare-metal) hypervisors manage the hardware themselves.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.6", lesson: 1, section: Virtualization Overview }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [hypervisor, virtualbox, type-2]
+
+  - id: 101-102.6-0012
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: >
+      Your database instance in an IaaS cloud needs an extra 500 GB virtual disk that the guest can
+      partition and format. Which kind of cloud resource do you add?
+    options:
+      - id: a
+        text: A computing instance
+        rationale: Wrong. A computing instance is a virtual machine itself, billed mainly for its CPU time and size.
+      - id: b
+        text: A VPN gateway
+        rationale: Wrong. A VPN gateway links the cloud network to another network; it provides no storage.
+      - id: c
+        text: A block storage volume
+        rationale: Correct. Block storage appears in the guest as a disk device it can partition, format and mount.
+      - id: d
+        text: A public DNS record
+        rationale: Wrong. A DNS record gives a name to an address; it provides no storage.
+    answer: [c]
+    explanation: >
+      IaaS planning covers computing instances (VMs and their CPU time), block storage (virtual disks,
+      priced by size and speed) and networking (subnets, routes, firewalls, DNS, VPN links).
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.6", lesson: 1, section: Deploying Virtual Machines to the Cloud }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [iaas, block-storage]
+
+  - id: 101-102.6-0013
+    type: multi_choice
+    difficulty: 2
+    pool: practice
+    stem: Which **TWO** statements about Linux containers are true?
+    select_count: 2
+    options:
+      - id: a
+        text: Containers rely on kernel features such as cgroups to limit an application's resources.
+        rationale: Correct. cgroups limit memory, CPU and I/O; namespaces provide the isolation.
+      - id: b
+        text: An application container image includes its own Linux kernel.
+        rationale: Wrong. Every container on a host runs on the host's kernel; the image holds only user-space files.
+      - id: c
+        text: Containers only run on CPUs with Intel VT-x or AMD-V enabled.
+        rationale: Wrong. Containers need no CPU virtualization extensions; those are for hardware-assisted VMs.
+      - id: d
+        text: A system container such as LXC can run an init system and several services.
+        rationale: Correct. A system (Linux) container runs a whole distribution's user space, much like a lightweight VM.
+    answer: [a, d]
+    explanation: >
+      An application container (for example, Docker) usually runs one application; a system or Linux
+      container (LXC/LXD, systemd-nspawn) runs a full user space with its own init. Both share the
+      host kernel and are isolated with namespaces and cgroups.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.6", lesson: 1, section: Containers }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [container, cgroups, application-container, linux-container]
+
+  - id: 101-102.6-0014
+    type: fill_in
+    difficulty: 3
+    pool: practice
+    stem: >
+      Type the exact first line a cloud-config user-data file must have so that cloud-init treats it
+      as cloud-config YAML.
+    fill_in:
+      accepted: ["#cloud-config"]
+      match: normalized
+      case_sensitive: true
+    explanation: >
+      cloud-init decides what kind of user data it received from the first line. Cloud-config YAML
+      starts with "#cloud-config", with no space after the hash; the rest of the file is YAML keys
+      such as hostname, users, packages and timezone.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.6", lesson: 1, section: Preconfiguring Cloud Systems }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [cloud-init, cloud-config]
+
+  - id: 101-102.6-0015
+    type: single_choice
+    difficulty: 3
+    pool: practice
+    stem: >
+      A script must find out whether it runs inside a container, and must not report VM-based
+      virtualization. Which `systemd-detect-virt` option does that?
+    options:
+      - id: a
+        text: "`-v`"
+        rationale: Wrong. -v (--vm) does the opposite; it detects only VM virtualization and ignores containers.
+      - id: b
+        text: "`-c`"
+        rationale: Correct. -c (--container) detects only container environments such as docker, lxc or systemd-nspawn.
+      - id: c
+        text: "`-r`"
+        rationale: Wrong. -r (--chroot) checks whether the program runs in a chroot, not in a container.
+      - id: d
+        text: "`--list`"
+        rationale: Wrong. --list prints every virtualization type systemd knows about; it detects nothing.
+    answer: [b]
+    explanation: >
+      systemd-detect-virt prints the detected technology (for example kvm, xen, docker, lxc) or
+      "none". -c limits it to containers, -v to VMs, and -q suppresses output so scripts can test the
+      exit status.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.6", lesson: 1, section: Containers }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [systemd-detect-virt, container]
