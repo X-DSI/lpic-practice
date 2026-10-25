@@ -7,8 +7,8 @@ later, LPIC-2 (201, 202) exams.
 - **Browser mock exams** — 10 timed mock exams per exam (60 questions, 90 minutes),
   graded from easiest (mock 1) to hardest (mock 10), with per-objective results.
 
-> Status: **early**. The shared engine (`engine/`) loads, grades and scores the question bank;
-> the terminal and browser interfaces are not built yet.
+> Status: **early**. The shared engine (`engine/`) loads, grades and scores the question bank,
+> and `lpic practice` drills it in the terminal. Browser mock exams are not built yet.
 
 ## Repository layout
 
@@ -31,7 +31,7 @@ lpic-practice/
 │   └── difficulty-rubric.md
 ├── engine/              # Python core: loading, matching, scoring, selection, build, mock assembly
 ├── tests/               # pytest suite with synthetic fixture banks
-├── cli/                 # (planned) Textual terminal practice
+├── cli/                 # Textual terminal practice (the `lpic` command)
 └── web/                 # (planned) FastAPI + Jinja + htmx mock exams
 ```
 
@@ -56,6 +56,17 @@ python -m engine.assemble 101       # assemble content/101/mocks/mock-01…10.ya
 pytest                              # run the tests
 ruff check . && ruff format --check .
 ```
+
+## Practising
+
+```bash
+lpic practice                       # drill by objective, a weighted mix, or weak areas
+lpic flags export > flags.yaml      # questions you flagged while studying, for the planner
+```
+
+Results and flags are kept in `~/.local/share/lpic-practice/results.sqlite` (or under
+`$XDG_DATA_HOME`); set `LPIC_DB` to use another file. Practice uses only practice questions, never
+the holdout pool reserved for mock exams.
 
 The build output is one JSON file per exam; its layout is documented in `engine/build.py`.
 

@@ -1,7 +1,7 @@
 ---
 title: Terminal practice app — drills, results storage, weak areas and question flagging
-status: open
-assignee: agent:any
+status: done
+assignee: X-DSI-agent
 base_sha: ee19572
 adrs:
   - 2026-10-22-technology-stack.md
@@ -9,7 +9,7 @@ adrs:
   - proposed/2026-10-24-lpi-style-scoring.md
   - proposed/2026-10-25-question-generation-workflow.md
 plan_pr: 7
-impl_pr: null
+impl_pr: 9
 review: auto
 ---
 
@@ -88,3 +88,69 @@ results anywhere, any change to how questions are written.
 ## Attached content
 None. The real practice pool is small for now (5 questions for 102.3); the topic 101 batch is being
 written in parallel.
+
+## Outcome
+**Status:** done  
+**Commits:** 36bb729..48fe9fc (plus this Outcome) · **PR:** #9 ·
+**CI run:** [https://github.com/X-DSI/lpic-practice/actions/runs/40171913544](https://github.com/X-DSI/lpic-practice/actions/runs/40171913544)
+
+Drift check: `git diff ee19572..origin/main` shows only planning PR #7 (this handoff, the
+engine-fixes-and-mock-assembler handoff, `docs/STATUS.md` and a changelog fragment). No engine
+code, schema or ADR changed, so the plan applies as written. `main` did not move while this was
+being implemented, so no merge was needed.
+
+### Verified acceptance criteria
+- [x] All tests pass, lint and format clean — `Lint and test engine` job in the CI run above:
+      `ruff check .`, `ruff format --check .`, 148 passed on Python 3.12
+- [x] `pip install -e ".[dev]"` provides the `lpic` command — the job installs the package, then
+      `tests/test_cli_main.py` runs the installed `lpic --help` and `lpic flags export`
+- [x] No holdout or retired question can be served in any mode — `tests/test_practice.py`: every
+      mode, 20 seeds each, over a bank where every objective also has holdout and retired questions
+- [x] Mixed mode draws in proportion to weights, and weak-areas mode prefers the lowest-accuracy and
+      unattempted objectives — `tests/test_practice.py`
+- [x] Answers are stored and survive a restart; `LPIC_DB` overrides the path — `tests/test_store.py`
+- [x] A flag with an over-long note or a URL is rejected; a valid flag appears in
+      `lpic flags export` output — `tests/test_store.py`
+- [x] A full session (answer each type, see feedback, flag one, reach the summary) works in the
+      Textual app — `tests/test_cli_app.py` (Textual `run_test` pilot), including a refused flag
+      with a link and a saved one
+
+### Unverified (manual) criteria
+- [x] The database layout is recorded as a Proposed ADR —
+      `docs/adr/proposed/2026-10-25-results-database.md`
+
+### Not met
+- None.
+
+### Deviations
+- **PR opened from the maintainer's account.** This session's `gh` and SSH key belong to X-DSI, not
+  `X-DSI-agent` (PROTOCOL §2). The maintainer chose to open the PR that way; merging needs the
+  ruleset bypass, since nobody can approve their own PR. The branch pushes also came from X-DSI.
+- Session logic is a new engine module, `engine/practice.py` (selection per mode, grading and
+  storage through `PracticeSession`), so it is testable without the UI. No existing engine
+  function changed.
+- `lpic practice` validates the content before starting and exits with a message if it is invalid,
+  because the loader assumes valid files.
+
+### Decisions within "Implementer may decide"
+- **Textual is a main dependency** (`textual>=8.0`), so `pip install -e ".[dev]"` gives a working
+  `lpic`.
+- **Mixed mode** apportions questions with Sainte-Laguë over the objectives that have practice
+  questions: when the count equals the total weight, each objective gets exactly its weight.
+- **Weak areas:** objectives never attempted, or below 80 % all-time accuracy, are weak; a drill uses
+  the 3 weakest (never attempted first, then lowest accuracy), spread evenly, topped up from the next
+  weakest if they run out. If nothing is below 80 %, the 3 lowest are used.
+- **Choose-N questions** can only be submitted with exactly N options chosen; the app says how many.
+- **Esc** ends a session early and shows the summary of what was answered.
+- **URL rule for flag notes:** a scheme (`https://`, `ftp://`, …) or a `www.` host is refused;
+  a bare domain such as `example.org` is allowed.
+- **Keys:** Ctrl+S submit, `n` next, `f` flag, Esc end session, `r` new session, `q` quit.
+
+### New decisions
+- `docs/adr/proposed/2026-10-25-results-database.md` — the results database layout.
+
+### Questions for the planner
+- Accept the results-database ADR, or adjust it before the web UI builds on it.
+- Is the 80 % / 3-objective weak-area rule what you want, or should it be tuned once real results
+  exist?
+- Should bare domains in flag notes also be refused?
