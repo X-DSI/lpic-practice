@@ -21,14 +21,10 @@
 
 ## Open handoffs
 
-Runs in parallel with the practice-CLI handoff, which is done.
-
-| Handoff | Status | Assignee |
-|---|---|---|
-| [Engine fixes, pass2-ready mocks, and the mock assembler](handoff/2026-10-25-engine-fixes-and-mock-assembler.md) | done (PR #8) | X-DSI-agent |
-| [Terminal practice app](handoff/2026-10-25-practice-cli.md) | open | agent:any |
+None.
 
 Done: [Content build and engine core](handoff/2026-10-23-build-and-engine-core.md) (PR #5),
+[Engine fixes, pass2-ready mocks, and the mock assembler](handoff/2026-10-25-engine-fixes-and-mock-assembler.md) (PR #8),
 [Terminal practice app](handoff/2026-10-25-practice-cli.md) (PR #9; its Outcome has questions for the planner).
 
 ## Proposed ADRs awaiting acceptance
@@ -43,5 +39,5 @@ Done: [Content build and engine core](handoff/2026-10-23-build-and-engine-core.m
 
 | Exam | Objectives done | Questions | Target |
 |---|---|---|---|
-| 101 | 102.3; topic 101 (101.1–101.3, in review) | 135 (90 holdout, 45 practice) | 900 (600 holdout, 300 practice) |
+| 101 | topic 101 (101.1–101.3), 102.3; topic 102 in progress | 135 (90 holdout, 45 practice) | 900 (600 holdout, 300 practice) |
 | 102 | — | 0 | 900 |
