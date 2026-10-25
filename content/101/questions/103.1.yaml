@@ -1,0 +1,1915 @@
+# 103.1 Work on the command line — weight 4 → 40 holdout + 20 practice.
+# Original questions written from LPI Learning Materials 101-500, objective 103.1, lessons 1 and 2.
+schema_version: 1
+exam: "101"
+objective: "103.1"
+questions:
+  # ---------------------------------------------------------------- holdout (mock exams only)
+
+  - id: 101-103.1-0001
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: >
+      After changing directories several times, you want to confirm which directory a new file
+      would be created in if you gave no path. Which command tells you?
+    options:
+      - id: a
+        text: "`uname`"
+        rationale: Wrong. uname reports system information such as the kernel name, not your location.
+      - id: b
+        text: "`pwd`"
+        rationale: Correct. pwd prints the absolute path of the current working directory.
+      - id: c
+        text: "`which`"
+        rationale: Wrong. which looks up the path of a command in PATH; it says nothing about where you are.
+      - id: d
+        text: "`type`"
+        rationale: Wrong. type describes how a command name would be interpreted, not the current directory.
+    answer: [b]
+    explanation: >
+      pwd ("print working directory") shows the directory the shell is in. Relative paths, including a
+      bare file name given to touch, are resolved against it.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 1, section: Getting System Information }
+    verify:
+      command: >-
+        cd /usr/share && pwd
+      expect: { exit_code: 0, stdout_contains: "/usr/share" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [pwd]
+
+  - id: 101-103.1-0002
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: What does `uname` print when you run it with no options at all?
+    options:
+      - id: a
+        text: The network host name of the machine
+        rationale: Wrong. That is uname -n.
+      - id: b
+        text: The kernel release, such as `6.8.0-45-generic`
+        rationale: Wrong. That is uname -r.
+      - id: c
+        text: The kernel name, such as `Linux`
+        rationale: Correct. With no option, uname behaves as uname -s and prints the kernel name.
+      - id: d
+        text: Every field it knows, as with `-a`
+        rationale: Wrong. uname only prints everything when given -a (--all).
+    answer: [c]
+    explanation: >
+      Without options uname is the same as uname -s, the kernel name. Other options select other fields
+      (-r release, -n host name, -m machine hardware), and -a prints them all on one line.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 1, section: Getting Command Information }
+    verify:
+      command: >-
+        uname
+      expect: { exit_code: 0, stdout_contains: "Linux" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [uname]
+
+  - id: 101-103.1-0003
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: In which file does Bash keep a user's saved command history by default?
+    options:
+      - id: a
+        text: "`/etc/bash.bashrc`"
+        rationale: Wrong. This is a system-wide start-up file for interactive shells on Debian-based systems.
+      - id: b
+        text: "`~/.bashrc`"
+        rationale: Wrong. This is the user's start-up file for interactive shells, not the history store.
+      - id: c
+        text: "`/var/log/bash.log`"
+        rationale: Wrong. Bash does not log commands to a file under /var/log.
+      - id: d
+        text: "`~/.bash_history`"
+        rationale: Correct. HISTFILE defaults to .bash_history in the user's home directory.
+    answer: [d]
+    explanation: >
+      Bash saves the history list to ~/.bash_history (the default value of HISTFILE). The leading dot
+      makes it a hidden file, so plain ls does not show it; ls -a does.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 1, section: Using Your Command History }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [history, .bash_history]
+
+  - id: 101-103.1-0004
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: Which command removes a variable from the current shell completely?
+    options:
+      - id: a
+        text: "`unset`"
+        rationale: Correct. unset NAME deletes the variable, so it no longer has any value.
+      - id: b
+        text: "`env`"
+        rationale: Wrong. env lists the environment or runs a program with a modified environment; it does not change the shell.
+      - id: c
+        text: "`set`"
+        rationale: Wrong. Without arguments set lists variables and functions; it does not delete them.
+      - id: d
+        text: "`export`"
+        rationale: Wrong. export marks a variable for passing to child processes.
+    answer: [a]
+    explanation: >
+      unset followed by the variable name (no $) removes the variable. After that, $NAME expands to an
+      empty string and child processes no longer receive it.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 2, section: Deleting Environment Variables }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [unset]
+
+  - id: 101-103.1-0005
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: >
+      You cannot remember the name of a tool, but you know its manual page mentions "partition" in its
+      short description. Which command searches manual page names and descriptions for a keyword?
+    options:
+      - id: a
+        text: "`which partition`"
+        rationale: Wrong. which only looks for an executable named exactly partition in PATH.
+      - id: b
+        text: "`apropos partition`"
+        rationale: Correct. apropos searches the names and one-line descriptions of the installed manual pages.
+      - id: c
+        text: "`type partition`"
+        rationale: Wrong. type only says how the shell would interpret a command named partition.
+      - id: d
+        text: "`man partition`"
+        rationale: Wrong. man needs the exact name of a page; it does not search descriptions.
+    answer: [b]
+    explanation: >
+      apropos (also available as man -k) matches a keyword against manual page names and their short
+      descriptions and lists every match with its section number.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 1, section: Getting Command Information }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [apropos, man]
+
+  - id: 101-103.1-0006
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: >
+      Which variable holds the colon-separated list of directories the shell searches when you type a
+      command name without a path?
+    options:
+      - id: a
+        text: "`HOME`"
+        rationale: Wrong. HOME is the user's home directory.
+      - id: b
+        text: "`PWD`"
+        rationale: Wrong. PWD is the current working directory.
+      - id: c
+        text: "`SHELL`"
+        rationale: Wrong. SHELL names the user's login shell program.
+      - id: d
+        text: "`PATH`"
+        rationale: Correct. The shell looks for commands in the directories listed in PATH, in order.
+    answer: [d]
+    explanation: >
+      PATH lists directories separated by colons. A command typed without a slash is looked for in each
+      of them in turn; the first match runs.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 2, section: Finding Your Environment Variables }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [PATH, environment]
+
+  - id: 101-103.1-0007
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: Which command prints the value of the variable `EDITOR`?
+    options:
+      - id: a
+        text: "`echo EDITOR`"
+        rationale: Wrong. Without the $ the shell does not expand anything; echo prints the word EDITOR.
+      - id: b
+        text: "`env EDITOR`"
+        rationale: Wrong. env treats EDITOR as the name of a program to run, and fails because there is none.
+      - id: c
+        text: "`echo $EDITOR`"
+        rationale: Correct. The $ makes the shell replace the name with the variable's value before echo runs.
+      - id: d
+        text: "`set EDITOR`"
+        rationale: Wrong. This sets the positional parameter $1 to the word EDITOR and prints nothing.
+    answer: [c]
+    explanation: >
+      Prefixing a variable name with $ tells the shell to expand it. echo then simply prints the
+      resulting value.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 2, section: Finding Your Environment Variables }
+    verify:
+      command: >-
+        bash -c 'EDITOR=nano; echo $EDITOR'
+      expect: { exit_code: 0, stdout_contains: "nano" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [echo, variables]
+
+  - id: 101-103.1-0008
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: Which command tells you whether `cd` is built into Bash or is a program on disk?
+    options:
+      - id: a
+        text: "`which cd`"
+        rationale: Wrong. which only searches PATH for executable files, so it cannot report that cd is a builtin.
+      - id: b
+        text: "`hash cd`"
+        rationale: Wrong. hash manages the remembered locations of external programs; it does not describe a command.
+      - id: c
+        text: "`type cd`"
+        rationale: Correct. type reports whether a name is a builtin, alias, function, keyword or file, and prints "cd is a shell builtin".
+      - id: d
+        text: "`apropos cd`"
+        rationale: Wrong. apropos searches manual page descriptions; it knows nothing about Bash builtins.
+    answer: [c]
+    explanation: >
+      type is itself a Bash builtin and knows everything the shell does: aliases, functions, keywords,
+      builtins and files found in PATH. For cd it reports "cd is a shell builtin".
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 1, section: Getting Command Information }
+    verify:
+      command: >-
+        bash -c 'type cd'
+      expect: { exit_code: 0, stdout_contains: "cd is a shell builtin" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [type, builtin]
+
+  - id: 101-103.1-0009
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: Which line correctly creates a shell variable `project` with the value `alpha`?
+    options:
+      - id: a
+        text: "`project=alpha`"
+        rationale: Correct. An assignment is NAME=value with no spaces around the equals sign.
+      - id: b
+        text: "`project = alpha`"
+        rationale: Wrong. With spaces, Bash tries to run a command called project with the arguments = and alpha.
+      - id: c
+        text: "`$project=alpha`"
+        rationale: Wrong. The $ expands the (empty) variable first, and the result is run as a command, not an assignment.
+      - id: d
+        text: "`set project=alpha`"
+        rationale: Wrong. This sets the positional parameter $1 to the string project=alpha.
+    answer: [a]
+    explanation: >
+      Variable assignment in Bash is written NAME=value with nothing around the =. The $ is used only
+      when reading the value back.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 2, section: Creating New Environment Variables }
+    verify:
+      command: >-
+        bash -c 'project=alpha; echo "[$project]"'
+      expect: { exit_code: 0, stdout_contains: "[alpha]" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [variables]
+
+  - id: 101-103.1-0010
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      You set `LOGLEVEL=debug` in your shell. A program you start next from the same shell has to see
+      that value. What do you run first?
+    options:
+      - id: a
+        text: "`set LOGLEVEL`"
+        rationale: Wrong. This replaces the positional parameters; it does not pass anything to programs.
+      - id: b
+        text: "`echo $LOGLEVEL`"
+        rationale: Wrong. This only prints the value.
+      - id: c
+        text: "`unset LOGLEVEL`"
+        rationale: Wrong. This deletes the variable, so no program can see it.
+      - id: d
+        text: "`export LOGLEVEL`"
+        rationale: Correct. export puts the variable in the environment that is copied to child processes.
+    answer: [d]
+    explanation: >
+      A plain assignment creates a shell variable that only the current shell sees. export marks it for
+      the environment, and every process started afterwards from that shell receives a copy.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 2, section: Creating New Environment Variables }
+    verify:
+      command: >-
+        bash -c 'LOGLEVEL=debug; export LOGLEVEL; bash -c "echo [\$LOGLEVEL]"'
+      expect: { exit_code: 0, stdout_contains: "[debug]" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [export]
+
+  - id: 101-103.1-0011
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      Which command shows the 15 most recent entries of the current shell's history list, including
+      commands typed in this session?
+    options:
+      - id: a
+        text: "`tail -n 15 ~/.bash_history`"
+        rationale: Wrong. By default the current session's commands are only written to the file when the shell exits.
+      - id: b
+        text: "`history 15`"
+        rationale: Correct. A numeric argument makes history list only that many of the most recent entries.
+      - id: c
+        text: "`history -c 15`"
+        rationale: Wrong. -c clears the history list instead of showing it.
+      - id: d
+        text: "`head -n 15 ~/.bash_history`"
+        rationale: Wrong. This shows the oldest saved entries, and misses this session's commands.
+    answer: [b]
+    explanation: >
+      history N prints the last N entries of the in-memory history list, newest last. The history file is
+      only updated when the shell exits (or on history -a / -w), so reading it misses recent commands.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 1, section: Using Your Command History }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [history]
+
+  - id: 101-103.1-0012
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      `backup.sh` is an executable script in your current directory, which is not listed in `PATH`.
+      Typing `backup.sh` gives "command not found". Which command runs the script?
+    options:
+      - id: a
+        text: "`./backup.sh`"
+        rationale: Correct. A name containing a slash is run from that path directly, without a PATH search.
+      - id: b
+        text: "`export backup.sh`"
+        rationale: Wrong. export works on variable names, and backup.sh is not a valid one.
+      - id: c
+        text: "`which backup.sh`"
+        rationale: Wrong. which searches PATH too, so it finds nothing, and it never runs the file anyway.
+      - id: d
+        text: "`type backup.sh`"
+        rationale: Wrong. type only describes how a name would be interpreted; here it reports that it is not found.
+    answer: [a]
+    explanation: >
+      The shell only searches PATH for names without a slash. Giving a relative path such as ./backup.sh
+      or an absolute path runs a program that is not in PATH.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 2, section: Finding Your Environment Variables }
+    verify:
+      command: >-
+        cd /tmp && printf '#!/bin/sh\necho ran-ok\n' > backup.sh && chmod +x backup.sh && ./backup.sh
+      expect: { exit_code: 0, stdout_contains: "ran-ok" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [PATH, invoking-commands]
+
+  - id: 101-103.1-0013
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      A script needs only the absolute path of the `rsync` executable that `PATH` would find, with no
+      other words in the output. Which command gives exactly that?
+    options:
+      - id: a
+        text: "`type rsync`"
+        rationale: Wrong. type prints a sentence such as "rsync is /usr/bin/rsync", not just the path.
+      - id: b
+        text: "`apropos rsync`"
+        rationale: Wrong. apropos lists manual pages whose names or descriptions match.
+      - id: c
+        text: "`which rsync`"
+        rationale: Correct. which prints just the full path of the first matching executable in PATH.
+      - id: d
+        text: "`man -w rsync`"
+        rationale: Wrong. man -w prints the location of the manual page file, not the program.
+    answer: [c]
+    explanation: >
+      which searches PATH and prints only the full path of the executable it finds, which makes its output
+      easy to use in scripts. type gives richer information, but phrased as a sentence.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 1, section: Getting Command Information }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [which]
+
+  - id: 101-103.1-0014
+    type: multi_choice
+    difficulty: 2
+    pool: holdout
+    stem: Which **TWO** commands create a single file named `q3 report.txt` (with the space)?
+    select_count: 2
+    options:
+      - id: a
+        text: "`touch \"q3 report.txt\"`"
+        rationale: Correct. Inside double quotes the space is part of the word, so touch gets one argument.
+      - id: b
+        text: "`touch q3 report.txt`"
+        rationale: Wrong. The unquoted space splits the name, so two files called q3 and report.txt are created.
+      - id: c
+        text: "`touch q3/ report.txt`"
+        rationale: Wrong. A forward slash is a path separator, not an escape; this names a directory q3/ and a file report.txt.
+      - id: d
+        text: "`touch q3\\ report.txt`"
+        rationale: Correct. A backslash makes the following space literal, so the name stays one argument.
+    answer: [a, d]
+    explanation: >
+      Bash splits words on unquoted spaces. Double quotes, single quotes or a backslash before the space
+      all stop that split, so the whole name reaches touch as one argument.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 2, section: Quoting to Escape Special Characters }
+    verify:
+      command: >-
+        cd "$(mktemp -d)" && touch "q3 report.txt" && touch q3\ report.txt && ls | wc -l
+      expect: { exit_code: 0, stdout_regex: "^1\\s*$" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [quoting, escaping]
+
+  - id: 101-103.1-0015
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: Which command displays Bash's own built-in documentation for the `cd` builtin?
+    options:
+      - id: a
+        text: "`which cd`"
+        rationale: Wrong. which looks for an executable in PATH and prints nothing for cd.
+      - id: b
+        text: "`help cd`"
+        rationale: Correct. help prints Bash's documentation for its builtin commands.
+      - id: c
+        text: "`type -a cd`"
+        rationale: Wrong. type -a lists every way the name could be interpreted, without any usage text.
+      - id: d
+        text: "`apropos cd`"
+        rationale: Wrong. apropos searches manual page descriptions; it does not show builtin help.
+    answer: [b]
+    explanation: >
+      Builtins such as cd, export or history are part of Bash, so they often have no manual page of their
+      own. The help builtin prints their synopsis and options.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 1, section: Getting Command Information }
+    verify:
+      command: >-
+        bash -c 'help cd'
+      expect: { exit_code: 0, stdout_contains: "Change the shell working directory" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [help, builtin]
+
+  - id: 101-103.1-0016
+    type: fill_in
+    difficulty: 2
+    pool: holdout
+    stem: >
+      Type the complete command, including its argument, that deletes the variable `TMPDIR` from your
+      current shell.
+    fill_in:
+      accepted: ['unset(\s+-v)?\s+TMPDIR']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      unset TMPDIR removes the variable (unset -v TMPDIR says explicitly that a variable, not a
+      function, is meant). The name is given without a $; with a $ the shell would expand it first and
+      unset whatever name the value happens to be.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 2, section: Deleting Environment Variables }
+    verify:
+      command: >-
+        bash -c 'TMPDIR=/x; unset TMPDIR; echo "[${TMPDIR-unset}]"'
+      expect: { exit_code: 0, stdout_contains: "[unset]" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [unset]
+
+  - id: 101-103.1-0017
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      Which command prints only the release of the running kernel, for example
+      `6.8.0-45-generic`?
+    options:
+      - id: a
+        text: "`uname -s`"
+        rationale: Wrong. -s prints the kernel name, such as Linux.
+      - id: b
+        text: "`uname -m`"
+        rationale: Wrong. -m prints the machine hardware name, such as x86_64.
+      - id: c
+        text: "`uname -v`"
+        rationale: Wrong. -v prints the kernel version string (build number and date), not the release.
+      - id: d
+        text: "`uname -r`"
+        rationale: Correct. -r (--kernel-release) prints the kernel release.
+    answer: [d]
+    explanation: >
+      uname -r gives the release, the string used for /lib/modules/<release>. uname -v is easy to confuse
+      with it, but it prints the build string such as "#45-Ubuntu SMP PREEMPT_DYNAMIC ...".
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 1, section: Getting Command Information }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [uname]
+
+  - id: 101-103.1-0018
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: What does the second command in the exhibit print?
+    exhibit: |
+      $ price=40
+      $ echo "Total: $price" 'Total: $price'
+    options:
+      - id: a
+        text: "`Total: 40 Total: 40`"
+        rationale: Wrong. Single quotes stop variable expansion, so the second $price stays literal.
+      - id: b
+        text: "`Total: 40 Total: $price`"
+        rationale: Correct. Double quotes still expand $price; single quotes keep every character literal.
+      - id: c
+        text: "`Total: $price Total: 40`"
+        rationale: Wrong. This swaps the behaviour of the two kinds of quotes.
+      - id: d
+        text: "`Total: $price Total: $price`"
+        rationale: Wrong. Double quotes do not stop $ expansion.
+    answer: [b]
+    explanation: >
+      Single quotes make everything between them literal. Double quotes protect spaces and most special
+      characters but still allow $ (variable and command substitution), backticks and backslash escapes.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 2, section: Quoting to Escape Special Characters }
+    verify:
+      command: >-
+        bash -c 'price=40; echo "Total: $price" '"'"'Total: $price'"'"''
+      expect: { exit_code: 0, stdout_contains: "Total: 40 Total: $price" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [quoting]
+
+  - id: 101-103.1-0019
+    type: multi_choice
+    difficulty: 3
+    pool: holdout
+    stem: Which **TWO** characters keep their special meaning inside double quotes in Bash?
+    select_count: 2
+    options:
+      - id: a
+        text: "`*`"
+        rationale: Wrong. Filename expansion does not happen inside double quotes; "*" is a literal asterisk.
+      - id: b
+        text: "`$`"
+        rationale: Correct. Variable expansion and $( ) command substitution still work inside double quotes.
+      - id: c
+        text: "`` ` `` (backtick)"
+        rationale: Correct. Backtick command substitution still works inside double quotes.
+      - id: d
+        text: "`~`"
+        rationale: Wrong. Tilde expansion does not happen inside double quotes; "~" stays a literal tilde.
+    answer: [b, c]
+    explanation: >
+      Inside double quotes, $, the backtick and the backslash stay special (and ! when interactive history
+      expansion is on). Globbing characters, ~, spaces and redirection symbols are taken literally.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 2, section: Quoting to Escape Special Characters }
+    verify:
+      command: >-
+        bash -c 'v=1; echo "~ * $v `echo bt`"'
+      expect: { exit_code: 0, stdout_contains: "~ * 1 bt" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [quoting]
+
+  - id: 101-103.1-0020
+    type: fill_in
+    difficulty: 3
+    pool: holdout
+    stem: >
+      Type the `uname` command, with its option, that prints every piece of information uname can
+      report (kernel name, host name, release, version, hardware and operating system) on one line.
+    fill_in:
+      accepted: ['(((/usr)?/bin/)?uname\s+)?(-a|--all)']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      uname -a (long form --all) prints all fields in a fixed order, leaving out the processor and
+      hardware platform fields when they are unknown.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 1, section: Getting System Information }
+    verify:
+      command: >-
+        uname -a
+      expect: { exit_code: 0, stdout_contains: "Linux" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [uname]
+
+  - id: 101-103.1-0021
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: In the exhibit, what does the word "hashed" tell you about `uname`?
+    exhibit: |
+      $ type uname
+      uname is hashed (/usr/bin/uname)
+    options:
+      - id: a
+        text: Bash found it via PATH earlier in this shell and remembered the path
+        rationale: Correct. Bash keeps a hash table of programs it has located, so it can skip the PATH search next time.
+      - id: b
+        text: It is a shell builtin, with a cached copy also kept in /usr/bin
+        rationale: Wrong. A builtin is reported as "a shell builtin"; uname here is an external program.
+      - id: c
+        text: Its checksum was verified against the package database when you logged in
+        rationale: Wrong. "hashed" refers to Bash's lookup table, not to a file checksum.
+      - id: d
+        text: It is an alias that the shell expands to /usr/bin/uname
+        rationale: Wrong. Aliases are reported by type as "aliased to ...".
+    answer: [a]
+    explanation: >
+      When Bash finds an external command through PATH, it records the location in its hash table. type
+      then reports the command as hashed. A new shell starts with an empty table; hash lists it and
+      hash -r clears it.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 1, section: Getting Command Information }
+    verify:
+      command: >-
+        bash -c 'uname >/dev/null; type uname'
+      expect: { exit_code: 0, stdout_contains: "uname is hashed" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Option lengths rebalanced; the correct option was the longest." }
+    tags: [type, hash]
+
+  - id: 101-103.1-0022
+    type: fill_in
+    difficulty: 3
+    pool: holdout
+    stem: >
+      Type the `man` option that makes man search manual page names and short descriptions for a
+      keyword, exactly as `apropos` does.
+    fill_in:
+      accepted: ['(((/usr)?/bin/)?man\s+)?(-k|--apropos)(\s+(?!-)\S+)*']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      man -k KEYWORD (long form --apropos) is the same search as apropos KEYWORD. Its sibling man -f
+      matches whole page names only, like whatis.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 1, section: Getting Command Information }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [man, apropos]
+
+  - id: 101-103.1-0023
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: What does the last command in the exhibit print?
+    exhibit: |
+      $ color=red
+      $ bash
+      $ echo "[$color]"
+    options:
+      - id: a
+        text: "`[red]`"
+        rationale: Wrong. color was never exported, so the new shell does not inherit it.
+      - id: b
+        text: "`red`"
+        rationale: Wrong. The brackets are literal text and would be printed in any case.
+      - id: c
+        text: "An error saying that `color` is not set"
+        rationale: Wrong. By default Bash expands an unset variable to an empty string without complaint.
+      - id: d
+        text: "`[]`"
+        rationale: Correct. The child shell has no variable named color, so it expands to nothing.
+    answer: [d]
+    explanation: >
+      Typing bash starts a child shell. Only exported variables are copied into a child's environment, so
+      the unexported color does not exist there. Running exit returns to the parent, where it still does.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 2, section: Creating New Environment Variables }
+    verify:
+      command: >-
+        bash -c 'color=red; bash -c "echo [\$color]"'
+      expect: { exit_code: 0, stdout_contains: "[]" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [variables, export, subshell]
+
+  - id: 101-103.1-0024
+    type: multi_choice
+    difficulty: 3
+    pool: holdout
+    stem: Which **TWO** commands show the location of the program that runs when you type `uname`?
+    select_count: 2
+    options:
+      - id: a
+        text: "`which uname`"
+        rationale: Correct. which prints the full path of the uname executable found in PATH.
+      - id: b
+        text: "`apropos uname`"
+        rationale: Wrong. apropos lists matching manual pages and their sections, not program locations.
+      - id: c
+        text: "`type uname`"
+        rationale: Correct. type reports "uname is /usr/bin/uname" (or "is hashed" with the path).
+      - id: d
+        text: "`uname -p`"
+        rationale: Wrong. -p prints the processor type, not where uname is installed.
+    answer: [a, c]
+    explanation: >
+      which prints only the path; type gives the same path as part of a sentence and also knows about
+      builtins, aliases and functions.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 1, section: Getting Command Information }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [which, type]
+
+  - id: 101-103.1-0025
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      You want `date` to run once with `TZ=UTC`, leaving the variables of your current shell exactly as
+      they were. Which command line does that?
+    options:
+      - id: a
+        text: "`export TZ=UTC; date`"
+        rationale: Wrong. date sees UTC, but TZ stays set and exported in your shell afterwards.
+      - id: b
+        text: "`TZ=UTC date`"
+        rationale: Correct. An assignment placed before a command goes only into that command's environment.
+      - id: c
+        text: "`TZ=UTC; date`"
+        rationale: Wrong. The semicolon makes this a separate assignment that stays in the shell; date only sees it if TZ was already exported.
+      - id: d
+        text: "`set TZ=UTC; date`"
+        rationale: Wrong. set makes the string TZ=UTC the positional parameter $1; it sets no variable.
+    answer: [b]
+    explanation: >
+      NAME=value command puts the variable in the environment of that one command only. env NAME=value
+      command does the same through the env program. Either way the shell itself is unchanged.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 2, section: Finding Your Environment Variables }
+    verify:
+      command: >-
+        bash -c 'unset TZ; TZ=UTC date +%Z; echo "[${TZ-none}]"'
+      expect: { exit_code: 0, stdout_contains: "[none]" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [env, variables]
+
+  - id: 101-103.1-0026
+    type: fill_in
+    difficulty: 3
+    pool: holdout
+    stem: >
+      Type the Bash history expansion that runs the previous command again, exactly as it was typed.
+    fill_in:
+      accepted: ['!!|!-1']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      !! refers to the previous history entry (it is shorthand for !-1). Bash prints the expanded command
+      and runs it. A common use is sudo !! to repeat a command that needed root.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 1, section: Using Your Command History }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [history, history-expansion]
+
+  - id: 101-103.1-0027
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      There is a `passwd` command and a `passwd` file. Which command opens the manual page that describes
+      the format of the `/etc/passwd` file?
+    options:
+      - id: a
+        text: "`man 5 passwd`"
+        rationale: Correct. Section 5 of the manual holds file formats.
+      - id: b
+        text: "`man passwd`"
+        rationale: Wrong. Without a section, man shows the first match in section order, which is the passwd(1) command.
+      - id: c
+        text: "`man -k passwd`"
+        rationale: Wrong. This searches for pages mentioning passwd and lists them; it does not open one.
+      - id: d
+        text: "`man 8 passwd`"
+        rationale: Wrong. Section 8 is for system administration commands, not file formats.
+    answer: [a]
+    explanation: >
+      Manual pages are grouped in numbered sections: 1 user commands, 5 file formats, 8 administration
+      commands, among others. Giving the section number picks the right page when a name exists in
+      several sections.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 1, section: Getting Command Information }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [man, man-sections]
+
+  - id: 101-103.1-0028
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: What does the last command in the exhibit print?
+    exhibit: |
+      $ a=1
+      $ export b=2
+      $ bash -c 'echo "[$a][$b]"'
+    options:
+      - id: a
+        text: "`[1][2]`"
+        rationale: Wrong. a was never exported, so the child bash cannot see it.
+      - id: b
+        text: "`[1][]`"
+        rationale: Wrong. This reverses which variable was exported.
+      - id: c
+        text: "`[][2]`"
+        rationale: Correct. Only the exported b reaches the child shell; a expands to nothing there.
+      - id: d
+        text: "`[][]`"
+        rationale: Wrong. export b=2 puts b into the environment of every later child process.
+    answer: [c]
+    explanation: >
+      The single quotes stop the current shell from expanding $a and $b, so the child bash expands them.
+      The child only has the variables it received in its environment, which here means b.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 2, section: Creating New Environment Variables }
+    verify:
+      command: >-
+        bash -c 'a=1; export b=2; bash -c '"'"'echo "[$a][$b]"'"'"''
+      expect: { exit_code: 0, stdout_contains: "[][2]" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [export, quoting, subshell]
+
+  - id: 101-103.1-0029
+    type: multi_choice
+    difficulty: 4
+    pool: holdout
+    stem: Which **TWO** statements are consistent with the exhibit?
+    exhibit: |
+      $ set | grep '^mydir='
+      mydir=/srv/data
+      $ env | grep '^mydir='
+      $
+    select_count: 2
+    options:
+      - id: a
+        text: mydir is passed to every program started from this shell
+        rationale: Wrong. env shows the environment that programs receive, and mydir is not in it.
+      - id: b
+        text: mydir is a shell variable that has not been exported
+        rationale: Correct. set lists all shell variables; env lists only the exported environment.
+      - id: c
+        text: env leaves out variables whose names are in lower case
+        rationale: Wrong. env lists every exported variable regardless of the case of its name.
+      - id: d
+        text: A child shell started by typing bash would not see mydir
+        rationale: Correct. Unexported variables are not copied into child processes.
+    answer: [b, d]
+    explanation: >
+      set (no arguments) prints all shell variables and functions; env prints only the environment. A
+      variable that set shows but env does not is a local shell variable. export mydir would make it
+      appear in both.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 2, section: Deleting Environment Variables }
+    verify:
+      command: >-
+        bash -c 'mydir=/srv/data; set | grep -c "^mydir="; env | grep -c "^mydir=" || true' | tr -d '\n'
+      expect: { exit_code: 0, stdout_contains: "10" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [set, env]
+
+  - id: 101-103.1-0030
+    type: multi_choice
+    difficulty: 4
+    pool: holdout
+    stem: The exhibit was taken on a system where `/bin` is a symbolic link to `usr/bin`. Which **TWO** statements are true?
+    exhibit: |
+      $ type -a echo
+      echo is a shell builtin
+      echo is /usr/bin/echo
+      echo is /bin/echo
+    select_count: 2
+    options:
+      - id: a
+        text: Typing `echo hi` runs the builtin, not a file on disk
+        rationale: Correct. type -a lists matches in the order Bash would use them, and builtins come before PATH.
+      - id: b
+        text: "`which echo` prints nothing, because echo is a builtin"
+        rationale: Wrong. which only searches PATH, so it prints /usr/bin/echo; it never reports builtins.
+      - id: c
+        text: The two paths show that two separate echo programs are installed
+        rationale: Wrong. With /bin linked to usr/bin, both paths lead to the same file; PATH just contains both directories.
+      - id: d
+        text: Typing `/usr/bin/echo hi` runs the external program instead
+        rationale: Correct. A name containing a slash is run from that path, bypassing builtins and the PATH search.
+    answer: [a, d]
+    explanation: >
+      Bash checks aliases, keywords, functions and builtins before searching PATH. type -a shows every
+      candidate in that order. To force the external program, give its path (or use command -p / env).
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 1, section: Getting Command Information }
+    verify:
+      command: >-
+        bash -c 'type -a echo; which echo'
+      expect: { exit_code: 0, stdout_regex: "(?s)echo is a shell builtin.*\\n/(usr/)?bin/echo\\s*$" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [type, which, builtin]
+
+  - id: 101-103.1-0031
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      You want the shell to search `$HOME/bin` before all the directories already in `PATH`, for this
+      session and the programs it starts. Which command does that?
+    options:
+      - id: a
+        text: "`export PATH=$HOME/bin`"
+        rationale: Wrong. This replaces PATH, so every other directory is lost and most commands stop being found.
+      - id: b
+        text: "`export PATH=\"$HOME/bin:$PATH\"`"
+        rationale: Correct. The new directory goes first, followed by the old value of PATH.
+      - id: c
+        text: "`export PATH='$HOME/bin:$PATH'`"
+        rationale: Wrong. Single quotes stop expansion, so PATH would contain the literal text $HOME/bin:$PATH.
+      - id: d
+        text: "`export $PATH=\"$HOME/bin:$PATH\"`"
+        rationale: Wrong. $PATH on the left is expanded first, so export receives an invalid name instead of PATH.
+    answer: [b]
+    explanation: >
+      To extend PATH, include the old value: NEW:$PATH puts the new directory first, $PATH:NEW puts it
+      last. Double quotes let both variables expand. The change lasts until the shell exits.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 2, section: Finding Your Environment Variables }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [PATH, export, quoting]
+
+  - id: 101-103.1-0032
+    type: multi_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      After `unset PATH`, typing `ls` fails. Which **TWO** command lines still run the `ls` program
+      from the same shell?
+    select_count: 2
+    options:
+      - id: a
+        text: "`/bin/ls`"
+        rationale: Correct. A command given with a path is run directly, without a PATH search.
+      - id: b
+        text: "`which ls`"
+        rationale: Wrong. which is itself an external program, so it cannot be found either, and it would only print a path.
+      - id: c
+        text: "`PATH=/usr/bin:/bin ls`"
+        rationale: Correct. The temporary PATH assignment is used to find ls for this one command.
+      - id: d
+        text: "`export PATH; ls`"
+        rationale: Wrong. Exporting an unset variable gives it no value, so ls is still not found.
+    answer: [a, c]
+    explanation: >
+      Without PATH the shell cannot locate external programs by name. Giving the full path, or a PATH
+      value for a single command, still works. Setting PATH again (or opening a new shell) restores
+      normal behaviour.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 2, section: Finding Your Environment Variables }
+    verify:
+      command: >-
+        bash -c 'unset PATH; /bin/ls -d / && PATH=/usr/bin:/bin ls -d /'
+      expect: { exit_code: 0, stdout_contains: "/" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [PATH, invoking-commands]
+
+  - id: 101-103.1-0033
+    type: fill_in
+    difficulty: 4
+    pool: holdout
+    stem: >
+      Write a single `export` command that adds `/opt/tools/bin` to the **end** of the existing `PATH`
+      and exports the result.
+    fill_in:
+      accepted:
+        - 'export\s+PATH=(?P<q>"?)\$(PATH|\{PATH\}):/opt/tools/bin/?(?P=q)'
+        - 'export\s+PATH\+=(?P<q>"?):/opt/tools/bin/?(?P=q)'
+      match: regex
+      case_sensitive: true
+    explanation: >
+      export PATH=$PATH:/opt/tools/bin keeps the old value and appends the new directory, so it is
+      searched last. Double quotes around the value are fine; single quotes are not, because they stop
+      $PATH from expanding. Bash's += form (export PATH+=:/opt/tools/bin) does the same.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 2, section: Finding Your Environment Variables }
+    verify:
+      command: >-
+        bash -c 'export PATH=$PATH:/opt/tools/bin; bash -c "echo \$PATH"'
+      expect: { exit_code: 0, stdout_regex: ":/opt/tools/bin\\s*$" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [PATH, export]
+
+  - id: 101-103.1-0034
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: The user's home directory is `/home/ana`. What does the command in the exhibit print?
+    exhibit: |
+      $ echo '$HOME' "\$HOME" "$HOME"
+    options:
+      - id: a
+        text: "`/home/ana /home/ana /home/ana`"
+        rationale: Wrong. The first two words are protected from expansion, by single quotes and by a backslash.
+      - id: b
+        text: "`$HOME \\$HOME /home/ana`"
+        rationale: Wrong. Inside double quotes a backslash before $ is removed after it does its job.
+      - id: c
+        text: "`$HOME /home/ana /home/ana`"
+        rationale: Wrong. The backslash in the second word stops the expansion of $HOME.
+      - id: d
+        text: "`$HOME $HOME /home/ana`"
+        rationale: Correct. Single quotes and a backslash both keep $HOME literal; only the last word expands.
+    answer: [d]
+    explanation: >
+      Within double quotes the backslash still escapes $, `, " and \, and is then removed. Single quotes
+      need no escaping because nothing inside them is special.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 2, section: Quoting to Escape Special Characters }
+    verify:
+      command: >-
+        HOME=/home/ana bash -c 'echo '"'"'$HOME'"'"' "\$HOME" "$HOME"'
+      expect: { exit_code: 0, stdout_contains: "$HOME $HOME /home/ana" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [quoting, escaping]
+
+  - id: 101-103.1-0035
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: The user's home directory is `/home/ana`. What does the last command in the exhibit print?
+    exhibit: |
+      $ x='$HOME'
+      $ echo "$x" $x
+    options:
+      - id: a
+        text: "`/home/ana /home/ana`"
+        rationale: Wrong. The value of x is expanded once; the $HOME it contains is not expanded a second time.
+      - id: b
+        text: "`$HOME /home/ana`"
+        rationale: Wrong. Leaving $x unquoted adds word splitting and globbing, not another variable expansion.
+      - id: c
+        text: "`$HOME $HOME`"
+        rationale: Correct. x holds the literal text $HOME, and both forms print that text unchanged.
+      - id: d
+        text: "`/home/ana $HOME`"
+        rationale: Wrong. Double quotes do not cause the expanded value to be expanded again.
+    answer: [c]
+    explanation: >
+      The single quotes store the literal string $HOME in x. Bash expands $x to that string and stops:
+      the result of a variable expansion is not scanned for further variables, quoted or not.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 2, section: Quoting to Escape Special Characters }
+    verify:
+      command: >-
+        HOME=/home/ana bash -c 'x='"'"'$HOME'"'"'; echo "$x" $x'
+      expect: { exit_code: 0, stdout_contains: "$HOME $HOME" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [quoting, variables]
+
+  - id: 101-103.1-0036
+    type: multi_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      Given the exhibit, which **TWO** of these, typed as the very next command, run `uname -r` again?
+    exhibit: |
+      $ history 4
+        102  uname -r
+        103  cat /etc/hostname
+        104  uptime
+        105  history 4
+    select_count: 2
+    options:
+      - id: a
+        text: "`!-2`"
+        rationale: Wrong. Counting back from the new entry 106, two back is 104, which is uptime.
+      - id: b
+        text: "`!102`"
+        rationale: Correct. !N runs history entry number N, which is uname -r.
+      - id: c
+        text: "`!u`"
+        rationale: Wrong. !string uses the most recent command starting with the string, which is uptime.
+      - id: d
+        text: "`!un`"
+        rationale: Correct. The most recent command starting with un is uname -r.
+      - id: e
+        text: "`!?name?`"
+        rationale: Wrong. !?string? uses the most recent command containing name anywhere, which is cat /etc/hostname.
+    answer: [b, d]
+    explanation: >
+      !N picks an entry by number, !-N counts back from the current command, !string matches the start of
+      the most recent command and !?string? matches anywhere in it. The history command itself is entry
+      105, which shifts relative references.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 1, section: Using Your Command History }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [history, history-expansion]
+
+  - id: 101-103.1-0037
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: What does the last command in the exhibit print?
+    exhibit: |
+      $ stage=build
+      $ bash
+      $ export stage=deploy
+      $ exit
+      $ echo $stage
+    options:
+      - id: a
+        text: "`build`"
+        rationale: Correct. The parent's stage was never changed; the export happened only in the child shell.
+      - id: b
+        text: "`deploy`"
+        rationale: Wrong. A child process cannot change its parent's variables, exported or not.
+      - id: c
+        text: An empty line
+        rationale: Wrong. stage is still set in the parent shell, even though it was never exported there.
+      - id: d
+        text: "`$stage`"
+        rationale: Wrong. The variable is unquoted and set, so it expands to its value.
+    answer: [a]
+    explanation: >
+      Environment variables flow one way: from a parent to the children it starts. The child shell got no
+      copy of stage (it was not exported), created its own, and that copy disappeared with exit.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 2, section: Creating New Environment Variables }
+    verify:
+      command: >-
+        bash -c 'stage=build; bash -c "export stage=deploy"; echo $stage'
+      expect: { exit_code: 0, stdout_contains: "build" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [export, subshell]
+
+  - id: 101-103.1-0038
+    type: fill_in
+    difficulty: 5
+    pool: holdout
+    stem: >
+      You typed a password on the command line by mistake, and `history` shows it as entry 42. Type the
+      `history` command that deletes only that entry from the history list.
+    fill_in:
+      accepted: ['(history\s+)?-d\s*42']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      history -d 42 removes entry 42 from the in-memory list; history -c would clear everything. If the
+      entry has already been saved to ~/.bash_history, run history -w afterwards to rewrite the file.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 1, section: Using Your Command History }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [history]
+
+  - id: 101-103.1-0039
+    type: multi_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      You ran `cnt=42` in your shell and nothing else. Which **TWO** commands print the value `42`?
+    select_count: 2
+    options:
+      - id: a
+        text: "`env | grep cnt`"
+        rationale: Wrong. cnt was not exported, so it is not in the environment that env prints.
+      - id: b
+        text: "`set | grep cnt`"
+        rationale: Correct. set lists all shell variables, exported or not, so it prints cnt=42.
+      - id: c
+        text: "`echo \"$cnt\"`"
+        rationale: Correct. The current shell expands its own variable, exported or not.
+      - id: d
+        text: "`printenv cnt`"
+        rationale: Wrong. printenv reads its own environment, which does not contain the unexported cnt.
+      - id: e
+        text: "`bash -c 'echo $cnt'`"
+        rationale: Wrong. The child bash expands $cnt, and it did not inherit the unexported variable.
+    answer: [b, c]
+    explanation: >
+      Unexported variables exist only inside the shell that created them. Commands the shell handles
+      itself (echo with expansion, set) can see them; separate programs such as env, printenv or a child
+      bash cannot.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 2, section: Deleting Environment Variables }
+    verify:
+      command: >-
+        bash -c 'cnt=42; set | grep "^cnt="; echo "$cnt"; env | grep -c "^cnt=" || true' | tr '\n' ' '
+      expect: { exit_code: 0, stdout_contains: "cnt=42 42 0" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [set, env, export]
+
+  - id: 101-103.1-0040
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      The `report` script was moved from `/tmp/old` to `/tmp/new`; both directories are in `PATH`. In
+      the same shell, you then see the exhibit. Which command makes `report` work again in this shell?
+    exhibit: |
+      $ report
+      report done
+      $ mv /tmp/old/report /tmp/new/report
+      $ report
+      bash: /tmp/old/report: No such file or directory
+      $ which report
+      /tmp/new/report
+    options:
+      - id: a
+        text: "`type report`"
+        rationale: Wrong. type only reports the location; here it would show "report is hashed (/tmp/old/report)".
+      - id: b
+        text: "`unset report`"
+        rationale: Wrong. unset removes variables and functions; it does not touch the table of remembered command paths.
+      - id: c
+        text: "`history -c`"
+        rationale: Wrong. This clears the command history list, which has nothing to do with locating programs.
+      - id: d
+        text: "`hash -r`"
+        rationale: Correct. hash -r empties Bash's table of remembered paths, so the next run searches PATH again.
+    answer: [d]
+    explanation: >
+      Bash remembered the old path of report in its hash table and keeps using it. which does its own PATH
+      search and so finds the new file. hash -r forgets all remembered paths; hash -d report would forget
+      just this one.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 1, section: Getting Command Information }
+    verify:
+      setup:
+        - mkdir -p /tmp/old /tmp/new && printf '#!/bin/sh\necho report done\n' > /tmp/old/report && chmod +x /tmp/old/report
+      command: >-
+        bash -c 'PATH=/tmp/old:/tmp/new:$PATH; report >/dev/null; mv /tmp/old/report /tmp/new/report; hash -r; report'
+      expect: { exit_code: 0, stdout_contains: "report done" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [hash, PATH]
+
+  # --------------------------------------------------------------------------- practice (CLI)
+
+  - id: 101-103.1-0041
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: >
+      `pwd` prints `/var/log`. You then run `touch notes.txt` without giving a path. Where is the file
+      created?
+    options:
+      - id: a
+        text: "`/var/log/notes.txt`"
+        rationale: Correct. A bare file name is relative to the current working directory.
+      - id: b
+        text: "`~/notes.txt`"
+        rationale: Wrong. The home directory is only used when it is also the current directory.
+      - id: c
+        text: "`/var/tmp/notes.txt`"
+        rationale: Wrong. touch does not fall back to a temporary directory; it uses the working directory.
+      - id: d
+        text: "`/notes.txt`"
+        rationale: Wrong. That would need an absolute path starting with /.
+    answer: [a]
+    explanation: >
+      Paths that do not start with / are relative to the working directory, which pwd prints.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 1, section: Getting System Information }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Distractor /tmp/notes.txt replaced by /var/tmp/notes.txt so the key is not the only long option." }
+    tags: [pwd]
+
+  - id: 101-103.1-0042
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: Which command opens the full manual page for `uname`?
+    options:
+      - id: a
+        text: "`help uname`"
+        rationale: Wrong. help only covers Bash builtins, and uname is an external program.
+      - id: b
+        text: "`man uname`"
+        rationale: Correct. man followed by a page name displays that manual page.
+      - id: c
+        text: "`which uname`"
+        rationale: Wrong. which prints the path of the program, not its documentation.
+      - id: d
+        text: "`uname --all`"
+        rationale: Wrong. This prints system information, not documentation.
+    answer: [b]
+    explanation: >
+      man NAME shows the manual page: name, synopsis, description of each option and related pages.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 1, section: Getting Command Information }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [man]
+
+  - id: 101-103.1-0043
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: Which command prints the machine hardware name, such as `x86_64` or `aarch64`?
+    options:
+      - id: a
+        text: "`uname -n`"
+        rationale: Wrong. -n prints the network host name.
+      - id: b
+        text: "`uname -r`"
+        rationale: Wrong. -r prints the kernel release.
+      - id: c
+        text: "`uname -m`"
+        rationale: Correct. -m (--machine) prints the hardware name.
+      - id: d
+        text: "`uname -s`"
+        rationale: Wrong. -s prints the kernel name.
+    answer: [c]
+    explanation: >
+      uname -m reports the architecture the kernel runs on, for example x86_64 for 64-bit PCs.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 1, section: Getting Command Information }
+    verify:
+      command: >-
+        uname -m
+      expect: { exit_code: 0, stdout_regex: "^\\S+\\s*$" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [uname]
+
+  - id: 101-103.1-0044
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: Which `uname` option prints the network host name of the machine?
+    options:
+      - id: a
+        text: "`-o`"
+        rationale: Wrong. -o prints the operating system, such as GNU/Linux.
+      - id: b
+        text: "`-v`"
+        rationale: Wrong. -v prints the kernel version (build) string.
+      - id: c
+        text: "`-s`"
+        rationale: Wrong. -s prints the kernel name.
+      - id: d
+        text: "`-n`"
+        rationale: Correct. -n (--nodename) prints the network node host name.
+    answer: [d]
+    explanation: >
+      uname -n gives the same name as the hostname command.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 1, section: Getting Command Information }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [uname]
+
+  - id: 101-103.1-0045
+    type: single_choice
+    difficulty: 3
+    pool: practice
+    stem: In the exhibit, what does `(1)` mean?
+    exhibit: |
+      $ whatis uname
+      uname (1)            - print system information
+    options:
+      - id: a
+        text: The page is in manual section 1, user commands
+        rationale: Correct. The number in parentheses is the manual section the page belongs to.
+      - id: b
+        text: It is the first of several matching results
+        rationale: Wrong. Results are not numbered; the number is the section.
+      - id: c
+        text: It is version 1 of the manual page
+        rationale: Wrong. Manual pages carry no version number in this listing.
+      - id: d
+        text: The program expects exactly one argument on its command line
+        rationale: Wrong. The listing says nothing about arguments.
+    answer: [a]
+    explanation: >
+      whatis and apropos show each page as name(section). Section 1 holds user commands; for example
+      uname(2) is the system call of the same name.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 1, section: Getting Command Information }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Distractor d lengthened; the correct option was the longest." }
+    tags: [man, man-sections, whatis]
+
+  - id: 101-103.1-0046
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: Why does `ls ~` not show the `.bash_history` file?
+    options:
+      - id: a
+        text: Only root may list files in a home directory
+        rationale: Wrong. Users can list their own home directory.
+      - id: b
+        text: Names starting with a dot are hidden unless you use `ls -a`
+        rationale: Correct. ls skips dot files by default; -a shows them.
+      - id: c
+        text: The file only exists on disk while a shell session is still running
+        rationale: Wrong. The file stays on disk between sessions.
+      - id: d
+        text: History is kept in /var/log instead
+        rationale: Wrong. Bash saves history to ~/.bash_history.
+    answer: [b]
+    explanation: >
+      A leading dot makes a file hidden by convention. ls -a (or -A) includes such files.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 1, section: Using Your Command History }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Distractor c lengthened; the correct option was the longest." }
+    tags: [.bash_history, ls]
+
+  - id: 101-103.1-0047
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: What does `history | grep tar` do?
+    options:
+      - id: a
+        text: Deletes history entries that contain tar
+        rationale: Wrong. grep only filters output; it changes nothing.
+      - id: b
+        text: Runs the most recent tar command again
+        rationale: Wrong. That would be the history expansion !tar.
+      - id: c
+        text: Lists earlier commands that contain tar, with their numbers
+        rationale: Correct. history prints numbered entries and grep keeps the lines with tar.
+      - id: d
+        text: Searches the manual page of tar for every mention of the word history
+        rationale: Wrong. Neither command reads manual pages.
+    answer: [c]
+    explanation: >
+      Filtering history through grep is a quick way to find an earlier command. Its number can then be
+      reused with !N.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 1, section: Using Your Command History }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Distractor d lengthened; the correct option was the longest." }
+    tags: [history, grep]
+
+  - id: 101-103.1-0048
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: Which `echo` option suppresses the newline it normally prints at the end?
+    options:
+      - id: a
+        text: "`-e`"
+        rationale: Wrong. -e turns on interpretation of backslash escapes such as \t.
+      - id: b
+        text: "`-E`"
+        rationale: Wrong. -E turns off interpretation of backslash escapes (the default).
+      - id: c
+        text: "`-s`"
+        rationale: Wrong. echo has no -s option; it would print -s as text.
+      - id: d
+        text: "`-n`"
+        rationale: Correct. -n leaves out the trailing newline.
+    answer: [d]
+    explanation: >
+      echo -n is handy for prompts or for building a line in pieces.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 2, section: Finding Your Environment Variables }
+    verify:
+      command: >-
+        bash -c 'echo -n ab; echo cd'
+      expect: { exit_code: 0, stdout_contains: "abcd" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [echo]
+
+  - id: 101-103.1-0049
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: How does the output of `set` (with no arguments) differ from the output of `env`?
+    options:
+      - id: a
+        text: set also lists unexported shell variables and functions
+        rationale: Correct. env shows only the exported environment.
+      - id: b
+        text: set lists only variables that were exported
+        rationale: Wrong. That describes env.
+      - id: c
+        text: set lists only the variables that were created during this session
+        rationale: Wrong. It lists inherited variables too.
+      - id: d
+        text: The two always print the same lines
+        rationale: Wrong. Local variables and functions appear only in set.
+    answer: [a]
+    explanation: >
+      env is a separate program and can only see the environment it inherits. set is a builtin and sees
+      everything the shell holds.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 2, section: Deleting Environment Variables }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Distractor c lengthened; the correct option was the longest." }
+    tags: [set, env]
+
+  - id: 101-103.1-0050
+    type: single_choice
+    difficulty: 3
+    pool: practice
+    stem: After the commands in the exhibit, which variable no longer exists?
+    exhibit: |
+      $ target=cache
+      $ cache=/var/tmp/x
+      $ unset $target
+    options:
+      - id: a
+        text: "`target`"
+        rationale: Wrong. $target is expanded before unset runs, so unset never sees the name target.
+      - id: b
+        text: "`cache`"
+        rationale: Correct. unset receives the value of target, which is the name cache.
+      - id: c
+        text: Both of them
+        rationale: Wrong. unset gets only one name, cache.
+      - id: d
+        text: Neither; unset reports an error
+        rationale: Wrong. cache is a valid variable name, so unset succeeds silently.
+    answer: [b]
+    explanation: >
+      Write unset NAME, not unset $NAME. With the $, the shell substitutes the value and unset removes
+      whatever variable that value names.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 2, section: Deleting Environment Variables }
+    verify:
+      command: >-
+        bash -c 'target=cache; cache=/var/tmp/x; unset $target; echo "[$target][$cache]"'
+      expect: { exit_code: 0, stdout_contains: "[cache][]" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [unset]
+
+  - id: 101-103.1-0051
+    type: single_choice
+    difficulty: 3
+    pool: practice
+    stem: "Which command prints exactly `Cost: $5`?"
+    options:
+      - id: a
+        text: "`echo \"Cost: $5\"`"
+        rationale: Wrong. $5 is the fifth positional parameter, which expands even in double quotes (usually to nothing).
+      - id: b
+        text: "`echo Cost: $5`"
+        rationale: Wrong. Unquoted, $5 is expanded too.
+      - id: c
+        text: "`echo 'Cost: $5'`"
+        rationale: Correct. Single quotes keep the $ literal.
+      - id: d
+        text: "`echo \"Cost: \"$5`"
+        rationale: Wrong. $5 sits outside the quotes and is expanded.
+    answer: [c]
+    explanation: >
+      To print a dollar sign followed by a digit or name, use single quotes or escape it as \$.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 2, section: Quoting to Escape Special Characters }
+    verify:
+      command: >-
+        bash -c 'echo '"'"'Cost: $5'"'"''
+      expect: { exit_code: 0, stdout_contains: "Cost: $5" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [quoting]
+
+  - id: 101-103.1-0052
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: At a Bash prompt, which key steps back through the commands you ran earlier?
+    options:
+      - id: a
+        text: Right arrow
+        rationale: Wrong. Right arrow moves the cursor one character to the right on the current line.
+      - id: b
+        text: Ctrl+C
+        rationale: Wrong. Ctrl+C interrupts the running command or discards the current line.
+      - id: c
+        text: Ctrl+D
+        rationale: Wrong. On an empty line Ctrl+D sends end-of-file, which exits the shell.
+      - id: d
+        text: Up arrow
+        rationale: Correct. Up arrow recalls the previous history entry; Down moves forward again.
+    answer: [d]
+    explanation: >
+      The arrow keys walk through the history list. A recalled line can be edited before pressing Enter.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 1, section: Using Your Command History }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Tab replaced by Right arrow so the key is not the longest option." }
+    tags: [history]
+
+  - id: 101-103.1-0053
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: Which command prints only the one-line description of the manual page named exactly `tar`?
+    options:
+      - id: a
+        text: "`apropos tar`"
+        rationale: Wrong. apropos matches tar anywhere in names and descriptions, so it lists many pages.
+      - id: b
+        text: "`whatis tar`"
+        rationale: Correct. whatis (same as man -f) matches whole page names only.
+      - id: c
+        text: "`which tar`"
+        rationale: Wrong. which prints the program's path.
+      - id: d
+        text: "`type tar`"
+        rationale: Wrong. type says how the shell would run tar.
+    answer: [b]
+    explanation: >
+      whatis looks up exact page names and prints their short descriptions; apropos does a keyword search.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 1, section: Getting Command Information }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [whatis, apropos]
+
+  - id: 101-103.1-0054
+    type: multi_choice
+    difficulty: 2
+    pool: practice
+    stem: Which **TWO** lines leave `NAME` set to `web` and visible to programs started later from this shell?
+    select_count: 2
+    options:
+      - id: a
+        text: "`export NAME=web`"
+        rationale: Correct. export can assign and export in one step.
+      - id: b
+        text: "`NAME=web`"
+        rationale: Wrong. Without export, the variable stays local to the shell.
+      - id: c
+        text: "`NAME=web; export NAME`"
+        rationale: Correct. Assigning first and exporting afterwards has the same effect.
+      - id: d
+        text: "`set NAME=web`"
+        rationale: Wrong. This sets the positional parameter $1, not a variable.
+    answer: [a, c]
+    explanation: >
+      Child processes only inherit exported variables. export NAME=value and NAME=value; export NAME are
+      equivalent.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 2, section: Creating New Environment Variables }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [export]
+
+  - id: 101-103.1-0055
+    type: multi_choice
+    difficulty: 3
+    pool: practice
+    stem: Which **TWO** command lines print `done` only if `cp a b` succeeded?
+    select_count: 2
+    options:
+      - id: a
+        text: "`cp a b || echo done`"
+        rationale: Wrong. || runs the second command only when the first one fails.
+      - id: b
+        text: "`cp a b && echo done`"
+        rationale: Correct. && runs the second command only when the first exits with status 0.
+      - id: c
+        text: "`cp a b; echo done`"
+        rationale: Wrong. ; runs the second command whatever the first one's result.
+      - id: d
+        text: "`if cp a b; then echo done; fi`"
+        rationale: Correct. if tests the exit status of cp and runs echo only on success.
+    answer: [b, d]
+    explanation: >
+      On one line, ; simply sequences commands, && continues on success and || continues on failure.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 1, section: Introduction }
+    verify:
+      command: >-
+        cd "$(mktemp -d)" && bash -c 'cp a b 2>/dev/null && echo bad; cp a b 2>/dev/null || echo ok'
+      expect: { exit_code: 0, stdout_regex: "^ok\\s*$" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [command-sequences]
+
+  - id: 101-103.1-0056
+    type: multi_choice
+    difficulty: 2
+    pool: practice
+    stem: Which **TWO** of these are Bash builtins rather than programs found through `PATH`?
+    select_count: 2
+    options:
+      - id: a
+        text: "`cd`"
+        rationale: Correct. cd must be a builtin, because a separate process could not change the shell's directory.
+      - id: b
+        text: "`history`"
+        rationale: Correct. history works on the shell's own history list, so it is a builtin.
+      - id: c
+        text: "`uname`"
+        rationale: Wrong. uname is an external program, for example /usr/bin/uname.
+      - id: d
+        text: "`which`"
+        rationale: Wrong. On most distributions which is an external program such as /usr/bin/which.
+    answer: [a, b]
+    explanation: >
+      type NAME tells you which kind a command is. Builtins are documented with help NAME.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 1, section: Getting Command Information }
+    verify:
+      command: >-
+        bash -c 'type -t cd history'
+      expect: { exit_code: 0, stdout_regex: "^builtin\\nbuiltin\\s*$" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [builtin, type]
+
+  - id: 101-103.1-0057
+    type: multi_choice
+    difficulty: 4
+    pool: practice
+    stem: Which **TWO** commands print the literal text `$PATH` rather than its value?
+    select_count: 2
+    options:
+      - id: a
+        text: "`echo \"$PATH\"`"
+        rationale: Wrong. Double quotes still expand variables.
+      - id: b
+        text: "`echo ${PATH}`"
+        rationale: Wrong. Braces just mark where the name ends; the variable is still expanded.
+      - id: c
+        text: "`echo '$PATH'`"
+        rationale: Correct. Nothing is expanded inside single quotes.
+      - id: d
+        text: "`echo \\$PATH`"
+        rationale: Correct. The backslash removes the special meaning of the $.
+    answer: [c, d]
+    explanation: >
+      Single quotes or a backslash before the $ stop expansion. Double quotes and braces do not.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 2, section: Quoting to Escape Special Characters }
+    verify:
+      command: >-
+        bash -c 'echo '"'"'$PATH'"'"' \$PATH'
+      expect: { exit_code: 0, stdout_contains: "$PATH $PATH" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [quoting, escaping]
+
+  - id: 101-103.1-0058
+    type: fill_in
+    difficulty: 3
+    pool: practice
+    stem: Type the `uname` option that prints only the kernel release.
+    fill_in:
+      accepted: ['(((/usr)?/bin/)?uname\s+)?(-r|--kernel-release)']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      uname -r (long form --kernel-release) prints the release, such as 6.8.0-45-generic.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 1, section: Getting Command Information }
+    verify:
+      command: >-
+        uname --kernel-release
+      expect: { exit_code: 0 }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [uname]
+
+  - id: 101-103.1-0059
+    type: fill_in
+    difficulty: 3
+    pool: practice
+    stem: >
+      Using `export`, type one command that sets `EDITOR` to `vim` and exports it in the same step.
+    fill_in:
+      accepted: ['export\s+EDITOR=(vim|"vim"|''vim'')']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      export NAME=value assigns and exports in one command. Programs started later, such as crontab -e
+      or git, then see EDITOR=vim.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 2, section: Creating New Environment Variables }
+    verify:
+      command: >-
+        bash -c 'export EDITOR=vim; printenv EDITOR'
+      expect: { exit_code: 0, stdout_contains: "vim" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [export]
+
+  - id: 101-103.1-0060
+    type: fill_in
+    difficulty: 3
+    pool: practice
+    stem: Type the `history` command, with its option, that clears the whole history list of the current shell.
+    fill_in:
+      accepted: ['(history\s+)?-c']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      history -c empties the in-memory list. The file ~/.bash_history is left as it is until the shell
+      next writes to it.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 1, section: Using Your Command History }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [history]
