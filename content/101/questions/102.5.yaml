@@ -664,26 +664,27 @@ questions:
         text: "`yum-config-manager --disable acme-stable`"
         rationale: Correct. The repo id is the [section] name, and yum-config-manager writes enabled=0 for that id into the .repo file.
       - id: b
-        text: "`yum-config-manager --disable 'ACME Monitoring Agents'`"
-        rationale: Wrong. name= is only a human-readable description; yum-config-manager selects repositories by id.
+        text: "`yum-config-manager --save --setopt=acme-stable.gpgcheck=0`"
+        rationale: Wrong. This permanently writes gpgcheck=0 for acme-stable, turning off its signature checks; the repository stays enabled.
       - id: c
         text: "`yum-config-manager --disable acme`"
-        rationale: Wrong. acme is the file name, not a repo id, so no repository matches it.
+        rationale: Wrong. acme is only part of the file name and of the repo id; without wildcards yum-config-manager needs a whole repo id (or name= value), so nothing matches.
       - id: d
         text: "`yum --disablerepo=acme-stable update`"
         rationale: Wrong. --disablerepo affects only that one yum run; the repository stays enabled in its .repo file.
     answer: [a]
     explanation: >
-      In a .repo file the text in square brackets is the repository id; name= is a description and
-      the file name is irrelevant (one file may hold several repositories). Commands such as
-      yum-config-manager --enable/--disable and --enablerepo/--disablerepo take the id.
-      yum-config-manager --disable saves enabled=0, so the change survives future runs.
+      In a .repo file the text in square brackets is the repository id; the file name does not matter,
+      and one file can hold several repositories. yum-config-manager --enable/--disable selects
+      repositories by id (it also accepts the exact name= value), and --disable saves enabled=0 in the
+      .repo file, so the change survives future runs. --enablerepo/--disablerepo take ids too, but last
+      for a single yum run only.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Managing Software Repositories }
     review:
       status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
-        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Needs re-check. Exhibit changed to a .repo file whose [section] id differs from its name= line and file name; same tested fact (yum-config-manager takes repo ids)." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Re-checked cold by the reviewer: matches key, but the original option b (disable by the name= value) was also correct, since yum-config-manager matches name= values (findRepos with name_match=True); replaced with a gpgcheck distractor and the explanation corrected. Exhibit changed to a .repo file whose [section] id differs from its name= line and file name; same tested fact (yum-config-manager takes repo ids)." }
     tags: [yum, yum-config-manager, repolist]
 
   - id: 101-102.5-0022
