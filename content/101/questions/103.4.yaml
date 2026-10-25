@@ -30,9 +30,10 @@ questions:
       numbers are what you write in front of a redirection operator, as in 2>errors.log.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 1, section: Introduction }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [file-descriptors, stderr]
 
   - id: 101-103.4-0002
@@ -61,9 +62,10 @@ questions:
       on every run before writing.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 1, section: Redirects }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [redirection, append]
 
   - id: 101-103.4-0003
@@ -90,9 +92,10 @@ questions:
       standard input. Data flows left to right and the target is always another command.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 2, section: Pipes }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [pipe]
 
   - id: 101-103.4-0004
@@ -119,9 +122,10 @@ questions:
       screen (or the next command) and in the named files.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 2, section: Pipes }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [tee]
 
   - id: 101-103.4-0005
@@ -148,9 +152,10 @@ questions:
       `wc -l < users.txt`. Without a number in front it applies to file descriptor 0.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 1, section: Redirects }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [redirection, stdin]
 
   - id: 101-103.4-0006
@@ -163,8 +168,8 @@ questions:
         text: "`/dev/null`"
         rationale: Correct. Anything written to /dev/null is discarded, and any user may write to it.
       - id: b
-        text: "`/dev/zero`"
-        rationale: Wrong. /dev/zero is mostly used as a source of zero bytes when read.
+        text: "`/dev/tty`"
+        rationale: Wrong. /dev/tty is the controlling terminal, so the output would still appear on screen.
       - id: c
         text: "`/dev/stdout`"
         rationale: Wrong. This refers to the process's own standard output, so the data would still appear.
@@ -177,9 +182,10 @@ questions:
       is the usual way to hide error messages.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 1, section: Redirects }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Distractor /dev/zero replaced by /dev/tty (writes to /dev/zero are also discarded)." }
     tags: [dev-null]
 
   - id: 101-103.4-0007
@@ -212,9 +218,10 @@ questions:
       to a file, removes them from the terminal while descriptor 1 still prints the listing.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 1, section: Redirects }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [stderr, dev-null]
 
   - id: 101-103.4-0008
@@ -244,9 +251,10 @@ questions:
       2 redirects just the complaints.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 1, section: Redirects }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [stderr, redirection]
 
   - id: 101-103.4-0009
@@ -275,9 +283,10 @@ questions:
       word, then hands the collected text to the command's standard input.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 1, section: Here Document and Here String }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [here-document]
 
   - id: 101-103.4-0010
@@ -304,9 +313,10 @@ questions:
       output, so it can be assigned to a variable or used as an argument.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 2, section: Command Substitution }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [command-substitution]
 
   - id: 101-103.4-0011
@@ -335,9 +345,10 @@ questions:
       cmd's arguments and runs it, so output of one program becomes arguments of another.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 2, section: Command Substitution }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [xargs]
 
   - id: 101-103.4-0012
@@ -356,9 +367,10 @@ questions:
       file fails with "cannot overwrite existing file". `set +o noclobber` or `set +C` turns it off.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 1, section: Redirects }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [noclobber, set]
 
   - id: 101-103.4-0013
@@ -385,9 +397,10 @@ questions:
       it when it may contain spaces so it stays one word.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 1, section: Here Document and Here String }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [here-string]
 
   - id: 101-103.4-0014
@@ -395,34 +408,35 @@ questions:
     difficulty: 1
     pool: holdout
     stem: >
-      Which **TWO** commands write the standard output of `date` to `now.txt`, replacing anything
-      already in the file?
+      Which **TWO** commands write the standard output of `uname -a` to `sysinfo.txt`, replacing
+      anything already in the file?
     select_count: 2
     options:
       - id: a
-        text: "`date >> now.txt`"
+        text: "`uname -a >> sysinfo.txt`"
         rationale: Wrong. >> appends; the old content is kept.
       - id: b
-        text: "`date > now.txt`"
+        text: "`uname -a > sysinfo.txt`"
         rationale: Correct. > redirects stdout and truncates the file first.
       - id: c
-        text: "`date 2> now.txt`"
-        rationale: Wrong. 2> captures standard error; date's normal output still goes to the screen.
+        text: "`uname -a 2> sysinfo.txt`"
+        rationale: Wrong. 2> captures standard error; uname's normal output still goes to the screen.
       - id: d
-        text: "`date 1> now.txt`"
+        text: "`uname -a 1> sysinfo.txt`"
         rationale: Correct. 1> names stdout explicitly and behaves exactly like >.
       - id: e
-        text: "`date < now.txt`"
-        rationale: Wrong. < feeds the file to date's stdin and writes nothing to it.
+        text: "`uname -a < sysinfo.txt`"
+        rationale: Wrong. < feeds the file to uname's stdin and writes nothing to it.
     answer: [b, d]
     explanation: >
       When no descriptor number is written before >, Bash uses 1 (stdout). So > and 1> are the same
       operation and both truncate the target before writing.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 1, section: Redirects }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Command changed from date/now.txt to uname -a/sysinfo.txt (was Guided Exercise 2's command); keys unchanged." }
     tags: [redirection, stdout]
 
   - id: 101-103.4-0015
@@ -441,9 +455,10 @@ questions:
       descriptor; without it, `2>1` would write errors to a file named 1.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 1, section: Redirects }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [stderr, fd-duplication]
 
   - id: 101-103.4-0016
@@ -475,9 +490,10 @@ questions:
       command's standard output, which then becomes an argument of the outer command.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 2, section: Command Substitution }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [command-substitution]
 
   - id: 101-103.4-0017
@@ -509,9 +525,10 @@ questions:
       command: printf 'red\ngreen\nblue\n' | xargs
       expect: { exit_code: 0, stdout_contains: "red green blue" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [xargs]
 
   - id: 101-103.4-0018
@@ -544,12 +561,13 @@ questions:
       several words.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 2, section: Command Substitution }
     verify:
-      command: echo jan feb mar apr may | xargs -n 2 echo | head -n 1
-      expect: { exit_code: 0, stdout_regex: "^jan feb\\s*$" }
+      command: echo jan feb mar apr may | xargs -n 2 echo
+      expect: { exit_code: 0, stdout_regex: "^jan feb\\nmar apr\\nmay\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "verify no longer pipes xargs into head (avoids signal 13 noise); checks full output." }
     tags: [xargs]
 
   - id: 101-103.4-0019
@@ -568,9 +586,10 @@ questions:
       spaces, quotes or newlines are passed through intact. It pairs with find's -print0.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 2, section: Command Substitution }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [xargs, find, print0]
 
   - id: 101-103.4-0020
@@ -589,9 +608,10 @@ questions:
       standard output.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 2, section: Pipes }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [tee]
 
   - id: 101-103.4-0021
@@ -629,9 +649,10 @@ questions:
         a=$(j 2>&1 | grep -c fail); b=$(j |& grep -c fail); echo "$a$b"'
       expect: { exit_code: 0, stdout_contains: "22" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [pipe, stderr]
 
   - id: 101-103.4-0022
@@ -658,9 +679,10 @@ questions:
       so `< file` and `0< file` are identical.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 1, section: Redirects }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [redirection, stdin, file-descriptors]
 
   - id: 101-103.4-0023
@@ -694,9 +716,10 @@ questions:
         echo c &> nc.t 2>/dev/null; wc -l < nc.t'
       expect: { exit_code: 0, stdout_contains: "2" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [noclobber, append]
 
   - id: 101-103.4-0024
@@ -723,9 +746,10 @@ questions:
       for reading and writing on descriptor n, so one descriptor can serve both directions.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 1, section: Redirects }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [file-descriptors]
 
   - id: 101-103.4-0025
@@ -760,9 +784,10 @@ questions:
       command: bash -c 'tr a-z A-Z <<< "hello world"'
       expect: { exit_code: 0, stdout_contains: "HELLO WORLD" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [here-string, pipe, tr]
 
   - id: 101-103.4-0026
@@ -789,9 +814,10 @@ questions:
       prints an error, leaves the target unchanged and does not run the command.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 1, section: Redirects }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [redirection, errors]
 
   - id: 101-103.4-0027
@@ -821,9 +847,10 @@ questions:
       `> /dev/null` if you do not want the copy on screen.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 2, section: Pipes }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [tee, sudo, redirection]
 
   - id: 101-103.4-0028
@@ -855,9 +882,10 @@ questions:
       command: bash -c 'R=$(ls /srv/nonexistent-dir 2>/dev/null); echo "[$R]"'
       expect: { stdout_contains: "[]" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Correct option shortened so it is not the longest." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [command-substitution, stderr]
 
   - id: 101-103.4-0029
@@ -893,9 +921,10 @@ questions:
       command: bash -c 'cd /tmp; ls /etc/hostname /nonexistent 2>/dev/null | tee out29.txt >/dev/null; cat out29.txt'
       expect: { stdout_regex: "^/etc/hostname\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [tee, pipe, stderr]
 
   - id: 101-103.4-0030
@@ -929,11 +958,12 @@ questions:
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 1, section: Redirects }
     verify:
       command: bash -c 'cd /tmp; printf "b\na\n" > s30; sort s30 > s30; wc -c < s30'
-      expect: { stdout_contains: "0" }
+      expect: { stdout_regex: "^0\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "verify uses an exact regex instead of stdout_contains 0." }
     tags: [redirection, sort, truncation]
 
   - id: 101-103.4-0031
@@ -969,11 +999,12 @@ questions:
       command: >
         bash -c 'd=$(mktemp -d); touch "$d/old copy.tmp" "$d/b.tmp";
         find "$d" -name "*.tmp" -print0 | xargs -0 rm; ls "$d" | wc -l'
-      expect: { exit_code: 0, stdout_contains: "0" }
+      expect: { exit_code: 0, stdout_regex: "^0\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "verify uses an exact regex instead of stdout_contains 0." }
     tags: [xargs, find, print0]
 
   - id: 101-103.4-0032
@@ -984,7 +1015,7 @@ questions:
       Type a complete command line that runs `ls -R /etc`, saves its normal output in `list.txt`
       and discards its error messages.
     fill_in:
-      accepted: ['ls\s+(-R|--recursive)\s+/etc/?\s+(1?>\s*list\.txt\s+2>\s*/dev/null|2>\s*/dev/null\s+1?>\s*list\.txt)']
+      accepted: ['(sudo\s+)?ls\s+(-R|--recursive)\s+/etc/?\s+(1?>\s*list\.txt\s+2>\s*/dev/null|2>\s*/dev/null(\s+1?>|>)\s*list\.txt)']
       match: regex
       case_sensitive: true
     explanation: >
@@ -992,9 +1023,10 @@ questions:
       stderr. Because they touch different descriptors, their order does not matter.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 1, section: Redirects }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Fill-in also accepts a sudo prefix and 2>/dev/null>list.txt with no space." }
     tags: [redirection, dev-null, stderr]
 
   - id: 101-103.4-0033
@@ -1018,7 +1050,7 @@ questions:
         text: The trailing slash in `backup/` must not be used with `mv`
         rationale: Wrong. A trailing slash on a directory destination is fine.
       - id: d
-        text: The names are added after `backup/`, so `b.txt` is the destination
+        text: "`backup/` ends up first, so `mv` treats `b.txt` as the target"
         rationale: Correct. The command run is `mv backup/ a.txt b.txt`; mv's last argument is the target.
     answer: [d]
     explanation: >
@@ -1027,9 +1059,10 @@ questions:
       such as `mv -t backup/`.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 2, section: Command Substitution }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Correct option shortened so it is not the longest." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Correct option reworded to avoid being a giveaway." }
     tags: [xargs]
 
   - id: 101-103.4-0034
@@ -1059,9 +1092,10 @@ questions:
       command: bash -c 'wc -c <<< "abc"'
       expect: { exit_code: 0, stdout_regex: "^4\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [here-string, wc]
 
   - id: 101-103.4-0035
@@ -1091,9 +1125,10 @@ questions:
       command: bash -c 'a=$( (echo hi 2>/dev/null 1>&2) 2>&1 ); echo "[$a]"'
       expect: { stdout_contains: "[]" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [redirection, order, fd-duplication]
 
   - id: 101-103.4-0036
@@ -1122,12 +1157,13 @@ questions:
       performed and the command is not run, so out.txt is never opened.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 1, section: Redirects }
     verify:
-      command: bash -c 'cd "$(mktemp -d)"; cat < missing.txt > out.txt 2>/dev/null; ls out.txt 2>/dev/null | wc -l'
-      expect: { stdout_contains: "0" }
+      command: bash -c 'cd "$(mktemp -d)"; { cat < missing.txt > out.txt; } 2>/dev/null; ls out.txt 2>/dev/null | wc -l'
+      expect: { stdout_regex: "^0\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "verify uses an exact regex instead of stdout_contains 0." }
     tags: [redirection, order, errors]
 
   - id: 101-103.4-0037
@@ -1164,9 +1200,10 @@ questions:
         b 2>&1 >b37.log | grep -c WARN'
       expect: { exit_code: 0, stdout_regex: "^1\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [pipe, order, stderr]
 
   - id: 101-103.4-0038
@@ -1203,9 +1240,10 @@ questions:
         bash -c 'cd /tmp; rm -f r38; set -C; echo a > r38; date >> r38 && date >| r38 && echo both-ok'
       expect: { exit_code: 0, stdout_contains: "both-ok" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [noclobber]
 
   - id: 101-103.4-0039
@@ -1217,7 +1255,7 @@ questions:
       standard error on the terminal, and also **appends** both streams to `/var/log/backup.log`.
       Use `tee`.
     fill_in:
-      accepted: ['(\./)?backup\.sh(\s+2>&1\s*\||\s*\|&)\s*(sudo\s+)?tee\s+((-a|--append)\s+/var/log/backup\.log|/var/log/backup\.log\s+(-a|--append))']
+      accepted: ['(sudo\s+)?(\./)?backup\.sh(\s+2>&\s*1\s*\||\s*\|&)\s*(sudo\s+)?tee\s+((-a|--append)\s+/var/log/backup\.log|/var/log/backup\.log\s+(-a|--append))']
       match: regex
       case_sensitive: true
     explanation: >
@@ -1225,9 +1263,10 @@ questions:
       stdout. tee -a then shows the data and appends it to the log.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 2, section: Pipes }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Fill-in also accepts a sudo prefix and 2>& 1." }
     tags: [tee, pipe, stderr]
 
   - id: 101-103.4-0040
@@ -1259,9 +1298,10 @@ questions:
       command: printf 'a b\nc\n' | xargs -I{} echo "<{}>"
       expect: { exit_code: 0, stdout_contains: "<a b>" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [xargs]
 
   # ---------------------------------------------------------------- practice (study mode)
@@ -1290,9 +1330,10 @@ questions:
       Redirections and pipes change these defaults for one command.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 1, section: Introduction }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [stdin]
 
   - id: 101-103.4-0042
@@ -1318,9 +1359,10 @@ questions:
       0 is stdin, 1 is stdout and 2 is stderr. > without a number means 1>.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 1, section: Introduction }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [file-descriptors]
 
   - id: 101-103.4-0043
@@ -1350,9 +1392,10 @@ questions:
       command: readlink /dev/stderr
       expect: { exit_code: 0, stdout_contains: "/proc/self/fd/2" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [dev-stderr]
 
   - id: 101-103.4-0044
@@ -1368,7 +1411,7 @@ questions:
         text: Saves only the error messages of `make` in `build.log`
         rationale: Wrong. That is 2>; &> covers both streams.
       - id: c
-        text: Writes both standard output and standard error of `make` to `build.log`
+        text: Sends both stdout and stderr of `make` to `build.log`
         rationale: Correct. &> redirects stdout and stderr to the same file.
       - id: d
         text: Appends the output of `make` to `build.log`
@@ -1376,12 +1419,13 @@ questions:
     answer: [c]
     explanation: >
       &> (also written >&) sends both streams to one file. The & must be attached to >; with a
-      space before it, Bash reads & as "run in the background".
+      space between & and >, Bash reads & as "run in the background".
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 1, section: Redirects }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Correct option shortened; explanation now says a space between & and >." }
     tags: [redirection, stderr]
 
   - id: 101-103.4-0045
@@ -1407,9 +1451,10 @@ questions:
       Command substitution can form part of a word. `date +%F` prints the date as YYYY-MM-DD.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 2, section: Command Substitution }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [command-substitution]
 
   - id: 101-103.4-0046
@@ -1419,7 +1464,7 @@ questions:
     stem: In `find /tmp -name '*.bak' | xargs rm`, what is the job of `xargs`?
     options:
       - id: a
-        text: It turns the file names arriving on its stdin into arguments for `rm`
+        text: It passes the names it reads as arguments to `rm`
         rationale: Correct. rm ignores stdin, so xargs places the names on rm's command line.
       - id: b
         text: It asks for confirmation before each file is removed
@@ -1436,9 +1481,10 @@ questions:
       that gap by reading the list and running the command with it.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 2, section: Command Substitution }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Correct option shortened to avoid being a giveaway." }
     tags: [xargs]
 
   - id: 101-103.4-0047
@@ -1457,9 +1503,10 @@ questions:
       overwrite.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 2, section: Pipes }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [tee]
 
   - id: 101-103.4-0048
@@ -1490,9 +1537,10 @@ questions:
       wc then prints just the count, without a file name.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 2, section: Pipes }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [redirection, pipe, stdin]
 
   - id: 101-103.4-0049
@@ -1521,12 +1569,13 @@ questions:
       -n counts arguments, -L counts lines.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 2, section: Command Substitution }
     verify:
-      command: printf 'db1 5432\nweb 80\n' | xargs -L 1 echo | head -n 1
-      expect: { stdout_regex: "^db1 5432\\s*$" }
+      command: printf 'db1 5432\nweb 80\n' | xargs -L 1 echo
+      expect: { exit_code: 0, stdout_regex: "^db1 5432\\nweb 80\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "verify no longer pipes xargs into head (avoids signal 13 noise); checks full output." }
     tags: [xargs]
 
   - id: 101-103.4-0050
@@ -1555,9 +1604,10 @@ questions:
       paths per run, much like plain xargs.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 2, section: Command Substitution }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [find, exec, xargs]
 
   - id: 101-103.4-0051
@@ -1576,7 +1626,7 @@ questions:
         text: Discards the message
         rationale: Wrong. Nothing is sent to /dev/null; the message is printed on stderr.
       - id: d
-        text: Writes the message to standard error instead of standard output
+        text: Sends the message to standard error
         rationale: Correct. >&2 (1>&2) makes stdout a copy of stderr for this command.
     answer: [d]
     explanation: >
@@ -1584,9 +1634,10 @@ questions:
       normal output still see the error.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 1, section: Redirects }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Correct option shortened to avoid being a giveaway." }
     tags: [stderr, fd-duplication]
 
   - id: 101-103.4-0052
@@ -1617,9 +1668,10 @@ questions:
       long pipelines can process data as it arrives.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 2, section: Pipes }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [pipe]
 
   - id: 101-103.4-0053
@@ -1638,9 +1690,10 @@ questions:
       also has the long form --replace=R.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 2, section: Command Substitution }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [xargs]
 
   - id: 101-103.4-0054
@@ -1670,9 +1723,10 @@ questions:
       command: bash -c "echo \$(printf 'one\ntwo\n')"
       expect: { stdout_regex: "^one two\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [command-substitution, word-splitting]
 
   - id: 101-103.4-0055
@@ -1705,9 +1759,10 @@ questions:
       command: printf '' | xargs -r echo RAN; echo end
       expect: { stdout_regex: "^end\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Stem fixed: GNU xargs gives the child /dev/null as stdin, so wc prints 0 instead of waiting for input." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [xargs]
 
   - id: 101-103.4-0056
@@ -1742,9 +1797,10 @@ questions:
         bash -c 'cd "$(mktemp -d)"; echo up | tee a.log > b.log; [ -s a.log ] && [ -s b.log ] && echo both'
       expect: { stdout_contains: "both" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "verify uses echo instead of uptime (procps is not in debian:stable-slim)." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [tee, redirection]
 
   - id: 101-103.4-0057
@@ -1774,9 +1830,10 @@ questions:
       command: bash -c 'cd /tmp; echo data > a57.log; > a57.log; wc -c < a57.log'
       expect: { stdout_regex: "^0\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [redirection, truncation]
 
   - id: 101-103.4-0058
@@ -1810,9 +1867,10 @@ questions:
       command: bash -c 'cd /tmp; f(){ echo out; echo err >&2; }; f > r58.txt 2> r58.txt; cat r58.txt'
       expect: { stdout_regex: "^err\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [redirection, stderr]
 
   - id: 101-103.4-0059
@@ -1852,9 +1910,10 @@ questions:
         xargs -d "\n" cp -t "$d/dst/" < "$d/list"; ls "$d/dst" | wc -l'
       expect: { exit_code: 0, stdout_contains: "2" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [xargs, tr]
 
   - id: 101-103.4-0060
@@ -1865,7 +1924,7 @@ questions:
       Type the redirection(s) that, written after `cmd`, **append** both its standard output and
       its standard error to `run.log`.
     fill_in:
-      accepted: ['(cmd\s+)?(&>>\s*run\.log|1?>>\s*run\.log\s+2>&\s*1)']
+      accepted: ['(cmd\s+)?(&>>\s*run\.log|1?>>\s*run\.log\s+(2>&\s*1|2>>\s*run\.log)|2>>\s*run\.log\s+(1?>&\s*2|1?>>\s*run\.log))']
       match: regex
       case_sensitive: true
     explanation: >
@@ -1873,7 +1932,8 @@ questions:
       `&>> run.log`. The order matters: `2>&1 >> run.log` would leave stderr on the terminal.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 1, section: Redirects }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Fill-in also accepts >> run.log 2>> run.log and 2>> run.log 1>&2 (and equivalents); wrong forms still rejected." }
     tags: [redirection, append, stderr]
