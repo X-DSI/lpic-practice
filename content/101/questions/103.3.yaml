@@ -395,7 +395,7 @@ questions:
       status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
-        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Option lengths evened out (a now -xvf, c now creates /opt/build/backup)." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Option lengths evened out (a now -xvf, c now creates /opt/build/backup). Re-checked cold by the reviewer: matches key." }
     tags: [tar]
 
   - id: 101-103.3-0013
@@ -566,7 +566,7 @@ questions:
       status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
-        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Stem changed from bzip2 (restated lesson 2 Guided Exercise 2) to xz; accepted -J/--xz; explanation rewritten. Needs re-check." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Stem changed from bzip2 (restated lesson 2 Guided Exercise 2) to xz; accepted -J/--xz; explanation rewritten. Re-checked cold by the reviewer: matches key." }
     tags: [tar, xz]
 
   - id: 101-103.3-0019
@@ -890,8 +890,8 @@ questions:
     select_count: 2
     options:
       - id: a
-        text: "`[a-z]eport[0-9].txt`"
-        rationale: Wrong. [a-z] covers lowercase letters only, so Report2.txt is missed.
+        text: "`[rR]eport[1-9]*.txt`"
+        rationale: Wrong. The * after the digit also accepts more characters, so report12.txt is listed too.
       - id: b
         text: "`[rR]eport[0-9].txt`"
         rationale: Correct. One of r or R, then exactly one digit; report.txt, report12.txt and reportA.txt do not fit.
@@ -908,6 +908,8 @@ questions:
     explanation: >
       Bracket expressions match exactly one character from a set or range and can be combined with
       ? and *. Here the first character must be r or R and exactly one digit must follow "eport".
+      Avoid letter ranges such as [a-z] to separate cases: in some locales and older shells they also
+      match uppercase letters.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 1, section: Combining Wildcards }
     verify:
       command: sh -c 'export LC_ALL=C; mkdir -p /tmp/r && cd /tmp/r && touch Report2.txt report.txt report1.txt report12.txt reportA.txt && echo [rR]eport[0-9].txt && echo [Rr]eport[12].txt'
@@ -916,7 +918,7 @@ questions:
       status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
-        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Options rebalanced so the correct ones are not the two longest; verify runs with LC_ALL=C." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Options rebalanced so the correct ones are not the two longest; verify runs with LC_ALL=C. Re-check: option a ([a-z]) replaced, since in en_US with older bash (globasciiranges off) it also matched Report2.txt; options re-tested." }
     tags: [globbing, wildcards]
 
   - id: 101-103.3-0029
@@ -1483,7 +1485,7 @@ questions:
       status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
-        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Stem, exhibit and options replaced (old one restated lesson 1 Guided Exercise 1); now asks for the block device. Needs re-check." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Stem, exhibit and options replaced (old one restated lesson 1 Guided Exercise 1); now asks for the block device. Re-checked cold by the reviewer: matches key." }
     tags: [ls]
 
   - id: 101-103.3-0045
@@ -1846,7 +1848,7 @@ questions:
       status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
-        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Option lengths evened out (a now mv -t with the wrong target, c now cp -r)." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Option lengths evened out (a now mv -t with the wrong target, c now cp -r). Re-checked cold by the reviewer: matches key." }
     tags: [mv]
 
   - id: 101-103.3-0057
