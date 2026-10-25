@@ -25,7 +25,8 @@ Runs in parallel with the practice-CLI handoff, which is done.
 
 | Handoff | Status | Assignee |
 |---|---|---|
-| [Engine fixes, pass2-ready mocks, and the mock assembler](handoff/2026-10-25-engine-fixes-and-mock-assembler.md) | open | agent:any |
+| [Engine fixes, pass2-ready mocks, and the mock assembler](handoff/2026-10-25-engine-fixes-and-mock-assembler.md) | done (PR #8) | X-DSI-agent |
+| [Terminal practice app](handoff/2026-10-25-practice-cli.md) | open | agent:any |
 
 Done: [Content build and engine core](handoff/2026-10-23-build-and-engine-core.md) (PR #5),
 [Terminal practice app](handoff/2026-10-25-practice-cli.md) (PR #9; its Outcome has questions for the planner).

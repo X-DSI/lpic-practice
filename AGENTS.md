@@ -53,8 +53,9 @@ command) exist; mock exams in the web UI are not built yet.
 |---|---|
 | Install the engine and dev tools | `pip install -e ".[dev]"` |
 | Validate all content | `python tools/validate.py` |
-| Validate, requiring mock questions to be approved | `python tools/validate.py --strict` |
+| Validate, requiring mock questions to be `pass2` or `approved` | `python tools/validate.py --strict` |
 | Build content to `build/content/<exam>.json` | `python -m engine.build` |
+| Assemble the 10 mock exams for an exam | `python -m engine.assemble <exam> [--seed N]` |
 | Test | `pytest` |
 | Lint and format check | `ruff check . && ruff format --check .` |
 | Practise in the terminal | `lpic practice` |

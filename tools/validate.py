@@ -4,7 +4,7 @@ on content format and mock exam composition (docs/adr/2026-10-22-*.md).
 
 Usage:
     python tools/validate.py              # validate everything under content/
-    python tools/validate.py --strict     # also require mock questions to be approved
+    python tools/validate.py --strict     # also require mock questions to be pass2 or approved
 
 Exit code 0 when everything is valid, 1 otherwise.
 """
@@ -23,7 +23,7 @@ from engine.validation import validate  # noqa: E402
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--strict", action="store_true", help="require approved status for mock questions")
+    ap.add_argument("--strict", action="store_true", help="require mock questions to be pass2 or approved")
     args = ap.parse_args(argv)
 
     errors, summary = validate(strict=args.strict)
