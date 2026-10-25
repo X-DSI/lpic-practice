@@ -1,0 +1,1938 @@
+# 103.3 Perform basic file management — weight 4 → 40 holdout + 20 practice.
+# Original questions written from LPI Learning Materials 101-500, objective 103.3, lessons 1 and 2.
+schema_version: 1
+exam: "101"
+objective: "103.3"
+questions:
+  # ---------------------------------------------------------------- holdout (mock exams only)
+
+  - id: 101-103.3-0001
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: >
+      You want a file called `notes.txt` to exist: if it is missing it should be created empty, and
+      if it is already there only its timestamps should change. Which command does this?
+    options:
+      - id: a
+        text: "`touch notes.txt`"
+        rationale: Correct. touch creates a missing file with no content and otherwise just updates its timestamps.
+      - id: b
+        text: "`mkdir notes.txt`"
+        rationale: Wrong. mkdir would create a directory named notes.txt, and fails if the name already exists.
+      - id: c
+        text: "`cat notes.txt`"
+        rationale: Wrong. cat only reads a file; on a missing file it reports "No such file or directory".
+      - id: d
+        text: "`file notes.txt`"
+        rationale: Wrong. file only reports what kind of data a file holds; it never creates or modifies one.
+    answer: [a]
+    explanation: >
+      touch is the usual way to create empty files, and it can create several at once. When a named
+      file already exists, its content is left alone and only its access and modification times are
+      set to the current time.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 1, section: Creating files with touch }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [touch]
+
+  - id: 101-103.3-0002
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: >
+      In a shell file name pattern, which wildcard stands for exactly one character, whatever that
+      character is?
+    options:
+      - id: a
+        text: "`*`"
+        rationale: Wrong. The asterisk matches any number of characters, including none.
+      - id: b
+        text: "`[0-9]`"
+        rationale: Wrong. A bracket expression matches one character, but only one from the listed set (here a digit).
+      - id: c
+        text: "`?`"
+        rationale: Correct. The question mark matches any single character.
+      - id: d
+        text: "`**`"
+        rationale: Wrong. Without special shell options, two asterisks behave like one and match any number of characters.
+    answer: [c]
+    explanation: >
+      The three globbing wildcards are `*` (any string, even an empty one), `?` (any one character)
+      and `[...]` (one character from a set or range). `file?.txt` matches `file1.txt` and
+      `fileA.txt` but not `file.txt` or `file10.txt`.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 1, section: The Question Mark }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [globbing, wildcards]
+
+  - id: 101-103.3-0003
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: What can the `rmdir` command remove?
+    options:
+      - id: a
+        text: A directory together with all files and subdirectories inside it
+        rationale: Wrong. That is rm -r; rmdir refuses a directory that still has entries.
+      - id: b
+        text: Only directories that are empty
+        rationale: Correct. rmdir fails with "Directory not empty" if anything is left inside.
+      - id: c
+        text: Only regular files, never directories
+        rationale: Wrong. Removing files is rm's job; rmdir works only on directories.
+      - id: d
+        text: Only symbolic links that point to directories
+        rationale: Wrong. rmdir does not remove symbolic links; it reports "Not a directory" for one.
+    answer: [b]
+    explanation: >
+      rmdir deletes empty directories and nothing else, which makes it a safe choice when you
+      expect a directory to be empty. To delete a directory with its contents, use rm -r.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 1, section: Removing Directories with rmdir }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [rmdir]
+
+  - id: 101-103.3-0004
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: >
+      Which `find` test limits the results to directories, leaving out regular files and other
+      kinds of files?
+    options:
+      - id: a
+        text: "`-type f`"
+        rationale: Wrong. -type f selects regular files.
+      - id: b
+        text: "`-empty`"
+        rationale: Wrong. -empty selects empty files and empty directories, whatever their type.
+      - id: c
+        text: "`-type l`"
+        rationale: Wrong. -type l selects symbolic links.
+      - id: d
+        text: "`-type d`"
+        rationale: Correct. -type d is true only for directories.
+    answer: [d]
+    explanation: >
+      find's -type test takes a one-letter file type: f for regular files, d for directories,
+      l for symbolic links (and b, c, p, s for block devices, character devices, named pipes and
+      sockets).
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: Using Criteria to Speed Search }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [find]
+
+  - id: 101-103.3-0005
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: >
+      You want to see which files are stored in `backup.tar` without unpacking anything. Which
+      command do you use?
+    options:
+      - id: a
+        text: "`tar -xf backup.tar`"
+        rationale: Wrong. -x extracts the members, writing them to disk.
+      - id: b
+        text: "`tar -cf backup.tar`"
+        rationale: Wrong. -c creates an archive; with no files named, GNU tar refuses to create an empty one.
+      - id: c
+        text: "`tar -rf backup.tar`"
+        rationale: Wrong. -r appends files to the end of an existing archive.
+      - id: d
+        text: "`tar -tf backup.tar`"
+        rationale: Correct. -t (--list) prints the names of the members without extracting them.
+    answer: [d]
+    explanation: >
+      tar needs exactly one operation: -c to create, -x to extract, -t to list (plus -r to append
+      and others). -f names the archive file; adding -v to -t gives an ls -l style listing.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: The tar Command (Archiving and Compresssion) }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [tar]
+
+  - id: 101-103.3-0006
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: >
+      A colleague sends you `notes.txt.gz`, a single text file compressed with gzip. Which command
+      restores `notes.txt`?
+    options:
+      - id: a
+        text: "`gunzip notes.txt.gz`"
+        rationale: Correct. gunzip decompresses a .gz file and removes the .gz suffix from the name.
+      - id: b
+        text: "`bunzip2 notes.txt.gz`"
+        rationale: Wrong. bunzip2 handles bzip2 data, not gzip; it would report that the file is not a bzip2 file.
+      - id: c
+        text: "`tar -xf notes.txt.gz`"
+        rationale: Wrong. The file is a compressed text file, not a tar archive, so tar does not restore notes.txt from it.
+      - id: d
+        text: "`gzip notes.txt.gz`"
+        rationale: Wrong. gzip refuses, saying the file already has the .gz suffix, and leaves it unchanged.
+    answer: [a]
+    explanation: >
+      gzip compresses a file to name.gz and removes the original; gunzip (or gzip -d) reverses it.
+      The bzip2 equivalents are bzip2 and bunzip2.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: Compressing with tar }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Rationale for the tar option corrected: a tiny gzipped text file makes tar exit 0 with nothing extracted, so it now says tar does not restore the file." }
+    tags: [gzip, gunzip]
+
+  - id: 101-103.3-0007
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: >
+      Which command examines a file's contents and prints a description such as `ASCII text`,
+      `gzip compressed data` or `ELF 64-bit LSB pie executable`?
+    options:
+      - id: a
+        text: "`stat`"
+        rationale: Wrong. stat prints metadata from the inode (size, owner, times, "regular file"), not what the data is.
+      - id: b
+        text: "`ls -l`"
+        rationale: Wrong. ls -l shows the file type character and metadata, but does not look inside the file.
+      - id: c
+        text: "`touch`"
+        rationale: Wrong. touch creates files or updates timestamps; it reports nothing about content.
+      - id: d
+        text: "`file`"
+        rationale: Correct. file tests the data (magic numbers and other patterns) and describes its format.
+    answer: [d]
+    explanation: >
+      Linux does not rely on file name extensions, so `file` is the tool for finding out what a
+      file really contains. It also recognises directories, device files and symbolic links.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 1, section: Introduction }
+    verify:
+      command: sh -c 'printf "hello\n" > /tmp/v.txt && gzip -c /tmp/v.txt > /tmp/v.gz && od -An -tx1 -N2 /tmp/v.gz'
+      expect: { exit_code: 0, stdout_contains: "1f 8b" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [file]
+
+  - id: 101-103.3-0008
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      `/srv` exists, but `/srv/app` does not. Which single command creates the directory
+      `/srv/app/logs/2026`?
+    options:
+      - id: a
+        text: "`mkdir /srv/app/logs/2026`"
+        rationale: Wrong. Without -p, mkdir fails with "No such file or directory" because the parent directories are missing.
+      - id: b
+        text: "`mkdir -m 755 /srv/app/logs/2026`"
+        rationale: Wrong. -m only sets the new directory's permissions; the missing parents still make it fail.
+      - id: c
+        text: "`mkdir -p /srv/app/logs/2026`"
+        rationale: Correct. -p (--parents) creates every missing directory along the path.
+      - id: d
+        text: "`mkdir -v /srv/app/logs/2026`"
+        rationale: Wrong. -v only prints a message for each directory created; it does not create parents.
+    answer: [c]
+    explanation: >
+      mkdir -p creates any missing parent directories and does not complain if the target already
+      exists, which also makes it handy in scripts.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 1, section: Creating Directories with mkdir }
+    verify:
+      command: sh -c 'mkdir -p /tmp/v/app/logs/2026 && test -d /tmp/v/app/logs/2026 && echo created'
+      expect: { exit_code: 0, stdout_contains: "created" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [mkdir]
+
+  - id: 101-103.3-0009
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      In your current directory, you want the file `report.txt` to be called `report-old.txt`
+      from now on, with no copy left under the old name. Which command does this?
+    options:
+      - id: a
+        text: "`mv report.txt report-old.txt`"
+        rationale: Correct. mv with a new name in the same directory renames the file.
+      - id: b
+        text: "`cp report.txt report-old.txt`"
+        rationale: Wrong. cp makes a second file; report.txt is still there afterwards.
+      - id: c
+        text: "`mv -t report-old.txt report.txt`"
+        rationale: Wrong. -t names a target directory; report-old.txt is not a directory, so mv fails.
+      - id: d
+        text: "`touch report-old.txt`"
+        rationale: Wrong. touch just creates an empty report-old.txt and leaves report.txt as it was.
+    answer: [a]
+    explanation: >
+      mv both moves and renames. If the destination is an existing directory, the file is moved
+      into it; otherwise the destination is taken as the new name.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 1, section: Moving Files with mv }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [mv]
+
+  - id: 101-103.3-0010
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      Plain `ls` in your home directory does not show `.bashrc` or `.profile`, although both
+      exist. Which option makes `ls` include them?
+    options:
+      - id: a
+        text: "`-l`"
+        rationale: Wrong. -l switches to the long format but still skips names that begin with a dot.
+      - id: b
+        text: "`-a`"
+        rationale: Correct. -a lists every entry, including those whose names begin with a dot (and . and ..).
+      - id: c
+        text: "`-R`"
+        rationale: Wrong. -R descends into subdirectories but still skips dot files.
+      - id: d
+        text: "`-h`"
+        rationale: Wrong. -h only changes how sizes are printed (K, M, G) in long listings.
+    answer: [b]
+    explanation: >
+      Names starting with a dot are hidden by convention. ls -a shows them, together with the `.`
+      and `..` entries; ls -A shows them without `.` and `..`.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 1, section: Using ls to List Files }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [ls, hidden-files]
+
+  - id: 101-103.3-0011
+    type: multi_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      Which **TWO** `cp` options make `cp` copy a directory together with everything inside it?
+    select_count: 2
+    options:
+      - id: a
+        text: "`-R`"
+        rationale: Correct. -R copies directories recursively.
+      - id: b
+        text: "`-s`"
+        rationale: Wrong. -s makes symbolic links instead of copies; without -r it still skips directories.
+      - id: c
+        text: "`-r`"
+        rationale: Correct. -r is the same as -R (and --recursive) in GNU cp.
+      - id: d
+        text: "`-l`"
+        rationale: Wrong. -l makes hard links instead of copies; without -r it still skips directories.
+    answer: [a, c]
+    explanation: >
+      Without a recursive option, cp skips directories with "-r not specified; omitting directory".
+      -r, -R and --recursive all copy the directory and its whole tree.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 1, section: Recursive Copy with cp -r }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [cp, recursion]
+
+  - id: 101-103.3-0012
+    type: multi_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      The archive `/root/backup.tar` must be unpacked into `/opt/build`, which already exists.
+      Which **TWO** commands do this?
+    select_count: 2
+    options:
+      - id: a
+        text: "`tar -xf /root/backup.tar /opt/build`"
+        rationale: 'Wrong. A name after the archive is read as a member to extract; tar reports "/opt/build: Not found in archive".'
+      - id: b
+        text: "`tar -xf /root/backup.tar -C /opt/build`"
+        rationale: Correct. -C (--directory) makes tar change to /opt/build before extracting.
+      - id: c
+        text: "`tar -cf /opt/build /root/backup.tar`"
+        rationale: Wrong. This tries to create a new archive named /opt/build containing backup.tar; it extracts nothing.
+      - id: d
+        text: "`cd /opt/build && tar -xf /root/backup.tar`"
+        rationale: Correct. tar extracts into the current directory, so changing there first works too.
+    answer: [b, d]
+    explanation: >
+      tar extracts into the current working directory. Either change into the target first, or
+      let tar do it with -C DIR (long form --directory=DIR).
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: Extracting an Archive }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [tar]
+
+  - id: 101-103.3-0013
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      Some projects name their file `README`, others `Readme` or `readme`. Which `find` expression
+      matches all of these spellings?
+    options:
+      - id: a
+        text: "`-name readme`"
+        rationale: Wrong. -name is case-sensitive, so it matches only the all-lowercase spelling.
+      - id: b
+        text: "`-name '[Rr]eadme'`"
+        rationale: Wrong. This covers readme and Readme but not README.
+      - id: c
+        text: "`-iname readme`"
+        rationale: Correct. -iname compares names without regard to letter case.
+      - id: d
+        text: "`-type readme`"
+        rationale: Wrong. -type takes a single file type letter such as f or d, not a name.
+    answer: [c]
+    explanation: >
+      -iname works like -name, wildcards included, but ignores case. For example
+      `find ~ -iname '*.jpg'` also finds photo.JPG.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: Using Criteria to Speed Search }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [find]
+
+  - id: 101-103.3-0014
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: Which command copies the contents of `in.img` to `out.img` using `dd`?
+    options:
+      - id: a
+        text: "`dd if=in.img of=out.img`"
+        rationale: Correct. dd takes its input and output as if= and of= operands.
+      - id: b
+        text: "`dd in.img out.img`"
+        rationale: Wrong. dd does not take plain file names; it reports an unrecognized operand.
+      - id: c
+        text: "`dd -i in.img -o out.img`"
+        rationale: Wrong. dd has no -i or -o options; files are given with if= and of=.
+      - id: d
+        text: "`dd < in.img out.img`"
+        rationale: Wrong. dd would read standard input, but out.img is still an unrecognized operand.
+    answer: [a]
+    explanation: >
+      Unlike most GNU tools, dd uses operand=value syntax: if= (input), of= (output), bs= (block
+      size), count=, skip=, seek=, conv=, status=. Without if= it reads standard input and without
+      of= it writes standard output.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: The dd Command }
+    verify:
+      command: sh -c 'printf abc > /tmp/in.img && dd if=/tmp/in.img of=/tmp/out.img status=none && cat /tmp/out.img'
+      expect: { exit_code: 0, stdout_contains: "abc" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [dd]
+
+  - id: 101-103.3-0015
+    type: fill_in
+    difficulty: 2
+    pool: holdout
+    stem: >
+      `big.log.bz2` was compressed with bzip2. Type a command that decompresses it so that
+      `big.log` is created.
+    fill_in:
+      accepted:
+        - '(sudo\s+)?((/usr)?/bin/)?(bunzip2(\s+(-k|-v|--keep|--verbose))*|bzip2\s+(-d|--decompress|-d[kv]+|-[kv]+d[kv]*))(\s+(\./)?big\.log\.bz2)?'
+        - '(sudo\s+)?((/usr)?/bin/)?bzcat\s+(\./)?big\.log\.bz2\s*>\s*(\./)?big\.log'
+      match: regex
+      case_sensitive: true
+    explanation: >
+      bunzip2 big.log.bz2 (or bzip2 -d big.log.bz2) writes big.log and, unless -k is given,
+      removes the .bz2 file. bzcat big.log.bz2 > big.log does the same while keeping the original.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: Compressing with tar }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [bzip2, bunzip2]
+
+  - id: 101-103.3-0016
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      The directory `projects` holds several files and subdirectories that you no longer need. You
+      get the error shown. Which command removes `projects` and everything in it?
+    exhibit: |
+      $ rm projects
+      rm: cannot remove 'projects': Is a directory
+    options:
+      - id: a
+        text: "`rmdir projects`"
+        rationale: Wrong. rmdir only removes empty directories and fails with "Directory not empty".
+      - id: b
+        text: "`rm -r projects`"
+        rationale: Correct. -r makes rm descend into the directory and delete its contents, then the directory.
+      - id: c
+        text: "`rm -f projects`"
+        rationale: Wrong. -f suppresses prompts and errors for missing files, but rm still will not remove a directory without -r.
+      - id: d
+        text: "`rm -i projects`"
+        rationale: Wrong. -i only asks before each removal; the directory is still refused.
+    answer: [b]
+    explanation: >
+      rm deletes directories only when told to recurse with -r (-R, --recursive). Because a recursive
+      delete cannot be undone, check the path first; -i adds a prompt for each item.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 1, section: Recursive Deletion with rm -r }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [rm, recursion]
+
+  - id: 101-103.3-0017
+    type: fill_in
+    difficulty: 3
+    pool: holdout
+    stem: >
+      Type the `touch` option that sets a file's access time to now while leaving its
+      modification time unchanged.
+    fill_in:
+      accepted:
+        - '(-a|--time(=|\s+)(atime|access|use))'
+        - '(sudo\s+)?((/usr)?/bin/)?touch\s+(-a|--time(=|\s+)(atime|access|use))(\s+(?!-)\S+)+'
+      match: regex
+      case_sensitive: true
+    explanation: >
+      touch normally updates both times. -a changes only the access time and -m only the
+      modification time; --time=atime (or access, use) is the long equivalent of -a.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 1, section: Creating files with touch }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [touch, timestamps]
+
+  - id: 101-103.3-0018
+    type: fill_in
+    difficulty: 3
+    pool: holdout
+    stem: >
+      The command `tar -c_f logs.tar.bz2 logs/` should create a bzip2-compressed archive. Type the
+      letter that belongs in place of the underscore.
+    fill_in:
+      accepted: ['-?j', '--bzip2']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      GNU tar compresses while it archives: -z uses gzip, -j uses bzip2 and -J uses xz. The full
+      command is `tar -cjf logs.tar.bz2 logs/`.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: Compressing with tar }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [tar, bzip2]
+
+  - id: 101-103.3-0019
+    type: multi_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      A directory contains exactly the files shown. Which **TWO** patterns, used with `ls`, list
+      `data7.csv` and nothing else?
+    exhibit: |
+      $ ls
+      data.csv  data7.csv  data77.csv  dataX.csv
+    select_count: 2
+    options:
+      - id: a
+        text: "`data[0-9].csv`"
+        rationale: Correct. Exactly one digit between "data" and ".csv" matches only data7.csv here.
+      - id: b
+        text: "`data?.csv`"
+        rationale: Wrong. ? accepts any character, so dataX.csv matches as well.
+      - id: c
+        text: "`data7*.csv`"
+        rationale: Wrong. * can match the second 7, so data77.csv matches as well.
+      - id: d
+        text: "`data[!A-Z].csv`"
+        rationale: Correct. One character that is not an uppercase letter excludes dataX.csv; data.csv and data77.csv have the wrong length.
+      - id: e
+        text: "`data*[0-9].csv`"
+        rationale: Wrong. The * lets data77.csv match too.
+    answer: [a, d]
+    explanation: >
+      A bracket expression always stands for exactly one character; `[!...]` (or `[^...]` in bash)
+      negates the set. `?` is one character of any kind and `*` any number, so they also accept the
+      other names here.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 1, section: Bracketed Characters }
+    verify:
+      command: sh -c 'mkdir -p /tmp/g && cd /tmp/g && touch data.csv data7.csv data77.csv dataX.csv && echo data[0-9].csv data[!A-Z].csv'
+      expect: { exit_code: 0, stdout_regex: "^data7\\.csv data7\\.csv\\s*$" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [globbing, wildcards]
+
+  - id: 101-103.3-0020
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: Which command lists the files under `/var/log` that are larger than 50 MiB?
+    options:
+      - id: a
+        text: "`find /var/log -size -50M`"
+        rationale: Wrong. A leading minus means less than, so this lists small files.
+      - id: b
+        text: "`find /var/log -size +50M`"
+        rationale: Correct. A leading plus means greater than, and M is the mebibyte unit.
+      - id: c
+        text: "`find /var/log -size 50M+`"
+        rationale: Wrong. The sign must come first; find rejects this with "invalid -size type".
+      - id: d
+        text: "`find /var/log -size +50m`"
+        rationale: Wrong. Size units are case-sensitive and m is not one of them; find rejects it.
+    answer: [b]
+    explanation: >
+      -size takes a number with an optional unit (c bytes, k KiB, M MiB, G GiB; the default is
+      512-byte blocks). `+n` means more than n units, `-n` less than n units, plain `n` exactly n.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: Locating Files by Size }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [find, size]
+
+  - id: 101-103.3-0021
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      Which `find` test selects files whose contents changed less than 72 hours ago?
+    options:
+      - id: a
+        text: "`-mtime 3`"
+        rationale: Wrong. Without a sign, find matches files whose age in whole days is exactly 3 (72 to 96 hours).
+      - id: b
+        text: "`-mtime +3`"
+        rationale: Wrong. +3 selects files at least four whole days old.
+      - id: c
+        text: "`-atime -3`"
+        rationale: Wrong. -atime tests the last access time, not the last modification.
+      - id: d
+        text: "`-mtime -3`"
+        rationale: Correct. -3 means fewer than three whole days, i.e. modified within the last 72 hours.
+    answer: [d]
+    explanation: >
+      -mtime counts the time since the last modification in 24-hour periods, dropping any
+      fraction. A minus sign means less than, a plus sign more than, and no sign exactly.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: Locating Files by Modification Time }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [find, mtime]
+
+  - id: 101-103.3-0022
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      Which command creates a cpio archive `docs.cpio` holding the directory `docs` and everything
+      below it?
+    options:
+      - id: a
+        text: "`find docs | cpio -o > docs.cpio`"
+        rationale: Correct. cpio -o reads the list of names from standard input and writes the archive to standard output.
+      - id: b
+        text: "`cpio -o docs > docs.cpio`"
+        rationale: Wrong. In copy-out mode cpio does not accept file names as arguments; it fails with "Too many arguments".
+      - id: c
+        text: "`cpio -o -F docs.cpio docs`"
+        rationale: Wrong. -F does name the archive file, but the extra argument docs is still rejected; the names must come on standard input.
+      - id: d
+        text: "`find docs | cpio -i > docs.cpio`"
+        rationale: Wrong. -i is copy-in (extract) mode; it expects an archive on standard input, not a list of names.
+    answer: [a]
+    explanation: >
+      cpio never walks directories itself. It archives exactly the names it is fed on standard
+      input, which is why find is its usual partner: `find DIR | cpio -o > FILE`.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: The cpio Command }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [cpio]
+
+  - id: 101-103.3-0023
+    type: fill_in
+    difficulty: 3
+    pool: holdout
+    stem: >
+      Type the `mkdir` option that creates any missing parent directories along the given path
+      (and does not complain if the directory already exists).
+    fill_in:
+      accepted:
+        - '(-p|--parents|-pv|-vp)'
+        - '(sudo\s+)?((/usr)?/bin/)?mkdir\s+(-p|--parents|-pv|-vp)(\s+(?!-)\S+)+'
+      match: regex
+      case_sensitive: true
+    explanation: >
+      mkdir -p a/b/c creates a, a/b and a/b/c as needed. Without -p, mkdir fails if a parent is
+      missing or the directory exists.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 1, section: Creating Directories with mkdir }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [mkdir]
+
+  - id: 101-103.3-0024
+    type: multi_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      Which **TWO** commands produce a gzip-compressed copy of `access.log` and leave the
+      uncompressed `access.log` in place?
+    select_count: 2
+    options:
+      - id: a
+        text: "`gzip access.log`"
+        rationale: Wrong. By default gzip replaces access.log with access.log.gz.
+      - id: b
+        text: "`gzip -d access.log`"
+        rationale: Wrong. -d decompresses; it refuses a file without a compression suffix.
+      - id: c
+        text: "`gzip -k access.log`"
+        rationale: Correct. -k (--keep) writes access.log.gz and keeps the input file.
+      - id: d
+        text: "`bzip2 access.log`"
+        rationale: Wrong. This uses bzip2, not gzip, and also removes the original.
+      - id: e
+        text: "`gzip -c access.log > access.log.gz`"
+        rationale: Correct. -c writes the compressed data to standard output, so the input file is not touched.
+    answer: [c, e]
+    explanation: >
+      gzip (like bzip2 and xz) deletes the input after compressing it. Keep it with -k, or send the
+      output to standard output with -c and redirect it yourself.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: Compressing with tar }
+    verify:
+      command: sh -c 'cd /tmp && seq 100 > a.log && gzip -k a.log && seq 100 > b.log && gzip -c b.log > b.log.gz && ls a.log a.log.gz b.log b.log.gz'
+      expect: { exit_code: 0 }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [gzip]
+
+  - id: 101-103.3-0025
+    type: multi_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      `old` is an **empty** directory in the current directory. Which **TWO** commands remove it?
+    select_count: 2
+    options:
+      - id: a
+        text: "`rm old`"
+        rationale: Wrong. Without -r (or -d), rm refuses with "Is a directory", even if it is empty.
+      - id: b
+        text: "`rmdir old`"
+        rationale: Correct. rmdir removes empty directories.
+      - id: c
+        text: "`unlink old`"
+        rationale: Wrong. unlink removes a single file name; on a directory it fails with "Is a directory".
+      - id: d
+        text: "`rm -r old`"
+        rationale: Correct. rm -r removes a directory whether or not it has contents.
+      - id: e
+        text: "`rm -f old`"
+        rationale: Wrong. -f does not allow rm to delete directories; it still needs -r or -d.
+    answer: [b, d]
+    explanation: >
+      rmdir handles empty directories only, while rm -r deletes a directory and anything in it.
+      Plain rm, with or without -f, does not remove directories.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 1, section: Recursive Deletion with rm -r }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [rm, rmdir]
+
+  - id: 101-103.3-0026
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      You want to check the permissions and owner of the directory `/srv/www` itself, not of the
+      files it contains. Which command shows them?
+    options:
+      - id: a
+        text: "`ls -l /srv/www`"
+        rationale: Wrong. Given a directory, ls lists its contents, so you see the files inside instead.
+      - id: b
+        text: "`ls -lR /srv/www`"
+        rationale: Wrong. -R lists the contents and the contents of every subdirectory, still not the directory itself.
+      - id: c
+        text: "`ls -ld /srv/www`"
+        rationale: Correct. -d lists the directory entry itself instead of its contents.
+      - id: d
+        text: "`ls -lh /srv/www`"
+        rationale: Wrong. -h only formats sizes; the contents are still listed.
+    answer: [c]
+    explanation: >
+      ls normally opens a directory and lists what is in it. -d treats a directory argument like
+      any other file, so ls -ld shows its own permission string, owner, size and date.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 1, section: Using ls to List Files }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [ls]
+
+  - id: 101-103.3-0027
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      Given the directories shown, you run `cp -r site backup`. Where is the copy of `index.html`
+      afterwards?
+    exhibit: |
+      $ ls -F
+      backup/  site/
+      $ ls site
+      index.html
+    options:
+      - id: a
+        text: "`backup/index.html`"
+        rationale: Wrong. That happens only when backup does not exist yet, in which case backup becomes the copy of site.
+      - id: b
+        text: "`backup/site/index.html`"
+        rationale: Correct. backup already exists, so cp copies the directory site into it.
+      - id: c
+        text: "`site/backup/index.html`"
+        rationale: Wrong. The last argument is the destination; nothing is written into site.
+      - id: d
+        text: Nowhere; cp reports "omitting directory 'site'"
+        rationale: Wrong. That message appears without -r; with -r the directory is copied.
+    answer: [b]
+    explanation: >
+      When the destination is an existing directory, cp puts the source inside it under its own
+      name. When the destination does not exist, the copy is created with the destination's name.
+      To copy only the contents of site into backup, use `cp -r site/. backup` (or site/* if there
+      are no hidden files to keep).
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 1, section: Recursive Copy with cp -r }
+    verify:
+      command: sh -c 'mkdir -p /tmp/c/site /tmp/c/backup && touch /tmp/c/site/index.html && cd /tmp/c && cp -r site backup && ls backup/site'
+      expect: { exit_code: 0, stdout_contains: "index.html" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [cp, recursion]
+
+  - id: 101-103.3-0028
+    type: multi_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      A directory contains exactly the files shown. Which **TWO** patterns, used with `ls`, list
+      `report1.txt` and `Report2.txt` and no other file?
+    exhibit: |
+      $ ls
+      Report2.txt  report.txt  report1.txt  report12.txt  reportA.txt
+    select_count: 2
+    options:
+      - id: a
+        text: "`?eport?.txt`"
+        rationale: Wrong. The second ? accepts a letter as well, so reportA.txt is listed too.
+      - id: b
+        text: "`[rR]eport[0-9].txt`"
+        rationale: Correct. One of r or R, then exactly one digit; report.txt, report12.txt and reportA.txt do not fit.
+      - id: c
+        text: "`[Rr]eport[12].txt`"
+        rationale: Correct. Exactly one character from the set 1 or 2 matches report1.txt and Report2.txt only.
+      - id: d
+        text: "`*eport[0-9]*.txt`"
+        rationale: Wrong. The trailing * lets report12.txt match as well.
+      - id: e
+        text: "`[Rr]eport*.txt`"
+        rationale: Wrong. * also matches nothing, A or 12, so all five files are listed.
+    answer: [b, c]
+    explanation: >
+      Bracket expressions match exactly one character from a set or range and can be combined with
+      ? and *. Here the first character must be r or R and exactly one digit must follow "eport".
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 1, section: Combining Wildcards }
+    verify:
+      command: sh -c 'mkdir -p /tmp/r && cd /tmp/r && touch Report2.txt report.txt report1.txt report12.txt reportA.txt && echo [rR]eport[0-9].txt && echo [Rr]eport[12].txt'
+      expect: { exit_code: 0, stdout_regex: "^Report2\\.txt report1\\.txt\\nReport2\\.txt report1\\.txt\\s*$" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [globbing, wildcards]
+
+  - id: 101-103.3-0029
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      In a directory tree holding three PNG files, one of the commands below printed exactly the
+      output shown. Which one?
+    exhibit: |
+      X ./z.png ./sub/x.png ./y.png
+    options:
+      - id: a
+        text: "`find . -name '*.png' -exec echo X {} \\;`"
+        rationale: Wrong. With \; the command runs once per file, giving three lines with one name each.
+      - id: b
+        text: "`find . -name '*.png' -exec echo X \\;`"
+        rationale: Wrong. Without {} no file name is passed, so echo prints a bare X three times.
+      - id: c
+        text: "`find . -name '*.png' -exec echo X {} +`"
+        rationale: Correct. Ending -exec with + passes as many names as fit to one run of the command.
+      - id: d
+        text: "`find . -name '*.png' -ok echo X {} \\;`"
+        rationale: Wrong. -ok asks for confirmation before each run and still handles one file at a time.
+    answer: [c]
+    explanation: >
+      In -exec, {} is replaced by the current file name. `\;` ends the command and runs it once per
+      match; `+` ends it and collects many matches into a single run, much like xargs.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: Acting on the Result Set }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [find, exec]
+
+  - id: 101-103.3-0030
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      You try to add `new.log` to an existing archive and get the error shown. How do you get
+      `new.log` into the archive?
+    exhibit: |
+      $ tar -rf logs.tar.gz new.log
+      tar: Cannot update compressed archives
+      tar: Error is not recoverable: exiting now
+    options:
+      - id: a
+        text: Gunzip it, append with `tar -rf logs.tar new.log`, then gzip it again
+        rationale: Correct. Appending only works on an uncompressed archive, so decompress, append, and compress again.
+      - id: b
+        text: Run `tar -rzf logs.tar.gz new.log` so tar knows the archive is gzip-compressed
+        rationale: Wrong. Adding -z gives the same "Cannot update compressed archives" error.
+      - id: c
+        text: Run `tar -uf logs.tar.gz new.log`, because -u updates archives in place
+        rationale: Wrong. -u has the same restriction as -r and fails on a compressed archive.
+      - id: d
+        text: Run the same command as root, because the archive belongs to another user
+        rationale: Wrong. The message is about compression, not permissions; root gets the same error.
+    answer: [a]
+    explanation: >
+      tar can append (-r) or update (-u) only an uncompressed archive, because it must write after
+      the last member in place. A compressed archive has to be decompressed first, or recreated.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: Compressing with tar }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Correct option shortened; it was the longest option." }
+    tags: [tar, gzip]
+
+  - id: 101-103.3-0031
+    type: fill_in
+    difficulty: 4
+    pool: holdout
+    stem: >
+      Type a `dd` command that saves the first 512 bytes of `/dev/sda` (the boot sector) to the
+      file `mbr.bin`. Set the block size explicitly to 512 bytes and copy exactly one block.
+    fill_in:
+      accepted:
+        - '(sudo\s+)?((/usr)?/bin/)?dd(?=.*\sif=/dev/sda(\s|$))(?=.*\sof=(\./)?mbr\.bin(\s|$))(?=.*\sbs=512(\s|$))(?=.*\scount=1(\s|$))(\s+(if=/dev/sda|of=(\./)?mbr\.bin|bs=512|count=1|status=(none|noxfer|progress))){4,5}'
+      match: regex
+      case_sensitive: true
+    explanation: >
+      `dd if=/dev/sda of=mbr.bin bs=512 count=1` reads one 512-byte block from the start of the disk.
+      The operands can be given in any order. bs sets the block size and count how many blocks to copy.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: The dd Command }
+    verify:
+      command: sh -c 'head -c 4096 /dev/urandom > /tmp/disk && dd if=/tmp/disk of=/tmp/mbr.bin bs=512 count=1 status=none && wc -c < /tmp/mbr.bin'
+      expect: { exit_code: 0, stdout_regex: "^\\s*512\\s*$" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [dd]
+
+  - id: 101-103.3-0032
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      `draft.txt` should be renamed to `final.txt`, but if a `final.txt` already exists it must be
+      left untouched and you must not be asked anything. Which command does this?
+    options:
+      - id: a
+        text: "`mv -i draft.txt final.txt`"
+        rationale: Wrong. -i asks for confirmation before overwriting, and you must not be asked.
+      - id: b
+        text: "`mv -f draft.txt final.txt`"
+        rationale: Wrong. -f overwrites final.txt without asking, which is what you want to avoid.
+      - id: c
+        text: "`mv -v draft.txt final.txt`"
+        rationale: Wrong. -v only reports what was done; an existing final.txt is still overwritten.
+      - id: d
+        text: "`mv -n draft.txt final.txt`"
+        rationale: Correct. -n (--no-clobber) never overwrites an existing destination and does not prompt.
+    answer: [d]
+    explanation: >
+      By default mv overwrites silently. -i prompts first, -f forces overwriting, and -n refuses to
+      overwrite. If several of these are given, the last one wins.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 1, section: Moving Files with mv }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [mv]
+
+  - id: 101-103.3-0033
+    type: multi_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      Which **TWO** commands produce `site.tar.gz`, a gzip-compressed tar archive of the directory
+      `site`?
+    select_count: 2
+    options:
+      - id: a
+        text: "`tar -czf site.tar.gz site`"
+        rationale: Correct. -c creates the archive, -z compresses it with gzip and -f names the output file.
+      - id: b
+        text: "`tar -cjf site.tar.gz site`"
+        rationale: Wrong. -j compresses with bzip2; the name ends in .gz but the content is bzip2 data.
+      - id: c
+        text: "`gzip -r site`"
+        rationale: Wrong. gzip -r compresses each file inside site separately; no tar archive is made.
+      - id: d
+        text: "`tar -cf - site | gzip > site.tar.gz`"
+        rationale: Correct. tar writes the archive to standard output (-f -) and gzip compresses the stream.
+      - id: e
+        text: "`tar -xzf site.tar.gz site`"
+        rationale: Wrong. -x extracts from an existing archive; it does not create one.
+    answer: [a, d]
+    explanation: >
+      tar -z is shorthand for piping the archive through gzip, so `tar -czf` and
+      `tar -cf - … | gzip > …` give the same kind of file. The file name does not choose the
+      compression; the option does.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: Compressing with tar }
+    verify:
+      command: sh -c 'mkdir -p /tmp/s/site && echo hi > /tmp/s/site/index.html && cd /tmp/s && tar -cf - site | gzip > site.tar.gz && tar -tzf site.tar.gz'
+      expect: { exit_code: 0, stdout_contains: "site/index.html" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [tar, gzip]
+
+  - id: 101-103.3-0034
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      You expected `find` to report both PNG files below, but it reports only one. Why?
+    exhibit: |
+      $ ls
+      diagram.png  img
+      $ ls img
+      logo.png
+      $ find . -name *.png
+      ./diagram.png
+    options:
+      - id: a
+        text: find does not descend into subdirectories unless -R is given
+        rationale: Wrong. find is recursive by default; it has no -R option.
+      - id: b
+        text: The shell replaced *.png with diagram.png before find ran
+        rationale: Correct. The unquoted pattern matched a file in the current directory, so find received -name diagram.png.
+      - id: c
+        text: -name only matches files in the starting directory; -path is needed for subdirectories
+        rationale: Wrong. -name tests the base name of every file at every depth.
+      - id: d
+        text: logo.png is a hidden file, which find skips unless -a is given
+        rationale: Wrong. logo.png does not start with a dot, and find does not skip hidden files anyway.
+    answer: [b]
+    explanation: >
+      The shell expands wildcards before a command starts. Quote patterns meant for find
+      (`find . -name '*.png'`) so they reach find unchanged. With two matches in the current
+      directory, the unquoted form even makes find fail with "paths must precede expression".
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: How to Find Files }
+    verify:
+      command: sh -c 'mkdir -p /tmp/f/img && cd /tmp/f && touch diagram.png img/logo.png && find . -name *.png'
+      expect: { exit_code: 0, stdout_regex: "^\\./diagram\\.png\\s*$" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [find, globbing, quoting]
+
+  - id: 101-103.3-0035
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      You wanted every file under `/srv/data` smaller than one mebibyte, but `find` returns only
+      the empty file. Why?
+    exhibit: |
+      $ ls -l /srv/data
+      total 300
+      -rw-r--r-- 1 ana ana      0 Oct 25 13:16 empty.dat
+      -rw-r--r-- 1 ana ana 300000 Oct 25 13:16 mid.dat
+      -rw-r--r-- 1 ana ana    512 Oct 25 13:16 small.dat
+      $ find /srv/data -type f -size -1M
+      /srv/data/empty.dat
+    options:
+      - id: a
+        text: "-size -1M means \"exactly 1 MiB or less\", and only the empty file is listed by mistake"
+        rationale: Wrong. A leading minus means less than, not "or less", and the output here is the expected behaviour.
+      - id: b
+        text: "M counts 512-byte blocks, so -1M is less than 512 bytes"
+        rationale: Wrong. M is mebibytes; only a size with no unit (or b) counts 512-byte blocks.
+      - id: c
+        text: "-type f leaves out files smaller than one 512-byte block"
+        rationale: Wrong. -type f selects regular files of any size.
+      - id: d
+        text: "Sizes are rounded up to whole MiB, so every non-empty file counts as 1M"
+        rationale: Correct. Sizes are rounded up to the unit before comparing, so only a 0-byte file is below 1M.
+    answer: [d]
+    explanation: >
+      find rounds a file's size up to whole units of the given suffix before comparing. With M, a
+      1-byte file and a 1048576-byte file both count as 1, so -size -1M matches only empty files.
+      Count in bytes for an exact limit: -size -1048576c.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: Locating Files by Size }
+    verify:
+      command: sh -c 'mkdir -p /tmp/z && cd /tmp/z && true > e && head -c 512 /dev/zero > s && find . -type f -size -1M'
+      expect: { exit_code: 0, stdout_regex: "^\\./e\\s*$" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Correct option shortened (was longest); explanation now gives -1048576c as the exact form, since -1024k also rounds." }
+    tags: [find, size]
+
+  - id: 101-103.3-0036
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      An archive was made from a list of regular files only. Extracting it into an empty directory
+      fails as shown. Which command extracts it correctly?
+    exhibit: |
+      $ find web -type f | cpio -o > ~/web.cpio
+      1 block
+      $ cd /tmp/restore
+      $ cpio -i < ~/web.cpio
+      cpio: web/index.html: Cannot open: No such file or directory
+      cpio: web/css/s.css: Cannot open: No such file or directory
+      1 block
+    options:
+      - id: a
+        text: "`cpio -iv < ~/web.cpio`"
+        rationale: Wrong. -v only lists names as they are processed; the missing directories still cause the same errors.
+      - id: b
+        text: "`cpio -it < ~/web.cpio`"
+        rationale: Wrong. -t only prints the table of contents; nothing is extracted.
+      - id: c
+        text: "`cpio -id < ~/web.cpio`"
+        rationale: Correct. -d makes cpio create the leading directories it needs, such as web and web/css.
+      - id: d
+        text: "`mkdir web && cpio -i < ~/web.cpio`"
+        rationale: Wrong. That fixes web/index.html, but web/css is still missing, so s.css fails.
+    answer: [c]
+    explanation: >
+      cpio only creates what is in the archive. When the list fed to cpio -o had no directory
+      entries, extraction needs -d (--make-directories) to create the parent directories. With
+      directories in the list (plain `find web`), they come first and are made from the archive.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: The cpio Command }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [cpio]
+
+  - id: 101-103.3-0037
+    type: multi_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      `src` contains the file `main`, the hidden file `.env` and the directory `sub`, which holds
+      the hidden file `.hidden`. The directory `dst` exists and is empty. After running
+      `cp -r src/* dst/` in bash with default settings, which **TWO** statements are true?
+    select_count: 2
+    options:
+      - id: a
+        text: "`dst/.env` does not exist"
+        rationale: Correct. src/* does not match names that start with a dot, so .env is never given to cp.
+      - id: b
+        text: "`dst/src` is created, holding a copy of the whole tree"
+        rationale: Wrong. The shell passes src/main and src/sub, so cp copies the contents, not src itself.
+      - id: c
+        text: cp fails with "omitting directory" for sub
+        rationale: Wrong. That only happens without -r; with -r sub is copied recursively.
+      - id: d
+        text: "`dst/.env` exists because -r includes hidden files"
+        rationale: Wrong. The selection is done by the shell's glob, before cp runs; -r cannot add what was never passed.
+      - id: e
+        text: "`dst/sub/.hidden` exists"
+        rationale: Correct. sub is copied recursively, and cp copies everything inside it, hidden or not.
+    answer: [a, e]
+    explanation: >
+      A leading dot must be matched explicitly, so * skips hidden entries at the level where the
+      glob is expanded. Once cp -r copies a directory, it copies all of that directory's entries.
+      `cp -r src/. dst/` copies the contents including .env.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 1, section: The Asterisk }
+    verify:
+      command: sh -c 'mkdir -p /tmp/h/src/sub /tmp/h/dst && cd /tmp/h && touch src/main src/.env src/sub/.hidden && cp -r src/* dst/ && test ! -e dst/.env && test -e dst/sub/.hidden && echo ok'
+      expect: { exit_code: 0, stdout_contains: "ok" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [cp, globbing, hidden-files]
+
+  - id: 101-103.3-0038
+    type: fill_in
+    difficulty: 5
+    pool: holdout
+    stem: >
+      Type the `find` test, with its argument, that matches files last modified 11 or more full
+      days ago. A file modified 10½ days ago must **NOT** match.
+    fill_in:
+      accepted:
+        - '(find(\s+(?!-)\S+)*\s+(-type\s+f\s+)?)?-mtime\s+\+10'
+        - '(find(\s+(?!-)\S+)*\s+(-type\s+f\s+)?)?(!|\\!|-not)\s+-mtime\s+-11'
+      match: regex
+      case_sensitive: true
+    explanation: >
+      find drops the fraction of a day before comparing, so a file 10½ days old counts as 10 days.
+      `-mtime +10` means more than 10 whole days, i.e. 11 or more; `-mtime +11` would require 12.
+      `! -mtime -11` expresses the same condition.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: Locating Files by Modification Time }
+    verify:
+      command: sh -c 'mkdir -p /tmp/m && cd /tmp/m && touch -d "10 days ago 12 hours ago" a105 && touch -d "11 days ago 12 hours ago" a115 && find . -type f -mtime +10'
+      expect: { exit_code: 0, stdout_regex: "^\\./a115\\s*$" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Regex also accepts the test after -type f in a full find command." }
+    tags: [find, mtime]
+
+  - id: 101-103.3-0039
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      The directory `s` contains one file, `f`. The name `t` does not exist yet. You run
+      `cp -r s t` and then, by mistake, run exactly the same command again. What does `t` contain
+      afterwards?
+    options:
+      - id: a
+        text: Only `f`; the second run fails because `t` already exists
+        rationale: Wrong. An existing destination directory is not an error for cp; it copies into it.
+      - id: b
+        text: Only `f`; the second run overwrites `t/f` with the same data
+        rationale: Wrong. That would require copying the contents of s, but the second run copies s itself into t.
+      - id: c
+        text: "`f`, plus a subdirectory `s` holding another `f`"
+        rationale: Correct. The first run creates t as a copy of s; the second finds t existing and creates t/s.
+      - id: d
+        text: Only a subdirectory `s` that contains `f`
+        rationale: Wrong. The first run already put f directly in t, and the second run does not remove it.
+    answer: [c]
+    explanation: >
+      cp -r SRC DEST behaves differently depending on whether DEST exists. If not, DEST becomes the
+      copy of SRC. If it is an existing directory, the copy goes inside it as DEST/SRC. Running the
+      same command twice therefore nests a second copy.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 1, section: Recursive Copy with cp -r }
+    verify:
+      command: sh -c 'mkdir -p /tmp/w/s && cd /tmp/w && touch s/f && cp -r s t && cp -r s t && find t | sort'
+      expect: { exit_code: 0, stdout_regex: "^t\\nt/f\\nt/s\\nt/s/f\\s*$" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Correct option shortened; it was the longest option." }
+    tags: [cp, recursion]
+
+  - id: 101-103.3-0040
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      You need bytes 1024 to 2047 of `disk.img` (its third and fourth 512-byte sectors) in a file
+      `part.bin`. Which command copies exactly those bytes?
+    options:
+      - id: a
+        text: "`dd if=disk.img of=part.bin bs=512 seek=2 count=2`"
+        rationale: Wrong. seek skips blocks of the output; this copies the first 1024 bytes of the input.
+      - id: b
+        text: "`dd if=disk.img of=part.bin skip=1024 count=1024`"
+        rationale: Wrong. With the default 512-byte block size this skips 512 KiB and copies another 512 KiB.
+      - id: c
+        text: "`dd if=disk.img of=part.bin bs=1024 skip=2 count=1`"
+        rationale: Wrong. Skipping two 1024-byte blocks starts at byte 2048, so this copies bytes 2048 to 3071.
+      - id: d
+        text: "`dd if=disk.img of=part.bin bs=512 skip=2 count=2`"
+        rationale: Correct. It skips two 512-byte input blocks (bytes 0 to 1023) and copies the next two.
+    answer: [d]
+    explanation: >
+      skip and count are measured in input blocks (bs, default 512 bytes), and seek in output
+      blocks. Offset = skip × bs and length = count × bs; here 2 × 512 = 1024 for both.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: The dd Command }
+    verify:
+      command: sh -c 'cd /tmp && head -c 4096 /dev/urandom > disk.img && dd if=disk.img of=part.bin bs=512 skip=2 count=2 status=none && head -c 2048 disk.img | tail -c 1024 | cmp - part.bin && echo same'
+      expect: { exit_code: 0, stdout_contains: "same" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [dd]
+
+  # --------------------------------------------------------------------------- practice (CLI)
+
+  - id: 101-103.3-0041
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: Which pattern matches every file in the current directory whose name ends in `.conf`?
+    options:
+      - id: a
+        text: "`?.conf`"
+        rationale: Wrong. ? is exactly one character, so this only matches names like a.conf.
+      - id: b
+        text: "`*.conf`"
+        rationale: Correct. * matches any leading text, so every name ending in .conf matches.
+      - id: c
+        text: "`[conf]`"
+        rationale: Wrong. This matches a one-character name that is c, o, n or f.
+      - id: d
+        text: "`.conf*`"
+        rationale: Wrong. This matches names that start with .conf, such as .config.
+    answer: [b]
+    explanation: >
+      The asterisk matches any string of characters, including an empty one, so `*.conf` covers
+      `a.conf`, `sshd.conf` and `.conf`-ending names of any length (hidden files excepted).
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 1, section: The Asterisk }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [globbing, wildcards]
+
+  - id: 101-103.3-0042
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: Which command is used to rename a file?
+    options:
+      - id: a
+        text: "`cp`"
+        rationale: Wrong. cp makes a copy and leaves the original under its old name.
+      - id: b
+        text: "`rm`"
+        rationale: Wrong. rm deletes files.
+      - id: c
+        text: "`mv`"
+        rationale: Correct. mv moves files, and moving to a new name in the same directory renames.
+      - id: d
+        text: "`touch`"
+        rationale: Wrong. touch creates empty files or updates timestamps.
+    answer: [c]
+    explanation: >
+      Linux has no separate basic rename command in the 103.3 toolset: `mv old new` renames, and
+      `mv file dir/` moves a file into another directory.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 1, section: Moving Files with mv }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [mv]
+
+  - id: 101-103.3-0043
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: >
+      Which command copies data using operands such as `if=`, `of=` and `bs=`, and is often used to
+      image whole disks?
+    options:
+      - id: a
+        text: "`dd`"
+        rationale: Correct. dd copies from if= to of= in blocks of bs bytes.
+      - id: b
+        text: "`cpio`"
+        rationale: Wrong. cpio builds and extracts archives from a list of names on standard input.
+      - id: c
+        text: "`tar`"
+        rationale: Wrong. tar creates and extracts archives with options such as -c, -x and -f.
+      - id: d
+        text: "`cp`"
+        rationale: Wrong. cp copies files and directories with ordinary options and arguments.
+    answer: [a]
+    explanation: >
+      dd copies raw bytes, so it can copy disks, partitions or parts of files, and convert data on
+      the way (conv=). Its operand=value syntax sets it apart from most commands.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: The dd Command }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [dd]
+
+  - id: 101-103.3-0044
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: In the listing shown, what does the `d` at the start of the `scripts` line tell you?
+    exhibit: |
+      $ ls -l
+      drwxr-xr-x 2 maria maria 4096 Mar  3 09:12 scripts
+      -rw-r--r-- 1 maria maria  220 Mar  3 09:10 todo.txt
+    options:
+      - id: a
+        text: It is a regular file
+        rationale: Wrong. Regular files show a - in that position, like todo.txt.
+      - id: b
+        text: It is a symbolic link
+        rationale: Wrong. Symbolic links show an l.
+      - id: c
+        text: It is a character device
+        rationale: Wrong. Character devices show a c, as /dev/null does.
+      - id: d
+        text: It is a directory
+        rationale: Correct. A leading d marks a directory.
+    answer: [d]
+    explanation: >
+      The first character of a long listing gives the file type: - regular file, d directory,
+      l symbolic link, c character device, b block device, p named pipe, s socket.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 1, section: Using ls to List Files }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [ls]
+
+  - id: 101-103.3-0045
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: Which command creates a gzip-compressed archive `site.tar.gz` from the directory `site`?
+    options:
+      - id: a
+        text: "`tar -cjf site.tar.gz site`"
+        rationale: Wrong. -j selects bzip2, so the archive would be bzip2-compressed despite its name.
+      - id: b
+        text: "`tar -czf site.tar.gz site`"
+        rationale: Correct. -c creates, -z compresses with gzip, -f names the archive.
+      - id: c
+        text: "`tar -xzf site.tar.gz site`"
+        rationale: Wrong. -x extracts from an existing archive.
+      - id: d
+        text: "`tar -tzf site.tar.gz site`"
+        rationale: Wrong. -t lists the contents of an existing archive.
+    answer: [b]
+    explanation: >
+      Combine one operation (-c) with a compression option (-z gzip, -j bzip2, -J xz) and -f with
+      the archive name, followed by what to archive.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: Compressing with tar }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [tar, gzip]
+
+  - id: 101-103.3-0046
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: Which `rm` option makes `rm` ask for confirmation before it deletes each file?
+    options:
+      - id: a
+        text: "`-i`"
+        rationale: Correct. -i (interactive) prompts before every removal.
+      - id: b
+        text: "`-f`"
+        rationale: Wrong. -f does the opposite and never prompts.
+      - id: c
+        text: "`-r`"
+        rationale: Wrong. -r makes rm recurse into directories.
+      - id: d
+        text: "`-v`"
+        rationale: Wrong. -v reports each removal after it happens, without asking.
+    answer: [a]
+    explanation: >
+      rm -i asks "remove regular file …?" for each file. mv and cp have the same -i option to ask
+      before overwriting.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 1, section: Deleting Files with rm }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [rm]
+
+  - id: 101-103.3-0047
+    type: multi_choice
+    difficulty: 2
+    pool: practice
+    stem: Which **TWO** commands decompress `data.csv.gz` back to `data.csv`?
+    select_count: 2
+    options:
+      - id: a
+        text: "`gzip data.csv.gz`"
+        rationale: Wrong. Without -d, gzip tries to compress again and refuses because of the .gz suffix.
+      - id: b
+        text: "`bunzip2 data.csv.gz`"
+        rationale: Wrong. bunzip2 only understands bzip2 data.
+      - id: c
+        text: "`gunzip data.csv.gz`"
+        rationale: Correct. gunzip decompresses gzip files.
+      - id: d
+        text: "`gzip -d data.csv.gz`"
+        rationale: Correct. gzip -d is the same as gunzip.
+      - id: e
+        text: "`tar -xzf data.csv.gz`"
+        rationale: Wrong. The file is a compressed CSV, not a tar archive, so tar does not restore data.csv from it.
+    answer: [c, d]
+    explanation: >
+      gunzip and gzip -d (--decompress) do the same thing: restore the file and remove the .gz
+      version.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: Compressing with tar }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Rationale for the tar option corrected (tar does not restore the file, rather than always failing)." }
+    tags: [gzip, gunzip]
+
+  - id: 101-103.3-0048
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: Which command lists all symbolic links below `/etc`?
+    options:
+      - id: a
+        text: "`find /etc -type f`"
+        rationale: Wrong. -type f selects regular files.
+      - id: b
+        text: "`find /etc -type d`"
+        rationale: Wrong. -type d selects directories.
+      - id: c
+        text: "`find /etc -type l`"
+        rationale: Correct. -type l selects symbolic links.
+      - id: d
+        text: "`find /etc -type s`"
+        rationale: Wrong. -type s selects sockets.
+    answer: [c]
+    explanation: >
+      find does not follow symbolic links by default, so -type l reports the links themselves.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: Using Criteria to Speed Search }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [find]
+
+  - id: 101-103.3-0049
+    type: fill_in
+    difficulty: 2
+    pool: practice
+    stem: >
+      Type the `ls` option that lists a directory and then the contents of every subdirectory
+      below it.
+    fill_in:
+      accepted:
+        - '(-R|--recursive)'
+        - '((/usr)?/bin/)?ls\s+(-R|--recursive)(\s+(?!-)\S+)*'
+      match: regex
+      case_sensitive: true
+    explanation: >
+      ls -R (--recursive) walks down the tree, printing a heading for each directory. Mind the
+      case: ls -r reverses the sort order instead.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 1, section: Recursive Listing with ls -R }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [ls, recursion]
+
+  - id: 101-103.3-0050
+    type: fill_in
+    difficulty: 3
+    pool: practice
+    stem: >
+      Type the `find` option, with its value, that limits the search to the starting directory and
+      the entries directly inside it, without going into subdirectories.
+    fill_in:
+      accepted: ['(find(\s+(?!-)\S+)?\s+)?-maxdepth\s+1']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      -maxdepth N stops find N levels below the starting point; 0 tests only the starting point
+      itself and 1 adds its direct entries. Put it before the tests to avoid a warning.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: Using Criteria to Speed Search }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [find]
+
+  - id: 101-103.3-0051
+    type: single_choice
+    difficulty: 3
+    pool: practice
+    stem: >
+      Which pattern matches the (non-hidden) files whose names do **NOT** begin with a digit?
+    options:
+      - id: a
+        text: "`[!0-9]*`"
+        rationale: Correct. [!0-9] is one character that is not a digit, and * accepts the rest of the name.
+      - id: b
+        text: "`[0-9]*`"
+        rationale: Wrong. This matches names that do begin with a digit.
+      - id: c
+        text: "`*[!0-9]`"
+        rationale: Wrong. This tests the last character, not the first.
+      - id: d
+        text: "`?[0-9]*`"
+        rationale: Wrong. This requires the second character to be a digit and says nothing about the first.
+    answer: [a]
+    explanation: >
+      An exclamation mark right after `[` negates a bracket expression (bash also accepts `^`).
+      Placing it first in the pattern tests the first character of the name.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 1, section: Bracketed Characters }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [globbing, wildcards]
+
+  - id: 101-103.3-0052
+    type: multi_choice
+    difficulty: 3
+    pool: practice
+    stem: Which **TWO** `find` tests select files by when they were last modified?
+    select_count: 2
+    options:
+      - id: a
+        text: "`-mtime`"
+        rationale: Correct. -mtime compares the modification time in days.
+      - id: b
+        text: "`-iname`"
+        rationale: Wrong. -iname matches the name, ignoring case.
+      - id: c
+        text: "`-newer`"
+        rationale: Correct. -newer FILE matches files modified more recently than FILE.
+      - id: d
+        text: "`-maxdepth`"
+        rationale: Wrong. -maxdepth limits how deep find descends.
+      - id: e
+        text: "`-size`"
+        rationale: Wrong. -size compares file sizes.
+    answer: [a, c]
+    explanation: >
+      -mtime n (days) and -mmin n (minutes) compare against the current time; -newer FILE compares
+      against another file's modification time. -atime and -ctime test access and status-change times.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: Locating Files by Modification Time }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [find, mtime]
+
+  - id: 101-103.3-0053
+    type: fill_in
+    difficulty: 3
+    pool: practice
+    stem: >
+      Type a `tar` command that prints the names of the files stored in `site.tar` without
+      extracting them.
+    fill_in:
+      accepted:
+        - 'tar\s+(-?(t|tv|vt)f\s*(\./)?site\.tar|(-t|--list)(\s+(-v|--verbose))?\s+(-f\s*|--file(=|\s+))(\./)?site\.tar|(-f\s*|--file(=|\s+))(\./)?site\.tar\s+(-t|--list)(\s+(-v|--verbose))?)'
+      match: regex
+      case_sensitive: true
+    explanation: >
+      `tar -tf site.tar` (long form `tar --list --file=site.tar`) lists the members; add -v for
+      permissions, owners, sizes and dates. GNU tar detects compression on its own when listing.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: The tar Command (Archiving and Compresssion) }
+    verify:
+      command: sh -c 'mkdir -p /tmp/l/site && cd /tmp/l && touch site/a && tar -cf site.tar site && tar -tf site.tar'
+      expect: { exit_code: 0, stdout_contains: "site/a" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [tar]
+
+  - id: 101-103.3-0054
+    type: single_choice
+    difficulty: 3
+    pool: practice
+    stem: >
+      Which command extracts the cpio archive `backup.cpio` into the current directory, creating
+      subdirectories as needed?
+    options:
+      - id: a
+        text: "`cpio -o < backup.cpio`"
+        rationale: Wrong. -o is copy-out (create) mode; it would read the archive bytes as a list of file names.
+      - id: b
+        text: "`cpio -id < backup.cpio`"
+        rationale: Correct. -i extracts the archive read from standard input and -d creates directories as needed.
+      - id: c
+        text: "`cpio -id > backup.cpio`"
+        rationale: Wrong. The redirection points the wrong way; it truncates backup.cpio and cpio waits for input.
+      - id: d
+        text: "`cpio -t < backup.cpio`"
+        rationale: Wrong. -t only lists the archive's contents.
+    answer: [b]
+    explanation: >
+      cpio reads archives from standard input in copy-in mode (-i) and writes them to standard
+      output in copy-out mode (-o). -d creates leading directories during extraction.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: The cpio Command }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [cpio]
+
+  - id: 101-103.3-0055
+    type: single_choice
+    difficulty: 4
+    pool: practice
+    stem: A directory contains exactly the files shown. Which names does `ls [ab]?g*` print?
+    exhibit: |
+      $ ls
+      abc  bag  bg  big  big2  bog.txt
+    options:
+      - id: a
+        text: "`bag big`"
+        rationale: Wrong. * also matches extra characters, so big2 and bog.txt match too.
+      - id: b
+        text: "`bag big big2`"
+        rationale: Wrong. bog.txt also fits (b, then o for ?, then g, then .txt for *).
+      - id: c
+        text: "`bag big big2 bog.txt`"
+        rationale: Correct. Each has a or b first, any second character, g third, then anything.
+      - id: d
+        text: "`bag bg big big2 bog.txt`"
+        rationale: Wrong. bg has no character between b and g for ? to match.
+    answer: [c]
+    explanation: >
+      Read the pattern one position at a time: [ab] is one of a or b, ? is exactly one character,
+      g is literal, and * is anything (including nothing). abc fails at the third position.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 1, section: Combining Wildcards }
+    verify:
+      command: sh -c 'mkdir -p /tmp/b && cd /tmp/b && touch abc bag bg big big2 bog.txt && echo [ab]?g*'
+      expect: { exit_code: 0, stdout_regex: "^bag big big2 bog\\.txt\\s*$" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [globbing, wildcards]
+
+  - id: 101-103.3-0056
+    type: multi_choice
+    difficulty: 4
+    pool: practice
+    stem: >
+      `docs` is an existing directory. Which **TWO** commands move both `a.txt` and `b.txt` into it?
+    select_count: 2
+    options:
+      - id: a
+        text: "`mv docs a.txt b.txt`"
+        rationale: Wrong. The last argument is the destination; b.txt is not a directory, so mv fails.
+      - id: b
+        text: "`mv a.txt b.txt docs/`"
+        rationale: Correct. With several sources, the last argument must be a directory, and docs is one.
+      - id: c
+        text: "`cp a.txt b.txt docs`"
+        rationale: Wrong. This copies the files; the originals stay where they are.
+      - id: d
+        text: "`mv a.txt,b.txt docs`"
+        rationale: Wrong. The shell passes a.txt,b.txt as one name, which does not exist.
+      - id: e
+        text: "`mv -t docs a.txt b.txt`"
+        rationale: Correct. -t (--target-directory) names the destination first, followed by the sources.
+    answer: [b, e]
+    explanation: >
+      mv SOURCE... DIRECTORY moves several files into a directory. With -t DIRECTORY the
+      destination comes first, which is handy with xargs or find -exec … +.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 1, section: Moving Files with mv }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [mv]
+
+  - id: 101-103.3-0057
+    type: single_choice
+    difficulty: 4
+    pool: practice
+    stem: >
+      An archive was created as shown. Later you run `cd /tmp/restore && tar -xf /root/etc-backup.tar`.
+      Where is `hosts` written?
+    exhibit: |
+      # tar -cf /root/etc-backup.tar /etc/hosts
+      tar: Removing leading `/' from member names
+    options:
+      - id: a
+        text: "`/etc/hosts`, replacing the live file"
+        rationale: Wrong. The leading / was removed, so the member name is relative.
+      - id: b
+        text: "`/tmp/restore/hosts`"
+        rationale: Wrong. Only the leading slash is removed; the etc/ directory part stays in the name.
+      - id: c
+        text: Nowhere; tar refuses to extract an archive made from absolute paths
+        rationale: Wrong. The archive holds the relative name etc/hosts and extracts normally.
+      - id: d
+        text: "`/tmp/restore/etc/hosts`"
+        rationale: Correct. The member is stored as etc/hosts and extracted relative to the current directory.
+    answer: [d]
+    explanation: >
+      GNU tar strips the leading / from member names by default, so extracting never overwrites
+      system files by accident. The files land below the current directory (or the -C directory).
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: Extracting an Archive }
+    verify:
+      command: sh -c 'tar -cf /tmp/e.tar /etc/hostname 2>/dev/null; mkdir -p /tmp/rs && cd /tmp/rs && tar -xf /tmp/e.tar && ls etc'
+      expect: { exit_code: 0, stdout_contains: "hostname" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [tar]
+
+  - id: 101-103.3-0058
+    type: single_choice
+    difficulty: 4
+    pool: practice
+    stem: >
+      Inside a web directory you build a cpio archive as shown. The directory `css` contains
+      `style.css`. What is true about the archive?
+    exhibit: |
+      $ ls
+      css  index.html
+      $ ls | cpio -o > ../site.cpio
+      1 block
+      $ cpio -t < ../site.cpio
+      css
+      index.html
+      1 block
+    options:
+      - id: a
+        text: The archive is damaged, because cpio -t should list every file
+        rationale: Wrong. The listing is complete; it shows exactly what was archived.
+      - id: b
+        text: "cpio -t hides files in subdirectories unless -v is given"
+        rationale: Wrong. -v adds details to each line, but cpio -t never hides members.
+      - id: c
+        text: "style.css is included but stored without its css/ prefix"
+        rationale: Wrong. style.css was never given to cpio, so it is not in the archive at all.
+      - id: d
+        text: "css is stored only as a directory entry, without style.css"
+        rationale: Correct. ls printed only top-level names, and cpio archives exactly the names it is given.
+    answer: [d]
+    explanation: >
+      cpio does not recurse. Feed it a complete list, e.g. `find . | cpio -o > ../site.cpio`, so
+      that files inside subdirectories are included.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: The cpio Command }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [cpio]
+
+  - id: 101-103.3-0059
+    type: multi_choice
+    difficulty: 5
+    pool: practice
+    stem: >
+      Which **TWO** commands delete every regular file ending in `.tmp` anywhere under
+      `/var/tmp/app` (including subdirectories at any depth) and nothing else, without prompting?
+    select_count: 2
+    options:
+      - id: a
+        text: "`find /var/tmp/app -type f -name '*.tmp' -delete`"
+        rationale: Correct. The tests are evaluated first, so -delete only acts on matching files.
+      - id: b
+        text: "`rm -r /var/tmp/app/*.tmp`"
+        rationale: Wrong. The glob only matches names directly in /var/tmp/app, not in subdirectories.
+      - id: c
+        text: "`find /var/tmp/app -delete -type f -name '*.tmp'`"
+        rationale: Wrong. -delete comes first, so it runs on every file and directory before the tests are checked.
+      - id: d
+        text: "`find /var/tmp/app -type f -name '*.tmp' -exec rm {} +`"
+        rationale: Correct. rm receives the matching files in batches and deletes them.
+      - id: e
+        text: "`rm /var/tmp/app/**/*.tmp`"
+        rationale: Wrong. Without bash's globstar option, ** acts like *, matching one level of subdirectories only.
+    answer: [a, d]
+    explanation: >
+      find evaluates its expression left to right, and actions such as -delete or -exec run only
+      when the tests before them succeed. Putting -delete first removes everything below the
+      starting point.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: Acting on the Result Set }
+    verify:
+      command: sh -c 'mkdir -p /tmp/a/sub/deeper && cd /tmp/a && touch x.tmp sub/y.tmp sub/deeper/z.tmp keep.txt && find . -type f -name "*.tmp" -delete && find . -type f'
+      expect: { exit_code: 0, stdout_regex: "^\\./keep\\.txt\\s*$" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [find, delete]
+
+  - id: 101-103.3-0060
+    type: single_choice
+    difficulty: 5
+    pool: practice
+    stem: >
+      A colleague uses `find /etc -name '*.conf' -mtime 7` to list configuration files changed
+      during the past week. A file edited yesterday is missing from the output. Why?
+    options:
+      - id: a
+        text: -mtime counts in minutes, so 7 means the last seven minutes
+        rationale: Wrong. -mtime counts in days; -mmin counts in minutes.
+      - id: b
+        text: -mtime 7 means exactly 7 whole days old; -mtime -7 is needed
+        rationale: Correct. No sign means "exactly", so only files 7 to 8 days old match.
+      - id: c
+        text: -mtime tests the access time; -atime is needed for changes
+        rationale: Wrong. -mtime is modification time; -atime is access time.
+      - id: d
+        text: The quotes around '*.conf' stop find from expanding the pattern
+        rationale: Wrong. find expands the quoted pattern itself; the quotes only keep the shell from doing it.
+    answer: [b]
+    explanation: >
+      For -mtime, -n means fewer than n whole days, +n more than n, and plain n exactly n (after
+      dropping fractions). "Changed in the last week" is -mtime -7.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.3", lesson: 2, section: Locating Files by Modification Time }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Correct option shortened; it was the longest option." }
+    tags: [find, mtime]
