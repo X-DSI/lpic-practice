@@ -13,16 +13,16 @@ questions:
     stem: What is the main job of the initramfs during a Linux boot?
     options:
       - id: a
-        text: It stores the boot entries that the firmware reads to find the bootloader
+        text: It stores the boot entries the firmware reads to decide which bootloader to start
         rationale: Wrong. UEFI boot entries live in the firmware's NVRAM, not in the initramfs.
       - id: b
-        text: It acts as a temporary root filesystem holding what the kernel needs to reach the real root filesystem
+        text: It is a temporary root filesystem with what the kernel needs to reach the real root
         rationale: Correct. The initramfs is unpacked into RAM and supplies modules and tools (storage drivers, LVM, decryption) needed to mount the real root filesystem.
       - id: c
-        text: It keeps the kernel's boot messages after the system is switched off
+        text: It keeps a copy of the kernel's boot messages after the system is switched off
         rationale: Wrong. Boot messages are kept in the kernel ring buffer (lost at power-off) and in log files or the systemd journal.
       - id: d
-        text: It holds the bootloader's menu and its list of installed kernels
+        text: It holds the bootloader's menu together with its list of installed kernels
         rationale: Wrong. That is the bootloader's configuration file, for example /boot/grub/grub.cfg for GRUB.
     answer: [b]
     explanation: >
@@ -31,9 +31,10 @@ questions:
       root filesystem, then hands over to init on that real root.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: System Initialization }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Option lengths rebalanced; correct option was the longest." }
     tags: [initramfs]
 
   - id: 101-101.2-0002
@@ -41,8 +42,8 @@ questions:
     difficulty: 1
     pool: holdout
     stem: >
-      Once the kernel has its root filesystem available, it starts one program that is in charge of
-      running the startup scripts and services. What is that program generically called?
+      After the real root filesystem is mounted, the kernel hands over to a single user-space
+      process, PID 1, which brings up everything else. What is the generic name for that program?
     options:
       - id: a
         text: The bootloader
@@ -58,14 +59,15 @@ questions:
         rationale: Correct. The first user-space program the kernel runs is called init; SysVinit, Upstart and systemd are implementations of it.
     answer: [d]
     explanation: >
-      The kernel's last boot step is to start init (PID 1). Whichever implementation a distribution
-      uses — SysVinit, Upstart or systemd — it then runs the initialization scripts and starts the
-      system daemons.
+      Starting init as PID 1 is the kernel's final boot step. From there, the init implementation
+      the distribution chose (SysVinit, Upstart or systemd) brings up scripts and daemons until the
+      system is ready.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: System Initialization }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Stem and explanation reworded away from the lesson's phrasing; key unchanged. Needs re-check." }
     tags: [init]
 
   - id: 101-101.2-0003
@@ -94,9 +96,10 @@ questions:
       console. dmesg reads that buffer, so the messages hidden by the splash screen are still there.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: Initialization Inspection }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [dmesg, ring-buffer]
 
   - id: 101-101.2-0004
@@ -124,9 +127,10 @@ questions:
       system that the manufacturer did not plan for more difficult.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: BIOS or UEFI }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [uefi, secure-boot]
 
   - id: 101-101.2-0005
@@ -154,9 +158,10 @@ questions:
       distributions have.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: System Initialization }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [upstart, init]
 
   - id: 101-101.2-0006
@@ -180,9 +185,10 @@ questions:
       command: test -r /proc/cmdline && cat /proc/cmdline
       expect: { exit_code: 0 }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [proc-cmdline, kernel-parameters]
 
   - id: 101-101.2-0007
@@ -212,9 +218,10 @@ questions:
       started.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: The Bootloader }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [kernel-parameters, init]
 
   - id: 101-101.2-0008
@@ -243,9 +250,10 @@ questions:
       1 is single-user (maintenance) mode and 6 reboots. The rest are up to the distribution.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: System Initialization }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [sysvinit, runlevels]
 
   - id: 101-101.2-0009
@@ -272,9 +280,10 @@ questions:
       bootloader) on the EFI System Partition; the firmware runs the default entry or offers a menu.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: BIOS or UEFI }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [uefi, nvram]
 
   - id: 101-101.2-0010
@@ -304,9 +313,10 @@ questions:
       -2 the one before that. Positive numbers count forward from the oldest boot kept.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: Initialization Inspection }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. journalctl -b behaviour tested on a real 4-boot journal. Reviewer suggested difficulty 3; kept at 2 to hold the 5/7/7/6/5 split." }
     tags: [journalctl, boot-offset]
 
   - id: 101-101.2-0011
@@ -314,13 +324,13 @@ questions:
     difficulty: 2
     pool: holdout
     stem: >
-      You are creating an EFI System Partition on a new disk. Which **TWO** filesystems does the UEFI
-      standard support for it?
+      UEFI firmware must be able to read the filesystem that holds EFI applications on a block
+      device. Which **TWO** of these filesystems does the UEFI standard require firmware to support?
     select_count: 2
     options:
       - id: a
         text: FAT32
-        rationale: Correct. FAT32 is the usual choice for an ESP and is supported by the UEFI standard.
+        rationale: Correct. FAT32 is required by the UEFI standard and is the usual filesystem for an ESP.
       - id: b
         text: ext4
         rationale: Wrong. ext4 is a common Linux root filesystem, but UEFI firmware is not required to read it.
@@ -329,17 +339,18 @@ questions:
         rationale: Wrong. UEFI firmware is not required to read XFS.
       - id: d
         text: FAT16
-        rationale: Correct. The UEFI standard supports FAT12, FAT16 and FAT32 on block devices.
+        rationale: Correct. The UEFI standard requires firmware to support FAT12, FAT16 and FAT32; FAT32 is the variant specified for a system partition on a fixed disk.
     answer: [a, d]
     explanation: >
-      UEFI firmware must be able to read the ESP itself, so the standard fixes the filesystems:
-      FAT12, FAT16 and FAT32 for disks (and ISO-9660 for optical media). In practice ESPs are
-      almost always FAT32.
+      UEFI firmware must read the ESP itself, so the standard fixes which filesystems it supports:
+      FAT12, FAT16 and FAT32 for block devices (and ISO-9660 for optical media). A system partition
+      on a fixed disk is specified as FAT32, which is what ESPs almost always use.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: BIOS or UEFI }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Stem now asks what UEFI requires firmware to support (UEFI 2.10 13.3: FAT12/16/32); rationales a and d updated. Exactly two FAT options remain. Needs re-check." }
     tags: [uefi, esp]
 
   - id: 101-101.2-0012
@@ -369,9 +380,10 @@ questions:
       for that boot.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: The Bootloader }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Distractor used Tab, whose GRUB menu behaviour is unclear; replaced with e + edit + Esc (discards edit)." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [grub, kernel-parameters]
 
   - id: 101-101.2-0013
@@ -401,9 +413,10 @@ questions:
       prints the buffer and then clears it. Both need root privileges.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: Initialization Inspection }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [dmesg, ring-buffer]
 
   - id: 101-101.2-0014
@@ -430,9 +443,10 @@ questions:
       journal, for the current boot. Combine it with -b to choose another boot.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: Initialization Inspection }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [journalctl, kernel-messages]
 
   - id: 101-101.2-0015
@@ -445,7 +459,7 @@ questions:
       effect at the next boot.
     fill_in:
       accepted:
-        - '(sudo\s+)?((/usr)?/s?bin/)?grub2?-mkconfig\s+(-o\s*|--output(=|\s+))/boot/grub/grub\.cfg'
+        - '(sudo\s+)?((/usr)?/s?bin/)?grub2?-mkconfig\s+(-o\s+|--output(=|\s+))/boot/grub/grub\.cfg'
         - '((/usr)?/s?bin/)?grub2?-mkconfig\s*>\s*/boot/grub/grub\.cfg'
         - '(sudo\s+)?((/usr)?/s?bin/)?update-grub2?'
       match: regex
@@ -457,9 +471,10 @@ questions:
       /boot/grub2/.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: The Bootloader }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Regex now requires whitespace after -o (grub-mkconfig rejects -o/boot/grub/grub.cfg)." }
     tags: [grub, grub-mkconfig]
 
   - id: 101-101.2-0016
@@ -489,9 +504,10 @@ questions:
       handy for testing and for virtual machines. maxcpus=0 has the same effect as nosmp.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: The Bootloader }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [kernel-parameters, mem, maxcpus]
 
   - id: 101-101.2-0017
@@ -499,18 +515,19 @@ questions:
     difficulty: 3
     pool: holdout
     stem: >
-      A disk uses the DOS (MBR) partition scheme. How many bytes at the very start of the disk does a
-      BIOS treat as the first stage of the bootloader?
+      In the first sector of a disk with a DOS (MBR) partition table, how many bytes are set aside
+      for the bootloader's first-stage (bootstrap) code, ahead of the disk signature and the
+      partition table?
     options:
       - id: a
         text: "64"
         rationale: Wrong. 64 bytes is the size of the MBR's partition table (four 16-byte entries).
       - id: b
         text: "440"
-        rationale: Correct. BIOS runs the first 440 bytes as the bootstrap code; the rest of the MBR holds the disk signature, partition table and boot signature.
+        rationale: Correct. The first 440 bytes of the MBR hold the bootstrap code that the BIOS ends up running; the disk signature, partition table and boot signature fill the rest of the 512-byte sector.
       - id: c
         text: "512"
-        rationale: Wrong. 512 bytes is the whole MBR, which also contains the partition table.
+        rationale: Wrong. 512 bytes is the whole MBR sector, which also holds the partition table and boot signature, not just bootstrap code.
       - id: d
         text: "4096"
         rationale: Wrong. That is a common sector or block size, not the size of the bootstrap area.
@@ -521,9 +538,10 @@ questions:
       BIOS machine unable to boot from that disk.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: BIOS or UEFI }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Stem reworded to the MBR sector layout; rationales b and c made precise. Needs re-check." }
     tags: [bios, mbr]
 
   - id: 101-101.2-0018
@@ -552,9 +570,10 @@ questions:
       mount points and still accepts SysV runlevels through compatibility targets.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: System Initialization }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [systemd]
 
   - id: 101-101.2-0019
@@ -575,9 +594,10 @@ questions:
       /etc/default/grub.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: The Bootloader }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [grub, kernel-parameters]
 
   - id: 101-101.2-0020
@@ -610,9 +630,10 @@ questions:
       time spent before the kernel ran or about the wall-clock time.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: Initialization Inspection }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [dmesg, timestamps]
 
   - id: 101-101.2-0021
@@ -647,9 +668,10 @@ questions:
       everywhere therefore belongs in GRUB_CMDLINE_LINUX, followed by regenerating grub.cfg.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: The Bootloader }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. Verified against /etc/grub.d/10_linux." }
     tags: [grub, kernel-parameters, GRUB_CMDLINE_LINUX]
 
   - id: 101-101.2-0022
@@ -664,7 +686,7 @@ questions:
       BOOT_IMAGE=/vmlinuz-6.8.0-45-generic root=UUID=2f6c1d0e-8a4b-4e1f-9c3d-5b7a6e2d1f90 ro quiet splash
     options:
       - id: a
-        text: The root filesystem stays read-only for the whole session, so nothing can be written to it
+        text: The root filesystem stays read-only until the next reboot, whatever /etc/fstab says
         rationale: Wrong. ro only governs the initial mount; the boot process remounts / using the options from /etc/fstab.
       - id: b
         text: The kernel image is protected against changes while the system runs
@@ -673,7 +695,7 @@ questions:
         text: Only the root user may write to the root filesystem
         rationale: Wrong. ro is not a permission setting for users; file permissions are unchanged.
       - id: d
-        text: The kernel first mounts the root filesystem read-only; it is remounted read-write later in the boot
+        text: The root filesystem is first mounted read-only and remounted read-write later in the boot
         rationale: Correct. ro sets the initial mount read-only (so it can be checked safely); the init system then remounts it as /etc/fstab says.
     answer: [d]
     explanation: >
@@ -682,9 +704,10 @@ questions:
       read-write according to /etc/fstab. rw would make the initial mount writable instead.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: The Bootloader }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Options a and d reworded to balance wording; rationales still fit." }
     tags: [kernel-parameters, ro, proc-cmdline]
 
   - id: 101-101.2-0023
@@ -700,13 +723,15 @@ questions:
       match: regex
       case_sensitive: true
     explanation: >
-      systemd reads SysV-style words from the kernel command line: 1, s, S, single or rescue all
-      start rescue.target. The long form is systemd.unit=rescue.target.
+      systemd accepts SysV-style words on the kernel command line: 1, single or rescue start
+      rescue.target (systemd 255 and earlier also document s and S). The long form is
+      systemd.unit=rescue.target.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: The Bootloader }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Explanation: s and S are documented in systemd 255 and earlier; regex kept." }
     tags: [systemd, kernel-parameters, rescue]
 
   - id: 101-101.2-0024
@@ -735,9 +760,10 @@ questions:
       application they point to, as a file on the FAT-formatted ESP.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: BIOS or UEFI }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. Reviewer suggested difficulty 3; kept at 4 to hold the 5/7/7/6/5 split." }
     tags: [bios, uefi]
 
   - id: 101-101.2-0025
@@ -767,9 +793,10 @@ questions:
       and -b 1 is a common mistake: it selects the oldest boot kept, not the latest.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: Initialization Inspection }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. journalctl -b behaviour tested on a real 4-boot journal." }
     tags: [journalctl, boot-offset]
 
   - id: 101-101.2-0026
@@ -797,9 +824,10 @@ questions:
       finally init on the real root filesystem, which starts the services.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: System Initialization }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [boot-sequence, bios]
 
   - id: 101-101.2-0027
@@ -828,16 +856,17 @@ questions:
         rationale: Wrong. Offset -1 is the boot that started on Tuesday and ended on Thursday.
       - id: d
         text: "`journalctl -b 9d3f6a1c`"
-        rationale: Wrong. journalctl does not accept a shortened boot ID; it needs the full 32-character ID.
+        rationale: Wrong. journalctl does not accept a shortened boot ID after -b; it takes the string as a separate match and fails. Only the full 32-character ID (or an offset) selects a boot.
     answer: [a]
     explanation: >
       In the IDX column, 0 is the current boot and negative numbers count backwards from it. The
       boot that ended on Monday evening is -2. The full 32-character boot ID would also select it.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: Initialization Inspection }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Distractor -b 2 also selected the Monday boot (oldest listed is -3, so +2 = -2); replaced with -b 3. Boot-ID rationale reworded." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Rationale d: shortened boot ID is taken as a separate match and fails. journalctl -b behaviour tested on a real 4-boot journal." }
     tags: [journalctl, list-boots, boot-offset]
 
   - id: 101-101.2-0028
@@ -861,8 +890,8 @@ questions:
         text: The directory `/var/log/journal` does not exist, so the journal is only kept in `/run/log/journal` and lost at reboot
         rationale: Correct. With the default Storage=auto, journald writes to disk only if /var/log/journal exists; otherwise logs live in RAM under /run.
       - id: d
-        text: The option needs root privileges; run it again with `sudo`
-        rationale: Wrong. Missing privileges limit which entries you can read; they do not produce this message.
+        text: The journal files of earlier boots are readable only by root; run it again with `sudo`
+        rationale: Wrong. Missing privileges limit which journal files can be opened and produce a different warning; they do not make the journal non-persistent.
     answer: [c]
     explanation: >
       journald's default Storage=auto keeps logs persistently in /var/log/journal only when that
@@ -870,9 +899,10 @@ questions:
       cannot be selected. Creating /var/log/journal (or setting Storage=persistent) fixes it.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: Initialization Inspection }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Distractor d lengthened to remove a length giveaway; rationale updated." }
     tags: [journalctl, journald, persistent-journal]
 
   - id: 101-101.2-0029
@@ -903,9 +933,10 @@ questions:
       the current boot.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: Initialization Inspection }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. journalctl -b behaviour tested on a real 4-boot journal. Reviewer suggested difficulty 4; kept at 5 to hold the 5/7/7/6/5 split." }
     tags: [journalctl, kernel-messages, boot-offset]
 
   - id: 101-101.2-0030
@@ -916,7 +947,9 @@ questions:
       Type a `dmesg` command that prints only kernel ring buffer messages of the levels `err` and
       `warn`, and nothing else.
     fill_in:
-      accepted: ['((sudo\s+)?((/usr)?/bin/)?dmesg\s+)?(-l\s*|--level(=|\s+))(err,warn|warn,err)']
+      accepted:
+        - '((sudo\s+)?((/usr)?/bin/)?dmesg\s+)?(-l\s*|--level(=|\s+))(err,warn|warn,err)'
+        - '((sudo\s+)?((/usr)?/bin/)?dmesg\s+)?(-l\s*|--level(=|\s+))(err|warn)\s+(-l\s*|--level(=|\s+))(err|warn)'
       match: regex
       case_sensitive: true
     explanation: >
@@ -925,9 +958,10 @@ questions:
       of normal messages.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: Initialization Inspection }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Also accept -l err -l warn (repeated option)." }
     tags: [dmesg, log-levels]
 
   # --------------------------------------------------------------------------- practice (CLI)
@@ -936,11 +970,11 @@ questions:
     type: single_choice
     difficulty: 1
     pool: practice
-    stem: Where is a PC's BIOS stored?
+    stem: Where does a PC keep its BIOS firmware?
     options:
       - id: a
-        text: In a non-volatile memory chip on the motherboard
-        rationale: Correct. BIOS is firmware kept in its own chip, separate from the system's storage devices.
+        text: In a flash memory chip on the mainboard
+        rationale: Correct. The BIOS lives in its own persistent memory chip on the mainboard, apart from every disk.
       - id: b
         text: In the first partition of the boot disk
         rationale: Wrong. The firmware must run before any disk is read, so it cannot live on a disk partition.
@@ -952,13 +986,14 @@ questions:
         rationale: Wrong. /boot holds the kernel, initramfs and bootloader files, not the firmware.
     answer: [a]
     explanation: >
-      BIOS (Basic Input/Output System) is firmware: a program stored in non-volatile memory on the
-      motherboard that runs each time the machine is powered on.
+      BIOS (Basic Input/Output System) is firmware. It sits in a flash chip on the mainboard, which
+      keeps its contents without power, and it is the first code the CPU runs at power-on.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: BIOS or UEFI }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Stem, option a, rationale and explanation reworded away from the lesson's phrasing; key unchanged. Needs re-check." }
     tags: [bios, firmware]
 
   - id: 101-101.2-0032
@@ -985,9 +1020,10 @@ questions:
       to catch basic hardware faults before the boot continues.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: BIOS or UEFI }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [post, firmware]
 
   - id: 101-101.2-0033
@@ -1014,9 +1050,10 @@ questions:
       are defined by the distribution.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: System Initialization }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [sysvinit, runlevels]
 
   - id: 101-101.2-0034
@@ -1045,9 +1082,10 @@ questions:
       troubleshooting setting, not something to leave on permanently.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: The Bootloader }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [kernel-parameters, acpi]
 
   - id: 101-101.2-0035
@@ -1055,16 +1093,15 @@ questions:
     difficulty: 2
     pool: practice
     stem: >
-      A machine stops booting after the kernel and initramfs load. You start it from a live USB stick
-      and mount its root filesystem. Under which directory of that filesystem do you look for its
-      log files?
+      A nightly backup job must keep a server's logs: both its plain-text log files and its
+      persistent systemd journal. Which single directory tree holds all of them?
     options:
       - id: a
         text: "`/var/log/`"
         rationale: Correct. System and boot logs, including a persistent systemd journal, are kept under /var/log/.
       - id: b
         text: "`/proc/`"
-        rationale: Wrong. /proc is a virtual filesystem of the running kernel; it holds nothing on disk.
+        rationale: Wrong. /proc is a virtual filesystem generated by the running kernel; nothing in it is stored on disk.
       - id: c
         text: "`/boot/`"
         rationale: Wrong. /boot holds kernels, initramfs images and bootloader files, not logs.
@@ -1077,9 +1114,10 @@ questions:
       in /var/log/journal/ are binary and must be read with journalctl.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: Initialization Inspection }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Scenario rewritten (backup job) so it no longer mirrors the lesson's alternative-boot-medium passage; key unchanged. Needs re-check." }
     tags: [logs, var-log]
 
   - id: 101-101.2-0036
@@ -1107,9 +1145,10 @@ questions:
       the default /var/log/journal (or /run/log/journal).
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: Initialization Inspection }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [journalctl]
 
   - id: 101-101.2-0037
@@ -1139,9 +1178,10 @@ questions:
       rootflags=subvol=... for Btrfs roots.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: The Bootloader }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [kernel-parameters, rootflags]
 
   - id: 101-101.2-0038
@@ -1168,9 +1208,10 @@ questions:
       buffer and can be read later with dmesg or journalctl -k.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: The Bootloader }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [kernel-parameters, quiet]
 
   - id: 101-101.2-0039
@@ -1199,9 +1240,10 @@ questions:
       graphical.target, multi-user.target or rescue.target.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: The Bootloader }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [systemd, kernel-parameters]
 
   - id: 101-101.2-0040
@@ -1209,12 +1251,12 @@ questions:
     difficulty: 3
     pool: practice
     stem: >
-      GRUB on a UEFI machine is set up to hide its menu and boot straight away. Which key do you
-      press while GRUB starts to make the menu appear?
+      GRUB on a UEFI machine is set up to hide its menu during a short timeout before booting the
+      default entry. Which key do you press during that timeout to make the menu appear?
     options:
       - id: a
         text: Esc
-        rationale: Correct. On UEFI systems Esc brings up a hidden GRUB menu.
+        rationale: Correct. Esc during the timeout shows the hidden menu; Shift is often not detected on UEFI firmware.
       - id: b
         text: Ctrl+X
         rationale: Wrong. Ctrl+X boots the entry being edited in the GRUB editor.
@@ -1226,13 +1268,15 @@ questions:
         rationale: Wrong. Delete is a common key for the firmware setup utility, not for GRUB.
     answer: [a]
     explanation: >
-      When GRUB's menu is hidden, holding Shift shows it on BIOS machines and pressing Esc shows it
-      on UEFI machines.
+      When GRUB's menu is hidden, pressing Esc (or F4), or holding Shift, during the timeout shows it.
+      Shift is often not detected on UEFI firmware, so Esc is the key to use there; Shift is the
+      traditional choice on BIOS machines.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: The Bootloader }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Stem says hidden menu with timeout; rationale a and explanation cover Esc/F4/Shift and Shift detection on UEFI." }
     tags: [grub, uefi]
 
   - id: 101-101.2-0041
@@ -1261,14 +1305,15 @@ questions:
       given to -b.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: Initialization Inspection }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [journalctl, list-boots]
 
   - id: 101-101.2-0042
     type: multi_choice
-    difficulty: 4
+    difficulty: 3
     pool: practice
     stem: Which **TWO** statements about the initramfs are true?
     select_count: 2
@@ -1292,9 +1337,10 @@ questions:
       root and starts init; the initramfs is released.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: System Initialization }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Difficulty 4 -> 3." }
     tags: [initramfs]
 
   - id: 101-101.2-0043
@@ -1322,9 +1368,10 @@ questions:
       initramfs, and finally init (such as systemd).
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: BIOS or UEFI }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [bios, uefi, firmware]
 
   - id: 101-101.2-0044
@@ -1343,9 +1390,10 @@ questions:
       boot), its boot ID and the time of its first and last entries.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: Initialization Inspection }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [journalctl, list-boots]
 
   - id: 101-101.2-0045
@@ -1363,7 +1411,8 @@ questions:
       mem=2048M. It is useful for testing how software behaves with less RAM.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: The Bootloader }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [kernel-parameters, mem]
