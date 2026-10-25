@@ -1,0 +1,1369 @@
+# 101.2 Boot the system — weight 3 → 30 holdout + 15 practice.
+# Original questions written from LPI Learning Materials 101-500, objective 101.2, lesson 1.
+schema_version: 1
+exam: "101"
+objective: "101.2"
+questions:
+  # ---------------------------------------------------------------- holdout (mock exams only)
+
+  - id: 101-101.2-0001
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: What is the main job of the initramfs during a Linux boot?
+    options:
+      - id: a
+        text: It stores the boot entries that the firmware reads to find the bootloader
+        rationale: Wrong. UEFI boot entries live in the firmware's NVRAM, not in the initramfs.
+      - id: b
+        text: It acts as a temporary root filesystem holding what the kernel needs to reach the real root filesystem
+        rationale: Correct. The initramfs is unpacked into RAM and supplies modules and tools (storage drivers, LVM, decryption) needed to mount the real root filesystem.
+      - id: c
+        text: It keeps the kernel's boot messages after the system is switched off
+        rationale: Wrong. Boot messages are kept in the kernel ring buffer (lost at power-off) and in log files or the systemd journal.
+      - id: d
+        text: It holds the bootloader's menu and its list of installed kernels
+        rationale: Wrong. That is the bootloader's configuration file, for example /boot/grub/grub.cfg for GRUB.
+    answer: [b]
+    explanation: >
+      The bootloader loads the kernel and an initramfs image. The kernel uses the initramfs as an
+      interim root filesystem so it can load whatever drivers it needs to find and mount the real
+      root filesystem, then hands over to init on that real root.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: System Initialization }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [initramfs]
+
+  - id: 101-101.2-0002
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: >
+      Once the kernel has its root filesystem available, it starts one program that is in charge of
+      running the startup scripts and services. What is that program generically called?
+    options:
+      - id: a
+        text: The bootloader
+        rationale: Wrong. The bootloader runs before the kernel and loads it; it is finished by this point.
+      - id: b
+        text: The initramfs
+        rationale: Wrong. The initramfs is an archive used as a temporary root filesystem, not the program that manages services.
+      - id: c
+        text: The firmware
+        rationale: Wrong. BIOS or UEFI firmware runs before the bootloader and plays no part once the kernel is running.
+      - id: d
+        text: init
+        rationale: Correct. The first user-space program the kernel runs is called init; SysVinit, Upstart and systemd are implementations of it.
+    answer: [d]
+    explanation: >
+      The kernel's last boot step is to start init (PID 1). Whichever implementation a distribution
+      uses — SysVinit, Upstart or systemd — it then runs the initialization scripts and starts the
+      system daemons.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: System Initialization }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [init]
+
+  - id: 101-101.2-0003
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: >
+      A graphical splash screen hid the kernel's messages while a laptop booted. Which command
+      prints the messages currently held in the kernel ring buffer?
+    options:
+      - id: a
+        text: "`dmesg`"
+        rationale: Correct. Without options, dmesg prints the contents of the kernel ring buffer, boot messages included.
+      - id: b
+        text: "`lsmod`"
+        rationale: Wrong. lsmod lists the kernel modules currently loaded, not kernel messages.
+      - id: c
+        text: "`uname -a`"
+        rationale: Wrong. uname prints kernel name, release, version and architecture, not its messages.
+      - id: d
+        text: "`cat /proc/cmdline`"
+        rationale: Wrong. That shows the parameters the kernel was booted with, not the messages it logged.
+    answer: [a]
+    explanation: >
+      The kernel writes its messages to the kernel ring buffer whether or not they were shown on the
+      console. dmesg reads that buffer, so the messages hidden by the splash screen are still there.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: Initialization Inspection }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [dmesg, ring-buffer]
+
+  - id: 101-101.2-0004
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: Which UEFI feature refuses to run EFI applications that are not signed with a trusted key?
+    options:
+      - id: a
+        text: Legacy (CSM) boot
+        rationale: Wrong. The Compatibility Support Module emulates BIOS booting; it does not check signatures.
+      - id: b
+        text: POST
+        rationale: Wrong. The power-on self-test checks for basic hardware faults; it does not check software signatures.
+      - id: c
+        text: Secure Boot
+        rationale: Correct. With Secure Boot enabled, the firmware only executes EFI applications carrying a trusted signature.
+      - id: d
+        text: The EFI System Partition
+        rationale: Wrong. The ESP is where EFI applications are stored; it does not decide which may run.
+    answer: [c]
+    explanation: >
+      Secure Boot makes UEFI firmware check the signature of each EFI application before running it.
+      This blocks unsigned (possibly malicious) bootloaders, but can make installing an operating
+      system that the manufacturer did not plan for more difficult.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: BIOS or UEFI }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [uefi, secure-boot]
+
+  - id: 101-101.2-0005
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: Which statement best describes Upstart?
+    options:
+      - id: a
+        text: A bootloader that replaced GRUB on Ubuntu systems
+        rationale: Wrong. Upstart never was a bootloader; Ubuntu has used GRUB throughout.
+      - id: b
+        text: A replacement for init that started services in parallel, used by older Ubuntu releases
+        rationale: Correct. Upstart replaced the traditional init to speed up boot by starting services in parallel; Ubuntu later moved to systemd.
+      - id: c
+        text: The systemd component that collects boot messages into the journal
+        rationale: Wrong. That component is systemd-journald.
+      - id: d
+        text: A firmware standard that superseded BIOS
+        rationale: Wrong. That describes UEFI.
+    answer: [b]
+    explanation: >
+      Upstart is an init replacement whose main aim was a faster boot through parallel service
+      start-up. Ubuntu shipped it in earlier releases and switched to systemd, as most major
+      distributions have.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: System Initialization }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [upstart, init]
+
+  - id: 101-101.2-0006
+    type: fill_in
+    difficulty: 2
+    pool: holdout
+    stem: >
+      Someone edited a GRUB entry at the boot menu before the server came up, and you want to know
+      exactly which parameters the running kernel received. Type the full path of the file that
+      shows them.
+    fill_in:
+      accepted: ['((sudo\s+)?((/usr)?/bin/)?(cat|less|more)\s+)?/proc/cmdline']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      /proc/cmdline holds the command line the current kernel was booted with, including any
+      changes typed at the bootloader menu. /etc/default/grub only shows what future generated
+      entries will use.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: The Bootloader }
+    verify:
+      command: test -r /proc/cmdline && cat /proc/cmdline
+      expect: { exit_code: 0 }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [proc-cmdline, kernel-parameters]
+
+  - id: 101-101.2-0007
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      To repair a broken service configuration, you want the kernel to start a plain Bash shell
+      instead of the normal service manager. Which kernel parameter do you add at the boot menu?
+    options:
+      - id: a
+        text: "`root=/bin/bash`"
+        rationale: Wrong. root= names the device holding the root filesystem, not the program to run.
+      - id: b
+        text: "`systemd.unit=bash.target`"
+        rationale: Wrong. There is no bash.target unit; systemd.unit= selects a systemd target, and systemd would still be PID 1.
+      - id: c
+        text: "`init=/bin/bash`"
+        rationale: Correct. init= tells the kernel which program to run as the first process, here a Bash shell.
+      - id: d
+        text: "`rootflags=/bin/bash`"
+        rationale: Wrong. rootflags= passes mount options for the root filesystem.
+    answer: [c]
+    explanation: >
+      The init= parameter replaces the program the kernel starts as PID 1. With init=/bin/bash you
+      get a root shell as soon as the kernel has mounted the root filesystem, with no services
+      started.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: The Bootloader }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [kernel-parameters, init]
+
+  - id: 101-101.2-0008
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      Distributions using SysVinit decide for themselves what most runlevels mean. Which runlevels
+      have the same meaning on all of them?
+    options:
+      - id: a
+        text: 0, 1 and 6
+        rationale: Correct. 0 (halt), 1 (single-user) and 6 (reboot) are common to all; 2 to 5 vary between distributions.
+      - id: b
+        text: 1, 3 and 5
+        rationale: Wrong. 3 and 5 are a common convention (text and graphical multi-user) but not universal.
+      - id: c
+        text: 0 to 6, all of them
+        rationale: Wrong. Runlevels 2 to 5 are defined by each distribution's maintainers.
+      - id: d
+        text: 2, 3 and 4
+        rationale: Wrong. These are among the runlevels whose meaning differs between distributions.
+    answer: [a]
+    explanation: >
+      SysV runlevels are numbered 0 to 6. Only three are shared everywhere: 0 halts the system,
+      1 is single-user (maintenance) mode and 6 reboots. The rest are up to the distribution.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: System Initialization }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [sysvinit, runlevels]
+
+  - id: 101-101.2-0009
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: On a UEFI machine, where does the firmware look to find out which EFI application to start automatically?
+    options:
+      - id: a
+        text: The first 440 bytes of the first disk in the boot order
+        rationale: Wrong. That is where BIOS firmware expects the first stage of the bootloader; UEFI does not use the MBR.
+      - id: b
+        text: The file /etc/default/grub on the root filesystem
+        rationale: Wrong. The firmware cannot read the Linux root filesystem's settings; that file only feeds grub-mkconfig.
+      - id: c
+        text: The initramfs image in /boot
+        rationale: Wrong. The initramfs is loaded later, by the bootloader, for the kernel.
+      - id: d
+        text: The boot entries stored in the firmware's NVRAM
+        rationale: Correct. UEFI keeps its boot entries in non-volatile memory on the motherboard; each points to an EFI application on the ESP.
+    answer: [d]
+    explanation: >
+      UEFI ignores the MBR. Its NVRAM holds boot entries that point to EFI applications (usually a
+      bootloader) on the EFI System Partition; the firmware runs the default entry or offers a menu.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: BIOS or UEFI }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [uefi, nvram]
+
+  - id: 101-101.2-0010
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      A systemd server with a persistent journal hung during the night and was power-cycled. Which
+      command shows the log messages from the boot session that hung, the one before the current
+      boot?
+    options:
+      - id: a
+        text: "`journalctl -b`"
+        rationale: Wrong. Without a value, -b means the current boot.
+      - id: b
+        text: "`journalctl -b -1`"
+        rationale: Correct. A boot offset of -1 selects the boot before the current one.
+      - id: c
+        text: "`journalctl -b 1`"
+        rationale: Wrong. Positive offsets count from the oldest boot in the journal, so 1 is the first recorded boot.
+      - id: d
+        text: "`dmesg`"
+        rationale: Wrong. The kernel ring buffer only holds messages from the current boot; it was emptied at power-off.
+    answer: [b]
+    explanation: >
+      journalctl -b takes a boot offset: 0 (or nothing) is the current boot, -1 the previous one,
+      -2 the one before that. Positive numbers count forward from the oldest boot kept.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: Initialization Inspection }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [journalctl, boot-offset]
+
+  - id: 101-101.2-0011
+    type: multi_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      You are creating an EFI System Partition on a new disk. Which **TWO** filesystems does the UEFI
+      standard support for it?
+    select_count: 2
+    options:
+      - id: a
+        text: FAT32
+        rationale: Correct. FAT32 is the usual choice for an ESP and is supported by the UEFI standard.
+      - id: b
+        text: ext4
+        rationale: Wrong. ext4 is a common Linux root filesystem, but UEFI firmware is not required to read it.
+      - id: c
+        text: XFS
+        rationale: Wrong. UEFI firmware is not required to read XFS.
+      - id: d
+        text: FAT16
+        rationale: Correct. The UEFI standard supports FAT12, FAT16 and FAT32 on block devices.
+    answer: [a, d]
+    explanation: >
+      UEFI firmware must be able to read the ESP itself, so the standard fixes the filesystems:
+      FAT12, FAT16 and FAT32 for disks (and ISO-9660 for optical media). In practice ESPs are
+      almost always FAT32.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: BIOS or UEFI }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [uefi, esp]
+
+  - id: 101-101.2-0012
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      The GRUB menu is on screen. You want to add a kernel parameter for this one boot only, without
+      changing any file. What do you do?
+    options:
+      - id: a
+        text: Press `c`, type `grub-mkconfig`, then press Enter
+        rationale: Wrong. c opens the GRUB command line, and grub-mkconfig is a Linux command, not a GRUB command.
+      - id: b
+        text: Boot normally, add the parameter to `/etc/default/grub`, then reboot
+        rationale: Wrong. That changes a file, and it has no effect until grub-mkconfig regenerates the configuration.
+      - id: c
+        text: Highlight the entry, press `e`, add the parameter to the `linux` line, then press Ctrl+X
+        rationale: Correct. e opens the entry for editing; the change is used for this boot (Ctrl+X or F10) and is not saved.
+      - id: d
+        text: Highlight the entry, press `e`, add the parameter to the `linux` line, then press Esc
+        rationale: Wrong. Esc in the GRUB editor discards the edit and returns to the menu instead of booting.
+    answer: [c]
+    explanation: >
+      In the GRUB menu, e opens the selected entry in an editor. Append the parameter to the line that
+      starts with linux (the kernel command line) and boot with Ctrl+X or F10. The edit only lasts
+      for that boot.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: The Bootloader }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Distractor used Tab, whose GRUB menu behaviour is unclear; replaced with e + edit + Esc (discards edit)." }
+    tags: [grub, kernel-parameters]
+
+  - id: 101-101.2-0013
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      Before reproducing a hardware fault you want to empty the kernel ring buffer, so that later
+      output only shows new messages. You do not need to see the current messages. Which command
+      does exactly that?
+    options:
+      - id: a
+        text: "`dmesg -c`"
+        rationale: Wrong. -c also clears the buffer, but prints all its messages first.
+      - id: b
+        text: "`dmesg -w`"
+        rationale: Wrong. -w (--follow) waits for and prints new messages; it clears nothing.
+      - id: c
+        text: "`dmesg -k`"
+        rationale: Wrong. -k only restricts output to kernel messages; it clears nothing.
+      - id: d
+        text: "`dmesg -C`"
+        rationale: Correct. -C (--clear) clears the ring buffer without printing it.
+    answer: [d]
+    explanation: >
+      dmesg -C, or dmesg --clear, empties the kernel ring buffer silently. dmesg -c (--read-clear)
+      prints the buffer and then clears it. Both need root privileges.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: Initialization Inspection }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [dmesg, ring-buffer]
+
+  - id: 101-101.2-0014
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: On a systemd system, which `journalctl` option limits the output to kernel messages from the current boot?
+    options:
+      - id: a
+        text: "`-k`"
+        rationale: Correct. -k (--dmesg) shows only kernel messages and implies the current boot.
+      - id: b
+        text: "`-x`"
+        rationale: Wrong. -x (--catalog) adds explanatory text to messages; it does not filter by source.
+      - id: c
+        text: "`-r`"
+        rationale: Wrong. -r (--reverse) shows the newest entries first.
+      - id: d
+        text: "`-u`"
+        rationale: Wrong. -u filters by systemd unit and needs a unit name; the kernel is not a unit.
+    answer: [a]
+    explanation: >
+      journalctl -k (long form --dmesg) shows the same kind of messages as dmesg, taken from the
+      journal, for the current boot. Combine it with -b to choose another boot.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: Initialization Inspection }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [journalctl, kernel-messages]
+
+  - id: 101-101.2-0015
+    type: fill_in
+    difficulty: 3
+    pool: holdout
+    stem: >
+      You changed `/etc/default/grub` on a machine whose GRUB configuration file is
+      `/boot/grub/grub.cfg`. Type the full command that regenerates that file so the change takes
+      effect at the next boot.
+    fill_in:
+      accepted:
+        - '(sudo\s+)?((/usr)?/s?bin/)?grub2?-mkconfig\s+(-o\s*|--output(=|\s+))/boot/grub/grub\.cfg'
+        - '((/usr)?/s?bin/)?grub2?-mkconfig\s*>\s*/boot/grub/grub\.cfg'
+        - '(sudo\s+)?((/usr)?/s?bin/)?update-grub2?'
+      match: regex
+      case_sensitive: true
+    explanation: >
+      grub-mkconfig -o /boot/grub/grub.cfg reads /etc/default/grub and the scripts in /etc/grub.d/
+      and writes a new configuration. On Debian and Ubuntu, update-grub is a wrapper that runs
+      exactly that command. Some distributions name the tool grub2-mkconfig and keep the file in
+      /boot/grub2/.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: The Bootloader }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [grub, grub-mkconfig]
+
+  - id: 101-101.2-0016
+    type: multi_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      On a large server you want one boot to behave like a small machine with only 2 processors and
+      4 GiB of RAM, to test an application. Which **TWO** kernel parameters do you add?
+    select_count: 2
+    options:
+      - id: a
+        text: "`nosmp`"
+        rationale: Wrong. nosmp disables multi-processor support, leaving one processor, not two.
+      - id: b
+        text: "`mem=4G`"
+        rationale: Correct. mem= limits the amount of RAM the kernel will use.
+      - id: c
+        text: "`maxcpus=2`"
+        rationale: Correct. maxcpus= limits how many processors the kernel brings up at boot.
+      - id: d
+        text: "`acpi=off`"
+        rationale: Wrong. acpi=off disables ACPI support; it does not set a number of CPUs or amount of memory.
+    answer: [b, c]
+    explanation: >
+      mem= caps usable memory and maxcpus= caps the processors brought online at boot. Both are
+      handy for testing and for virtual machines. maxcpus=0 has the same effect as nosmp.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: The Bootloader }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [kernel-parameters, mem, maxcpus]
+
+  - id: 101-101.2-0017
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      A disk uses the DOS (MBR) partition scheme. How many bytes at the very start of the disk does a
+      BIOS treat as the first stage of the bootloader?
+    options:
+      - id: a
+        text: "64"
+        rationale: Wrong. 64 bytes is the size of the MBR's partition table (four 16-byte entries).
+      - id: b
+        text: "440"
+        rationale: Correct. BIOS runs the first 440 bytes as the bootstrap code; the rest of the MBR holds the disk signature, partition table and boot signature.
+      - id: c
+        text: "512"
+        rationale: Wrong. 512 bytes is the whole MBR, which also contains the partition table.
+      - id: d
+        text: "4096"
+        rationale: Wrong. That is a common sector or block size, not the size of the bootstrap area.
+    answer: [b]
+    explanation: >
+      The MBR is the first 512 bytes of the disk. The first 440 bytes are the bootstrap code that
+      BIOS executes; the partition table and the 0x55AA boot signature follow. A damaged MBR leaves a
+      BIOS machine unable to boot from that disk.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: BIOS or UEFI }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [bios, mbr]
+
+  - id: 101-101.2-0018
+    type: multi_choice
+    difficulty: 3
+    pool: holdout
+    stem: Which **TWO** statements about systemd are true?
+    select_count: 2
+    options:
+      - id: a
+        text: It can only start services one after another, in the order of their script numbers
+        rationale: Wrong. systemd starts services concurrently, ordered by their declared dependencies.
+      - id: b
+        text: It cannot understand SysV runlevels in any form
+        rationale: Wrong. systemd has a compatibility layer that maps SysV runlevels to targets.
+      - id: c
+        text: It can start a daemon on demand, when its socket or D-Bus name is first used
+        rationale: Correct. Socket and D-Bus activation let systemd start services only when something needs them.
+      - id: d
+        text: It tracks the processes of each service using control groups
+        rationale: Correct. systemd places each service in its own cgroup, so it knows every process the service starts.
+    answer: [c, d]
+    explanation: >
+      systemd is a dependency-based system and service manager. It starts units in parallel,
+      supports socket and D-Bus activation, follows service processes through cgroups, manages
+      mount points and still accepts SysV runlevels through compatibility targets.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: System Initialization }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [systemd]
+
+  - id: 101-101.2-0019
+    type: fill_in
+    difficulty: 3
+    pool: holdout
+    stem: >
+      A kernel parameter you added at the GRUB menu fixed a boot problem, and you want GRUB to pass
+      it on every future boot. Type the full path of the file where you add it before regenerating
+      the GRUB configuration.
+    fill_in:
+      accepted: [/etc/default/grub]
+      match: normalized
+      case_sensitive: true
+    explanation: >
+      Persistent kernel parameters go into /etc/default/grub (the GRUB_CMDLINE_LINUX line). The
+      generated /boot/grub/grub.cfg should not be edited by hand; run grub-mkconfig after changing
+      /etc/default/grub.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: The Bootloader }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [grub, kernel-parameters]
+
+  - id: 101-101.2-0020
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: Which conclusion is supported by this excerpt of `dmesg` output?
+    exhibit: |
+      [    0.000000] Linux version 6.8.0-45-generic (buildd@lcy02-amd64-075) ...
+      [    2.913407] EXT4-fs (nvme0n1p2): mounted filesystem with ordered data mode.
+      [    4.118230] systemd[1]: systemd 255.4-1ubuntu8 running in system mode
+      [    4.302871] systemd[1]: Detected architecture x86-64.
+    options:
+      - id: a
+        text: The firmware and the bootloader together took about 2.9 seconds
+        rationale: Wrong. The timestamps start when the kernel starts, so firmware and bootloader time is not included at all.
+      - id: b
+        text: systemd was started at about 04:11 local time
+        rationale: Wrong. The bracketed values are seconds, not a time of day.
+      - id: c
+        text: systemd started roughly 1.2 seconds after the root filesystem was mounted
+        rationale: Correct. Both values count seconds from kernel start, so the gap is 4.118 - 2.913, about 1.2 seconds.
+      - id: d
+        text: The machine had been powered on for about 4.1 seconds when systemd started
+        rationale: Wrong. Power-on also includes POST, firmware and bootloader time, which happen before the kernel's clock starts.
+    answer: [c]
+    explanation: >
+      By default dmesg prefixes each message with the number of seconds since the kernel started.
+      That makes it easy to measure gaps between kernel boot events, but it says nothing about the
+      time spent before the kernel ran or about the wall-clock time.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: Initialization Inspection }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [dmesg, timestamps]
+
+  - id: 101-101.2-0021
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      This is `/etc/default/grub` on a Debian-based system. A new kernel parameter must be used by
+      every Linux entry GRUB generates, including the recovery-mode entries. What do you do?
+    exhibit: |
+      GRUB_DEFAULT=0
+      GRUB_TIMEOUT=5
+      GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"
+      GRUB_CMDLINE_LINUX=""
+    options:
+      - id: a
+        text: Add it to `GRUB_CMDLINE_LINUX`, then run `grub-mkconfig -o /boot/grub/grub.cfg`
+        rationale: Correct. GRUB_CMDLINE_LINUX is added to both normal and recovery entries, and the configuration must be regenerated.
+      - id: b
+        text: Add it to `GRUB_CMDLINE_LINUX_DEFAULT`, then run `grub-mkconfig -o /boot/grub/grub.cfg`
+        rationale: Wrong. GRUB_CMDLINE_LINUX_DEFAULT is only added to the normal entries, not the recovery ones.
+      - id: c
+        text: Add it to `GRUB_CMDLINE_LINUX`; GRUB reads the file at the next boot
+        rationale: Wrong. GRUB reads grub.cfg, not /etc/default/grub; nothing changes until grub-mkconfig is run.
+      - id: d
+        text: Append it to `/proc/cmdline`, then run `grub-mkconfig -o /boot/grub/grub.cfg`
+        rationale: Wrong. /proc/cmdline only reports the running kernel's parameters; grub-mkconfig never reads it.
+    answer: [a]
+    explanation: >
+      grub-mkconfig builds normal entries from GRUB_CMDLINE_LINUX plus GRUB_CMDLINE_LINUX_DEFAULT,
+      and recovery entries from GRUB_CMDLINE_LINUX plus the recovery options. A parameter needed
+      everywhere therefore belongs in GRUB_CMDLINE_LINUX, followed by regenerating grub.cfg.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: The Bootloader }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [grub, kernel-parameters, GRUB_CMDLINE_LINUX]
+
+  - id: 101-101.2-0022
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      A system booted with the kernel command line shown. Its `/etc/fstab` mounts `/` with the
+      `defaults` option. What does the `ro` parameter mean here?
+    exhibit: |
+      $ cat /proc/cmdline
+      BOOT_IMAGE=/vmlinuz-6.8.0-45-generic root=UUID=2f6c1d0e-8a4b-4e1f-9c3d-5b7a6e2d1f90 ro quiet splash
+    options:
+      - id: a
+        text: The root filesystem stays read-only for the whole session, so nothing can be written to it
+        rationale: Wrong. ro only governs the initial mount; the boot process remounts / using the options from /etc/fstab.
+      - id: b
+        text: The kernel image is protected against changes while the system runs
+        rationale: Wrong. ro concerns the root filesystem mount, not the kernel image file.
+      - id: c
+        text: Only the root user may write to the root filesystem
+        rationale: Wrong. ro is not a permission setting for users; file permissions are unchanged.
+      - id: d
+        text: The kernel first mounts the root filesystem read-only; it is remounted read-write later in the boot
+        rationale: Correct. ro sets the initial mount read-only (so it can be checked safely); the init system then remounts it as /etc/fstab says.
+    answer: [d]
+    explanation: >
+      ro makes the kernel's initial mount of the root filesystem read-only, which allows a
+      filesystem check before anything writes to it. Later in the boot the init system remounts /
+      read-write according to /etc/fstab. rw would make the initial mount writable instead.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: The Bootloader }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [kernel-parameters, ro, proc-cmdline]
+
+  - id: 101-101.2-0023
+    type: fill_in
+    difficulty: 4
+    pool: holdout
+    stem: >
+      On a systemd machine you want the next boot to go into rescue mode, the equivalent of SysV
+      runlevel 1. Type one short word or number that you can append to the kernel command line for
+      this, without an `=` sign.
+    fill_in:
+      accepted: ['1|s|S|single|rescue']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      systemd reads SysV-style words from the kernel command line: 1, s, S, single or rescue all
+      start rescue.target. The long form is systemd.unit=rescue.target.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: The Bootloader }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [systemd, kernel-parameters, rescue]
+
+  - id: 101-101.2-0024
+    type: multi_choice
+    difficulty: 4
+    pool: holdout
+    stem: Which **TWO** statements correctly compare booting with BIOS and with UEFI?
+    select_count: 2
+    options:
+      - id: a
+        text: UEFI firmware loads the bootloader's first stage from the first 440 bytes of the boot disk
+        rationale: Wrong. That is how BIOS works; UEFI ignores the MBR and uses its NVRAM entries.
+      - id: b
+        text: BIOS firmware cannot read filesystems; it simply runs the code found at the start of the boot disk
+        rationale: Correct. BIOS just executes the bootstrap code in the MBR, which then loads the next stage.
+      - id: c
+        text: BIOS firmware reads its boot entries from the EFI System Partition
+        rationale: Wrong. BIOS knows nothing about the ESP; it follows the disk order set in its configuration utility.
+      - id: d
+        text: UEFI firmware can read a FAT filesystem and run a program stored as a file on it
+        rationale: Correct. UEFI reads the ESP's FAT filesystem and runs EFI applications stored there.
+    answer: [b, d]
+    explanation: >
+      Both start with POST and basic hardware set-up. BIOS then runs the bootstrap code in the MBR of
+      the first disk in its boot order. UEFI reads its NVRAM boot entries and runs the EFI
+      application they point to, as a file on the FAT-formatted ESP.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: BIOS or UEFI }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [bios, uefi]
+
+  - id: 101-101.2-0025
+    type: multi_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      Which **TWO** commands show all journal entries, from every source, for the current boot
+      only?
+    select_count: 2
+    options:
+      - id: a
+        text: "`journalctl -b`"
+        rationale: Correct. -b with no value selects the current boot.
+      - id: b
+        text: "`journalctl -k`"
+        rationale: Wrong. -k covers the current boot but shows kernel messages only.
+      - id: c
+        text: "`journalctl --boot=0`"
+        rationale: Correct. Boot offset 0 is the current boot.
+      - id: d
+        text: "`journalctl -b 1`"
+        rationale: Wrong. Positive offsets count from the oldest recorded boot; 1 is the first boot in the journal.
+    answer: [a, c]
+    explanation: >
+      journalctl -b, -b 0 and --boot=0 all mean the current boot. -k narrows that to kernel messages,
+      and -b 1 is a common mistake: it selects the oldest boot kept, not the latest.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: Initialization Inspection }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [journalctl, boot-offset]
+
+  - id: 101-101.2-0026
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: Which sequence correctly orders the boot of a BIOS-based Linux system?
+    options:
+      - id: a
+        text: POST → bootloader second stage → bootloader first stage from MBR → kernel → init → initramfs
+        rationale: Wrong. The first stage runs before the second stage, and the initramfs is used before init starts.
+      - id: b
+        text: POST → bootloader first stage from MBR → kernel → init → initramfs mounted → real root filesystem
+        rationale: Wrong. The initramfs is needed to reach the real root filesystem, which must happen before init runs from it.
+      - id: c
+        text: Bootloader first stage from MBR → POST → bootloader second stage → initramfs → kernel → init
+        rationale: Wrong. POST runs first, and the kernel is started before it opens the initramfs.
+      - id: d
+        text: POST → bootloader first stage from MBR → bootloader second stage → kernel → initramfs → init
+        rationale: Correct. Firmware self-test, two bootloader stages, then the kernel uses the initramfs to reach the real root and starts init.
+    answer: [d]
+    explanation: >
+      On BIOS hardware: POST and hardware set-up, the bootstrap code from the MBR, the second-stage
+      bootloader (menu, kernel loading), the kernel with its initramfs as a temporary root, and
+      finally init on the real root filesystem, which starts the services.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: System Initialization }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [boot-sequence, bios]
+
+  - id: 101-101.2-0027
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      You need the log of the boot that ended on Monday evening. Based on the output below, which
+      command shows it?
+    exhibit: |
+      $ journalctl --list-boots
+      IDX BOOT ID                          FIRST ENTRY                 LAST ENTRY
+       -3 4c1e9a0b7d2f4e6a8b3c5d7e9f1a2b3c Sat 2026-10-17 09:12:40 IST Sat 2026-10-17 22:05:13 IST
+       -2 9d3f6a1c2b8e4f7d9a0b1c2d3e4f5a6b Mon 2026-10-19 08:47:02 IST Mon 2026-10-19 19:31:55 IST
+       -1 1a2b3c4d5e6f47a8b9c0d1e2f3a4b5c6 Tue 2026-10-20 08:55:21 IST Thu 2026-10-22 18:02:44 IST
+        0 7f8e9d0c1b2a43f4e5d6c7b8a9f0e1d2 Fri 2026-10-23 08:30:09 IST Fri 2026-10-23 11:14:37 IST
+    options:
+      - id: a
+        text: "`journalctl -b -2`"
+        rationale: Correct. The boot whose last entry is Monday 19:31 has offset -2.
+      - id: b
+        text: "`journalctl -b 3`"
+        rationale: Wrong. Positive offsets count from the oldest boot in the journal, so 3 is the third oldest, the boot that started on Tuesday.
+      - id: c
+        text: "`journalctl -b -1`"
+        rationale: Wrong. Offset -1 is the boot that started on Tuesday and ended on Thursday.
+      - id: d
+        text: "`journalctl -b 9d3f6a1c`"
+        rationale: Wrong. journalctl does not accept a shortened boot ID; it needs the full 32-character ID.
+    answer: [a]
+    explanation: >
+      In the IDX column, 0 is the current boot and negative numbers count backwards from it. The
+      boot that ended on Monday evening is -2. The full 32-character boot ID would also select it.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: Initialization Inspection }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Distractor -b 2 also selected the Monday boot (oldest listed is -3, so +2 = -2); replaced with -b 3. Boot-ID rationale reworded." }
+    tags: [journalctl, list-boots, boot-offset]
+
+  - id: 101-101.2-0028
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      On a systemd machine with default journal settings, `journalctl -b -1` prints the message
+      shown. What is the most likely reason?
+    exhibit: |
+      $ journalctl -b -1
+      Specifying boot ID or boot offset has no effect, no persistent journal was found.
+    options:
+      - id: a
+        text: The kernel ring buffer was cleared with `dmesg -C` during the previous boot
+        rationale: Wrong. Clearing the ring buffer does not remove journal entries, and does not make the journal non-persistent.
+      - id: b
+        text: The system was booted with the `quiet` kernel parameter
+        rationale: Wrong. quiet only reduces console output; messages are still logged.
+      - id: c
+        text: The directory `/var/log/journal` does not exist, so the journal is only kept in `/run/log/journal` and lost at reboot
+        rationale: Correct. With the default Storage=auto, journald writes to disk only if /var/log/journal exists; otherwise logs live in RAM under /run.
+      - id: d
+        text: The option needs root privileges; run it again with `sudo`
+        rationale: Wrong. Missing privileges limit which entries you can read; they do not produce this message.
+    answer: [c]
+    explanation: >
+      journald's default Storage=auto keeps logs persistently in /var/log/journal only when that
+      directory exists. Without it the journal is volatile, in /run/log/journal, and earlier boots
+      cannot be selected. Creating /var/log/journal (or setting Storage=persistent) fixes it.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: Initialization Inspection }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [journalctl, journald, persistent-journal]
+
+  - id: 101-101.2-0029
+    type: multi_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      A systemd server with a persistent journal rebooted unexpectedly. Which **TWO** commands show
+      only the kernel's messages from the boot before the current one?
+    select_count: 2
+    options:
+      - id: a
+        text: "`journalctl -k -b -1`"
+        rationale: Correct. -k restricts to kernel messages and -b -1 selects the previous boot.
+      - id: b
+        text: "`journalctl --dmesg --boot=-1`"
+        rationale: Correct. These are the long forms of -k and -b -1.
+      - id: c
+        text: "`journalctl -k -b 1`"
+        rationale: Wrong. -b 1 is the oldest boot in the journal, not the previous one.
+      - id: d
+        text: "`dmesg -k`"
+        rationale: Wrong. dmesg reads the current kernel ring buffer, which does not survive a reboot.
+    answer: [a, b]
+    explanation: >
+      Only the journal keeps kernel messages across reboots. journalctl -k (--dmesg) filters for
+      kernel messages, and -b -1 (--boot=-1) picks the previous boot. dmesg cannot look back past
+      the current boot.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: Initialization Inspection }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [journalctl, kernel-messages, boot-offset]
+
+  - id: 101-101.2-0030
+    type: fill_in
+    difficulty: 5
+    pool: holdout
+    stem: >
+      Type a `dmesg` command that prints only kernel ring buffer messages of the levels `err` and
+      `warn`, and nothing else.
+    fill_in:
+      accepted: ['((sudo\s+)?((/usr)?/bin/)?dmesg\s+)?(-l\s*|--level(=|\s+))(err,warn|warn,err)']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      dmesg -l (--level) takes a comma-separated list of levels: emerg, alert, crit, err, warn,
+      notice, info and debug. dmesg -l err,warn is a quick way to spot boot problems among hundreds
+      of normal messages.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: Initialization Inspection }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [dmesg, log-levels]
+
+  # --------------------------------------------------------------------------- practice (CLI)
+
+  - id: 101-101.2-0031
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: Where is a PC's BIOS stored?
+    options:
+      - id: a
+        text: In a non-volatile memory chip on the motherboard
+        rationale: Correct. BIOS is firmware kept in its own chip, separate from the system's storage devices.
+      - id: b
+        text: In the first partition of the boot disk
+        rationale: Wrong. The firmware must run before any disk is read, so it cannot live on a disk partition.
+      - id: c
+        text: In the initramfs image
+        rationale: Wrong. The initramfs is loaded by the bootloader long after the firmware has run.
+      - id: d
+        text: In /boot on the root filesystem
+        rationale: Wrong. /boot holds the kernel, initramfs and bootloader files, not the firmware.
+    answer: [a]
+    explanation: >
+      BIOS (Basic Input/Output System) is firmware: a program stored in non-volatile memory on the
+      motherboard that runs each time the machine is powered on.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: BIOS or UEFI }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [bios, firmware]
+
+  - id: 101-101.2-0032
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: What is the purpose of POST, the first step after a computer is powered on?
+    options:
+      - id: a
+        text: Loading the kernel into memory
+        rationale: Wrong. The bootloader loads the kernel, much later.
+      - id: b
+        text: Choosing which operating system to start
+        rationale: Wrong. The bootloader menu does that.
+      - id: c
+        text: Detecting simple hardware failures
+        rationale: Correct. The power-on self-test checks basic hardware before anything is loaded.
+      - id: d
+        text: Mounting the root filesystem
+        rationale: Wrong. The kernel mounts the root filesystem after it has started.
+    answer: [c]
+    explanation: >
+      POST (power-on self-test) is run by BIOS or UEFI firmware as soon as the machine powers on,
+      to catch basic hardware faults before the boot continues.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: BIOS or UEFI }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [post, firmware]
+
+  - id: 101-101.2-0033
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: On a system using SysVinit, what does switching to runlevel 6 do?
+    options:
+      - id: a
+        text: Halts the system
+        rationale: Wrong. Halting is runlevel 0.
+      - id: b
+        text: Starts single-user maintenance mode
+        rationale: Wrong. Single-user mode is runlevel 1.
+      - id: c
+        text: Starts the graphical desktop
+        rationale: Wrong. A graphical runlevel (often 5) is distribution-specific; 6 is not one.
+      - id: d
+        text: Reboots the system
+        rationale: Correct. Runlevel 6 reboots on every SysVinit distribution.
+    answer: [d]
+    explanation: >
+      Runlevels 0 (halt), 1 (single-user) and 6 (reboot) mean the same everywhere. Runlevels 2 to 5
+      are defined by the distribution.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: System Initialization }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [sysvinit, runlevels]
+
+  - id: 101-101.2-0034
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: >
+      An old laptop hangs during boot, and you suspect its power-management firmware tables. Which
+      kernel parameter disables ACPI support for a test boot?
+    options:
+      - id: a
+        text: "`nosmp`"
+        rationale: Wrong. nosmp disables multi-processor support, not ACPI.
+      - id: b
+        text: "`acpi=off`"
+        rationale: Correct. acpi=off turns ACPI support off.
+      - id: c
+        text: "`quiet`"
+        rationale: Wrong. quiet hides most boot messages; ACPI is still used.
+      - id: d
+        text: "`maxcpus=0`"
+        rationale: Wrong. maxcpus=0 acts like nosmp; it has nothing to do with ACPI.
+    answer: [b]
+    explanation: >
+      Many kernel parameters use the option=value form; acpi=off disables ACPI. It is a
+      troubleshooting setting, not something to leave on permanently.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: The Bootloader }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [kernel-parameters, acpi]
+
+  - id: 101-101.2-0035
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: >
+      A machine stops booting after the kernel and initramfs load. You start it from a live USB stick
+      and mount its root filesystem. Under which directory of that filesystem do you look for its
+      log files?
+    options:
+      - id: a
+        text: "`/var/log/`"
+        rationale: Correct. System and boot logs, including a persistent systemd journal, are kept under /var/log/.
+      - id: b
+        text: "`/proc/`"
+        rationale: Wrong. /proc is a virtual filesystem of the running kernel; it holds nothing on disk.
+      - id: c
+        text: "`/boot/`"
+        rationale: Wrong. /boot holds kernels, initramfs images and bootloader files, not logs.
+      - id: d
+        text: "`/etc/`"
+        rationale: Wrong. /etc holds configuration files, not logs.
+    answer: [a]
+    explanation: >
+      Logs are written below /var/log/. Text logs can be read with any pager; systemd journal files
+      in /var/log/journal/ are binary and must be read with journalctl.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: Initialization Inspection }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [logs, var-log]
+
+  - id: 101-101.2-0036
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: What does the `-D` (`--directory`) option of `journalctl` do?
+    options:
+      - id: a
+        text: Shows only entries logged by daemons
+        rationale: Wrong. Filtering by service is done with -u; -D does not filter by source.
+      - id: b
+        text: Deletes journal files older than a given date
+        rationale: Wrong. Old journal files are removed with options such as --vacuum-time.
+      - id: c
+        text: Prints the directory where the journal is stored
+        rationale: Wrong. -D takes a directory as input; it does not print one.
+      - id: d
+        text: Reads journal files from the given directory instead of the default location
+        rationale: Correct. -D PATH makes journalctl read the journal files found in PATH.
+    answer: [d]
+    explanation: >
+      Journal files are binary, so they must be read with journalctl even when they come from
+      another system. -D (--directory) points journalctl at a directory of journal files instead of
+      the default /var/log/journal (or /run/log/journal).
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: Initialization Inspection }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [journalctl]
+
+  - id: 101-101.2-0037
+    type: single_choice
+    difficulty: 3
+    pool: practice
+    stem: >
+      The root filesystem is a Btrfs subvolume named `@`. Which kernel parameter passes the mount
+      option needed to mount that subvolume as root?
+    options:
+      - id: a
+        text: "`root=subvol=@`"
+        rationale: Wrong. root= takes the device that holds the root filesystem, not mount options.
+      - id: b
+        text: "`init=subvol=@`"
+        rationale: Wrong. init= names the first program to run.
+      - id: c
+        text: "`rootflags=subvol=@`"
+        rationale: Correct. rootflags= passes mount options for the root filesystem.
+      - id: d
+        text: "`rw=subvol=@`"
+        rationale: Wrong. rw is a plain flag that makes the initial mount writable; it takes no value.
+    answer: [c]
+    explanation: >
+      root= says which device to mount as /, rootflags= adds mount options for it, and ro or rw
+      decides whether the initial mount is read-only or writable. GRUB's own scripts add
+      rootflags=subvol=... for Btrfs roots.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: The Bootloader }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [kernel-parameters, rootflags]
+
+  - id: 101-101.2-0038
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: Which kernel parameter hides most of the messages the kernel prints while booting?
+    options:
+      - id: a
+        text: "`ro`"
+        rationale: Wrong. ro makes the initial root mount read-only.
+      - id: b
+        text: "`quiet`"
+        rationale: Correct. quiet suppresses most kernel boot messages on the console.
+      - id: c
+        text: "`vga=ask`"
+        rationale: Wrong. vga=ask asks for a video mode at boot.
+      - id: d
+        text: "`acpi=off`"
+        rationale: Wrong. acpi=off disables ACPI support.
+    answer: [b]
+    explanation: >
+      quiet only hides the messages from the console. They are still stored in the kernel ring
+      buffer and can be read later with dmesg or journalctl -k.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: The Bootloader }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [kernel-parameters, quiet]
+
+  - id: 101-101.2-0039
+    type: single_choice
+    difficulty: 3
+    pool: practice
+    stem: >
+      Which kernel parameter makes systemd boot straight into the graphical desktop target,
+      whatever the default target is?
+    options:
+      - id: a
+        text: "`init=graphical.target`"
+        rationale: Wrong. init= expects the path of a program to run, not a unit name.
+      - id: b
+        text: "`runlevel=graphical`"
+        rationale: Wrong. There is no runlevel= kernel parameter.
+      - id: c
+        text: "`systemd.target=graphical`"
+        rationale: Wrong. The parameter is called systemd.unit, and it takes a full unit name.
+      - id: d
+        text: "`systemd.unit=graphical.target`"
+        rationale: Correct. systemd.unit= picks the unit (normally a target) to activate at boot.
+    answer: [d]
+    explanation: >
+      systemd.unit=<name>.target overrides the default target for one boot, for example
+      graphical.target, multi-user.target or rescue.target.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: The Bootloader }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [systemd, kernel-parameters]
+
+  - id: 101-101.2-0040
+    type: single_choice
+    difficulty: 3
+    pool: practice
+    stem: >
+      GRUB on a UEFI machine is set up to hide its menu and boot straight away. Which key do you
+      press while GRUB starts to make the menu appear?
+    options:
+      - id: a
+        text: Esc
+        rationale: Correct. On UEFI systems Esc brings up a hidden GRUB menu.
+      - id: b
+        text: Ctrl+X
+        rationale: Wrong. Ctrl+X boots the entry being edited in the GRUB editor.
+      - id: c
+        text: e
+        rationale: Wrong. e edits the selected entry once the menu is visible; it does not reveal the menu.
+      - id: d
+        text: Delete
+        rationale: Wrong. Delete is a common key for the firmware setup utility, not for GRUB.
+    answer: [a]
+    explanation: >
+      When GRUB's menu is hidden, holding Shift shows it on BIOS machines and pressing Esc shows it
+      on UEFI machines.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: The Bootloader }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [grub, uefi]
+
+  - id: 101-101.2-0041
+    type: multi_choice
+    difficulty: 3
+    pool: practice
+    stem: For each recorded boot, which **TWO** of these does `journalctl --list-boots` show?
+    select_count: 2
+    options:
+      - id: a
+        text: The kernel version that was booted
+        rationale: Wrong. The kernel version is not part of the list; it is in the boot's log messages.
+      - id: b
+        text: The boot ID
+        rationale: Correct. Each line shows the boot's 32-character ID.
+      - id: c
+        text: The number of errors logged
+        rationale: Wrong. --list-boots does not count messages of any priority.
+      - id: d
+        text: The times of the first and last entries
+        rationale: Correct. Each line shows when that boot's first and last journal entries were written.
+    answer: [b, d]
+    explanation: >
+      journalctl --list-boots prints one line per boot: its offset relative to the current boot,
+      its boot ID and the timestamps of its first and last entries. The offset or ID can then be
+      given to -b.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: Initialization Inspection }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [journalctl, list-boots]
+
+  - id: 101-101.2-0042
+    type: multi_choice
+    difficulty: 4
+    pool: practice
+    stem: Which **TWO** statements about the initramfs are true?
+    select_count: 2
+    options:
+      - id: a
+        text: It is an archive that the kernel uses as a temporary root filesystem in RAM
+        rationale: Correct. The initramfs is unpacked into memory and serves as an interim root filesystem.
+      - id: b
+        text: It stays mounted as / for the whole session, with the disk mounted beneath it
+        rationale: Wrong. The system switches to the real root filesystem, and the initramfs is freed from RAM.
+      - id: c
+        text: It can supply kernel modules needed to access the disk holding the real root filesystem
+        rationale: Correct. That is its main purpose, for example storage, LVM or encryption support.
+      - id: d
+        text: It is stored in the firmware's NVRAM so that the bootloader can find it
+        rationale: Wrong. The initramfs is a file, usually in /boot, loaded by the bootloader with the kernel.
+    answer: [a, c]
+    explanation: >
+      The bootloader loads the kernel and the initramfs file. The kernel unpacks the initramfs into
+      RAM, uses it to load whatever it needs to reach the real root filesystem, then switches to that
+      root and starts init; the initramfs is released.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: System Initialization }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [initramfs]
+
+  - id: 101-101.2-0043
+    type: multi_choice
+    difficulty: 1
+    pool: practice
+    stem: Which **TWO** of these are types of firmware that start a PC's boot process?
+    select_count: 2
+    options:
+      - id: a
+        text: BIOS
+        rationale: Correct. BIOS is the traditional PC firmware.
+      - id: b
+        text: GRUB
+        rationale: Wrong. GRUB is a bootloader, started by the firmware.
+      - id: c
+        text: systemd
+        rationale: Wrong. systemd is an init system, started by the kernel.
+      - id: d
+        text: UEFI
+        rationale: Correct. UEFI is the firmware interface that superseded BIOS.
+    answer: [a, d]
+    explanation: >
+      The boot chain is firmware (BIOS or UEFI), bootloader (such as GRUB), kernel with its
+      initramfs, and finally init (such as systemd).
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: BIOS or UEFI }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [bios, uefi, firmware]
+
+  - id: 101-101.2-0044
+    type: fill_in
+    difficulty: 3
+    pool: practice
+    stem: >
+      Type the `journalctl` option that lists the boots recorded in the journal, each with its offset
+      and boot ID.
+    fill_in:
+      accepted: ['((sudo\s+)?((/usr)?/bin/)?journalctl\s+)?--list-boots']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      journalctl --list-boots shows every boot in the journal with its offset (0 is the current
+      boot), its boot ID and the time of its first and last entries.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: Initialization Inspection }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [journalctl, list-boots]
+
+  - id: 101-101.2-0045
+    type: fill_in
+    difficulty: 3
+    pool: practice
+    stem: >
+      Type the kernel parameter that limits a test boot to 2 GiB of RAM.
+    fill_in:
+      accepted: ['mem=(2[Gg]|2048[Mm]|2097152[Kk]|2147483648)']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      mem= sets how much memory the kernel will use, with an optional K, M or G suffix: mem=2G or
+      mem=2048M. It is useful for testing how software behaves with less RAM.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "101.2", lesson: 1, section: The Bootloader }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [kernel-parameters, mem]
