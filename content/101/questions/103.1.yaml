@@ -36,9 +36,10 @@ questions:
         cd /usr/share && pwd
       expect: { exit_code: 0, stdout_contains: "/usr/share" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [pwd]
 
   - id: 101-103.1-0002
@@ -69,9 +70,10 @@ questions:
         uname
       expect: { exit_code: 0, stdout_contains: "Linux" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [uname]
 
   - id: 101-103.1-0003
@@ -98,9 +100,10 @@ questions:
       makes it a hidden file, so plain ls does not show it; ls -a does.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 1, section: Using Your Command History }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [history, .bash_history]
 
   - id: 101-103.1-0004
@@ -127,9 +130,10 @@ questions:
       empty string and child processes no longer receive it.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 2, section: Deleting Environment Variables }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [unset]
 
   - id: 101-103.1-0005
@@ -158,9 +162,10 @@ questions:
       descriptions and lists every match with its section number.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 1, section: Getting Command Information }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [apropos, man]
 
   - id: 101-103.1-0006
@@ -189,9 +194,10 @@ questions:
       of them in turn; the first match runs.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 2, section: Finding Your Environment Variables }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [PATH, environment]
 
   - id: 101-103.1-0007
@@ -222,9 +228,10 @@ questions:
         bash -c 'EDITOR=nano; echo $EDITOR'
       expect: { exit_code: 0, stdout_contains: "nano" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [echo, variables]
 
   - id: 101-103.1-0008
@@ -255,9 +262,10 @@ questions:
         bash -c 'type cd'
       expect: { exit_code: 0, stdout_contains: "cd is a shell builtin" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [type, builtin]
 
   - id: 101-103.1-0009
@@ -288,9 +296,10 @@ questions:
         bash -c 'project=alpha; echo "[$project]"'
       expect: { exit_code: 0, stdout_contains: "[alpha]" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [variables]
 
   - id: 101-103.1-0010
@@ -323,9 +332,10 @@ questions:
         bash -c 'LOGLEVEL=debug; export LOGLEVEL; bash -c "echo [\$LOGLEVEL]"'
       expect: { exit_code: 0, stdout_contains: "[debug]" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [export]
 
   - id: 101-103.1-0011
@@ -333,30 +343,32 @@ questions:
     difficulty: 2
     pool: holdout
     stem: >
-      Which command shows the 15 most recent entries of the current shell's history list, including
-      commands typed in this session?
+      Five minutes ago you ran an `rsync` command in the terminal you are still working in. With Bash's
+      default settings, `grep rsync ~/.bash_history` does not find it. Why?
     options:
       - id: a
-        text: "`tail -n 15 ~/.bash_history`"
-        rationale: Wrong. By default the current session's commands are only written to the file when the shell exits.
+        text: The history file only stores commands that finished without errors
+        rationale: Wrong. Bash records commands whatever their exit status.
       - id: b
-        text: "`history 15`"
-        rationale: Correct. A numeric argument makes history list only that many of the most recent entries.
+        text: This session's commands stay in memory until the shell exits
+        rationale: Correct. By default Bash writes the in-memory history list to ~/.bash_history when the shell exits.
       - id: c
-        text: "`history -c 15`"
-        rationale: Wrong. -c clears the history list instead of showing it.
+        text: grep skips hidden files, such as those whose names begin with a dot
+        rationale: Wrong. grep reads any file it is named on the command line, hidden or not.
       - id: d
-        text: "`head -n 15 ~/.bash_history`"
-        rationale: Wrong. This shows the oldest saved entries, and misses this session's commands.
+        text: Bash saves each session's commands to ~/.bashrc instead of that file
+        rationale: Wrong. ~/.bashrc is a start-up file; history goes to ~/.bash_history (HISTFILE).
     answer: [b]
     explanation: >
-      history N prints the last N entries of the in-memory history list, newest last. The history file is
-      only updated when the shell exits (or on history -a / -w), so reading it misses recent commands.
+      The running shell keeps its history list in memory. history (or history | grep rsync) shows the
+      command at once, but the file is only updated when the shell exits, or when you run history -a or
+      history -w.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 1, section: Using Your Command History }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Scenario rewritten (mirrored Explorational Ex. 2): now asks why grep on ~/.bash_history misses a command from the running session. Needs re-check." }
     tags: [history]
 
   - id: 101-103.1-0012
@@ -389,9 +401,10 @@ questions:
         cd /tmp && printf '#!/bin/sh\necho ran-ok\n' > backup.sh && chmod +x backup.sh && ./backup.sh
       expect: { exit_code: 0, stdout_contains: "ran-ok" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [PATH, invoking-commands]
 
   - id: 101-103.1-0013
@@ -420,9 +433,10 @@ questions:
       easy to use in scripts. type gives richer information, but phrased as a sentence.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 1, section: Getting Command Information }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [which]
 
   - id: 101-103.1-0014
@@ -440,7 +454,7 @@ questions:
         rationale: Wrong. The unquoted space splits the name, so two files called q3 and report.txt are created.
       - id: c
         text: "`touch q3/ report.txt`"
-        rationale: Wrong. A forward slash is a path separator, not an escape; this names a directory q3/ and a file report.txt.
+        rationale: "Wrong. A forward slash is a path separator, not an escape: touch tries to update a directory q3/ (failing if it does not exist) and separately creates report.txt."
       - id: d
         text: "`touch q3\\ report.txt`"
         rationale: Correct. A backslash makes the following space literal, so the name stays one argument.
@@ -454,9 +468,10 @@ questions:
         cd "$(mktemp -d)" && touch "q3 report.txt" && touch q3\ report.txt && ls | wc -l
       expect: { exit_code: 0, stdout_regex: "^1\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Option c rationale corrected: touch tries to update q3/ (fails if missing) and separately creates report.txt." }
     tags: [quoting, escaping]
 
   - id: 101-103.1-0015
@@ -487,9 +502,10 @@ questions:
         bash -c 'help cd'
       expect: { exit_code: 0, stdout_contains: "Change the shell working directory" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [help, builtin]
 
   - id: 101-103.1-0016
@@ -513,9 +529,10 @@ questions:
         bash -c 'TMPDIR=/x; unset TMPDIR; echo "[${TMPDIR-unset}]"'
       expect: { exit_code: 0, stdout_contains: "[unset]" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [unset]
 
   - id: 101-103.1-0017
@@ -544,9 +561,10 @@ questions:
       with it, but it prints the build string such as "#45-Ubuntu SMP PREEMPT_DYNAMIC ...".
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 1, section: Getting Command Information }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [uname]
 
   - id: 101-103.1-0018
@@ -580,9 +598,10 @@ questions:
         bash -c 'price=40; echo "Total: $price" '"'"'Total: $price'"'"''
       expect: { exit_code: 0, stdout_contains: "Total: 40 Total: $price" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [quoting]
 
   - id: 101-103.1-0019
@@ -614,9 +633,10 @@ questions:
         bash -c 'v=1; echo "~ * $v `echo bt`"'
       expect: { exit_code: 0, stdout_contains: "~ * 1 bt" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [quoting]
 
   - id: 101-103.1-0020
@@ -624,8 +644,7 @@ questions:
     difficulty: 3
     pool: holdout
     stem: >
-      Type the `uname` command, with its option, that prints every piece of information uname can
-      report (kernel name, host name, release, version, hardware and operating system) on one line.
+      Type the uname command, with its option, that prints every field uname can report on one line.
     fill_in:
       accepted: ['(((/usr)?/bin/)?uname\s+)?(-a|--all)']
       match: regex
@@ -639,9 +658,10 @@ questions:
         uname -a
       expect: { exit_code: 0, stdout_contains: "Linux" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Stem shortened; no longer lists the fields." }
     tags: [uname]
 
   - id: 101-103.1-0021
@@ -676,9 +696,10 @@ questions:
         bash -c 'uname >/dev/null; type uname'
       expect: { exit_code: 0, stdout_contains: "uname is hashed" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Option lengths rebalanced; the correct option was the longest." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [type, hash]
 
   - id: 101-103.1-0022
@@ -697,9 +718,10 @@ questions:
       matches whole page names only, like whatis.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 1, section: Getting Command Information }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [man, apropos]
 
   - id: 101-103.1-0023
@@ -734,9 +756,10 @@ questions:
         bash -c 'color=red; bash -c "echo [\$color]"'
       expect: { exit_code: 0, stdout_contains: "[]" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [variables, export, subshell]
 
   - id: 101-103.1-0024
@@ -764,9 +787,10 @@ questions:
       builtins, aliases and functions.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 1, section: Getting Command Information }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [which, type]
 
   - id: 101-103.1-0025
@@ -799,9 +823,10 @@ questions:
         bash -c 'unset TZ; TZ=UTC date +%Z; echo "[${TZ-none}]"'
       expect: { exit_code: 0, stdout_contains: "[none]" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [env, variables]
 
   - id: 101-103.1-0026
@@ -819,9 +844,10 @@ questions:
       and runs it. A common use is sudo !! to repeat a command that needed root.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 1, section: Using Your Command History }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [history, history-expansion]
 
   - id: 101-103.1-0027
@@ -851,9 +877,10 @@ questions:
       several sections.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 1, section: Getting Command Information }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [man, man-sections]
 
   - id: 101-103.1-0028
@@ -888,9 +915,10 @@ questions:
         bash -c 'a=1; export b=2; bash -c '"'"'echo "[$a][$b]"'"'"''
       expect: { exit_code: 0, stdout_contains: "[][2]" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [export, quoting, subshell]
 
   - id: 101-103.1-0029
@@ -928,9 +956,10 @@ questions:
         bash -c 'mydir=/srv/data; set | grep -c "^mydir="; env | grep -c "^mydir=" || true' | tr -d '\n'
       expect: { exit_code: 0, stdout_contains: "10" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [set, env]
 
   - id: 101-103.1-0030
@@ -967,9 +996,10 @@ questions:
         bash -c 'type -a echo; which echo'
       expect: { exit_code: 0, stdout_regex: "(?s)echo is a shell builtin.*\\n/(usr/)?bin/echo\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [type, which, builtin]
 
   - id: 101-103.1-0031
@@ -977,30 +1007,38 @@ questions:
     difficulty: 4
     pool: holdout
     stem: >
-      You want the shell to search `$HOME/bin` before all the directories already in `PATH`, for this
-      session and the programs it starts. Which command does that?
+      You saved your own wrapper script as `$HOME/bin/ls`. Which command makes typing `ls` run that
+      wrapper instead of `/usr/bin/ls`, while every other command is still found as before?
     options:
       - id: a
-        text: "`export PATH=$HOME/bin`"
-        rationale: Wrong. This replaces PATH, so every other directory is lost and most commands stop being found.
+        text: "`export PATH=\"$PATH:$HOME/bin\"`"
+        rationale: Wrong. The directory is appended, so /usr/bin is searched first and the system ls still runs.
       - id: b
         text: "`export PATH=\"$HOME/bin:$PATH\"`"
-        rationale: Correct. The new directory goes first, followed by the old value of PATH.
+        rationale: Correct. $HOME/bin is searched first, and the old directories follow it.
       - id: c
         text: "`export PATH='$HOME/bin:$PATH'`"
-        rationale: Wrong. Single quotes stop expansion, so PATH would contain the literal text $HOME/bin:$PATH.
+        rationale: Wrong. Single quotes stop expansion, so PATH holds the literal text and no command is found.
       - id: d
-        text: "`export $PATH=\"$HOME/bin:$PATH\"`"
-        rationale: Wrong. $PATH on the left is expanded first, so export receives an invalid name instead of PATH.
+        text: "`export PATH=$HOME/bin`"
+        rationale: Wrong. The wrapper runs, but PATH now holds only $HOME/bin, so commands such as date are no longer found.
     answer: [b]
     explanation: >
-      To extend PATH, include the old value: NEW:$PATH puts the new directory first, $PATH:NEW puts it
-      last. Double quotes let both variables expand. The change lasts until the shell exits.
+      PATH is searched from left to right and the first match wins. To override a system command, put your
+      directory in front and keep the old value after it (NEW:$PATH); appending ($PATH:NEW) only helps
+      for names that exist nowhere else. Double quotes let both variables expand.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 2, section: Finding Your Environment Variables }
+    verify:
+      setup:
+        - mkdir -p /tmp/h31/bin && printf '#!/bin/sh\necho WRAPPER\n' > /tmp/h31/bin/ls && chmod +x /tmp/h31/bin/ls
+      command: >-
+        HOME=/tmp/h31 bash -c 'export PATH="$HOME/bin:$PATH"; ls; date +%Y'
+      expect: { exit_code: 0, stdout_regex: "^WRAPPER\\n\\d{4}\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Stem and options replaced (restated lesson 2 Guided Ex. 1): wrapper $HOME/bin/ls must override /usr/bin/ls; verify block added. Needs re-check." }
     tags: [PATH, export, quoting]
 
   - id: 101-103.1-0032
@@ -1008,36 +1046,37 @@ questions:
     difficulty: 4
     pool: holdout
     stem: >
-      After `unset PATH`, typing `ls` fails. Which **TWO** command lines still run the `ls` program
-      from the same shell?
+      A typo left `PATH=/nonexistent` in your shell, and now typing `date` fails with "command not
+      found". Which **TWO** command lines still run the `date` program from that same shell?
     select_count: 2
     options:
       - id: a
-        text: "`/bin/ls`"
+        text: "`/bin/date`"
         rationale: Correct. A command given with a path is run directly, without a PATH search.
       - id: b
-        text: "`which ls`"
-        rationale: Wrong. which is itself an external program, so it cannot be found either, and it would only print a path.
+        text: "`which date`"
+        rationale: Wrong. which is itself an external program found through PATH, so it is not found either, and it would only print a path.
       - id: c
-        text: "`PATH=/usr/bin:/bin ls`"
-        rationale: Correct. The temporary PATH assignment is used to find ls for this one command.
+        text: "`PATH=/usr/bin:/bin date`"
+        rationale: Correct. The PATH assignment in front of the command is used to find date for this one command.
       - id: d
-        text: "`export PATH; ls`"
-        rationale: Wrong. Exporting an unset variable gives it no value, so ls is still not found.
+        text: "`export PATH; date`"
+        rationale: Wrong. export only marks PATH for child processes; its value is still /nonexistent, so date is still not found.
     answer: [a, c]
     explanation: >
-      Without PATH the shell cannot locate external programs by name. Giving the full path, or a PATH
-      value for a single command, still works. Setting PATH again (or opening a new shell) restores
-      normal behaviour.
+      With a useless PATH the shell cannot locate external programs by name. Giving the full path, or a
+      PATH value for a single command, still works. Setting PATH correctly again (or opening a new
+      shell) restores normal behaviour.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 2, section: Finding Your Environment Variables }
     verify:
       command: >-
-        bash -c 'unset PATH; /bin/ls -d / && PATH=/usr/bin:/bin ls -d /'
-      expect: { exit_code: 0, stdout_contains: "/" }
+        bash -c 'PATH=/nonexistent; /bin/date +%Y && PATH=/usr/bin:/bin date +%Y'
+      expect: { exit_code: 0, stdout_regex: "^\\d{4}\\n\\d{4}\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Scenario changed from unset PATH/ls to PATH=/nonexistent/date (was close to Guided Ex. 2); options re-tested. Needs re-check." }
     tags: [PATH, invoking-commands]
 
   - id: 101-103.1-0033
@@ -1051,6 +1090,8 @@ questions:
       accepted:
         - 'export\s+PATH=(?P<q>"?)\$(PATH|\{PATH\}):/opt/tools/bin/?(?P=q)'
         - 'export\s+PATH\+=(?P<q>"?):/opt/tools/bin/?(?P=q)'
+        - 'export\s+PATH="\$(PATH|\{PATH\})":/opt/tools/bin/?'
+        - 'export\s+PATH=\$(PATH|\{PATH\}):"/opt/tools/bin/?"'
       match: regex
       case_sensitive: true
     explanation: >
@@ -1063,9 +1104,10 @@ questions:
         bash -c 'export PATH=$PATH:/opt/tools/bin; bash -c "echo \$PATH"'
       expect: { exit_code: 0, stdout_regex: ":/opt/tools/bin\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Two accepted patterns added for partially quoted forms (quotes around $PATH only, or around the new directory only)." }
     tags: [PATH, export]
 
   - id: 101-103.1-0034
@@ -1098,9 +1140,10 @@ questions:
         HOME=/home/ana bash -c 'echo '"'"'$HOME'"'"' "\$HOME" "$HOME"'
       expect: { exit_code: 0, stdout_contains: "$HOME $HOME /home/ana" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [quoting, escaping]
 
   - id: 101-103.1-0035
@@ -1134,9 +1177,10 @@ questions:
         HOME=/home/ana bash -c 'x='"'"'$HOME'"'"'; echo "$x" $x'
       expect: { exit_code: 0, stdout_contains: "$HOME $HOME" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked. Reviewer's cold answer differed; key confirmed correct on re-test." }
     tags: [quoting, variables]
 
   - id: 101-103.1-0036
@@ -1175,9 +1219,10 @@ questions:
       105, which shifts relative references.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 1, section: Using Your Command History }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [history, history-expansion]
 
   - id: 101-103.1-0037
@@ -1214,9 +1259,10 @@ questions:
         bash -c 'stage=build; bash -c "export stage=deploy"; echo $stage'
       expect: { exit_code: 0, stdout_contains: "build" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [export, subshell]
 
   - id: 101-103.1-0038
@@ -1235,9 +1281,10 @@ questions:
       entry has already been saved to ~/.bash_history, run history -w afterwards to rewrite the file.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 1, section: Using Your Command History }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [history]
 
   - id: 101-103.1-0039
@@ -1274,9 +1321,10 @@ questions:
         bash -c 'cnt=42; set | grep "^cnt="; echo "$cnt"; env | grep -c "^cnt=" || true' | tr '\n' ' '
       expect: { exit_code: 0, stdout_contains: "cnt=42 42 0" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [set, env, export]
 
   - id: 101-103.1-0040
@@ -1317,12 +1365,13 @@ questions:
       setup:
         - mkdir -p /tmp/old /tmp/new && printf '#!/bin/sh\necho report done\n' > /tmp/old/report && chmod +x /tmp/old/report
       command: >-
-        bash -c 'PATH=/tmp/old:/tmp/new:$PATH; report >/dev/null; mv /tmp/old/report /tmp/new/report; hash -r; report'
-      expect: { exit_code: 0, stdout_contains: "report done" }
+        bash -c 'PATH=/tmp/old:/tmp/new:$PATH; report >/dev/null; mv /tmp/old/report /tmp/new/report; report 2>&1; hash -r; report'
+      expect: { exit_code: 0, stdout_regex: "(?s)/tmp/old/report: No such file or directory.*report done" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "verify now also checks the stale-hash error before hash -r." }
     tags: [hash, PATH]
 
   # --------------------------------------------------------------------------- practice (CLI)
@@ -1352,9 +1401,10 @@ questions:
       Paths that do not start with / are relative to the working directory, which pwd prints.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 1, section: Getting System Information }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Distractor /tmp/notes.txt replaced by /var/tmp/notes.txt so the key is not the only long option." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [pwd]
 
   - id: 101-103.1-0042
@@ -1380,9 +1430,10 @@ questions:
       man NAME shows the manual page: name, synopsis, description of each option and related pages.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 1, section: Getting Command Information }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [man]
 
   - id: 101-103.1-0043
@@ -1412,9 +1463,10 @@ questions:
         uname -m
       expect: { exit_code: 0, stdout_regex: "^\\S+\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [uname]
 
   - id: 101-103.1-0044
@@ -1440,14 +1492,15 @@ questions:
       uname -n gives the same name as the hostname command.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 1, section: Getting Command Information }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [uname]
 
   - id: 101-103.1-0045
     type: single_choice
-    difficulty: 3
+    difficulty: 2
     pool: practice
     stem: In the exhibit, what does `(1)` mean?
     exhibit: |
@@ -1472,9 +1525,10 @@ questions:
       uname(2) is the system call of the same name.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 1, section: Getting Command Information }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Distractor d lengthened; the correct option was the longest." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Difficulty 3 -> 2." }
     tags: [man, man-sections, whatis]
 
   - id: 101-103.1-0046
@@ -1500,9 +1554,10 @@ questions:
       A leading dot makes a file hidden by convention. ls -a (or -A) includes such files.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 1, section: Using Your Command History }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Distractor c lengthened; the correct option was the longest." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [.bash_history, ls]
 
   - id: 101-103.1-0047
@@ -1529,9 +1584,10 @@ questions:
       reused with !N.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 1, section: Using Your Command History }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Distractor d lengthened; the correct option was the longest." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [history, grep]
 
   - id: 101-103.1-0048
@@ -1561,9 +1617,10 @@ questions:
         bash -c 'echo -n ab; echo cd'
       expect: { exit_code: 0, stdout_contains: "abcd" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [echo]
 
   - id: 101-103.1-0049
@@ -1590,14 +1647,15 @@ questions:
       everything the shell holds.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 2, section: Deleting Environment Variables }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Distractor c lengthened; the correct option was the longest." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [set, env]
 
   - id: 101-103.1-0050
     type: single_choice
-    difficulty: 3
+    difficulty: 4
     pool: practice
     stem: After the commands in the exhibit, which variable no longer exists?
     exhibit: |
@@ -1627,9 +1685,10 @@ questions:
         bash -c 'target=cache; cache=/var/tmp/x; unset $target; echo "[$target][$cache]"'
       expect: { exit_code: 0, stdout_contains: "[cache][]" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Difficulty 3 -> 4." }
     tags: [unset]
 
   - id: 101-103.1-0051
@@ -1659,9 +1718,10 @@ questions:
         bash -c 'echo '"'"'Cost: $5'"'"''
       expect: { exit_code: 0, stdout_contains: "Cost: $5" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [quoting]
 
   - id: 101-103.1-0052
@@ -1687,9 +1747,10 @@ questions:
       The arrow keys walk through the history list. A recalled line can be edited before pressing Enter.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 1, section: Using Your Command History }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Tab replaced by Right arrow so the key is not the longest option." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [history]
 
   - id: 101-103.1-0053
@@ -1715,9 +1776,10 @@ questions:
       whatis looks up exact page names and prints their short descriptions; apropos does a keyword search.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 1, section: Getting Command Information }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [whatis, apropos]
 
   - id: 101-103.1-0054
@@ -1745,9 +1807,10 @@ questions:
       equivalent.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 2, section: Creating New Environment Variables }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [export]
 
   - id: 101-103.1-0055
@@ -1778,9 +1841,10 @@ questions:
         cd "$(mktemp -d)" && bash -c 'cp a b 2>/dev/null && echo bad; cp a b 2>/dev/null || echo ok'
       expect: { exit_code: 0, stdout_regex: "^ok\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [command-sequences]
 
   - id: 101-103.1-0056
@@ -1811,14 +1875,15 @@ questions:
         bash -c 'type -t cd history'
       expect: { exit_code: 0, stdout_regex: "^builtin\\nbuiltin\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [builtin, type]
 
   - id: 101-103.1-0057
     type: multi_choice
-    difficulty: 4
+    difficulty: 3
     pool: practice
     stem: Which **TWO** commands print the literal text `$PATH` rather than its value?
     select_count: 2
@@ -1844,9 +1909,10 @@ questions:
         bash -c 'echo '"'"'$PATH'"'"' \$PATH'
       expect: { exit_code: 0, stdout_contains: "$PATH $PATH" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Difficulty 4 -> 3." }
     tags: [quoting, escaping]
 
   - id: 101-103.1-0058
@@ -1866,9 +1932,10 @@ questions:
         uname --kernel-release
       expect: { exit_code: 0 }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [uname]
 
   - id: 101-103.1-0059
@@ -1890,9 +1957,10 @@ questions:
         bash -c 'export EDITOR=vim; printenv EDITOR'
       expect: { exit_code: 0, stdout_contains: "vim" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [export]
 
   - id: 101-103.1-0060
@@ -1909,7 +1977,8 @@ questions:
       next writes to it.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.1", lesson: 1, section: Using Your Command History }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [history]
