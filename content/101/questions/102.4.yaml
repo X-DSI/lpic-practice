@@ -662,13 +662,13 @@ questions:
     options:
       - id: a
         text: Both libgeo and geo-tools are removed, because dpkg removes dependants automatically
-        rationale: Wrong. dpkg only removes the packages named on the command line; removing dependants automatically is something APT does.
+        rationale: Wrong. dpkg -r removes only the packages named on its command line; removing dependants automatically is something APT does.
       - id: b
         text: libgeo is removed and geo-tools stays installed (ii) with an unmet dependency
         rationale: Correct. dpkg prints "dependency problems, but removing anyway as you requested", removes libgeo and leaves geo-tools as it was.
       - id: c
         text: libgeo stays installed and geo-tools is removed instead
-        rationale: Wrong. dpkg never removes a package that was not named; libgeo is the one removed.
+        rationale: Wrong. dpkg -r acts only on the packages you name, and libgeo is the one named; geo-tools is left alone.
       - id: d
         text: libgeo is removed and geo-tools is set back to unpacked (iU) until the dependency returns
         rationale: Wrong. dpkg does not change geo-tools' state; it stays ii, now with a broken dependency.
@@ -683,7 +683,7 @@ questions:
       status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
-        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Rewritten: stem restated Guided Exercise 3. Now asks for the package states after dpkg -r --force-depends (geo-tools stays ii, verified live). needs re-check" }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Rewritten: stem restated Guided Exercise 3. Now asks for the package states after dpkg -r --force-depends (geo-tools stays ii, verified live). re-checked cold by the reviewer: matches key; apt-get check reports the unmet dependency (verified)" }
     tags: [dpkg, dependencies, remove, force]
 
   - id: 101-102.4-0022
@@ -1398,8 +1398,9 @@ questions:
     fill_in:
       accepted:
         - '--force-depends'
-        - '(sudo\s+)?((/usr)?/bin/)?dpkg\s+(-i|--install)\s+--force-depends\s+\S+\.deb'
-        - '(sudo\s+)?((/usr)?/bin/)?dpkg\s+--force-depends\s+(-i|--install)\s+\S+\.deb'
+        - '(sudo\s+)?((/usr)?/bin/)?dpkg\s+(-i|--install)\s+--force-depends(\s+\S+\.deb)+'
+        - '(sudo\s+)?((/usr)?/bin/)?dpkg\s+--force-depends\s+(-i|--install)(\s+\S+\.deb)+'
+        - '(sudo\s+)?((/usr)?/bin/)?dpkg\s+(--force-depends\s+--configure|--configure\s+--force-depends)\s+(-a|--pending|geo-tools)'
       match: regex
       case_sensitive: true
     explanation: >
@@ -1413,7 +1414,7 @@ questions:
       status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
-        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Rewritten: stem restated Explorational Exercise 3. Now about dpkg -i --force-depends configuring anyway (verified live, package ends ii); accepted patterns use -i/--install with a .deb. needs re-check" }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Rewritten: stem restated Explorational Exercise 3. Now about dpkg -i --force-depends configuring anyway (verified live, package ends ii); accepted patterns use -i/--install with a .deb. re-checked cold by the reviewer: matches key; --configure --force-depends form added (tested: iU to ii)" }
     tags: [dpkg, force, dependencies]
 
   - id: 101-102.4-0044
