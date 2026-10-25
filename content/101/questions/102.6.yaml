@@ -223,9 +223,9 @@ questions:
     answer: [c]
     explanation: >
       Copy-on-write (thin-provisioned) images, such as QEMU's qcow2, present their full virtual size to
-      the guest but start small and grow as the guest writes data, so `ls -l` shows only what has been
-      written. A raw image's file size always equals the virtual disk size; whether it also uses that
-      much host space depends on preallocation (a fully preallocated raw image does, and avoids the
+      the guest but by default start small and grow as the guest writes data, so both `ls -l` and
+      `du` show roughly the amount written plus some metadata. A raw image's file size always equals
+      the virtual disk size; whether it also uses that much host space depends on preallocation (a fully preallocated raw image does, and avoids the
       cost of growing the file during writes; a sparse raw image shows the full size in `ls -l` but
       less in `du`).
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.6", lesson: 1, section: Example Virtual Machine Disk Storage }
@@ -233,7 +233,7 @@ questions:
       status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
-        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Explanation was false (default raw images are sparse); replaced. Exhibit reshaped to du --apparent-size / du / lsblk (was close to the lesson's ls -lh vs lsblk); options reworked: sparse raw and preallocated raw distractors. Checked with qemu-img create: raw 40G = 40G apparent / 4K du, qcow2 = 193K / 196K. Needs re-check." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Explanation was false (default raw images are sparse); replaced. Exhibit reshaped to du --apparent-size / du / lsblk (was close to the lesson's ls -lh vs lsblk); options reworked: sparse raw and preallocated raw distractors. Checked with qemu-img create: raw 40G = 40G apparent / 4K du, qcow2 = 193K / 196K. Re-checked cold by the reviewer: matches key; qcow2, VDI, VMDK and raw variants tested." }
     tags: [disk-image, qcow2, thin-provisioning]
 
   - id: 101-102.6-0008
