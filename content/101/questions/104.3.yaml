@@ -201,6 +201,7 @@ questions:
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Removed verify block (blkid --help proves nothing about the key)." }
         - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Stem rewritten (troubleshooting a UUID line); the old one restated Guided Exercise 4. Text supplied by the reviewer; verified by the reviewer." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Rewrite re-checked cold by a second reviewer; matches key; tested." }
     tags: [blkid, uuid]
 
   - id: 101-104.3-0007
@@ -414,6 +415,7 @@ questions:
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Removed verify block (systemd-escape is not in debian:stable-slim)." }
         - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Turned around (unit name to mount point); the old direction restated Explorational Exercise 5. Text supplied by the reviewer; verified by the reviewer." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Rewrite re-checked cold by a second reviewer; matches key; tested." }
     tags: [systemd, mount-unit, naming]
 
   - id: 101-104.3-0014
@@ -768,6 +770,7 @@ questions:
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
         - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Reworded (XFS only, monitoring script) to move away from Guided Exercise 6. Text supplied by the reviewer; verified by the reviewer." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Rewrite re-checked cold by a second reviewer; matches key; tested." }
     tags: [mount, findmnt]
 
   - id: 101-104.3-0024
@@ -804,6 +807,7 @@ questions:
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
         - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Option d changed from an easy xfs mismatch to a lowercase label, which fails because labels are case-sensitive (tested: mount -T reports can't find LABEL=photos)." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Rewrite re-checked cold by a second reviewer; matches key; tested." }
     tags: [fstab, blkid, label]
 
   - id: 101-104.3-0025
@@ -1179,6 +1183,7 @@ questions:
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
         - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Stem rewritten (USB stick before removal); the old one restated Guided Exercise 2. Text supplied by the reviewer; verified by the reviewer." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Rewrite re-checked cold by a second reviewer; matches key; tested." }
     tags: [lsof, busy]
 
   - id: 101-104.3-0036
@@ -1231,6 +1236,7 @@ questions:
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
         - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Stem changed to remount with noatime; the read-only version restated Guided Exercise 5. Text supplied by the reviewer; verified by the reviewer." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Rewrite re-checked cold by a second reviewer; matches key; tested." }
     tags: [remount]
 
   - id: 101-104.3-0038

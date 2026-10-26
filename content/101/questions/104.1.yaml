@@ -390,7 +390,7 @@ questions:
       from 1MiB to 600MiB on an MBR table. Type the `parted` command (just its name) that searches a
       range of the disk for a filesystem signature and offers to add a partition for it.
     fill_in:
-      accepted: ['((sudo\s+)?((/usr)?/s?bin/)?parted\s+((-s|--script)\s+)?/dev/\S+\s+)?rescue(\s+\S+\s+\S+)?']
+      accepted: ['((sudo\s+)?((/usr)?/s?bin/)?parted\s+((-s|--script)\s+)?/dev/\S+\s+)?rescue']
       match: regex
       case_sensitive: true
     explanation: >
@@ -405,6 +405,7 @@ questions:
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "parted 3.6 on an image: rm 3 then rescue 990MB 1310MB found and restored the ext4 partition. Matching tested: rescue, rescue 990MB 1310MB, parted /dev/sdb rescue 990MB 1310MB, sudo parted -s /dev/sdb rescue 1G 2G accepted; recover, resc, rescue -f, mkpart, testdisk, Rescue rejected." }
         - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Stem rewritten; the deleted-in-parted scenario restated Explorational Exercise 4. Text supplied by the reviewer; verified by the reviewer." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Rewrite re-checked cold by a second reviewer; pattern narrowed to the command name, as the stem asks." }
     tags: [parted, rescue]
 
   - id: 101-104.1-0014
@@ -452,6 +453,7 @@ questions:
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "Exhibit from parted 3.6 on a 2000 MiB image file, path replaced with /dev/sdc and the Model line dropped. Key creates 3 1000MB-1300MB 300MB with an empty File system column; option a fails with end-before-start." }
         - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Size changed from 300 MB to 450 MB so it no longer mirrors Guided Exercise 4; option b's rationale now names partition 2. Text supplied by the reviewer; verified by the reviewer." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Rewrite re-checked cold by a second reviewer; matches key; tested." }
     tags: [parted, mkpart]
 
   - id: 101-104.1-0015

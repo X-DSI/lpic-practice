@@ -1,0 +1,1 @@
+- Topic 104 (Devices, Linux Filesystems, Filesystem Hierarchy Standard) question batch: 210 original questions for 104.1 to 104.7 (140 holdout, 70 practice), each checked by its writer and by an independent reviewing agent. This completes the exam 101 bank (900 questions), which can now fill all 10 mock exams.

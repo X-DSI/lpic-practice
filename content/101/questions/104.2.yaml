@@ -396,6 +396,7 @@ questions:
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
         - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Option c changed from df -T to df -a, further from Explorational Exercise 5. Text supplied by the reviewer; verified by the reviewer." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Rewrite re-checked cold by a second reviewer; matches key; tested." }
     tags: [df]
 
   - id: 101-104.2-0013
@@ -586,6 +587,7 @@ questions:
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
         - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Exhibit trimmed after the replay sentence; the full message named the answer." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Rewrite re-checked cold by a second reviewer; matches key; tested." }
     tags: [xfs_repair, xfs, log, troubleshooting]
 
   - id: 101-104.2-0018

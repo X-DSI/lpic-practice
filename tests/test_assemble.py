@@ -189,16 +189,25 @@ def test_an_infeasible_difficulty_mix_is_reported() -> None:
     )
 
 
-def test_real_content_today_is_too_small(tmp_path: Path, capsys) -> None:
+def test_the_real_101_bank_fills_ten_mocks(tmp_path: Path) -> None:
+    content = tmp_path / "content"
+    shutil.copytree(ROOT / "content", content)
+    assert main(["101", "--content-dir", str(content)]) == 0
+    assert len(mock_files(content)) == 10
+    errors, _ = validate(content, strict=True)
+    assert errors == []
+
+
+def test_the_real_102_bank_today_is_too_small(tmp_path: Path, capsys) -> None:
     content = tmp_path / "content"
     shutil.copytree(ROOT / "content", content)
     before = sorted(p.relative_to(content) for p in content.rglob("*"))
-    assert main(["101", "--content-dir", str(content)]) == 1
+    assert main(["102", "--content-dir", str(content)]) == 1
     assert sorted(p.relative_to(content) for p in content.rglob("*")) == before
     out = capsys.readouterr().out
     assert "nothing written" in out
     # Which objectives are short changes as the bank grows, so check the shape of the report
-    # rather than naming one. Remove this test once the 101 bank can fill all 10 mocks.
+    # rather than naming one. Remove this test once the 102 bank can fill all 10 mocks.
     shortfalls = re.findall(r"objective (\d{3}\.\d+): (\d+) eligible holdout question\(s\) .*?; needs (\d+)", out)
     assert shortfalls, out
     assert all(int(have) < int(need) for _, have, need in shortfalls), out
