@@ -19,7 +19,8 @@
 
 ## Open handoffs
 
-None.
+- [Web mock exam](handoff/2026-10-26-web-mock-exam.md) — timed mocks, LPI-style results, weak
+  areas and holdout review (`lpic serve`).
 
 Done: [Content build and engine core](handoff/2026-10-23-build-and-engine-core.md) (PR #5),
 [Engine fixes, pass2-ready mocks, and the mock assembler](handoff/2026-10-25-engine-fixes-and-mock-assembler.md) (PR #8),
@@ -27,7 +28,9 @@ Done: [Content build and engine core](handoff/2026-10-23-build-and-engine-core.m
 
 ## Proposed ADRs awaiting acceptance
 
-None. Scoring, question-generation workflow and results database were accepted on 2026-10-26.
+| ADR | Needed by |
+|---|---|
+| [Results database v2 — mock sessions, resumable drafts and holdout sign-off](adr/proposed/2026-10-26-results-database-v2.md) | web mock exam handoff |
 
 ## Question bank
 

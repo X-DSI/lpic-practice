@@ -1,0 +1,1 @@
+- Plan and handoff for the web mock exam, and a proposed ADR for results database v2 (mock sessions, resumable drafts, holdout sign-off).
