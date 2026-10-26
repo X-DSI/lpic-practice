@@ -1,0 +1,1452 @@
+# 104.3 Control mounting and unmounting of filesystems — weight 3 → 30 holdout + 15 practice.
+# Original questions written from LPI Learning Materials 101-500, objective 104.3, lesson 1.
+schema_version: 1
+exam: "101"
+objective: "104.3"
+questions:
+  # ---------------------------------------------------------------- holdout (mock exams only)
+
+  - id: 101-104.3-0001
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: >
+      An administrator wants a new data partition to be attached to the directory tree automatically
+      every time the system starts. Which file should get a new line describing it?
+    options:
+      - id: a
+        text: "`/etc/mtab`"
+        rationale: Wrong. On current systems /etc/mtab is a symbolic link to /proc/self/mounts, which shows what is mounted right now; it is not configuration.
+      - id: b
+        text: "`/etc/filesystems`"
+        rationale: Wrong. This optional file lists filesystem types for mount to try when no type is given; it does not describe what to mount where.
+      - id: c
+        text: "`/etc/fstab`"
+        rationale: Correct. Each line of /etc/fstab describes a filesystem, its mount point, type and options, and it is read at boot.
+      - id: d
+        text: "`/proc/mounts`"
+        rationale: Wrong. This is a kernel-generated view of the current mounts; it cannot be edited to configure boot-time mounts.
+    answer: [c]
+    explanation: >
+      /etc/fstab is the static table of filesystems. At boot (and with mount -a) every entry that is
+      not marked noauto is mounted. The list of what is mounted at this moment lives in the kernel
+      and is shown through /proc/self/mounts, which /etc/mtab points to.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Mounting Filesystems on Bootup }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [fstab]
+
+  - id: 101-104.3-0002
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: >
+      Under the Filesystem Hierarchy Standard, which directory is meant to hold the mount points for
+      removable media such as USB sticks and memory cards?
+    options:
+      - id: a
+        text: "`/media`"
+        rationale: Correct. The FHS reserves /media for mount points of removable media, and desktop systems mount such devices below it.
+      - id: b
+        text: "`/srv`"
+        rationale: Wrong. /srv holds data served by the system, such as web or FTP content.
+      - id: c
+        text: "`/opt`"
+        rationale: Wrong. /opt is for add-on application software packages.
+      - id: d
+        text: "`/dev`"
+        rationale: Wrong. /dev contains device files, not mount points.
+    answer: [a]
+    explanation: >
+      /media is for removable media; on many desktops a stick appears under /media/<user>/<label>.
+      /mnt is traditionally the place for filesystems that an administrator mounts temporarily by
+      hand.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: "Where to Mount?" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [media, fhs]
+
+  - id: 101-104.3-0003
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: >
+      You have finished copying files to an external disk mounted on `/mnt/ext`. Which command
+      detaches the filesystem so the disk can be removed safely?
+    options:
+      - id: a
+        text: "`unmount /mnt/ext`"
+        rationale: Wrong. There is no standard unmount command; the utility is spelled umount.
+      - id: b
+        text: "`mount -u /mnt/ext`"
+        rationale: Wrong. Linux mount has no -u option for unmounting.
+      - id: c
+        text: "`fsck /mnt/ext`"
+        rationale: Wrong. fsck checks a filesystem for errors; it does not unmount it.
+      - id: d
+        text: "`umount /mnt/ext`"
+        rationale: Correct. umount detaches the filesystem; it accepts either the mount point or the device.
+    answer: [d]
+    explanation: >
+      umount (with no "n") detaches a mounted filesystem and writes out pending data first. You can
+      name the mount point or the device that is mounted there.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Additional Command Line Parameters }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [umount]
+
+  - id: 101-104.3-0004
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: >
+      An `/etc/fstab` line begins with `UUID=0b3f9c2e-6d1a-4e57-9a80-3c1d2b7e4f15` instead of a device
+      name such as `/dev/sdb1`. What does this achieve?
+    options:
+      - id: a
+        text: A new UUID is written to the filesystem each time it is mounted
+        rationale: Wrong. Mounting never changes the UUID; it is set when the filesystem is created or changed on purpose with a tool such as tune2fs.
+      - id: b
+        text: The filesystem is found by its own ID, whatever device name the disk gets
+        rationale: Correct. The UUID belongs to the filesystem, so the entry keeps working when the kernel names the disk differently.
+      - id: c
+        text: Only the user account with that UUID may mount the filesystem from the command line
+        rationale: Wrong. User accounts are identified by UID numbers, and the user/users options control who may mount.
+      - id: d
+        text: The filesystem is mounted over the network from the host with that UUID
+        rationale: Wrong. Network filesystems are named with host:/path or //host/share sources, not UUID=.
+    answer: [b]
+    explanation: >
+      Device names such as /dev/sdb1 depend on detection order and ports. A filesystem UUID (or a
+      label, with LABEL=) stays the same until the filesystem is recreated or the value is changed
+      deliberately, so it is the safer way to refer to the filesystem in /etc/fstab.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Using UUIDs and Labels }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Option lengths rebalanced; the key was the longest option." }
+    tags: [uuid, fstab]
+
+  - id: 101-104.3-0005
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: >
+      Which type of systemd unit file describes a filesystem to mount, using `What=` and `Where=`
+      settings?
+    options:
+      - id: a
+        text: A `.path` unit
+        rationale: Wrong. A .path unit watches files or directories and starts another unit when they change.
+      - id: b
+        text: A `.target` unit
+        rationale: Wrong. A target groups other units into a synchronisation point, such as multi-user.target.
+      - id: c
+        text: A `.mount` unit
+        rationale: Correct. A .mount unit has a [Mount] section whose What= names the source and Where= the mount point.
+      - id: d
+        text: A `.swap` unit
+        rationale: Wrong. A .swap unit activates a swap device or file; it has What= but no Where=.
+    answer: [c]
+    explanation: >
+      systemd can mount filesystems itself. Each mount point gets a .mount unit with a [Mount]
+      section (What=, Where=, Type=, Options=); an optional .automount unit with the same base name
+      mounts it on first access.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Mounting Disks with Systemd }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [systemd, mount-unit]
+
+  - id: 101-104.3-0006
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      You want to put a UUID-based entry for the filesystem on `/dev/sdb1` into `/etc/fstab`. Which
+      command shows you that filesystem's UUID?
+    options:
+      - id: a
+        text: "`blkid /dev/sdb1`"
+        rationale: Correct. blkid prints the attributes of the filesystem on a block device, including UUID, LABEL and TYPE.
+      - id: b
+        text: "`fdisk -l /dev/sdb`"
+        rationale: Wrong. fdisk shows the partition table and its disk identifier, not the UUID stored inside a filesystem.
+      - id: c
+        text: "`df -T /dev/sdb1`"
+        rationale: Wrong. df -T adds the filesystem type to the usage report; it does not show UUIDs.
+      - id: d
+        text: "`mount -l`"
+        rationale: Wrong. mount -l lists mounted filesystems and adds their labels in brackets, but no UUIDs.
+    answer: [a]
+    explanation: >
+      blkid reads the filesystem signature on the device and prints it as KEY="value" pairs, for
+      example UUID="…" TYPE="ext4". lsblk -f shows the same information as columns.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Using UUIDs and Labels }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Removed verify block (blkid --help proves nothing about the key)." }
+    tags: [blkid, uuid]
+
+  - id: 101-104.3-0007
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      `umount /srv/share` fails with "target is busy". Which command lists the processes that are
+      using the filesystem mounted there?
+    options:
+      - id: a
+        text: "`findmnt /srv/share`"
+        rationale: Wrong. findmnt shows the mount itself (source, type, options), not which processes use it.
+      - id: b
+        text: "`lsblk /srv/share`"
+        rationale: Wrong. lsblk lists block devices; it does not report processes, and it expects a device rather than a directory.
+      - id: c
+        text: "`df /srv/share`"
+        rationale: Wrong. df reports the space used and free on the filesystem, nothing about processes.
+      - id: d
+        text: "`fuser -vm /srv/share`"
+        rationale: Correct. fuser -m reports every process using the filesystem that contains the given path; -v shows user, PID, access type and command.
+    answer: [d]
+    explanation: >
+      A filesystem is busy while a process has a file open on it or has its current directory there.
+      fuser -m (with -v for a readable table) and lsof given the mount point or device both name those
+      processes, so you can close them before unmounting.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Dealing with Open Files }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [fuser, busy]
+
+  - id: 101-104.3-0008
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      A shared upload area is mounted on `/srv/uploads`. Users must not be able to run programs
+      directly from it. Which mount option provides this?
+    options:
+      - id: a
+        text: "`nodev`"
+        rationale: Wrong. nodev stops device files on the filesystem from being interpreted; programs can still run.
+      - id: b
+        text: "`noexec`"
+        rationale: Correct. noexec makes the kernel refuse to execute files directly from that filesystem.
+      - id: c
+        text: "`noauto`"
+        rationale: Wrong. noauto only keeps the filesystem from being mounted by mount -a or at boot.
+      - id: d
+        text: "`nouser`"
+        rationale: Wrong. nouser means only root may mount it; it says nothing about running programs.
+    answer: [b]
+    explanation: >
+      noexec blocks direct execution of binaries and scripts stored on the filesystem. Its
+      counterpart exec is part of defaults. Related hardening options are nosuid (ignore set-user-ID
+      and set-group-ID bits) and nodev (ignore device files).
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Mounting Filesystems on Bootup }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [noexec, mount-options]
+
+  - id: 101-104.3-0009
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      After a boot problem the root filesystem is mounted read-only. Which command makes it writable
+      again without unmounting it?
+    options:
+      - id: a
+        text: "`mount -a`"
+        rationale: Wrong. mount -a only mounts fstab entries that are not mounted yet; it skips / because it is already mounted.
+      - id: b
+        text: "`umount -r /`"
+        rationale: Wrong. umount -r falls back to remounting read-only when unmounting fails, the opposite of what is needed.
+      - id: c
+        text: "`mount -o remount,rw /`"
+        rationale: Correct. remount changes the options of an already mounted filesystem; rw makes it writable.
+      - id: d
+        text: "`mount -o remount,ro /`"
+        rationale: Wrong. This remounts / read-only, which it already is.
+    answer: [c]
+    explanation: >
+      The remount option applies new options to a filesystem that is already mounted, without
+      unmounting it. Only the mount point (or device) is needed; the type and source are already
+      known.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Mounting Filesystems on Bootup }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [remount]
+
+  - id: 101-104.3-0010
+    type: fill_in
+    difficulty: 2
+    pool: holdout
+    stem: >
+      You added three lines to `/etc/fstab` and want to test them without rebooting. Type the
+      `mount` option that mounts every filesystem listed in `/etc/fstab` that is not marked `noauto`.
+    fill_in:
+      accepted: ['((sudo\s+)?((/usr)?/s?bin/)?mount\s+)?(-a|--all)(\s+(-v|--verbose))?', '((sudo\s+)?((/usr)?/s?bin/)?mount\s+)?(-av|-va)']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      `mount -a` (long form `--all`) walks through /etc/fstab and mounts each entry that is not
+      already mounted and not marked noauto. Running it after editing the file catches mistakes before
+      the next boot does; `findmnt --verify` checks the file without mounting anything.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Additional Command Line Parameters }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [mount, fstab]
+
+  - id: 101-104.3-0011
+    type: multi_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      A USB disk is sometimes detected as `/dev/sdb` and sometimes as `/dev/sdc`. Which **TWO** forms
+      of the first `/etc/fstab` field keep finding its filesystem either way?
+    select_count: 2
+    options:
+      - id: a
+        text: "`LABEL=archive`"
+        rationale: Correct. The label is stored in the filesystem, so it does not depend on the device name.
+      - id: b
+        text: "`/dev/sdb1`"
+        rationale: Wrong. This names a device node, which points to a different disk when detection order changes.
+      - id: c
+        text: "`DEVICE=sdb1`"
+        rationale: Wrong. DEVICE= is not a recognised source tag in fstab, and sdb1 is still the changing kernel name.
+      - id: d
+        text: "`UUID=5e1f8a3c-2b47-4d09-8c6e-91a0f3d7b2e4`"
+        rationale: Correct. The filesystem UUID is stored in the filesystem and is independent of the device name.
+    answer: [a, d]
+    explanation: >
+      LABEL= and UUID= identify the filesystem by data stored inside it, so the entry follows the
+      filesystem whatever name the kernel gives the disk. Labels are easier to read but must be kept
+      unique by the administrator; UUIDs are unique by design.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Using UUIDs and Labels }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [uuid, label, fstab]
+
+  - id: 101-104.3-0012
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      You downloaded `debian.iso` and want to browse its contents under the existing directory
+      `/mnt/iso`. Which command does this?
+    options:
+      - id: a
+        text: "`mount /mnt/iso debian.iso`"
+        rationale: Wrong. The source must come first; here mount treats /mnt/iso as the source and fails because it is not a block device.
+      - id: b
+        text: "`mount -o loop debian.iso /mnt/iso`"
+        rationale: Correct. The loop option attaches the image file to a loop device and mounts the filesystem in it.
+      - id: c
+        text: "`mount --bind debian.iso /mnt/iso`"
+        rationale: Wrong. A bind mount makes a file or directory visible elsewhere; binding a file onto a directory fails with "Not a directory".
+      - id: d
+        text: "`losetup /mnt/iso debian.iso`"
+        rationale: Wrong. losetup's first argument must be a loop device such as /dev/loop0, and losetup never mounts anything.
+    answer: [b]
+    explanation: >
+      An image file is not a block device, so mount uses a loop device to present it as one. The
+      loop option asks for this explicitly; current versions of mount also set up a loop device on
+      their own when the source is a regular file.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Mounting and Unmounting Filesystems }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [loop, mount]
+
+  - id: 101-104.3-0013
+    type: fill_in
+    difficulty: 3
+    pool: holdout
+    stem: >
+      You are writing a systemd mount unit that mounts a disk on `/var/lib/backups`. Type the file
+      name the unit must have.
+    fill_in:
+      accepted: ['(/etc/systemd/system/)?var-lib-backups\.mount']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      A mount unit's name must be its mount point path, with the leading slash dropped, the other
+      slashes turned into dashes and .mount appended: /var/lib/backups becomes
+      var-lib-backups.mount. Local units go in /etc/systemd/system/. `systemd-escape -p
+      --suffix=mount /var/lib/backups` prints the name.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Mounting Disks with Systemd }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Removed verify block (systemd-escape is not in debian:stable-slim)." }
+    tags: [systemd, mount-unit, naming]
+
+  - id: 101-104.3-0014
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: Which set of options does the `defaults` mount option stand for?
+    options:
+      - id: a
+        text: "`rw, suid, dev, exec, auto, user, async`"
+        rationale: Wrong. defaults includes nouser, so ordinary users may not mount the filesystem.
+      - id: b
+        text: "`rw, nosuid, nodev, exec, auto, nouser, async`"
+        rationale: Wrong. defaults allows set-user-ID bits and device files (suid, dev); nosuid and nodev must be added explicitly.
+      - id: c
+        text: "`ro, suid, dev, exec, auto, nouser, sync`"
+        rationale: Wrong. defaults mounts read-write and with asynchronous I/O (rw, async).
+      - id: d
+        text: "`rw, suid, dev, exec, auto, nouser, async`"
+        rationale: Correct. This is the set the mount manual page gives for defaults.
+    answer: [d]
+    explanation: >
+      defaults means rw, suid, dev, exec, auto, nouser and async. Options written after it override
+      single items, so `defaults,noexec` is the usual way to keep everything else and forbid
+      execution.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Mounting Filesystems on Bootup }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [defaults, mount-options]
+
+  - id: 101-104.3-0015
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      Two `/etc/fstab` entries for removable drives differ only in the options `user` and `users`.
+      What is the difference?
+    options:
+      - id: a
+        text: With `users`, any ordinary user may unmount the filesystem; with `user`, only the user who mounted it (or root) may
+        rationale: Correct. Both let ordinary users mount; users also lets any user unmount, while user restricts unmounting to the user who mounted it and root.
+      - id: b
+        text: With `user`, only the owner of the device file may mount it; with `users`, any member of the device file's group may mount it
+        rationale: Wrong. Those rules belong to the owner and group options.
+      - id: c
+        text: "`users` lets ordinary users mount it; `user` is a synonym for `nouser`"
+        rationale: Wrong. user is not a synonym for nouser; it explicitly allows ordinary users to mount the filesystem.
+      - id: d
+        text: There is no difference; `users` is accepted only as an alias of `user`
+        rationale: Wrong. The two options differ in who may unmount the filesystem.
+    answer: [a]
+    explanation: >
+      user and users both allow an ordinary user to mount the filesystem. The mounting user is
+      recorded, and with user only that user (or root) can unmount it; users lets any user unmount
+      it. Both also imply noexec, nosuid and nodev unless later options override them.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Mounting Filesystems on Bootup }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Option lengths rebalanced; the key was the longest option." }
+    tags: [user, users, mount-options]
+
+  - id: 101-104.3-0016
+    type: fill_in
+    difficulty: 3
+    pool: holdout
+    stem: >
+      Type the `lsblk` option that adds filesystem columns (such as FSTYPE, LABEL, UUID and
+      MOUNTPOINTS) to its device list.
+    fill_in:
+      accepted: ['((sudo\s+)?((/usr)?/s?bin/)?lsblk\s+)?(-f|--fs)(\s+(?!-)\S+)*']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      `lsblk -f` (long form `--fs`) shows each block device with its filesystem type, label, UUID,
+      free space, use percentage and mount points. Adding a device name, as in `lsblk -f /dev/sdb`,
+      limits the output to that device.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Using UUIDs and Labels }
+    verify:
+      command: lsblk --help
+      expect: { exit_code: 0, stdout_regex: "-f, --fs" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [lsblk]
+
+  - id: 101-104.3-0017
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      Web content lives in `/srv/www`. A chrooted service can only see `/var/chroot`, so the same
+      files must also be visible under `/var/chroot/www`, while they stay available at `/srv/www`.
+      Which command does this?
+    options:
+      - id: a
+        text: "`mount -M /srv/www /var/chroot/www`"
+        rationale: Wrong. --move relocates an existing mount, so the content would no longer be available at /srv/www (and /srv/www would have to be a mount point).
+      - id: b
+        text: "`mount -o loop /srv/www /var/chroot/www`"
+        rationale: Wrong. A loop device needs an image file as its source; /srv/www is a directory, so setting up the loop device fails.
+      - id: c
+        text: "`mount --bind /srv/www /var/chroot/www`"
+        rationale: Correct. A bind mount makes the same directory tree visible at a second place; both paths show the same files.
+      - id: d
+        text: "`mount -o remount /srv/www /var/chroot/www`"
+        rationale: Wrong. remount only changes the options of something already mounted; it does not make a directory appear elsewhere.
+    answer: [c]
+    explanation: >
+      `mount --bind` (or `-B`, or `-o bind`) attaches an existing directory at another mount point.
+      It is not a copy: changes made through either path are seen through the other. Unlike a
+      symbolic link, it also works where a chroot cannot follow a link out of its tree.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Mounting and Unmounting Filesystems }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [bind]
+
+  - id: 101-104.3-0018
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      A local filesystem is busy, and the process using it cannot be stopped right now. You want the
+      filesystem removed from the directory tree immediately and fully released as soon as nothing
+      uses it any more. Which command does this?
+    options:
+      - id: a
+        text: "`umount -f /data`"
+        rationale: Wrong. -f forces the unmount of unreachable network filesystems; on a busy local filesystem it still fails with "target is busy".
+      - id: b
+        text: "`umount -l /data`"
+        rationale: Correct. A lazy unmount detaches the filesystem now and cleans up references once it is no longer busy.
+      - id: c
+        text: "`umount -r /data`"
+        rationale: Wrong. -r remounts the filesystem read-only if unmounting fails; it stays attached.
+      - id: d
+        text: "`umount -n /data`"
+        rationale: Wrong. -n only skips writing to /etc/mtab; it does not get around a busy filesystem.
+    answer: [b]
+    explanation: >
+      `umount -l` (lazy) removes the mount from the tree at once, so new accesses through the path
+      no longer reach it, and the kernel finishes the unmount when the last user lets go. Finding and
+      closing the user with lsof or fuser is the cleaner fix when possible.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Dealing with Open Files }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [umount, busy]
+
+  - id: 101-104.3-0019
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      An `/etc/fstab` entry for `/home` ends with the two fields `0 2`. What does the final `2`
+      mean?
+    exhibit: |
+      UUID=7a1e5c90-3f2b-4d8e-a6c1-0b9d4e2f8a37  /home  ext4  defaults  0  2
+    options:
+      - id: a
+        text: The filesystem is checked by fsck at boot, after the root filesystem
+        rationale: Correct. The sixth field is the fsck pass number; root uses 1 and other filesystems to be checked use 2.
+      - id: b
+        text: The filesystem is backed up by the dump utility every second day of the week
+        rationale: Wrong. The dump setting is the fifth field (here 0), and it is a flag, not a schedule.
+      - id: c
+        text: The filesystem is mounted as the second one during boot
+        rationale: Wrong. Mount order follows the mount point hierarchy, not this field.
+      - id: d
+        text: Two reserved-block percentage points are kept free for root
+        rationale: Wrong. Reserved blocks are a property of the ext filesystem set with mkfs or tune2fs, not an fstab field.
+    answer: [a]
+    explanation: >
+      Field five is the dump flag (0 = ignore). Field six tells fsck at boot in which order to
+      check: 0 means never, 1 is for the root filesystem, and 2 for other filesystems, checked after
+      root. Both fields may be omitted, and then default to 0.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Mounting Filesystems on Bootup }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Option lengths rebalanced; the key was the longest option." }
+    tags: [fstab, fsck]
+
+  - id: 101-104.3-0020
+    type: multi_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      None of the filesystems below is mounted yet, and every device exists. The administrator runs
+      `mount -a` as root. Which **TWO** mount points have a filesystem mounted afterwards?
+    exhibit: |
+      LABEL=scratch   /scratch     ext4  noauto,noatime      0  0
+      LABEL=projects  /projects    xfs   defaults            0  2
+      LABEL=camera    /media/cam   ext4  noauto,users        0  0
+      LABEL=logs      /var/log2    ext4  nouser,noexec,async 0  2
+    select_count: 2
+    options:
+      - id: a
+        text: "`/scratch`"
+        rationale: Wrong. noauto tells mount -a to skip this entry; it can only be mounted by naming it.
+      - id: b
+        text: "`/projects`"
+        rationale: Correct. defaults includes auto, so mount -a mounts it.
+      - id: c
+        text: "`/var/log2`"
+        rationale: Correct. auto is the default when noauto is not given; nouser and noexec only restrict who mounts it and what can run.
+      - id: d
+        text: "`/media/cam`"
+        rationale: Wrong. users allows ordinary users to mount it, but noauto still makes mount -a skip it.
+    answer: [b, c]
+    explanation: >
+      mount -a mounts every fstab entry that is not marked noauto (and is not mounted yet). Options
+      such as user, users, nouser or noexec have nothing to do with whether mount -a picks the entry
+      up. Removable media are usually marked noauto so a missing device does not break the boot.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Mounting Filesystems on Bootup }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [fstab, noauto, mount]
+
+  - id: 101-104.3-0021
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: Based on the output below, which statement is correct?
+    exhibit: |
+      # umount /mnt/archive
+      umount: /mnt/archive: target is busy.
+      # lsof /mnt/archive
+      COMMAND  PID   USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
+      bash    5995 nobody  cwd    DIR    7,0     4096   16 /mnt/archive/reports
+      tail    5996   root    3r   REG    7,0        2   17 /mnt/archive/reports/q3.log
+      sleep   5998 nobody  cwd    DIR    7,0     4096   16 /mnt/archive/reports
+    options:
+      - id: a
+        text: Only `tail` keeps the filesystem busy; the `bash` and `sleep` lines are informational
+        rationale: Wrong. A current working directory on the filesystem also keeps it busy, so bash and sleep block the unmount too.
+      - id: b
+        text: Process 5995 has a file named `reports` open for reading
+        rationale: Wrong. FD cwd with TYPE DIR means reports is that process's current directory, not an open file.
+      - id: c
+        text: "`umount -f /mnt/archive` will succeed because the users are local processes"
+        rationale: Wrong. -f is meant for unreachable network filesystems; a busy local filesystem still reports "target is busy".
+      - id: d
+        text: Process 5995 holds the filesystem busy because its current directory is inside it
+        rationale: Correct. The cwd entry shows the shell is sitting in /mnt/archive/reports, which pins the filesystem.
+    answer: [d]
+    explanation: >
+      lsof lists everything that pins the filesystem: open files (here tail has q3.log open as file
+      descriptor 3 for reading) and current directories (the cwd lines). The shell must leave the
+      directory, its child must finish, and tail must close the file before umount succeeds.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Dealing with Open Files }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [lsof, busy, troubleshooting]
+
+  - id: 101-104.3-0022
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      The disk described below must be mounted on `/srv/backup`, but systemd refuses the unit. What
+      fixes it?
+    exhibit: |
+      $ cat /etc/systemd/system/backup.mount
+      [Unit]
+      Description=Backup volume
+
+      [Mount]
+      What=/dev/disk/by-uuid/c2b82332-2a49-4df8-beeb-3f20f639afb7
+      Where=/srv/backup
+      Type=ext4
+      Options=noatime
+
+      [Install]
+      WantedBy=multi-user.target
+      $ systemd-analyze verify /etc/systemd/system/backup.mount
+      backup.mount: Where= setting doesn't match unit name. Refusing.
+      Unit backup.mount has a bad unit file setting.
+    options:
+      - id: a
+        text: Replace `What=` with the kernel device name, such as `/dev/sdb1`
+        rationale: Wrong. What= may name any device path; the error is about the unit name and Where=, which this does not change.
+      - id: b
+        text: Run `systemctl daemon-reload` and verify again
+        rationale: Wrong. Reloading makes systemd reread the file, but the name still does not match Where=.
+      - id: c
+        text: Rename the file to `srv-backup.mount`
+        rationale: Correct. A mount unit's name must be derived from its Where= path, so /srv/backup requires srv-backup.mount.
+      - id: d
+        text: Add `Type=auto` and remove `Options=`
+        rationale: Wrong. Type= and Options= are unrelated to the naming error; ext4 and noatime are valid.
+    answer: [c]
+    explanation: >
+      systemd ties a mount unit to its mount point: the file name must be the escaped Where= path plus
+      .mount. Here /srv/backup becomes srv-backup.mount. Changing Where= to /backup would also make
+      the name match, but would mount the disk in the wrong place.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Mounting Disks with Systemd }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [systemd, mount-unit, naming, troubleshooting]
+
+  - id: 101-104.3-0023
+    type: multi_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      Which **TWO** commands list only the ext4 and XFS filesystems that are mounted at the moment,
+      without changing anything?
+    select_count: 2
+    options:
+      - id: a
+        text: "`mount -a -t ext4,xfs`"
+        rationale: Wrong. -a mounts the matching fstab entries that are not mounted yet; it changes the system instead of just listing.
+      - id: b
+        text: "`mount -t ext4,xfs`"
+        rationale: Correct. Without a source or target, mount lists the mounted filesystems, and -t limits the list to the given types.
+      - id: c
+        text: "`blkid -t TYPE=ext4`"
+        rationale: Wrong. blkid shows devices containing ext4 whether mounted or not, and leaves XFS out.
+      - id: d
+        text: "`findmnt -t ext4,xfs`"
+        rationale: Correct. findmnt shows the current mounts, and -t restricts them to the listed types.
+    answer: [b, d]
+    explanation: >
+      With no device or directory, mount prints the current mount table; -t with a comma-separated
+      list filters by type. findmnt accepts the same -t filter and prints a tree. Combined with -a,
+      the type list would instead select which fstab entries to mount.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Listing Mounted Filesystems }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [mount, findmnt]
+
+  - id: 101-104.3-0024
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      Using the `blkid` output below, which `/etc/fstab` line mounts the filesystem labelled PHOTOS
+      on `/srv/photos`?
+    exhibit: |
+      # blkid /dev/loop0 /dev/loop1
+      /dev/loop0: LABEL="DATA" UUID="c2b82332-2a49-4df8-beeb-3f20f639afb7" BLOCK_SIZE="4096" TYPE="ext4"
+      /dev/loop1: LABEL="PHOTOS" UUID="cc8c6641-d20c-4d32-9317-70b28bae9db1" BLOCK_SIZE="4096" TYPE="ext4"
+    options:
+      - id: a
+        text: "`LABEL=PHOTOS  /srv/photos  ext4  defaults  0  2`"
+        rationale: Correct. Source, mount point, type, options, dump and pass are in the right order, and the type matches.
+      - id: b
+        text: "`UUID=c2b82332-2a49-4df8-beeb-3f20f639afb7  /srv/photos  ext4  defaults  0  2`"
+        rationale: Wrong. That UUID belongs to the DATA filesystem on /dev/loop0, so the wrong filesystem would be mounted.
+      - id: c
+        text: "`/srv/photos  LABEL=PHOTOS  ext4  defaults  0  2`"
+        rationale: Wrong. The first field must be the source and the second the mount point; they are swapped.
+      - id: d
+        text: "`LABEL=PHOTOS  /srv/photos  xfs  defaults  0  2`"
+        rationale: Wrong. blkid reports TYPE="ext4", so mounting it as xfs fails.
+    answer: [a]
+    explanation: >
+      An fstab line is: source (device, LABEL= or UUID=), mount point, type, options, dump, pass.
+      Each value has to match the real filesystem, which blkid (or lsblk -f) shows.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Using UUIDs and Labels }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [fstab, blkid, label]
+
+  - id: 101-104.3-0025
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      A working unit `srv-backup.mount` exists. The administrator now wants the disk mounted only
+      when something first accesses `/srv/backup`, not at every boot. What is needed?
+    options:
+      - id: a
+        text: Add `Automount=yes` to the `[Mount]` section of `srv-backup.mount`, then run `systemctl daemon-reload` and restart the unit
+        rationale: Wrong. There is no Automount= key; systemd warns about an unknown key and ignores it.
+      - id: b
+        text: Create `srv-backup.automount` with `[Automount]` and `Where=/srv/backup`, then enable that unit instead of the mount unit
+        rationale: Correct. An automount unit with the same base name watches the path and starts the matching mount unit on first access.
+      - id: c
+        text: Rename `srv-backup.mount` to `srv-backup.automount`, keep its contents unchanged and enable the renamed unit
+        rationale: Wrong. An automount unit takes an [Automount] section; a [Mount] section with What= is not valid in it, and the mount unit itself is still needed.
+      - id: d
+        text: Change `WantedBy=multi-user.target` to `WantedBy=local-fs.target` in the mount unit
+        rationale: Wrong. That only changes which target pulls in the mount at boot; it still mounts at boot rather than on access.
+    answer: [b]
+    explanation: >
+      Automounting needs a second unit: <name>.automount with an [Automount] section whose Where=
+      is the same mount point. Enabling and starting the automount unit (and not the mount unit)
+      makes systemd mount the filesystem on first access via the matching .mount unit.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Automounting a Mount Unit }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Option lengths rebalanced; the key was the longest option." }
+    tags: [systemd, automount]
+
+  - id: 101-104.3-0026
+    type: multi_choice
+    difficulty: 5
+    pool: holdout
+    stem: Which **TWO** conclusions follow from the session below?
+    exhibit: |
+      $ findmnt -no OPTIONS /mnt/tools
+      rw,noexec,relatime
+      $ ls -l backup.sh
+      -rwxr-xr-x 1 root root 27 Oct 26 11:08 backup.sh
+      $ ./backup.sh
+      bash: ./backup.sh: Permission denied
+      $ sh backup.sh
+      backup done
+    select_count: 2
+    options:
+      - id: a
+        text: noexec stops scripts on the filesystem from being started directly, even with execute permission set.
+        rationale: Correct. ./backup.sh is refused although the file mode allows execution, because the mount is noexec.
+      - id: b
+        text: noexec only affects compiled binaries, so the denial must come from the file permissions.
+        rationale: Wrong. The mode is rwxr-xr-x, so the permissions allow execution; the denial comes from noexec, which applies to scripts too.
+      - id: c
+        text: An interpreter from another filesystem can still read and run the script, so noexec alone does not stop scripts.
+        rationale: Correct. sh is executed from /usr/bin and only reads backup.sh as data, which noexec does not prevent.
+      - id: d
+        text: "`sh backup.sh` worked because `sh` runs with root privileges that bypass mount options."
+        rationale: Wrong. sh is not set-user-ID; it works because it merely reads the file, and a root shell would also be refused for ./backup.sh.
+      - id: e
+        text: noexec removed the execute bits when the filesystem was mounted, which is why `./backup.sh` failed.
+        rationale: Wrong. ls -l still shows the execute bits; noexec leaves file modes alone and is enforced when executing.
+    answer: [a, c]
+    explanation: >
+      noexec makes the kernel refuse execve() of any file on that filesystem, ELF binary or script.
+      Passing the script to an interpreter that lives elsewhere sidesteps this, since the interpreter
+      only opens the script for reading. noexec reduces risk but is not a full barrier against
+      running code.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Mounting Filesystems on Bootup }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [noexec, mount-options]
+
+  - id: 101-104.3-0027
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      Ordinary users must be able to mount a tools disk on `/mnt/tools` **and** run the programs on
+      it. Which options field achieves this?
+    options:
+      - id: a
+        text: "`noauto,exec,user`"
+        rationale: Wrong. user implies noexec, and because it comes after exec it overrides it, so programs cannot run.
+      - id: b
+        text: "`defaults,user`"
+        rationale: Wrong. defaults includes exec, but the later user implies noexec, nosuid and nodev, so programs cannot run.
+      - id: c
+        text: "`noauto,nouser,exec`"
+        rationale: Wrong. nouser means only root may mount the filesystem.
+      - id: d
+        text: "`noauto,user,exec`"
+        rationale: Correct. user allows ordinary users to mount and implies noexec, but the exec that follows overrides it.
+    answer: [d]
+    explanation: >
+      user (and users) imply noexec, nosuid and nodev. Options are applied from left to right, so an
+      exec placed after user turns execution back on, while an exec placed before it is cancelled.
+      The resulting mount shows noexec or not in the mount or findmnt output.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Mounting Filesystems on Bootup }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [user, noexec, mount-options]
+
+  - id: 101-104.3-0028
+    type: multi_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      On a systemd host, `/etc/fstab` contains the line below. The listing shows the unit files that
+      systemd generates from it at boot (trimmed). Which **TWO** statements are true?
+    exhibit: |
+      LABEL=PHOTOS /srv/photo-archive ext4 noauto,x-systemd.automount 0 2
+
+      $ ls /run/systemd/generator
+      local-fs.target.requires  local-fs.target.wants
+      srv-photo\x2darchive.automount  srv-photo\x2darchive.mount
+      $ cat '/run/systemd/generator/srv-photo\x2darchive.mount'
+      [Unit]
+      Requires=systemd-fsck@dev-disk-by\x2dlabel-PHOTOS.service
+      After=systemd-fsck@dev-disk-by\x2dlabel-PHOTOS.service
+
+      [Mount]
+      What=/dev/disk/by-label/PHOTOS
+      Where=/srv/photo-archive
+      Type=ext4
+      Options=noauto,x-systemd.automount
+    select_count: 2
+    options:
+      - id: a
+        text: The filesystem is mounted when something first accesses `/srv/photo-archive`.
+        rationale: Correct. x-systemd.automount makes systemd create an automount unit for the path, which triggers the mount on first access.
+      - id: b
+        text: Because of `noauto`, the filesystem is never mounted unless an administrator runs `mount /srv/photo-archive`.
+        rationale: Wrong. noauto stops it from being mounted at boot, but the generated automount unit still mounts it on access.
+      - id: c
+        text: The `\x2d` in the names shows the files are corrupt; they must be renamed `srv-photo-archive.*` to work.
+        rationale: Wrong. \x2d is systemd's escape for a dash that is part of a path component; the names are correct as generated.
+      - id: d
+        text: The pass value `2` makes systemd check the filesystem with fsck before mounting it.
+        rationale: Correct. A non-zero pass field makes the generator add the systemd-fsck@ dependency shown in [Unit].
+      - id: e
+        text: The generated units must be copied to `/etc/systemd/system` before systemd uses them.
+        rationale: Wrong. Units in the generator directory under /run are loaded directly; copying is not needed.
+    answer: [a, d]
+    explanation: >
+      systemd-fstab-generator turns each fstab line into a .mount unit named after the mount point,
+      and x-systemd.automount adds a matching .automount unit. A dash inside a path component is
+      escaped as \x2d, because a plain dash stands for "/". A non-zero sixth field becomes an fsck
+      dependency on the device.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Automounting a Mount Unit }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [systemd, automount, fstab, naming]
+
+  - id: 101-104.3-0029
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      `/srv/www` is a directory on a writable filesystem. A copy of the same tree must appear at
+      `/var/chroot/www` read-only, while `/srv/www` itself stays writable. Which command achieves
+      this?
+    options:
+      - id: a
+        text: "`mount -o ro /srv/www /var/chroot/www`"
+        rationale: Wrong. Without bind, mount treats /srv/www as a device and fails because it is not a block device.
+      - id: b
+        text: "`mount --bind /srv/www /var/chroot/www && mount -o remount,ro /var/chroot/www`"
+        rationale: Wrong. Remounting without the bind flag changes the underlying filesystem, so /srv/www becomes read-only too.
+      - id: c
+        text: "`mount -o bind,ro /srv/www /var/chroot/www`"
+        rationale: Correct. Current mount creates the bind mount and then makes only that mount read-only.
+      - id: d
+        text: "`mount -o loop,ro /srv/www /var/chroot/www`"
+        rationale: Wrong. loop needs an image file as the source; /srv/www is a directory, so the loop setup fails.
+    answer: [c]
+    explanation: >
+      A read-only flag on a bind mount belongs to that mount only. mount -o bind,ro does it in one
+      step (internally a bind followed by remount,bind,ro). A plain remount,ro on the bind target
+      applies to the filesystem's superblock and so affects every place it is mounted.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Mounting Filesystems on Bootup }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [bind, remount, ro]
+
+  - id: 101-104.3-0030
+    type: fill_in
+    difficulty: 5
+    pool: holdout
+    stem: >
+      A disk must be mounted on `/srv/web-data` with a systemd mount unit. Type the unit's file name
+      exactly as `systemd-escape -p --suffix=mount /srv/web-data` prints it.
+    fill_in:
+      accepted: ['([''"]?)(/etc/systemd/system/)?srv-web\\x2ddata\.mount\1']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      In unit names a "-" stands for "/", so a dash that really is part of a directory name is
+      escaped as \x2d. /srv/web-data therefore becomes srv-web\x2ddata.mount. Quote the name in the
+      shell (for example systemctl status 'srv-web\x2ddata.mount') so the backslash survives.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Mounting Disks with Systemd }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [systemd, systemd-escape, naming]
+
+  # --------------------------------------------------------------------------- practice (CLI)
+
+  - id: 101-104.3-0031
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: >
+      An administrator needs a place to mount a filesystem by hand for a short repair job. Which
+      directory is traditionally used for such temporary mounts?
+    options:
+      - id: a
+        text: "`/boot`"
+        rationale: Wrong. /boot holds the kernel and boot loader files.
+      - id: b
+        text: "`/var`"
+        rationale: Wrong. /var holds variable data such as logs, spools and caches.
+      - id: c
+        text: "`/tmp`"
+        rationale: Wrong. /tmp is for temporary files, not a conventional mount point location.
+      - id: d
+        text: "`/mnt`"
+        rationale: Correct. /mnt is the conventional place for filesystems an administrator mounts temporarily.
+    answer: [d]
+    explanation: >
+      /mnt is for temporary, manual mounts by the administrator; /media is for removable media,
+      often mounted automatically by the desktop.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: "Where to Mount?" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [mnt, fhs]
+
+  - id: 101-104.3-0032
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: What does running `mount` with no arguments do?
+    options:
+      - id: a
+        text: It lists the filesystems that are currently mounted
+        rationale: Correct. Without arguments mount prints the mount table, one "source on target type type (options)" line each.
+      - id: b
+        text: It mounts everything listed in `/etc/fstab`
+        rationale: Wrong. That needs the -a option.
+      - id: c
+        text: It prints the contents of `/etc/fstab`
+        rationale: Wrong. It shows what is mounted now, which may differ from the configuration in /etc/fstab.
+      - id: d
+        text: It lists all block devices together with their filesystem types
+        rationale: Wrong. That is what lsblk -f or blkid do; unmounted devices do not appear in mount's output.
+    answer: [a]
+    explanation: >
+      Plain mount shows every mounted filesystem, including in-memory ones such as proc, sysfs and
+      tmpfs. Add -t type (or use findmnt) to narrow the list.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Listing Mounted Filesystems }
+    verify:
+      command: mount
+      expect: { exit_code: 0, stdout_regex: " on / type " }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Option lengths rebalanced; the key was the longest option." }
+    tags: [mount]
+
+  - id: 101-104.3-0033
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: >
+      Which option in an `/etc/fstab` entry lets an ordinary (non-root) user mount that filesystem?
+    options:
+      - id: a
+        text: "`auto`"
+        rationale: Wrong. auto means the entry is mounted by mount -a and at boot; it does not grant users anything.
+      - id: b
+        text: "`user`"
+        rationale: Correct. user allows an ordinary user to mount the filesystem described by that entry.
+      - id: c
+        text: "`rw`"
+        rationale: Wrong. rw makes the mounted filesystem writable; it does not decide who may mount it.
+      - id: d
+        text: "`dev`"
+        rationale: Wrong. dev lets device files on the filesystem be used; it is unrelated to who may mount it.
+    answer: [b]
+    explanation: >
+      Normally only root may mount. The user option (and users) in an fstab entry lets ordinary users
+      mount that filesystem by naming its mount point or device, as in mount /media/usb.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Mounting Filesystems on Bootup }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [user, mount-options]
+
+  - id: 101-104.3-0034
+    type: fill_in
+    difficulty: 2
+    pool: practice
+    stem: >
+      Type the util-linux command that, given `/dev/sdc1`, prints that filesystem's attributes as
+      KEY="value" pairs, for example `UUID="…" TYPE="ext4"`.
+    fill_in:
+      accepted: ['(sudo\s+)?((/usr)?/s?bin/)?blkid(\s+/dev/sdc1)?']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      blkid identifies the content of block devices and prints LABEL, UUID, TYPE and similar tags as
+      KEY="value" pairs. lsblk -f shows the same data as table columns.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Using UUIDs and Labels }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [blkid]
+
+  - id: 101-104.3-0035
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: >
+      `umount /dev/sdb1` fails with "target is busy". Which command shows the open files on that
+      filesystem and the processes holding them?
+    options:
+      - id: a
+        text: "`blkid /dev/sdb1`"
+        rationale: Wrong. blkid prints the filesystem's label, UUID and type, not processes.
+      - id: b
+        text: "`ps -ef /dev/sdb1`"
+        rationale: Wrong. ps lists processes but cannot filter them by the filesystem they use.
+      - id: c
+        text: "`lsof /dev/sdb1`"
+        rationale: Correct. Given a mounted device (or its mount point), lsof lists every open file on that filesystem with the command and PID.
+      - id: d
+        text: "`lsblk /dev/sdb1`"
+        rationale: Wrong. lsblk shows device details and mount points, not who is using them.
+    answer: [c]
+    explanation: >
+      lsof with a block device or mount point argument lists the open files on that filesystem,
+      including current directories (FD cwd). Close those programs or leave the directory, then
+      unmount again.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Dealing with Open Files }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [lsof, busy]
+
+  - id: 101-104.3-0036
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: In an `/etc/fstab` line, which field holds the comma-separated mount options?
+    options:
+      - id: a
+        text: The fourth field
+        rationale: Correct. The order is source, mount point, type, options, dump, pass, so options come fourth.
+      - id: b
+        text: The second field
+        rationale: Wrong. The second field is the mount point.
+      - id: c
+        text: The third field
+        rationale: Wrong. The third field is the filesystem type.
+      - id: d
+        text: The sixth field
+        rationale: Wrong. The sixth field is the fsck pass number.
+    answer: [a]
+    explanation: >
+      Each fstab line has up to six fields: source (device, LABEL= or UUID=), mount point, type,
+      options, dump flag and fsck pass number.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Mounting Filesystems on Bootup }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [fstab]
+
+  - id: 101-104.3-0037
+    type: fill_in
+    difficulty: 2
+    pool: practice
+    stem: >
+      `/srv/data` is mounted read-write. Fill in the blank so the command makes it read-only without
+      unmounting it: `mount -o ____,ro /srv/data`
+    fill_in:
+      accepted: [remount]
+      match: normalized
+      case_sensitive: true
+    explanation: >
+      `mount -o remount,ro /srv/data` applies new options to the mounted filesystem in place. The
+      mount point (or device) is enough; type and source are already known.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Mounting Filesystems on Bootup }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [remount]
+
+  - id: 101-104.3-0038
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: What is the effect of `noauto` in an `/etc/fstab` entry?
+    options:
+      - id: a
+        text: Ordinary users may not mount the filesystem
+        rationale: Wrong. That is nouser (part of defaults).
+      - id: b
+        text: The filesystem type is not detected automatically
+        rationale: Wrong. Type detection depends on the type field (auto there), not the noauto option.
+      - id: c
+        text: The filesystem is never checked by fsck during the boot process, even after a crash
+        rationale: Wrong. Boot-time checks are controlled by the sixth field (0 = no check).
+      - id: d
+        text: The filesystem is skipped by `mount -a` and so not mounted at boot
+        rationale: Correct. noauto entries are only mounted when someone names them explicitly.
+    answer: [d]
+    explanation: >
+      noauto keeps an entry out of mount -a and the boot process; the entry still supplies the
+      defaults when someone runs mount with its mount point or device. It suits removable media.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Mounting Filesystems on Bootup }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Option lengths rebalanced; the key was the longest option." }
+    tags: [noauto, fstab]
+
+  - id: 101-104.3-0039
+    type: multi_choice
+    difficulty: 3
+    pool: practice
+    stem: >
+      An fstab entry has the options `noauto,user` and nothing else. Which **THREE** options does
+      the resulting mount get implicitly?
+    select_count: 3
+    options:
+      - id: a
+        text: "`noexec`"
+        rationale: Correct. user implies noexec unless a later exec overrides it.
+      - id: b
+        text: "`ro`"
+        rationale: Wrong. user does not make the mount read-only; it stays rw.
+      - id: c
+        text: "`nosuid`"
+        rationale: Correct. user implies nosuid, so set-user-ID and set-group-ID bits are ignored.
+      - id: d
+        text: "`sync`"
+        rationale: Wrong. user does not change the I/O mode; async remains the default.
+      - id: e
+        text: "`nodev`"
+        rationale: Correct. user implies nodev, so device files on the filesystem cannot be used.
+    answer: [a, c, e]
+    explanation: >
+      Letting ordinary users mount media is a security risk, so user (and users) imply noexec,
+      nosuid and nodev. A later option such as exec can turn one back on: user,exec.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Mounting Filesystems on Bootup }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [user, mount-options]
+
+  - id: 101-104.3-0040
+    type: single_choice
+    difficulty: 3
+    pool: practice
+    stem: >
+      A USB disk brought in by a visitor is mounted with `nosuid`. What does this option prevent?
+    options:
+      - id: a
+        text: Files on the disk from being owned by root
+        rationale: Wrong. Ownership stored on the disk is unchanged; nosuid only changes how special bits are treated.
+      - id: b
+        text: Ordinary users from writing to the disk
+        rationale: Wrong. Write access depends on rw/ro and the file permissions.
+      - id: c
+        text: A set-user-ID program on the disk from running with its owner's privileges
+        rationale: Correct. With nosuid the set-user-ID and set-group-ID bits are ignored, so such a program runs with the caller's own IDs.
+      - id: d
+        text: Any program stored on the disk from being started by any user, including root
+        rationale: Wrong. That is noexec; with nosuid programs still run, just without privilege change.
+    answer: [c]
+    explanation: >
+      A set-user-ID root program copied to removable media could otherwise give root rights to
+      whoever runs it. nosuid makes the kernel ignore the setuid and setgid bits on that filesystem.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Mounting Filesystems on Bootup }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Option lengths rebalanced; the key was the longest option." }
+    tags: [nosuid, mount-options]
+
+  - id: 101-104.3-0041
+    type: single_choice
+    difficulty: 3
+    pool: practice
+    stem: >
+      Which section and key does a systemd `.automount` unit use to name the directory that triggers
+      the mount?
+    options:
+      - id: a
+        text: "`[Mount]` with `What=`"
+        rationale: Wrong. That section and key belong to the .mount unit and name the source device.
+      - id: b
+        text: "`[Automount]` with `Where=`"
+        rationale: Correct. The automount unit's Where= gives the mount point to watch; it must match the .mount unit's Where=.
+      - id: c
+        text: "`[Install]` with `WantedBy=`"
+        rationale: Wrong. WantedBy= decides which target starts the unit when enabled, not the path.
+      - id: d
+        text: "`[Automount]` with `What=`"
+        rationale: Wrong. Automount units have no What= key; the source is taken from the matching .mount unit.
+    answer: [b]
+    explanation: >
+      An automount unit is small: [Unit] with a Description=, [Automount] with Where= (plus optional
+      settings such as TimeoutIdleSec=), and usually an [Install] section. Its name matches the
+      mount unit's, with .automount instead of .mount.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Automounting a Mount Unit }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [systemd, automount]
+
+  - id: 101-104.3-0042
+    type: fill_in
+    difficulty: 3
+    pool: practice
+    stem: >
+      Fill in the mount option that explicitly asks `mount` to attach an image file to a loop device:
+      `mount -o ____ /root/rescue.img /mnt/rescue`
+    fill_in:
+      accepted: [loop]
+      match: normalized
+      case_sensitive: true
+    explanation: >
+      The loop option makes mount attach the file to a free /dev/loopN device and mount that. Current
+      util-linux mount also does this automatically when the source is a regular file, and detaches
+      the loop device again on umount.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Mounting and Unmounting Filesystems }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [loop]
+
+  - id: 101-104.3-0043
+    type: single_choice
+    difficulty: 3
+    pool: practice
+    stem: >
+      After writing `mnt-media.mount`, an administrator ran `systemctl daemon-reload` and
+      `systemctl start mnt-media.mount`. The disk was mounted, but after a reboot it is not. What
+      was missing?
+    options:
+      - id: a
+        text: "`systemctl daemon-reexec` after the reload"
+        rationale: Wrong. daemon-reexec restarts the systemd manager itself; it does not make a unit start at boot.
+      - id: b
+        text: An entry for the same disk in `/etc/mtab`
+        rationale: Wrong. /etc/mtab is a link to the kernel's list of current mounts and is not configuration.
+      - id: c
+        text: "`systemctl restart mnt-media.mount`"
+        rationale: Wrong. Restarting only remounts it in the running system, like start.
+      - id: d
+        text: "`systemctl enable mnt-media.mount`"
+        rationale: Correct. enable creates the link from the target in WantedBy= so the unit is started at every boot.
+    answer: [d]
+    explanation: >
+      start acts on the running system only. enable reads the [Install] section and links the unit
+      into the named target (for example multi-user.target), so it is started on every boot;
+      enable --now does both at once.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Mounting Disks with Systemd }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [systemd, mount-unit]
+
+  - id: 101-104.3-0044
+    type: single_choice
+    difficulty: 4
+    pool: practice
+    stem: >
+      An ordinary user mounted the disk below. Why does the mount show `nosuid,nodev,noexec`
+      although the fstab entry does not list them?
+    exhibit: |
+      $ grep photos /etc/fstab
+      LABEL=PHOTOS  /mnt/photos  ext4  noauto,user  0  0
+      $ mount /mnt/photos
+      $ mount -t ext4 | grep photos
+      /dev/loop1 on /mnt/photos type ext4 (rw,nosuid,nodev,noexec,relatime,user=nobody)
+    options:
+      - id: a
+        text: The `user` option implies `nosuid`, `nodev` and `noexec`
+        rationale: Correct. user brings these three restrictions with it unless later options override them.
+      - id: b
+        text: "`noauto` adds them because the disk was not mounted at boot"
+        rationale: Wrong. noauto only keeps the entry out of mount -a; it adds no other options.
+      - id: c
+        text: The kernel adds them to every ext4 filesystem on a loop device
+        rationale: Wrong. Loop-mounted ext4 filesystems get no such options by default.
+      - id: d
+        text: A dump value of `0` disables execution on the filesystem
+        rationale: Wrong. The fifth field is only the dump backup flag.
+    answer: [a]
+    explanation: >
+      Because user lets anyone mount media, it also implies nosuid, nodev and noexec. The user=nobody
+      entry records who mounted it, which is used to decide who may unmount it. To allow programs,
+      write noauto,user,exec.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Mounting Filesystems on Bootup }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [user, mount-options]
+
+  - id: 101-104.3-0045
+    type: single_choice
+    difficulty: 4
+    pool: practice
+    stem: >
+      After adding the fstab line below, `mount -a` prints an error. `blkid -L DATA` finds the
+      filesystem. What fixes the problem?
+    exhibit: |
+      LABEL=DATA  /srv/data  ext4  defaults,noatime  0  2
+
+      # mount -a
+      mount: /srv/data: mount point does not exist.
+             dmesg(1) may have more information after failed mount system call.
+    options:
+      - id: a
+        text: Replace `LABEL=DATA` with the filesystem's UUID
+        rationale: Wrong. The label was found; the error concerns the target directory, not the source.
+      - id: b
+        text: Change the last field from `2` to `0`
+        rationale: Wrong. The pass field only controls the boot-time fsck; it does not create the mount point.
+      - id: c
+        text: Run `mkfs.ext4` on the device so it can be mounted
+        rationale: Wrong. The filesystem exists; reformatting would destroy its data and still leave /srv/data missing.
+      - id: d
+        text: Create the directory with `mkdir /srv/data`
+        rationale: Correct. A mount point must be an existing directory; once it exists, mount -a succeeds.
+    answer: [d]
+    explanation: >
+      The mount point named in the second field must already exist. `findmnt --verify` checks
+      /etc/fstab for this and similar problems without mounting anything.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Mounting and Unmounting Filesystems }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [fstab, troubleshooting]
