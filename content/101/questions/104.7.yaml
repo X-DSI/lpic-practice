@@ -1,0 +1,1042 @@
+# 104.7 Find system files and place files in the correct location — weight 2 → 20 holdout + 10 practice.
+# Original questions written from LPI Learning Materials 101-500, objective 104.7, lesson 1.
+schema_version: 1
+exam: "101"
+objective: "104.7"
+questions:
+  # ---------------------------------------------------------------- holdout (mock exams only)
+
+  - id: 101-104.7-0001
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: >
+      According to the Filesystem Hierarchy Standard, which directory holds the configuration files
+      specific to this host, such as the settings for the SSH daemon?
+    options:
+      - id: a
+        text: "`/etc`"
+        rationale: Correct. /etc is the place for host-specific configuration, usually one subdirectory per program, such as /etc/ssh.
+      - id: b
+        text: "`/usr`"
+        rationale: Wrong. /usr holds shareable, read-only programs, libraries and data, not this host's configuration.
+      - id: c
+        text: "`/var`"
+        rationale: Wrong. /var holds data that changes while the system runs, such as logs and spools.
+      - id: d
+        text: "`/opt`"
+        rationale: Wrong. /opt is for add-on application packages; their host-specific configuration belongs in /etc/opt.
+    answer: [a]
+    explanation: >
+      Host-specific configuration lives in /etc, often in a subdirectory per program (/etc/ssh,
+      /etc/apt, /etc/systemd). Keeping configuration in one tree makes it easy to back up and to
+      keep separate from the programs in /usr.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.7", lesson: 1, section: The Filesystem Hierarchy Standard }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Rationale a reworded away from lesson phrasing." }
+    tags: [fhs, etc]
+
+  - id: 101-104.7-0002
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: What does the `/proc` directory contain?
+    options:
+      - id: a
+        text: Core dump files saved by crashed processes
+        rationale: Wrong. Core dumps go to the process's working directory or to a collector such as systemd-coredump, not to /proc.
+      - id: b
+        text: Kernel-generated virtual files describing running processes
+        rationale: Correct. /proc is a virtual filesystem; its files are produced by the kernel on demand and describe processes and kernel state.
+      - id: c
+        text: Start-up scripts that launch system services at boot
+        rationale: Wrong. Init scripts and unit files live under /etc and /usr/lib, not /proc.
+      - id: d
+        text: Executable programs meant for the system administrator
+        rationale: Wrong. Administrative commands are in /sbin and /usr/sbin.
+    answer: [b]
+    explanation: >
+      /proc takes no space on disk. The kernel creates its contents when they are read: one numbered
+      directory per process (/proc/1234) plus files such as /proc/cpuinfo and /proc/meminfo.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.7", lesson: 1, section: The Filesystem Hierarchy Standard }
+    verify:
+      command: test -d /proc/self && grep -q '^proc /proc proc' /proc/mounts && echo ok
+      expect: { exit_code: 0, stdout_contains: "ok" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [fhs, proc]
+
+  - id: 101-104.7-0003
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: >
+      Which command searches the directories in your `PATH` and prints the full path of the program
+      that would run if you typed `rsync`?
+    options:
+      - id: a
+        text: "`locate -c rsync`"
+        rationale: Wrong. -c makes locate print only how many database entries match, not a path.
+      - id: b
+        text: "`find rsync`"
+        rationale: Wrong. find treats rsync as a starting point in the current directory; it does not look through PATH.
+      - id: c
+        text: "`which rsync`"
+        rationale: Correct. which checks each PATH directory in order and prints the first executable called rsync.
+      - id: d
+        text: "`whatis rsync`"
+        rationale: Wrong. whatis prints the one-line description from the manual page, not the program's location.
+    answer: [c]
+    explanation: >
+      which walks the PATH directories in order and prints the first matching executable, for
+      example /usr/bin/rsync. With -a it prints every match instead of only the first.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.7", lesson: 1, section: "Finding Binaries, Manual Pages and Source Code" }
+    verify:
+      command: which ls
+      expect: { exit_code: 0, stdout_regex: "^/(usr/)?bin/ls" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [which]
+
+  - id: 101-104.7-0004
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      A daemon writes a file containing its process ID when it starts. The file is meaningless after
+      a reboot. Where does the FHS say such run-time files belong?
+    options:
+      - id: a
+        text: "`/var/tmp`"
+        rationale: Wrong. /var/tmp is for temporary files that should survive a reboot, the opposite of what is needed.
+      - id: b
+        text: "`/proc`"
+        rationale: Wrong. /proc is generated by the kernel; programs do not store their own files there.
+      - id: c
+        text: "`/etc`"
+        rationale: Wrong. /etc is for configuration, not for data that changes while programs run.
+      - id: d
+        text: "`/run`"
+        rationale: Correct. /run holds run-time data such as PID files and sockets and is emptied at every boot.
+    answer: [d]
+    explanation: >
+      /run is for data describing the system since it last booted: PID files, sockets, lock files.
+      It is cleared at boot (usually it is a tmpfs). The older location /var/run is now normally a
+      symbolic link to /run.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.7", lesson: 1, section: Location of Temporary Files }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [fhs, run, pid-file]
+
+  - id: 101-104.7-0005
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      You are setting up an FTP service on a new server. Following the FHS, in which directory should
+      the files that the service offers to clients be stored?
+    options:
+      - id: a
+        text: "`/srv`"
+        rationale: Correct. /srv is meant for site-specific data that this system serves, for example /srv/ftp or /srv/www.
+      - id: b
+        text: "`/opt`"
+        rationale: Wrong. /opt holds add-on software packages, not the data a service publishes.
+      - id: c
+        text: "`/usr/share`"
+        rationale: Wrong. /usr/share holds architecture-independent data shipped with installed software, such as manual pages.
+      - id: d
+        text: "`/var/lib`"
+        rationale: Wrong. /var/lib holds programs' internal state, such as package databases, not content published to clients.
+    answer: [a]
+    explanation: >
+      The FHS created /srv for data served by the system, so that an administrator can find (and
+      back up) everything a web, FTP or rsync service publishes in one place.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.7", lesson: 1, section: The Filesystem Hierarchy Standard }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [fhs, srv]
+
+  - id: 101-104.7-0006
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      Log files, mail queues, print spools and package caches all change while the system runs.
+      Under which top-level directory does the FHS place them?
+    options:
+      - id: a
+        text: "`/usr`"
+        rationale: Wrong. /usr is meant to be shareable and read-only during normal operation.
+      - id: b
+        text: "`/var`"
+        rationale: Correct. /var holds variable data such as /var/log, /var/spool, /var/cache and /var/mail.
+      - id: c
+        text: "`/tmp`"
+        rationale: Wrong. /tmp is for short-lived temporary files that may be deleted at any reboot.
+      - id: d
+        text: "`/etc`"
+        rationale: Wrong. /etc holds configuration, which changes only when an administrator edits it.
+    answer: [b]
+    explanation: >
+      /var exists so that /usr can stay read-only. Anything a program writes during normal
+      operation that must be kept, such as logs, spools, caches and state, goes under /var.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.7", lesson: 1, section: The Filesystem Hierarchy Standard }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Correct-option rationale reworded (YAML colon); fact unchanged." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [fhs, var]
+
+  - id: 101-104.7-0007
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      A long-running conversion job writes intermediate files that it must still find after an
+      unexpected reboot. Which directory does the FHS intend for temporary files like these?
+    options:
+      - id: a
+        text: "`/tmp`"
+        rationale: Wrong. Programs must not count on files in /tmp surviving a reboot; many systems empty it at boot or mount it as tmpfs.
+      - id: b
+        text: "`/run`"
+        rationale: Wrong. /run is cleared at every boot.
+      - id: c
+        text: "`/var/tmp`"
+        rationale: Correct. /var/tmp is for temporary files that are kept across reboots.
+      - id: d
+        text: "`/proc`"
+        rationale: Wrong. /proc is a kernel-generated virtual filesystem; ordinary files cannot be stored there.
+    answer: [c]
+    explanation: >
+      Both /tmp and /var/tmp are for temporary data, but only /var/tmp is expected to survive a
+      reboot. Its files are usually only removed by age-based cleanup.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.7", lesson: 1, section: Location of Temporary Files }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [fhs, var-tmp, tmp]
+
+  - id: 101-104.7-0008
+    type: fill_in
+    difficulty: 2
+    pool: holdout
+    stem: >
+      Type the full path of the configuration file that `updatedb` reads for settings such as
+      `PRUNEPATHS` and `PRUNEFS`.
+    fill_in:
+      accepted: [/etc/updatedb.conf]
+      match: normalized
+      case_sensitive: true
+    explanation: >
+      /etc/updatedb.conf sets which file systems, paths and directory names updatedb leaves out of
+      the locate database. Changes take effect the next time updatedb runs.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.7", lesson: 1, section: Controlling the Behavior of updatedb }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [updatedb, updatedb.conf]
+
+  - id: 101-104.7-0009
+    type: fill_in
+    difficulty: 3
+    pool: holdout
+    stem: >
+      Your PDF files are named inconsistently (`Report.PDF`, `memo.pdf`, `Scan.Pdf`). Type the `find`
+      test that goes in the blank so that all of them are listed:
+      `find ~/docs ____ '*.pdf'`
+    fill_in:
+      accepted: ['(find\s+(~|\$HOME|/home/\w+)/docs/?\s+)?-iname(\s+(?P<q>[''"])\*\.[pP][dD][fF](?P=q))?']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      -name compares the pattern case-sensitively, so '*.pdf' would miss Report.PDF and Scan.Pdf.
+      -iname does the same comparison without regard to case.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.7", lesson: 1, section: Finding Files }
+    verify:
+      setup:
+        - mkdir -p /tmp/v && touch /tmp/v/Report.PDF /tmp/v/memo.pdf /tmp/v/Scan.Pdf
+      command: find /tmp/v -iname '*.pdf' | wc -l
+      expect: { exit_code: 0, stdout_contains: "3" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [find, iname]
+
+  - id: 101-104.7-0010
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: What does `find /var/log -mtime -7` list?
+    options:
+      - id: a
+        text: Files whose contents were modified more than 7 days ago
+        rationale: Wrong. A minus sign means less than; older files are selected with a plus sign, as in +7.
+      - id: b
+        text: Files that were read in the last 7 days
+        rationale: Wrong. Access time is tested with -atime, not -mtime.
+      - id: c
+        text: Files whose contents were modified in the last 7 minutes
+        rationale: Wrong. Minutes are tested with -mmin; -mtime counts in 24-hour periods.
+      - id: d
+        text: Files whose contents were modified less than 7 days ago
+        rationale: Correct. -mtime tests modification time in 24-hour periods, and -7 means less than 7 of them.
+    answer: [d]
+    explanation: >
+      -atime, -ctime and -mtime test access, status change and modification time in units of 24
+      hours; -amin, -cmin and -mmin do the same in minutes. A leading - means less than, + means
+      more than, and no sign means exactly that many (rounded down) periods.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.7", lesson: 1, section: Searching by Time }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Rationale for option a made precise (+7 is not exactly 'more than 7 days')." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [find, mtime]
+
+  - id: 101-104.7-0011
+    type: fill_in
+    difficulty: 3
+    pool: holdout
+    stem: >
+      `updatedb` wastes time indexing `.git` directories inside every project tree. Type the name of
+      the variable in `/etc/updatedb.conf` that lists directory **names** to skip wherever they
+      appear.
+    fill_in:
+      accepted: [PRUNENAMES, PRUNENAMES=]
+      match: normalized
+      case_sensitive: true
+    explanation: >
+      PRUNENAMES lists directory names (not paths) to skip wherever they occur, such as .git or .svn.
+      PRUNEPATHS lists full paths, PRUNEFS lists file system types, and PRUNE_BIND_MOUNTS decides
+      whether bind mounts are skipped.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.7", lesson: 1, section: Controlling the Behavior of updatedb }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Now asks for PRUNENAMES (.git directories); the PRUNEFS version restated Guided Exercise 6. Text supplied by the reviewer; verified by the reviewer." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Rewrite re-checked cold by a second reviewer; matches key; tested." }
+    tags: [updatedb.conf, PRUNENAMES]
+
+  - id: 101-104.7-0012
+    type: multi_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      In Bash, which **TWO** commands tell you that `cd` is built into the shell rather than being a
+      program file?
+    select_count: 2
+    options:
+      - id: a
+        text: "`which cd`"
+        rationale: Wrong. which only searches PATH for executable files; it knows nothing about shell builtins.
+      - id: b
+        text: "`type cd`"
+        rationale: Correct. type is a shell builtin that knows the shell's own commands; it prints "cd is a shell builtin".
+      - id: c
+        text: "`type -t cd`"
+        rationale: Correct. -t prints a single word for the kind of command, here "builtin".
+      - id: d
+        text: "`whereis -b cd`"
+        rationale: Wrong. whereis looks for files in standard directories; it cannot report shell builtins.
+    answer: [b, c]
+    explanation: >
+      type reports how the shell will interpret a name: alias, keyword, function, builtin or file.
+      which and whereis only look at files on disk, so they cannot tell you that a name is a builtin.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.7", lesson: 1, section: "Finding Binaries, Manual Pages and Source Code" }
+    verify:
+      command: bash -c 'type -t cd; type cd'
+      expect: { exit_code: 0, stdout_contains: "cd is a shell builtin" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [type, which, whereis, builtin]
+
+  - id: 101-104.7-0013
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      During a security audit you want to list every file that has the SUID bit set, whatever its
+      other permission bits are. Which command does this?
+    options:
+      - id: a
+        text: "`find / -perm 4000`"
+        rationale: Wrong. Without a prefix, -perm matches only files whose mode is exactly 4000, which real SUID programs never have.
+      - id: b
+        text: "`find / -perm -4000`"
+        rationale: Correct. With a leading -, every bit given must be set and the others are ignored, so any SUID file matches.
+      - id: c
+        text: "`find / -perm -0400`"
+        rationale: Wrong. 0400 is the owner's read bit, not SUID.
+      - id: d
+        text: "`find / -perm -2000`"
+        rationale: Wrong. 2000 is the SGID bit, not SUID.
+    answer: [b]
+    explanation: >
+      -perm MODE matches the exact mode, -perm -MODE matches files that have at least all of the
+      given bits, and -perm /MODE matches files that have any of them. SUID is the octal value 4000.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.7", lesson: 1, section: Searching for Attributes }
+    verify:
+      setup:
+        - mkdir -p /tmp/v && touch /tmp/v/a /tmp/v/b && chmod 4755 /tmp/v/a && chmod 755 /tmp/v/b
+      command: find /tmp/v -perm -4000; echo "exact:"; find /tmp/v -perm 4000
+      expect: { exit_code: 0, stdout_regex: "^/tmp/v/a\nexact:\n?$" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [find, perm, suid]
+
+  - id: 101-104.7-0014
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      Given the directory listing below, which files does `find . -type f -perm -664` print?
+    exhibit: |
+      $ ls -l
+      -rwxrwxr-x 1 root root 0 Oct 26 11:21 deploy.sh
+      -rw-rw-r-- 1 root root 0 Oct 26 11:21 draft.txt
+      -rwsr-xr-x 1 root root 0 Oct 26 11:21 helper
+      -rw-r--r-- 1 root root 0 Oct 26 11:21 notes.txt
+    options:
+      - id: a
+        text: "`draft.txt` only"
+        rationale: Wrong. Only draft.txt has exactly 664, but -perm -664 also accepts extra bits, so deploy.sh (775) matches too.
+      - id: b
+        text: "`deploy.sh`, `draft.txt` and `notes.txt`"
+        rationale: Wrong. notes.txt (644) lacks group write, which 664 requires.
+      - id: c
+        text: "`deploy.sh` and `draft.txt`"
+        rationale: Correct. Both have at least rw for owner and group and r for others; the extra execute bits on deploy.sh do not matter.
+      - id: d
+        text: All four files
+        rationale: Wrong. helper (4755) and notes.txt (644) both lack group write.
+    answer: [c]
+    explanation: >
+      -perm -664 requires owner rw, group rw and other r to all be set and ignores every other bit.
+      deploy.sh (775) and draft.txt (664) qualify. helper (4755) and notes.txt (644) do not, because
+      the group cannot write to them.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.7", lesson: 1, section: Searching for Attributes }
+    verify:
+      setup:
+        - mkdir -p /tmp/v && cd /tmp/v && touch deploy.sh draft.txt helper notes.txt && chmod 775 deploy.sh && chmod 664 draft.txt && chmod 4755 helper && chmod 644 notes.txt
+      command: cd /tmp/v && find . -type f -perm -664 | sort | tr '\n' ' '
+      expect: { exit_code: 0, stdout_contains: "./deploy.sh ./draft.txt " }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [find, perm]
+
+  - id: 101-104.7-0015
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      On an Ubuntu 24.04 system whose `PATH` contains both `/usr/bin` and `/bin`, you get the output
+      below. What explains the two lines printed by `which -a`?
+    exhibit: |
+      $ ls -ld /bin
+      lrwxrwxrwx 1 root root 7 Apr 22  2024 /bin -> usr/bin
+      $ which -a ls
+      /usr/bin/ls
+      /bin/ls
+    options:
+      - id: a
+        text: Two different builds of ls are installed, and the first one listed is the one that runs.
+        rationale: Wrong. /bin is a symbolic link to usr/bin, so /bin/ls is the very same file as /usr/bin/ls.
+      - id: b
+        text: The -a option adds any aliases and shell functions named ls to the output.
+        rationale: Wrong. which -a prints every matching executable in PATH; by default it does not report aliases or functions.
+      - id: c
+        text: /bin/ls is a hard link kept for compatibility, so deleting either name breaks ls.
+        rationale: Wrong. No hard link is involved; the directory /bin itself is a symbolic link to usr/bin.
+      - id: d
+        text: Both lines name one file, reached through two PATH entries because /bin points to usr/bin.
+        rationale: Correct. On a merged-/usr system, /bin is a symlink to usr/bin, so the same ls is found once per PATH entry.
+    answer: [d]
+    explanation: >
+      Current Debian, Ubuntu, Fedora, RHEL and Arch systems have merged /bin, /sbin and /lib into
+      /usr: the old top-level directories are symbolic links to their /usr counterparts. The
+      classic FHS paths still work, but they lead to the files in /usr.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.7", lesson: 1, section: "Finding Binaries, Manual Pages and Source Code" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [which, usrmerge, fhs]
+
+  - id: 101-104.7-0016
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      On an Ubuntu 24.04 desktop, files on a VFAT USB stick mounted at `/media/carol/STICK` never show
+      up in `locate` results, even after `sudo updatedb`. Based on the configuration below, why?
+    exhibit: |
+      $ grep -E '^PRUNE(PATHS|FS|_BIND)' /etc/updatedb.conf
+      PRUNE_BIND_MOUNTS="yes"
+      PRUNEPATHS="/tmp /var/spool /media /var/lib/os-prober /var/lib/ceph /home/.ecryptfs /var/lib/schroot"
+      PRUNEFS="NFS afs autofs binfmt_misc ceph cgroup cgroup2 cifs coda configfs curlftpfs debugfs devfs devpts devtmpfs ecryptfs ftpfs fuse.ceph fuse.cryfs fuse.encfs fuse.glusterfs fuse.gocryptfs fuse.gvfsd-fuse fuse.mfs fuse.rclone fuse.rozofs fuse.sshfs fusectl fusesmb hugetlbfs iso9660 lustre lustre_lite mfs mqueue ncpfs nfs nfs4 ocfs ocfs2 proc pstore rpc_pipefs securityfs shfs smbfs sysfs tmpfs tracefs udev udf usbfs"
+    options:
+      - id: a
+        text: "`/media` is listed in `PRUNEPATHS`, so updatedb skips everything below it."
+        rationale: Correct. A path in PRUNEPATHS is skipped together with all of its subdirectories, and the stick is mounted below /media.
+      - id: b
+        text: "`vfat` is listed in `PRUNEFS`, so updatedb skips VFAT file systems."
+        rationale: Wrong. vfat does not appear in this PRUNEFS list.
+      - id: c
+        text: "`PRUNE_BIND_MOUNTS=\"yes\"` makes updatedb skip every mounted file system."
+        rationale: Wrong. This setting only skips bind mounts; ordinary mounts are still indexed unless pruned otherwise.
+      - id: d
+        text: The file names are upper case, and locate only matches lower-case names.
+        rationale: Wrong. locate finds upper-case names when the pattern uses the same case, and -i ignores case entirely.
+    answer: [a]
+    explanation: >
+      Ubuntu's default /etc/updatedb.conf prunes /media, where removable media are mounted, so their
+      contents never reach the locate database. Searching them needs find, or removing /media from
+      PRUNEPATHS and running updatedb again while the stick is mounted.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.7", lesson: 1, section: Controlling the Behavior of updatedb }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Rationale for option d reworded for clarity." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [updatedb.conf, PRUNEPATHS, locate]
+
+  - id: 101-104.7-0017
+    type: multi_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      Which **TWO** commands delete every file under `/home` that is owned by the user `carol` and
+      whose name ends in `.bak`?
+    select_count: 2
+    options:
+      - id: a
+        text: "`find /home -user carol -name '*.bak' -exec rm {} \\;`"
+        rationale: Correct. -exec runs rm once for each match; the escaped semicolon ends the command.
+      - id: b
+        text: "`find /home -owner carol -name '*.bak' -exec rm {} \\;`"
+        rationale: Wrong. find has no -owner test; it stops with "unknown predicate".
+      - id: c
+        text: "`find /home -user carol -name '*.bak' -exec rm {}`"
+        rationale: Wrong. -exec must end with ; or +; find reports "missing argument to -exec" and runs nothing.
+      - id: d
+        text: "`find /home -user carol -name '*.bak' -exec rm {} +`"
+        rationale: Correct. Ending with + passes as many matches as fit to each rm call, which is faster.
+    answer: [a, d]
+    explanation: >
+      -user selects files by owner (-group by group). -exec runs a command for the matches, with {}
+      standing for the file name. It ends with \; to run the command once per file, or with + to
+      pass many files to one command.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.7", lesson: 1, section: Searching for Attributes }
+    verify:
+      setup:
+        - mkdir -p /tmp/v && touch /tmp/v/a.bak /tmp/v/b.bak /tmp/v/keep.txt
+      command: find /tmp/v -user root -name '*.bak' -exec rm {} + && ls /tmp/v
+      expect: { exit_code: 0, stdout_regex: "^keep.txt\n?$" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [find, exec, user]
+
+  - id: 101-104.7-0018
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      Given the files below, which of them does `find . -type f -size -1M` print?
+    exhibit: |
+      $ ls -l
+      -rw-r--r-- 1 root root       0 Oct 26 11:21 a.dat
+      -rw-r--r-- 1 root root     700 Oct 26 11:21 b.dat
+      -rw-r--r-- 1 root root  921600 Oct 26 11:21 c.dat
+      -rw-r--r-- 1 root root 1126400 Oct 26 11:21 d.dat
+      -rw-r--r-- 1 root root 5242880 Oct 26 11:21 e.dat
+    options:
+      - id: a
+        text: "`a.dat`, `b.dat` and `c.dat`"
+        rationale: Wrong. b.dat and c.dat are smaller than 1 MiB, but find rounds their size up to one whole MiB, which is not less than 1.
+      - id: b
+        text: "`a.dat` only"
+        rationale: Correct. Sizes are rounded up to whole MiB units, so only a zero-byte file counts as fewer than one.
+      - id: c
+        text: "`a.dat` and `b.dat`"
+        rationale: Wrong. b.dat (700 bytes) rounds up to 1 MiB, so it is not less than 1M.
+      - id: d
+        text: "`b.dat` and `c.dat`"
+        rationale: Wrong. These two match -size 1M (rounded up to exactly one unit), not -size -1M.
+    answer: [b]
+    explanation: >
+      find -size rounds each file's size up to the unit given (k, M, G) before comparing. Any file
+      from 1 byte to 1 MiB counts as 1M, so -size -1M only matches empty files. To find files below
+      1 MiB, use a smaller unit, for example -size -1024k.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.7", lesson: 1, section: Searching for Attributes }
+    verify:
+      setup:
+        - mkdir -p /tmp/v && cd /tmp/v && truncate -s 0 a.dat && truncate -s 700 b.dat && truncate -s 900K c.dat && truncate -s 1100K d.dat && truncate -s 5M e.dat
+      command: cd /tmp/v && find . -type f -size -1M
+      expect: { exit_code: 0, stdout_regex: "^\\./a\\.dat\n?$" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [find, size]
+
+  - id: 101-104.7-0019
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      Given the current time and the modification times below, which files does
+      `find . -type f -mtime 1` print?
+    exhibit: |
+      $ date '+%F %R'
+      2026-10-26 11:21
+      $ stat -c '%y %n' *    # seconds and time zone trimmed
+      2026-10-26 09:21 a.csv
+      2026-10-25 05:21 b.csv
+      2026-10-24 12:21 c.csv
+      2026-10-24 09:21 d.csv
+    options:
+      - id: a
+        text: "`b.csv` only"
+        rationale: Wrong. c.csv is 47 hours old, which is also one whole day once the fraction is dropped.
+      - id: b
+        text: "`a.csv` and `b.csv`"
+        rationale: Wrong. a.csv is 2 hours old, which is zero whole days; it matches -mtime 0 or -mtime -1.
+      - id: c
+        text: "`b.csv` and `c.csv`"
+        rationale: Correct. They are 30 and 47 hours old; find drops the fraction, so both are exactly one day old.
+      - id: d
+        text: "`c.csv` and `d.csv`"
+        rationale: Wrong. d.csv is 50 hours old, which is two whole days; it matches -mtime 2 or -mtime +1.
+    answer: [c]
+    explanation: >
+      -mtime divides a file's age by 24 hours and drops the remainder. -mtime 1 therefore matches
+      ages from 24 hours up to just under 48 hours. Here that is b.csv (30 h) and c.csv (47 h).
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.7", lesson: 1, section: Searching by Time }
+    verify:
+      setup:
+        - mkdir -p /tmp/v && cd /tmp/v && touch -d '2 hours ago' a.csv && touch -d '30 hours ago' b.csv && touch -d '47 hours ago' c.csv && touch -d '50 hours ago' d.csv
+      command: cd /tmp/v && find . -type f -mtime 1 | sort | tr '\n' ' '
+      expect: { exit_code: 0, stdout_contains: "./b.csv ./c.csv " }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [find, mtime]
+
+  - id: 101-104.7-0020
+    type: multi_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      As root, you want a separate locate database that covers only `/srv/projects`, stored in
+      `/root/projects.db`, without touching the system-wide database, and then to search it for
+      `report`. Which **TWO** commands do this?
+    select_count: 2
+    options:
+      - id: a
+        text: "`updatedb --prunepaths /srv/projects`"
+        rationale: Wrong. This leaves /srv/projects out, and it rebuilds the system-wide database.
+      - id: b
+        text: "`updatedb -U /srv/projects -o /root/projects.db`"
+        rationale: Correct. -U sets the directory tree to index and -o the database file to write.
+      - id: c
+        text: "`locate -e report`"
+        rationale: Wrong. -e only hides entries for files that no longer exist; it still reads the system-wide database.
+      - id: d
+        text: "`locate -d /root/projects.db report`"
+        rationale: Correct. -d tells locate which database file to search.
+    answer: [b, d]
+    explanation: >
+      updatedb normally indexes / into the system database. --database-root (-U) and --output (-o)
+      build an index of one subtree into a file of your choice, and locate --database (-d) searches
+      that file instead of the default one.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.7", lesson: 1, section: Using locate and updatedb }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [updatedb, locate]
+
+  # --------------------------------------------------------------------------- practice (CLI)
+
+  - id: 101-104.7-0021
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: In which directory are the Linux kernel image and the initial RAM disk normally stored?
+    options:
+      - id: a
+        text: "`/opt`"
+        rationale: Wrong. /opt is for add-on application packages.
+      - id: b
+        text: "`/usr/src`"
+        rationale: Wrong. /usr/src may hold kernel source code, not the image the boot loader loads.
+      - id: c
+        text: "`/dev`"
+        rationale: Wrong. /dev holds device files.
+      - id: d
+        text: "`/boot`"
+        rationale: Correct. /boot holds what the boot loader needs, such as the kernel, the initramfs/initrd and boot loader files.
+    answer: [d]
+    explanation: >
+      /boot holds the files needed before the kernel can mount the root file system: kernel images
+      (vmlinuz-*), initial RAM disks (initrd.img-* or initramfs-*) and boot loader files such as
+      /boot/grub.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.7", lesson: 1, section: The Filesystem Hierarchy Standard }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Correct-option rationale reworded (YAML colon); fact unchanged." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [fhs, boot]
+
+  - id: 101-104.7-0022
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: >
+      Which directory contains the special files through which programs access disks, terminals and
+      other devices?
+    options:
+      - id: a
+        text: "`/dev`"
+        rationale: Correct. /dev holds device files such as /dev/sda and /dev/tty1.
+      - id: b
+        text: "`/media`"
+        rationale: Wrong. /media holds mount points for removable media, not device files.
+      - id: c
+        text: "`/proc`"
+        rationale: Wrong. /proc describes processes and kernel state; device files live in /dev.
+      - id: d
+        text: "`/mnt`"
+        rationale: Wrong. /mnt is a mount point for temporarily mounted file systems.
+    answer: [a]
+    explanation: >
+      /dev holds device files, both for physical hardware (/dev/sda, /dev/nvme0n1) and for virtual
+      devices the kernel provides (/dev/null, /dev/zero). Today udev manages them on a devtmpfs.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.7", lesson: 1, section: The Filesystem Hierarchy Standard }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [fhs, dev]
+
+  - id: 101-104.7-0023
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: >
+      A vendor ships its application as a self-contained bundle with its own `bin`, `lib` and `share`
+      directories. Where does the FHS place such an add-on package?
+    options:
+      - id: a
+        text: "`/usr/bin`"
+        rationale: Wrong. /usr/bin is for commands installed by the distribution's packages, not whole vendor bundles.
+      - id: b
+        text: "`/opt`"
+        rationale: Correct. Add-on packages go in /opt/<package> (or /opt/<provider>), each with its own subdirectories.
+      - id: c
+        text: "`/srv`"
+        rationale: Wrong. /srv is for data served by the system, not for software.
+      - id: d
+        text: "`/var/lib`"
+        rationale: Wrong. /var/lib holds programs' variable state data, not installed software.
+    answer: [b]
+    explanation: >
+      /opt keeps third-party packages separate from the distribution's files. Each package gets its
+      own directory, such as /opt/google/chrome, and its host-specific configuration goes in
+      /etc/opt.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.7", lesson: 1, section: The Filesystem Hierarchy Standard }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [fhs, opt]
+
+  - id: 101-104.7-0024
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: >
+      A USB stick is mounted automatically at `/media/carol/STICK`. Separately, the administrator
+      wants to mount a backup file system by hand for an hour. Which directory does the FHS provide
+      for that second, temporary mount?
+    options:
+      - id: a
+        text: "`/media`"
+        rationale: Wrong. /media is for removable media such as USB sticks and optical discs, often mounted automatically.
+      - id: b
+        text: "`/run`"
+        rationale: Wrong. /run holds run-time data such as PID files and sockets.
+      - id: c
+        text: "`/mnt`"
+        rationale: Correct. /mnt is meant for file systems an administrator mounts temporarily.
+      - id: d
+        text: "`/home`"
+        rationale: Wrong. /home holds users' home directories.
+    answer: [c]
+    explanation: >
+      /mnt is for temporary, manual mounts by the administrator, while /media holds mount points for
+      removable media. On many desktops these are created per user, as in /media/<user>/<label>.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.7", lesson: 1, section: The Filesystem Hierarchy Standard }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Stem reworded to contrast /media with /mnt; it was close to Guided Exercise 7. Text supplied by the reviewer; verified by the reviewer." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Rewrite re-checked cold by a second reviewer; matches key; tested." }
+    tags: [fhs, mnt, media]
+
+  - id: 101-104.7-0025
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: >
+      Ordinary users have their home directories under `/home`. Where is the superuser's home
+      directory on a standard Linux system?
+    options:
+      - id: a
+        text: "`/home/root`"
+        rationale: Wrong. root's home is deliberately kept outside /home, so it is available even if /home is not mounted.
+      - id: b
+        text: "`/home`"
+        rationale: Wrong. /home is the parent of the regular users' home directories, not root's home.
+      - id: c
+        text: "`/var/root`"
+        rationale: Wrong. This is macOS's convention, not the Linux FHS.
+      - id: d
+        text: "`/root`"
+        rationale: Correct. The FHS places the superuser's home directory at /root.
+    answer: [d]
+    explanation: >
+      /root sits on the root file system so that the administrator can log in and work even when a
+      separate /home file system is missing or damaged.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.7", lesson: 1, section: The Filesystem Hierarchy Standard }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [fhs, root, home]
+
+  - id: 101-104.7-0026
+    type: fill_in
+    difficulty: 3
+    pool: practice
+    stem: >
+      Type the `whereis` option that limits the output to binary files, as when you want to know only
+      where the `sshd` program is installed and not its manual pages.
+    fill_in:
+      accepted: ['((sudo\s+)?((/usr)?/bin/)?whereis\s+)?-b(\s+sshd)?']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      whereis looks for a command's binary, source and manual page files in standard locations. -b
+      restricts the output to binaries, -m to manual pages and -s to sources.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.7", lesson: 1, section: "Finding Binaries, Manual Pages and Source Code" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Now asks for -b (binaries); the manual-page version restated Guided Exercise 5. Text supplied by the reviewer; verified by the reviewer." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Rewrite re-checked cold by a second reviewer; matches key; tested." }
+    tags: [whereis]
+
+  - id: 101-104.7-0027
+    type: single_choice
+    difficulty: 3
+    pool: practice
+    stem: >
+      `locate app.conf.old` prints `/etc/app/app.conf.old`, but `ls /etc/app/app.conf.old` reports
+      `No such file or directory`. What is the most likely reason?
+    options:
+      - id: a
+        text: The file was deleted after `updatedb` last built the database
+        rationale: Correct. locate reads the database, not the disk, so the stale entry stays until updatedb runs again; locate -e only hides results that no longer exist.
+      - id: b
+        text: "`locate` matched the name case-insensitively and found a different file"
+        rationale: Wrong. locate is case-sensitive unless -i is given, and the path it printed is exact.
+      - id: c
+        text: "`/etc/app` is listed in `PRUNEPATHS`"
+        rationale: Wrong. A pruned path is left out of the database, so locate would print nothing for it.
+      - id: d
+        text: "`locate` only searches the directories in `PATH`"
+        rationale: Wrong. That describes which; locate searches its database of the whole tree.
+    answer: [a]
+    explanation: >
+      locate searches a database, not the disk, so it can show deleted files until updatedb runs
+      again. `locate -e` removes results that no longer exist; files created since the last update still only
+      show up after updatedb.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.7", lesson: 1, section: Using locate and updatedb }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Rewritten as a stale-database diagnosis; the -e version restated Explorational Exercise 1. Text supplied by the reviewer; verified by the reviewer." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Rewrite re-checked cold by a second reviewer; rationale a corrected (locate -e only hides results)." }
+    tags: [locate]
+
+  - id: 101-104.7-0028
+    type: multi_choice
+    difficulty: 3
+    pool: practice
+    stem: >
+      Which **TWO** statements are true on a current distribution that has merged `/usr`, such as
+      Debian 12, Ubuntu 24.04 or Fedora?
+    select_count: 2
+    options:
+      - id: a
+        text: "`/bin` is a symbolic link to `/usr/bin`."
+        rationale: Correct. After the merge, /bin is a symlink (usually relative, usr/bin) to /usr/bin.
+      - id: b
+        text: "`/bin` and `/usr/bin` hold separate copies of essential commands."
+        rationale: Wrong. Both paths lead to the same directory, so there is only one copy of each command.
+      - id: c
+        text: "`/lib` is a symbolic link to `/usr/lib`."
+        rationale: Correct. /lib (and /lib64 where present) also point into /usr.
+      - id: d
+        text: "Commands from `/sbin` were moved to `/usr/local/sbin`."
+        rationale: Wrong. /sbin points to /usr/sbin; /usr/local is reserved for software the administrator installs locally.
+    answer: [a, c]
+    explanation: >
+      The /usr merge moves the contents of /bin, /sbin and /lib into /usr and replaces the old
+      directories with symbolic links. Paths such as /bin/sh keep working, but everything the
+      distribution installs lives under /usr.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.7", lesson: 1, section: The Filesystem Hierarchy Standard }
+    verify:
+      command: test -L /bin && test -L /lib && readlink /bin
+      expect: { exit_code: 0, stdout_contains: "usr/bin" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [usrmerge, fhs]
+
+  - id: 101-104.7-0029
+    type: single_choice
+    difficulty: 4
+    pool: practice
+    stem: >
+      In your interactive Bash shell you get the output below. What runs when you type
+      `grep error app.log`?
+    exhibit: |
+      $ which grep
+      /usr/bin/grep
+      $ type -a grep
+      grep is aliased to `grep --color=auto'
+      grep is /usr/bin/grep
+      grep is /bin/grep
+    options:
+      - id: a
+        text: "`/usr/bin/grep` exactly as typed, because which found it first"
+        rationale: Wrong. which only searches PATH; the shell expands the alias before it ever searches PATH.
+      - id: b
+        text: "The alias, so `/usr/bin/grep` runs with `--color=auto` added"
+        rationale: Correct. Aliases come before PATH lookup; the alias expands to grep --color=auto, and that grep is then found in PATH.
+      - id: c
+        text: "`/bin/grep`, because the last match in `PATH` wins"
+        rationale: Wrong. PATH is searched in order and the first match wins; both names are the same file here anyway.
+      - id: d
+        text: "A shell function called `grep`"
+        rationale: Wrong. type would then report "grep is a function"; no function is shown.
+    answer: [b]
+    explanation: >
+      type shows how the shell will interpret a name, in priority order: aliases, keywords,
+      functions, builtins, then files in PATH. which only knows about files in PATH, so it can
+      miss what really runs.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.7", lesson: 1, section: "Finding Binaries, Manual Pages and Source Code" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [type, which, alias]
+
+  - id: 101-104.7-0030
+    type: single_choice
+    difficulty: 4
+    pool: practice
+    stem: >
+      Given the tree below, which files does `find . -maxdepth 2 -name '*.log'` print?
+    exhibit: |
+      $ find . | sort
+      .
+      ./logs
+      ./logs/app.log
+      ./logs/notes.txt
+      ./logs/old
+      ./logs/old/2025.log
+      ./top.log
+    options:
+      - id: a
+        text: "`./top.log` only"
+        rationale: Wrong. That is the result of -maxdepth 1, which stays in the starting directory.
+      - id: b
+        text: "`./logs/app.log` and `./logs/old/2025.log`"
+        rationale: Wrong. That is the result of -mindepth 2, which skips the first level instead of limiting the depth.
+      - id: c
+        text: "`./top.log` and `./logs/app.log`"
+        rationale: Correct. Depth 1 is the starting directory's contents and depth 2 one level below; logs/old/2025.log is at depth 3.
+      - id: d
+        text: All three `.log` files
+        rationale: Wrong. logs/old/2025.log is at depth 3, beyond the limit of 2.
+    answer: [c]
+    explanation: >
+      The starting point is depth 0, its entries are depth 1, and so on. -maxdepth N stops find from
+      going deeper than N levels; -mindepth N skips everything shallower than N.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.7", lesson: 1, section: Finding Files }
+    verify:
+      setup:
+        - mkdir -p /tmp/v/logs/old && cd /tmp/v && touch top.log logs/app.log logs/old/2025.log logs/notes.txt
+      command: cd /tmp/v && find . -maxdepth 2 -name '*.log' | sort | tr '\n' ' '
+      expect: { exit_code: 0, stdout_contains: "./logs/app.log ./top.log " }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [find, maxdepth]

@@ -1,0 +1,1019 @@
+# 104.1 Create partitions and filesystems — weight 2 → 20 holdout + 10 practice.
+# Original questions written from LPI Learning Materials 101-500, objective 104.1, lesson 1.
+schema_version: 1
+exam: "101"
+objective: "104.1"
+questions:
+  # ---------------------------------------------------------------- holdout (mock exams only)
+
+  - id: 101-104.1-0001
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: How many primary partitions can an MBR partition table hold?
+    options:
+      - id: a
+        text: "2"
+        rationale: Wrong. The MBR table has four primary slots, not two.
+      - id: b
+        text: "4"
+        rationale: Correct. The MBR partition table has exactly four primary entries; more partitions need an extended partition holding logical ones.
+      - id: c
+        text: "15"
+        rationale: Wrong. There is no 15-partition limit for primary partitions on MBR.
+      - id: d
+        text: "128"
+        rationale: Wrong. 128 is the default number of entries in a GPT partition table, not MBR.
+    answer: [b]
+    explanation: >
+      An MBR (DOS) partition table has room for four primary partitions. To get more, one of the four
+      slots is used for an extended partition, which acts as a container for logical partitions.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Primary vs Extended Partitions }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [mbr, primary-partition]
+
+  - id: 101-104.1-0002
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: >
+      You have just created a partition to be used as swap. Which command writes the swap signature to
+      it, so that it can then be activated?
+    options:
+      - id: a
+        text: "`swapon`"
+        rationale: Wrong. swapon activates a swap area that has already been prepared; on an unprepared partition it fails.
+      - id: b
+        text: "`swapoff`"
+        rationale: Wrong. swapoff deactivates a swap area that is in use.
+      - id: c
+        text: "`mkswap`"
+        rationale: Correct. mkswap sets up a partition or file as a Linux swap area.
+      - id: d
+        text: "`mkfs -t swap`"
+        rationale: Wrong. mkfs looks for a helper called mkfs.swap, which does not exist, so this fails.
+    answer: [c]
+    explanation: >
+      A swap partition is prepared with mkswap and then turned on with swapon (and off with swapoff).
+      Swap is not a filesystem, so the mkfs front end has no swap helper.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Creating Swap Partitions }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "mkfs -t swap tested: \"failed to execute mkfs.swap\"." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [mkswap, swap]
+
+  - id: 101-104.1-0003
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: >
+      Which of these partitioning tools applies each change to the disk as soon as you enter the
+      command, without a separate write step?
+    options:
+      - id: a
+        text: "`fdisk`"
+        rationale: Wrong. fdisk keeps changes in memory until you use the w command.
+      - id: b
+        text: "`gdisk`"
+        rationale: Wrong. gdisk also only writes the table when you use w.
+      - id: c
+        text: "`cfdisk`"
+        rationale: Wrong. cfdisk changes nothing on disk until you choose its Write action.
+      - id: d
+        text: "`parted`"
+        rationale: Correct. parted carries out each command on the disk immediately.
+    answer: [d]
+    explanation: >
+      fdisk, gdisk and cfdisk let you experiment and quit without saving. parted has no such buffer:
+      mklabel, mkpart, rm and the rest take effect as soon as they run, so mistakes are not undone by
+      quitting.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Managing Partitions with GNU Parted }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [parted, fdisk, gdisk]
+
+  - id: 101-104.1-0004
+    type: multi_choice
+    difficulty: 2
+    pool: holdout
+    stem: Which **TWO** statements about the GPT partitioning scheme are true?
+    select_count: 2
+    options:
+      - id: a
+        text: A backup copy of the header and partition table is kept at the end of the disk.
+        rationale: Correct. GPT stores a secondary header and table at the end of the disk, which tools such as gdisk can use to repair the primary copy.
+      - id: b
+        text: It allows four primary partitions; more require an extended partition.
+        rationale: Wrong. That is the MBR scheme. GPT has no primary/extended distinction.
+      - id: c
+        text: A standard GPT table has room for 128 partition entries.
+        rationale: Correct. gdisk reports "Partition table holds up to 128 entries" for a default GPT table.
+      - id: d
+        text: It cannot be used on disks larger than 2 TiB.
+        rationale: Wrong. The 2 TiB limit (with 512-byte sectors) belongs to MBR; GPT was designed to remove it.
+    answer: [a, c]
+    explanation: >
+      GPT (GUID Partition Table) replaces MBR on modern, usually UEFI, systems. It has no practical
+      disk-size limit, 128 entries by default, no need for extended or logical partitions, and a
+      backup header and table at the end of the disk for recovery.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Understanding MBR and GPT }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "128 entries checked with gdisk 1.0.10 on a test image." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [gpt, mbr]
+
+  - id: 101-104.1-0005
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      At the `(parted)` prompt for a new, blank disk, which command creates an empty GPT partition
+      table?
+    options:
+      - id: a
+        text: "`mklabel gpt`"
+        rationale: Correct. mklabel (alias mktable) writes a new, empty partition table of the given type.
+      - id: b
+        text: "`mkpart gpt`"
+        rationale: Wrong. mkpart creates a partition and needs an existing partition table; on a blank disk parted reports an unrecognised disk label.
+      - id: c
+        text: "`select gpt`"
+        rationale: Wrong. select switches to another device; parted would look for a device called gpt.
+      - id: d
+        text: "`unit gpt`"
+        rationale: Wrong. unit sets the unit used to show and enter positions; gpt is not a valid unit.
+    answer: [a]
+    explanation: >
+      In parted, `mklabel gpt` creates a GPT table and `mklabel msdos` an MBR one. Doing this on a disk
+      that already has partitions throws the old table away, and parted does it immediately.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Creating a Partition Table on an Empty Disk }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "Distractors tested with parted 3.6 on a blank image: all three fail." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [parted, mklabel, gpt]
+
+  - id: 101-104.1-0006
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      In `fdisk`, you use the `t` command to mark a partition on an MBR disk as Linux swap. Which
+      hexadecimal type code do you enter?
+    options:
+      - id: a
+        text: "`83`"
+        rationale: Wrong. 83 is the MBR type code for an ordinary Linux partition.
+      - id: b
+        text: "`82`"
+        rationale: Correct. 82 is the MBR type code for Linux swap.
+      - id: c
+        text: "`8200`"
+        rationale: Wrong. 8200 is gdisk's four-digit code for Linux swap on a GPT disk.
+      - id: d
+        text: "`5`"
+        rationale: Wrong. 5 marks an extended partition.
+    answer: [b]
+    explanation: >
+      MBR partition types are one-byte hex codes: 83 Linux, 82 Linux swap, 5 Extended. gdisk uses
+      four-digit codes for GPT types, such as 8300 and 8200. The type only labels the partition;
+      mkswap still has to prepare it.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Changing the Partition Type }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "Codes checked in fdisk 2.39.3 (l) and gdisk 1.0.10 (L)." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [fdisk, partition-type, swap]
+
+  - id: 101-104.1-0007
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: How does a Btrfs subvolume differ from a separate partition?
+    options:
+      - id: a
+        text: A subvolume must be given a fixed size when it is created.
+        rationale: Wrong. Subvolumes have no fixed size; quotas can limit them, but none is required.
+      - id: b
+        text: Each subvolume needs its own `mkfs.btrfs` run.
+        rationale: Wrong. Subvolumes are created inside an existing Btrfs filesystem with btrfs subvolume create.
+      - id: c
+        text: A subvolume uses the free space of the whole filesystem it lives in.
+        rationale: Correct. All subvolumes share the filesystem's free space, so none of them runs out while another has space to spare.
+      - id: d
+        text: A subvolume cannot be mounted on its own, only with the top-level filesystem.
+        rationale: Wrong. A subvolume can be mounted by itself with the subvol= (or subvolid=) mount option.
+    answer: [c]
+    explanation: >
+      A subvolume looks like a directory but can be mounted, snapshotted and given quotas like a
+      separate filesystem. Unlike a partition it reserves no fixed space: all subvolumes draw on the
+      same pool.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Managing Subvolumes }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "mount -o subvol=data tested on a loop-mounted Btrfs image." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [btrfs, subvolume]
+
+  - id: 101-104.1-0008
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      A 128 GB memory card will be used in a camera and on Windows, macOS and Linux computers. It must
+      hold single video files of about 10 GB. Which command creates the most suitable filesystem on
+      `/dev/sdc1`?
+    options:
+      - id: a
+        text: "`mkfs.vfat -F 32 /dev/sdc1`"
+        rationale: Wrong. FAT32 is widely supported, but a single file cannot exceed 4 GiB.
+      - id: b
+        text: "`mkfs.ext4 /dev/sdc1`"
+        rationale: Wrong. ext4 handles large files, but Windows, macOS and cameras do not read it natively.
+      - id: c
+        text: "`mkfs.xfs /dev/sdc1`"
+        rationale: Wrong. XFS is a Linux server filesystem that the other systems cannot use natively.
+      - id: d
+        text: "`mkfs.exfat /dev/sdc1`"
+        rationale: Correct. exFAT removes FAT32's 4 GiB file limit and is supported by all three operating systems and most cameras.
+    answer: [d]
+    explanation: >
+      exFAT was made for large flash media shared between systems, and it is the standard
+      filesystem for SDXC cards. Its file-size limit is far beyond anything a card holds, unlike
+      FAT32's 4 GiB.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Creating an exFAT Filesystem }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [exfat, vfat, mkfs]
+
+  - id: 101-104.1-0009
+    type: fill_in
+    difficulty: 3
+    pool: holdout
+    stem: >
+      Before formatting `/dev/sdb1`, you want `mkfs.ext4` to show what it would create (block size,
+      inode count, superblock backups) without writing anything. Type the option that does this.
+    fill_in:
+      accepted: ['((sudo\s+)?((/usr)?/s?bin/)?(mkfs\.ext4|(mke2fs|mkfs)\s+-t\s+ext4)\s+((?!-)\S+\s+)?)?-n(\s+(?!-)\S+)?']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      `mke2fs -n` (and so `mkfs.ext4 -n`) goes through all the calculations and prints the result but
+      does not create the filesystem. It is also a way to find where the backup superblocks of an
+      existing filesystem are, if it was made with the same parameters.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Command Line Parameters }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "mkfs.ext4 -n tested on an ext2 image: output printed, filesystem type unchanged. Matching tested: -n, mkfs.ext4 -n, mkfs.ext4 -n /dev/sdb1, sudo mkfs.ext4 -n /dev/sdb1, mke2fs -t ext4 -n /dev/sdb1, /sbin/mkfs.ext4 /dev/sdb1 -n accepted; -N, -c, -q, n, mkfs.xfs -n, mkfs.ext4 -n -F /dev/sdb1 rejected." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Regex widened to accept 'mkfs -t ext4 -n', consistent with 0026. Text supplied by the reviewer; verified by the reviewer." }
+    tags: [mke2fs, mkfs.ext4, dry-run]
+
+  - id: 101-104.1-0010
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      Which `mkfs.xfs` option prints the parameters of the filesystem it would create on the target
+      device, without actually creating it?
+    options:
+      - id: a
+        text: "`-N`"
+        rationale: Correct. -N makes mkfs.xfs print the geometry and options and stop before writing anything.
+      - id: b
+        text: "`-n`"
+        rationale: Wrong. In mkfs.xfs, -n sets naming (directory) options such as -n size=; it is not a dry run, unlike mke2fs -n.
+      - id: c
+        text: "`-q`"
+        rationale: Wrong. -q suppresses the parameter listing but still creates the filesystem.
+      - id: d
+        text: "`-f`"
+        rationale: Wrong. -f forces creation even if the device already holds a filesystem.
+    answer: [a]
+    explanation: >
+      The dry-run options differ between tools: mke2fs uses -n, mkfs.xfs uses -N, and in mkfs.xfs a
+      lowercase -n introduces naming options instead.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Creating an XFS Filesystem }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "mkfs.xfs 6.6.0: -N -f printed parameters and left the existing ext4 signature; bare -n rejected as unknown option." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [mkfs.xfs, dry-run]
+
+  - id: 101-104.1-0011
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      Which command creates a FAT32 filesystem with the volume label `CAMERA` on `/dev/sdc1`?
+    options:
+      - id: a
+        text: "`mkfs.fat -F 32 -L CAMERA /dev/sdc1`"
+        rationale: Wrong. mkfs.fat has no -L option; it rejects it as invalid.
+      - id: b
+        text: "`mkfs.fat -t 32 -n CAMERA /dev/sdc1`"
+        rationale: Wrong. mkfs.fat has no -t option; the FAT size is chosen with -F.
+      - id: c
+        text: "`mkfs.fat -F 32 -n CAMERA /dev/sdc1`"
+        rationale: Correct. -F 32 selects FAT32 and -n sets the volume name (up to 11 characters).
+      - id: d
+        text: "`mkfs.fat -F 16 -n CAMERA /dev/sdc1`"
+        rationale: Wrong. -F 16 creates FAT16, not FAT32.
+    answer: [c]
+    explanation: >
+      mkfs.fat (also reachable as mkfs.vfat) uses -F 12, 16 or 32 for the FAT size and -n for the
+      label, at most 11 characters. Most other mkfs tools use -L for the label, which is a common trap.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Creating a FAT or VFAT Filesystem }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "dosfstools 4.2 tested on an image: -F 32 -n CAMERA works; -L and -t rejected as invalid options; 12-character label rejected." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [mkfs.fat, vfat, label]
+
+  - id: 101-104.1-0012
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      `/srv/data` is a Btrfs subvolume. Which command creates a snapshot of it at
+      `/srv/snaps/monday` that cannot be modified afterwards?
+    options:
+      - id: a
+        text: "`btrfs subvolume create -r /srv/data /srv/snaps/monday`"
+        rationale: Wrong. subvolume create makes a new, empty subvolume and has no -r option.
+      - id: b
+        text: "`btrfs subvolume snapshot -r /srv/data /srv/snaps/monday`"
+        rationale: Correct. subvolume snapshot copies the subvolume's tree, and -r makes the snapshot read-only.
+      - id: c
+        text: "`btrfs subvolume snapshot /srv/data /srv/snaps/monday`"
+        rationale: Wrong. Without -r the snapshot is writable.
+      - id: d
+        text: "`btrfs snapshot create -r /srv/data /srv/snaps/monday`"
+        rationale: Wrong. btrfs has no snapshot command group; snapshots are made with btrfs subvolume snapshot.
+    answer: [b]
+    explanation: >
+      A Btrfs snapshot is a subvolume that starts with the same content as its source and shares its
+      data blocks, so it takes almost no space at first. Adding -r freezes it, which suits backups.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Working with Snapshots }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "btrfs-progs 6.6.3 on a loop-mounted image: snapshot -r created a read-only snapshot (touch failed with Read-only file system); create -r and btrfs snapshot rejected." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [btrfs, snapshot]
+
+  - id: 101-104.1-0013
+    type: fill_in
+    difficulty: 3
+    pool: holdout
+    stem: >
+      A colleague ran `mklabel gpt` on `/dev/sdb` by mistake. The disk had held one ext4 partition
+      from 1MiB to 600MiB on an MBR table. Type the `parted` command (just its name) that searches a
+      range of the disk for a filesystem signature and offers to add a partition for it.
+    fill_in:
+      accepted: ['((sudo\s+)?((/usr)?/s?bin/)?parted\s+((-s|--script)\s+)?/dev/\S+\s+)?rescue']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      `rescue START END` searches between the two positions for a filesystem signature and asks
+      whether to recreate the partition that held it. It only finds partitions that contained a
+      filesystem, and the range should start a little before and end a little after the old
+      partition. It works after a single partition was removed and also after the whole table was
+      replaced.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Recovering Partitions }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "parted 3.6 on an image: rm 3 then rescue 990MB 1310MB found and restored the ext4 partition. Matching tested: rescue, rescue 990MB 1310MB, parted /dev/sdb rescue 990MB 1310MB, sudo parted -s /dev/sdb rescue 1G 2G accepted; recover, resc, rescue -f, mkpart, testdisk, Rescue rejected." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Stem rewritten; the deleted-in-parted scenario restated Explorational Exercise 4. Text supplied by the reviewer; verified by the reviewer." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Rewrite re-checked cold by a second reviewer; pattern narrowed to the command name, as the stem asks." }
+    tags: [parted, rescue]
+
+  - id: 101-104.1-0014
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      Using the layout below, you want a new 450 MB partition named `backup` directly after partition
+      2. Which command at the `(parted)` prompt creates it?
+    exhibit: |
+      (parted) unit MB
+      (parted) print free
+      Disk /dev/sdc: 2097MB
+      Sector size (logical/physical): 512B/512B
+      Partition Table: gpt
+      Disk Flags:
+
+      Number  Start   End     Size    File system  Name  Flags
+              0.02MB  1.05MB  1.03MB  Free Space
+       1      1.05MB  400MB   398MB                root
+       2      400MB   1000MB  601MB                home
+              1000MB  2097MB  1097MB  Free Space
+    options:
+      - id: a
+        text: "`mkpart backup ext4 1000MB 450MB`"
+        rationale: Wrong. The last value is an end position on the disk, not a size; 450MB is before 1000MB, so parted refuses ("Can't have the end before the start").
+      - id: b
+        text: "`mkpart backup ext4 450MB`"
+        rationale: Wrong. 450MB is taken as the start position, which lies inside partition 2; it is not read as a size.
+      - id: c
+        text: "`resizepart 3 1450MB`"
+        rationale: Wrong. resizepart changes the end of an existing partition, and there is no partition 3 yet.
+      - id: d
+        text: "`mkpart backup ext4 1000MB 1450MB`"
+        rationale: Correct. The partition starts where free space begins (1000MB) and ends 450 MB later, at 1450MB from the start of the disk.
+    answer: [d]
+    explanation: >
+      mkpart takes a start and an end, both measured from the beginning of the disk, so the size is
+      END minus START. On a GPT disk the first word is the partition name. The ext4 word only sets the
+      partition's type; parted does not create a filesystem, so mkfs.ext4 must still be run on the new
+      partition.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Creating a Partition }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "Exhibit from parted 3.6 on a 2000 MiB image file, path replaced with /dev/sdc and the Model line dropped. Key creates 3 1000MB-1300MB 300MB with an empty File system column; option a fails with end-before-start." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Size changed from 300 MB to 450 MB so it no longer mirrors Guided Exercise 4; option b's rationale now names partition 2. Text supplied by the reviewer; verified by the reviewer." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Rewrite re-checked cold by a second reviewer; matches key; tested." }
+    tags: [parted, mkpart]
+
+  - id: 101-104.1-0015
+    type: multi_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      An administrator sets up a swap file and gets the output below. Which **TWO** statements about
+      the result are true?
+    exhibit: |
+      # dd if=/dev/zero of=/swapfile bs=1M count=64 status=none
+      # mkswap /swapfile
+      mkswap: /swapfile: insecure permissions 0644, fix with: chmod 0600 /swapfile
+      Setting up swapspace version 1, size = 64 MiB (67104768 bytes)
+      no label, UUID=4ef0681a-4fb0-4d3d-a839-15b87ec4d7f7
+      # swapon /swapfile
+      swapon: /swapfile: insecure permissions 0644, 0600 suggested.
+    select_count: 2
+    options:
+      - id: a
+        text: "`swapon` refused to activate the file because of its permissions."
+        rationale: Wrong. The permission message is only a warning; swapon still enabled the file.
+      - id: b
+        text: The swap file is now in use.
+        rationale: Correct. Both tools only warned; mkswap set up the area and swapon activated it.
+      - id: c
+        text: After fixing the permissions, `mkswap` must be run again before the file can be used.
+        rationale: Wrong. chmod does not touch the swap signature that mkswap wrote, so there is nothing to redo.
+      - id: d
+        text: Any local user can read the memory pages that get swapped out to this file.
+        rationale: Correct. With mode 0644 the file is world-readable, so swapped-out memory, possibly including secrets, can be read by any user.
+    answer: [b, d]
+    explanation: >
+      mkswap and swapon warn about a world-readable swap file but do not stop. The fix is
+      `chmod 0600 /swapfile`, with root as owner. The swap file only lasts for this session unless it
+      is also added to /etc/fstab.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Creating Swap Partitions }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "Output from util-linux 2.39.3 on a 64 MiB file (path shortened to /swapfile); swapon exited 0 and swapon --show listed the file, which was then turned off." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [swap, mkswap, swapon, permissions]
+
+  - id: 101-104.1-0016
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      `/dev/sdd` still has about 1 GiB of unallocated space at the end, but `fdisk` will not create
+      another partition. What is the reason?
+    exhibit: |
+      # fdisk -l /dev/sdd
+      Disk /dev/sdd: 2 GiB, 2147483648 bytes, 4194304 sectors
+      Units: sectors of 1 * 512 = 512 bytes
+      Sector size (logical/physical): 512 bytes / 512 bytes
+      I/O size (minimum/optimal): 512 bytes / 512 bytes
+      Disklabel type: dos
+      Disk identifier: 0x43ecca2f
+
+      Device     Boot   Start     End Sectors  Size Id Type
+      /dev/sdd1          2048  526335  524288  256M 83 Linux
+      /dev/sdd2        526336 1050623  524288  256M 83 Linux
+      /dev/sdd3       1050624 1574911  524288  256M 83 Linux
+      /dev/sdd4       1574912 2099199  524288  256M 83 Linux
+      # fdisk /dev/sdd
+      ...
+      Command (m for help): n
+      To create more partitions, first replace a primary with an extended partition.
+    options:
+      - id: a
+        text: All four primary slots of the MBR table are already used.
+        rationale: Correct. The table is type dos (MBR) and holds four primary partitions, so there is no slot left for a fifth.
+      - id: b
+        text: The free space is split into separate gaps that are too small.
+        rationale: Wrong. The partitions are back to back, so all the free space (sectors 2099200 to the end) is one contiguous block.
+      - id: c
+        text: The disk is larger than an MBR table can address.
+        rationale: Wrong. The disk is 2 GiB; the MBR limit is 2 TiB.
+      - id: d
+        text: fdisk can only create partitions on GPT disks.
+        rationale: Wrong. fdisk handles both MBR (dos) and GPT tables; this disk is MBR.
+    answer: [a]
+    explanation: >
+      An MBR table has four primary entries. Here all four are used, so fdisk cannot add a fifth.
+      Remedies are to replace one primary partition with an extended partition that contains logical
+      partitions, or to use GPT instead, which has room for 128 entries.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Primary vs Extended Partitions }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "Exhibit from fdisk 2.39.3 on a 2 GiB image (file renamed to /dev/sdd, same column widths)." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [fdisk, mbr, primary-partition]
+
+  - id: 101-104.1-0017
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      An administrator wanted a Btrfs filesystem whose data and metadata are both mirrored across two
+      1 GiB partitions, so that either disk can fail without loss. The output below shows what was
+      created. Which command would have given the intended result?
+    exhibit: |
+      # mkfs.btrfs -m raid1 /dev/sdb1 /dev/sdc1
+      ...
+      Block group profiles:
+        Data:             single            8.00MiB
+        Metadata:         RAID1           102.38MiB
+        System:           RAID1             8.00MiB
+      ...
+      Number of devices:  2
+    options:
+      - id: a
+        text: "`mkfs.btrfs -m raid10 /dev/sdb1 /dev/sdc1`"
+        rationale: Wrong. -m only sets the metadata profile; data would still be single.
+      - id: b
+        text: "`mkfs.btrfs -d raid0 -m raid1 /dev/sdb1 /dev/sdc1`"
+        rationale: Wrong. raid0 stripes data across both devices with no redundancy, so losing either disk loses data.
+      - id: c
+        text: "`mkfs.btrfs -d raid1 -m raid1 /dev/sdb1 /dev/sdc1`"
+        rationale: Correct. -d sets the data profile and -m the metadata profile; both raid1 keep two copies on different devices.
+      - id: d
+        text: "`mkfs.btrfs -d single -m raid1 /dev/sdb1 /dev/sdc1`"
+        rationale: "Wrong. This is exactly what the exhibit already shows: metadata mirrored, data stored once."
+    answer: [c]
+    explanation: >
+      mkfs.btrfs sets the data profile with -d and the metadata profile with -m. With two devices the
+      current default is single for data and raid1 for metadata, so -m raid1 alone changes nothing for
+      data. With -d raid1 -m raid1 the usable size is about that of one device.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Creating a Btrfs Filesystem }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "btrfs-progs 6.6.3 on two 1 GiB image files (paths renamed): -m raid1 gives Data single; -d raid1 -m raid1 gives Data RAID1; -m raid10 with two devices gives Data single." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [btrfs, multi-device, raid]
+
+  - id: 101-104.1-0018
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      `/dev/sdb2` holds an ext4 filesystem mounted on `/srv` with 7 GiB of data. You must shrink it to
+      12 GiB to free space at the end of the disk. Which sequence does this without losing data?
+    exhibit: |
+      (parted) unit GiB
+      (parted) print
+      Disk /dev/sdb: 64.0GiB
+      Sector size (logical/physical): 512B/512B
+      Partition Table: gpt
+      Disk Flags:
+
+      Number  Start    End      Size     File system  Name  Flags
+       1      0.00GiB  30.0GiB  30.0GiB  ext4         root
+       2      30.0GiB  50.0GiB  20.0GiB  ext4         srv
+    options:
+      - id: a
+        text: Unmount `/srv`; `e2fsck -f /dev/sdb2`; `parted /dev/sdb resizepart 2 42GiB`; `resize2fs /dev/sdb2 12G`
+        rationale: Wrong. Shrinking the partition first cuts off the end of a filesystem that is still 20 GiB, which can destroy data.
+      - id: b
+        text: Unmount `/srv`; `e2fsck -f /dev/sdb2`; `resize2fs /dev/sdb2 12G`; `parted /dev/sdb resizepart 2 42GiB`
+        rationale: Correct. The filesystem is shrunk first, then the partition end is moved to 30 + 12 = 42 GiB, so the partition still contains the whole filesystem.
+      - id: c
+        text: "`resize2fs /dev/sdb2 12G` while mounted; `parted /dev/sdb resizepart 2 42GiB`; remount `/srv`"
+        rationale: Wrong. ext4 can be grown while mounted but not shrunk; resize2fs reports that on-line shrinking is not supported.
+      - id: d
+        text: Unmount `/srv`; `e2fsck -f /dev/sdb2`; `resize2fs /dev/sdb2 12G`; `parted /dev/sdb resizepart 2 12GiB`
+        rationale: Wrong. resizepart takes the new end position from the start of the disk, not a size; 12GiB is before the partition's start at 30GiB, so parted refuses.
+    answer: [b]
+    explanation: >
+      When shrinking, the filesystem goes first and the partition second; when growing, the order is
+      reversed. resize2fs needs the filesystem unmounted (and freshly checked with e2fsck -f) to shrink
+      it, and parted's resizepart takes an absolute end position, so the new end is the start plus the
+      new size.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Resizing ext2/3/4 Partitions }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "Exhibit from parted 3.6 on a sparse 64 GiB image with ext4 in both partitions (path renamed, Model line dropped). Checked: resize2fs refuses on-line shrinking; resizepart to an end before the start fails." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [resize2fs, parted, resizepart, shrink]
+
+  - id: 101-104.1-0019
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      Opening `/dev/sdb` in `gdisk` gives the output below. In gdisk's recovery and transformation
+      menu (`r`), which command rebuilds the damaged primary header from the intact backup header?
+    exhibit: |
+      Caution: invalid main GPT header, but valid backup; regenerating main header
+      from backup!
+
+      Warning: Invalid CRC on main header data; loaded backup partition table.
+      Warning! One or more CRCs don't match. You should repair the disk!
+      Main header: ERROR
+      Backup header: OK
+      Main partition table: OK
+      Backup partition table: OK
+    options:
+      - id: a
+        text: "`c`"
+        rationale: Wrong. c loads the backup partition table to rebuild the main table; here the tables are fine and the header is damaged.
+      - id: b
+        text: "`d`"
+        rationale: Wrong. d works in the other direction, using the main header to rebuild the backup header.
+      - id: c
+        text: "`e`"
+        rationale: Wrong. e uses the main partition table to rebuild the backup table.
+      - id: d
+        text: "`b`"
+        rationale: Correct. b uses the backup GPT header to rebuild the main header; w then writes the repaired table.
+    answer: [d]
+    explanation: >
+      GPT keeps a backup header and partition table at the end of the disk. gdisk's recovery menu can
+      rebuild either copy from the other: b (main header from backup), c (main table from backup),
+      d (backup header from main) and e (backup table from main). Nothing is saved until w.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Recovery Options }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "gdisk 1.0.10 on an image with sector 1 zeroed: exhibit is its real output; r, b, w repaired it and sgdisk -v reported no problems." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [gdisk, gpt, recovery]
+
+  - id: 101-104.1-0020
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      You want an XFS filesystem on `/dev/sdb1` whose log (journal) lives on a separate fast SSD
+      partition, `/dev/nvme0n1p4`. Which command creates it?
+    options:
+      - id: a
+        text: "`mkfs.xfs -l logdev=/dev/nvme0n1p4 /dev/sdb1`"
+        rationale: Correct. The -l suboption logdev= places the log section on the given device instead of inside the data section.
+      - id: b
+        text: "`mkfs.xfs -l size=/dev/nvme0n1p4 /dev/sdb1`"
+        rationale: Wrong. -l size= expects a size such as 64m; mkfs.xfs rejects a device path there.
+      - id: c
+        text: "`mkfs.xfs -m logdev=/dev/nvme0n1p4 /dev/sdb1`"
+        rationale: Wrong. -m holds metadata options such as crc= and uuid=; logdev is not one of them and mkfs.xfs rejects it.
+      - id: d
+        text: "`mkfs.xfs -L /dev/nvme0n1p4 /dev/sdb1`"
+        rationale: Wrong. -L sets the filesystem label (at most 12 characters), so this is rejected as an invalid label and would not place the log anyway.
+    answer: [a]
+    explanation: >
+      An XFS filesystem has a data section and a log section. By default the log is internal; with
+      `-l logdev=DEVICE` it goes on another device, which then also has to be named with the logdev=
+      mount option whenever the filesystem is mounted.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Creating an XFS Filesystem }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "mkfs.xfs 6.6.0 with image files: -l logdev= works; -l size=<path>, -m logdev=, -L <14-char path> all rejected." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [mkfs.xfs, log, journal]
+
+  # --------------------------------------------------------------------------- practice (CLI)
+
+  - id: 101-104.1-0021
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: In `fdisk`, which command saves your changes to the disk and exits?
+    options:
+      - id: a
+        text: "`q`"
+        rationale: Wrong. q quits and discards every change made in the session.
+      - id: b
+        text: "`p`"
+        rationale: Wrong. p prints the partition table as it currently stands in memory.
+      - id: c
+        text: "`w`"
+        rationale: Correct. w writes the partition table to the disk and exits.
+      - id: d
+        text: "`F`"
+        rationale: Wrong. F lists unpartitioned free space.
+    answer: [c]
+    explanation: >
+      fdisk (and gdisk) keep all changes in memory until you use w, so you can experiment and leave
+      with q if something goes wrong.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Managing MBR Partitions with FDISK }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [fdisk]
+
+  - id: 101-104.1-0022
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: Which of these filesystems supports subvolumes and snapshots by itself?
+    options:
+      - id: a
+        text: Btrfs
+        rationale: Correct. Btrfs has built-in subvolumes and copy-on-write snapshots.
+      - id: b
+        text: ext4
+        rationale: Wrong. ext4 has no subvolumes or snapshots of its own; snapshots need something like LVM underneath.
+      - id: c
+        text: VFAT
+        rationale: Wrong. VFAT is a simple FAT filesystem without such features.
+      - id: d
+        text: exFAT
+        rationale: Wrong. exFAT is designed for removable media and has no subvolumes or snapshots.
+    answer: [a]
+    explanation: >
+      Btrfs is a copy-on-write filesystem with subvolumes, snapshots, multi-device support,
+      transparent compression and checksums built in.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Getting to Know the Btrfs Filesystem }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [btrfs]
+
+  - id: 101-104.1-0023
+    type: multi_choice
+    difficulty: 2
+    pool: practice
+    stem: Which **TWO** statements about extended partitions on an MBR disk are true?
+    select_count: 2
+    options:
+      - id: a
+        text: Logical partitions inside it are numbered from 5 upward.
+        rationale: Correct. Numbers 1 to 4 are reserved for the primary slots, so the first logical partition is 5 (for example /dev/sda5).
+      - id: b
+        text: A disk can have up to four extended partitions.
+        rationale: Wrong. Only one extended partition is allowed; it takes one of the four primary slots.
+      - id: c
+        text: Linux can only mount filesystems that are on primary partitions.
+        rationale: Wrong. Linux treats logical partitions like primary ones; any of them can hold a filesystem or swap.
+      - id: d
+        text: Deleting the extended partition also deletes the logical partitions inside it.
+        rationale: Correct. The logical partitions live inside the extended one, so they disappear with it.
+    answer: [a, d]
+    explanation: >
+      An extended partition uses one of the four MBR slots as a container for logical partitions,
+      which are numbered from 5. For Linux, logical and primary partitions work the same way.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Primary vs Extended Partitions }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "fdisk 2.39.3 on an image: logical partitions became 5 and 6; deleting extended partition 2 removed both." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [mbr, extended-partition, logical-partition]
+
+  - id: 101-104.1-0024
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: >
+      On a GPT disk you deleted partition 2 of 3, so the remaining partitions are numbered 1 and 3.
+      Which `gdisk` command renumbers them to remove the gap?
+    options:
+      - id: a
+        text: "`r`"
+        rationale: Wrong. r opens the recovery and transformation menu.
+      - id: b
+        text: "`o`"
+        rationale: Wrong. o creates a new, empty GPT, discarding every partition.
+      - id: c
+        text: "`t`"
+        rationale: Wrong. t changes a partition's type code.
+      - id: d
+        text: "`s`"
+        rationale: Correct. s sorts the partition entries so they are numbered in order without gaps.
+    answer: [d]
+    explanation: >
+      gdisk's s command sorts partitions by their position on the disk and renumbers them. Note that
+      in fdisk the same letter does something else entirely (it creates a Sun disk label).
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Deleting a Partition }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "Command letters checked in the gdisk 1.0.10 and fdisk 2.39.3 menus." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [gdisk, gpt]
+
+  - id: 101-104.1-0025
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: How do you make Btrfs compress files transparently as they are written?
+    options:
+      - id: a
+        text: Create the filesystem with `mkfs.btrfs -d raid0`
+        rationale: Wrong. -d raid0 sets the data profile to striping across devices; it has nothing to do with compression.
+      - id: b
+        text: Mount the filesystem with the `compress` option
+        rationale: Correct. With -o compress (default algorithm zlib) Btrfs compresses new data where it is worth it.
+      - id: c
+        text: Take a snapshot with `btrfs subvolume snapshot`
+        rationale: Wrong. A snapshot shares existing data blocks; it does not compress anything.
+      - id: d
+        text: Mount the filesystem with `-o subvol=compress`
+        rationale: Wrong. That mounts a subvolume named compress instead of the top level.
+    answer: [b]
+    explanation: >
+      Btrfs compression is a mount option: compress (zlib by default), or compress=lzo or
+      compress=zstd. Files that do not compress well are stored uncompressed, so one directory can
+      hold both kinds.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: A Few Words on Compression }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "Loop-mounted Btrfs with -o compress shows compress=zlib:3 in /proc/mounts." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [btrfs, compression]
+
+  - id: 101-104.1-0026
+    type: fill_in
+    difficulty: 3
+    pool: practice
+    stem: Type the `mkfs.fat` option that sets the volume label of the new filesystem.
+    fill_in:
+      accepted: ['((sudo\s+)?((/usr)?/s?bin/)?(mkfs\.(v?fat|msdos)|mkdosfs|mkfs\s+-t\s+(v?fat|msdos))\s+(-F\s*(12|16|32)\s+)?)?-n(\s*(?!-)\S+)?(\s+(?!-)\S+)?']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      `mkfs.fat -n NAME` sets a label of up to 11 characters. Unlike mke2fs, mkfs.xfs and mkfs.btrfs,
+      which use -L, mkfs.fat has no -L option.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Creating a FAT or VFAT Filesystem }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "Matching tested: -n, -n CAMERA, -nCAMERA, mkfs.fat -n, mkfs.vfat -n CAMERA /dev/sdc1, sudo mkfs.fat -n CAMERA /dev/sdc1, mkfs -t vfat -n CAMERA accepted; -L, -N, --label, mkfs.fat -L CAMERA, mkfs.exfat -n, -n CAMERA -F 32 rejected." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Regex widened to accept -F before -n and the mkdosfs/mkfs.msdos names. Text supplied by the reviewer; verified by the reviewer." }
+    tags: [mkfs.fat, label]
+
+  - id: 101-104.1-0027
+    type: multi_choice
+    difficulty: 3
+    pool: practice
+    stem: >
+      Which **TWO** commands create an ext4 filesystem on the existing partition `/dev/sdb1`?
+    select_count: 2
+    options:
+      - id: a
+        text: "`mke2fs -L ext4 /dev/sdb1`"
+        rationale: Wrong. -L sets the label; called as mke2fs without -t, it creates ext2, here labelled "ext4".
+      - id: b
+        text: "`mkfs.ext4 /dev/sdb1`"
+        rationale: Correct. mkfs.ext4 is a link to mke2fs, which creates ext4 when called by this name.
+      - id: c
+        text: "`mke2fs -t ext4 /dev/sdb1`"
+        rationale: Correct. -t selects the filesystem type, so this is equivalent to mkfs.ext4.
+      - id: d
+        text: "`parted /dev/sdb mkpart data ext4 1MiB 100%`"
+        rationale: Wrong. This tries to create a new partition, and parted's filesystem-type word never creates a filesystem anyway.
+    answer: [b, c]
+    explanation: >
+      mkfs.ext2, mkfs.ext3 and mkfs.ext4 are links to mke2fs, which picks its defaults from the name
+      it is called by or from -t. Plain mke2fs creates ext2 unless told otherwise.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Creating an ext2/ext3/ext4 Filesystem }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "e2fsprogs 1.47.0: mke2fs -L ext4 produced TYPE=ext2 LABEL=ext4; mkfs.ext* are symlinks to mke2fs on Ubuntu 24.04." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [mke2fs, mkfs.ext4]
+
+  - id: 101-104.1-0028
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: >
+      In `gdisk`, which type code do you give a GPT partition that will be used as Linux swap?
+    options:
+      - id: a
+        text: "`8200`"
+        rationale: Correct. 8200 is gdisk's code for Linux swap.
+      - id: b
+        text: "`82`"
+        rationale: Wrong. 82 is the one-byte MBR code used in fdisk on DOS disks.
+      - id: c
+        text: "`8300`"
+        rationale: Wrong. 8300 is a Linux filesystem partition.
+      - id: d
+        text: "`EF00`"
+        rationale: Wrong. EF00 is the EFI system partition.
+    answer: [a]
+    explanation: >
+      gdisk maps GPT type GUIDs to four-digit codes: 8300 Linux filesystem, 8200 Linux swap, EF00
+      EFI system. After setting the type and writing with w, mkswap prepares the partition.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Creating Swap Partitions }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Difficulty 3 -> 2 to match its mirror question 0006." }
+    tags: [gdisk, partition-type, swap]
+
+  - id: 101-104.1-0029
+    type: single_choice
+    difficulty: 4
+    pool: practice
+    stem: Which sequence creates and activates a 2 GiB swap file at `/swapfile`?
+    options:
+      - id: a
+        text: "`dd if=/dev/zero of=/swapfile bs=1M count=2048`; `swapon /swapfile`; `mkswap /swapfile`"
+        rationale: Wrong. swapon fails on a file that mkswap has not prepared yet; the last two steps are in the wrong order.
+      - id: b
+        text: "`touch /swapfile`; `chmod 600 /swapfile`; `mkswap /swapfile`; `swapon /swapfile`"
+        rationale: Wrong. touch creates an empty file; mkswap rejects it because a swap area needs at least 40 KiB.
+      - id: c
+        text: "`dd if=/dev/zero of=/swapfile bs=1M count=2048`; `chmod 600 /swapfile`; `mkswap /swapfile`; `swapon /swapfile`"
+        rationale: Correct. dd allocates 2048 x 1 MiB, chmod restricts access, mkswap writes the swap signature and swapon activates it.
+      - id: d
+        text: "`dd if=/dev/zero of=/swapfile bs=1M count=2048`; `chmod 600 /swapfile`; `mkfs -t swap /swapfile`; `swapon /swapfile`"
+        rationale: Wrong. There is no mkfs.swap helper, so mkfs -t swap fails; swap is prepared with mkswap.
+    answer: [c]
+    explanation: >
+      A swap file needs real space (dd from /dev/zero), mode 0600, a swap signature from mkswap and
+      activation with swapon. An /etc/fstab entry makes it come back after a reboot.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Creating Swap Partitions }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "mkswap on an empty file: \"swap area needs to be at least 40 KiB\"; mkfs -t swap: \"failed to execute mkfs.swap\"." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [swap, mkswap, swapon, dd]
+
+  - id: 101-104.1-0030
+    type: single_choice
+    difficulty: 4
+    pool: practice
+    stem: >
+      `/dev/sdb1` held an old ext4 filesystem that is no longer needed. Creating XFS on it fails as
+      shown. Which command creates the XFS filesystem?
+    exhibit: |
+      # mkfs.xfs /dev/sdb1
+      mkfs.xfs: /dev/sdb1 appears to contain an existing filesystem (ext4).
+      mkfs.xfs: Use the -f option to force overwrite.
+    options:
+      - id: a
+        text: "`mkfs.xfs -N /dev/sdb1`"
+        rationale: Wrong. -N only prints the parameters it would use and writes nothing.
+      - id: b
+        text: "`mkfs.xfs -q /dev/sdb1`"
+        rationale: Wrong. -q only silences the output; the existing filesystem still blocks creation.
+      - id: c
+        text: "`mkfs.xfs -F /dev/sdb1`"
+        rationale: Wrong. -F is mke2fs's force option; mkfs.xfs does not accept it.
+      - id: d
+        text: "`mkfs.xfs -f /dev/sdb1`"
+        rationale: Correct. -f tells mkfs.xfs to overwrite the existing filesystem signature.
+    answer: [d]
+    explanation: >
+      mkfs.xfs refuses to overwrite a device that already holds a recognisable filesystem unless you
+      add -f. mke2fs uses -F for a similar purpose, which is an easy pair to mix up.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Creating an XFS Filesystem }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "Exhibit from mkfs.xfs 6.6.0 on an ext4 image (path renamed); -f succeeds." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [mkfs.xfs, force]
