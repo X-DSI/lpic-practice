@@ -816,7 +816,7 @@ questions:
 
   - id: 101-103.8-0027
     type: multi_choice
-    difficulty: 5
+    difficulty: 3
     pool: holdout
     stem: >
       You made changes in vi that you do **not** want to keep. Which **TWO** commands exit the
@@ -848,8 +848,8 @@ questions:
       status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "verify block removed: vi is not installed in debian:stable-slim; behaviour checked with vim 9.1 -es instead." }
-        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Distractors ZZ, :x, :wq (shared with 0013) replaced by :w!, :e, :wq!; rationales checked in vim 9.1. Reviewer suggested difficulty 3 or 4; kept at 5 to hold the holdout split. Needs re-check." }
-    tags: [vi, quit, ZZ]
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Distractors ZZ, :x, :wq (shared with 0013) replaced by :w!, :e, :wq!; rationales checked in vim 9.1. Re-checked cold by the reviewer: matches key. Difficulty lowered 5 to 3: with these distractors it tests recall of the discard-and-quit pair; the objective holdout split becomes 5-7-8-6-4." }
+    tags: [vi, quit, ZQ]
 
   - id: 101-103.8-0028
     type: fill_in
