@@ -31,9 +31,10 @@ questions:
       one. The data is only freed when the count reaches zero and no process holds the file open.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.6", lesson: 1, section: Managing Hard Links }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [ls, link-count, hard-link]
 
   - id: 101-104.6-0002
@@ -61,9 +62,10 @@ questions:
       special marker because every hard link is just another regular-file name.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.6", lesson: 1, section: Managing Symbolic Links }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [ls, symbolic-link]
 
   - id: 101-104.6-0003
@@ -91,9 +93,10 @@ questions:
       directories or other filesystems, and why it breaks when nothing exists at that path any more.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.6", lesson: 1, section: Understanding Links }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [symbolic-link, inode]
 
   - id: 101-104.6-0004
@@ -123,9 +126,10 @@ questions:
       ln or cp -l, must stay inside one filesystem.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.6", lesson: 1, section: Creating Symbolic Links }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [ln, symbolic-link, cross-device]
 
   - id: 101-104.6-0005
@@ -160,9 +164,10 @@ questions:
       command: readlink /tmp/rl/link
       expect: { exit_code: 0, stdout_regex: "^\\.\\./rl/data\\n?$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [readlink, symbolic-link]
 
   - id: 101-104.6-0006
@@ -191,9 +196,10 @@ questions:
       filesystems, at the cost of breaking when that path no longer exists.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.6", lesson: 1, section: Managing Symbolic Links }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [hard-link, symbolic-link]
 
   - id: 101-104.6-0007
@@ -223,9 +229,10 @@ questions:
       symbolic link to it dangling.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.6", lesson: 1, section: Moving and Removing Symbolic Links }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [rm, symbolic-link]
 
   - id: 101-104.6-0008
@@ -257,9 +264,10 @@ questions:
       command: find /tmp/fl -type l
       expect: { exit_code: 0, stdout_regex: "^/tmp/fl/l\\n?$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Option d replaced (-perm 777 could list exactly the symlinks on a real /etc) with -xtype l." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [find, symbolic-link]
 
   - id: 101-104.6-0009
@@ -272,8 +280,7 @@ questions:
       without typing that path by hand. Type the `ln` option to add.
     fill_in:
       accepted:
-        - '((sudo\s+)?((/usr)?/bin/)?ln\s+((-s|--symbolic)\s+)?)?(-r|--relative)(\s+(-s|--symbolic))?'
-        - '((sudo\s+)?((/usr)?/bin/)?ln\s+)?-(sr|rs)'
+        - '((sudo\s+)?((/usr)?/bin/)?ln\s+)?((-s|--symbolic)\s+)?(-r|--relative|-(sr|rs))(\s+(-s|--symbolic))?'
       match: regex
       case_sensitive: true
     explanation: >
@@ -287,9 +294,10 @@ questions:
       command: cd / && ln -sr /tmp/app/releases/2.1 /tmp/app/current && readlink /tmp/app/current
       expect: { exit_code: 0, stdout_regex: "^releases/2\\.1\\n?$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Fill-in now also accepts -s -r without the ln prefix. Pattern supplied by the reviewer; tested by the reviewer and the writer." }
     tags: [ln, relative-link]
 
   - id: 101-104.6-0010
@@ -328,9 +336,10 @@ questions:
       inode and data, so later changes to the original do not reach it.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.6", lesson: 1, section: Managing Hard Links }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [ls, inode, hard-link, symbolic-link, cp]
 
   - id: 101-104.6-0011
@@ -355,9 +364,10 @@ questions:
       command: find /tmp/sf -samefile /tmp/sf/f | sort
       expect: { exit_code: 0, stdout_regex: "^/tmp/sf/a/g\\n/tmp/sf/f\\n?$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [find, hard-link, inode]
 
   - id: 101-104.6-0012
@@ -387,9 +397,10 @@ questions:
       bytes in its stored path. Use ls -lL (or stat -L) to see the target's attributes.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.6", lesson: 1, section: Managing Symbolic Links }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [ls, symbolic-link]
 
   - id: 101-104.6-0013
@@ -421,9 +432,10 @@ questions:
       hop at a time. realpath (or readlink -f) resolves the whole chain to an absolute path.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.6", lesson: 1, section: Managing Symbolic Links }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [realpath, readlink, symbolic-link]
 
   - id: 101-104.6-0014
@@ -463,9 +475,10 @@ questions:
       path, or let ln -sr work it out (adding -f when a link already exists).
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.6", lesson: 1, section: Moving and Removing Symbolic Links }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [ln, relative-link, dangling-link]
 
   - id: 101-104.6-0015
@@ -501,9 +514,10 @@ questions:
       Symbolic links have no such limit.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.6", lesson: 1, section: Managing Hard Links }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [ln, cp, cross-device, hard-link]
 
   - id: 101-104.6-0016
@@ -547,9 +561,10 @@ questions:
       after shows exactly what happened.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.6", lesson: 1, section: Managing Hard Links }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Option d lengthened so the key is not the longest option." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [hard-link, inode, ls]
 
   - id: 101-104.6-0017
@@ -573,9 +588,10 @@ questions:
       not change the directory's link count. (Some filesystems, such as btrfs, do not follow this rule.)
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.6", lesson: 1, section: Managing Hard Links }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [link-count, ls, directory]
 
   - id: 101-104.6-0018
@@ -618,9 +634,10 @@ questions:
       command: cd /tmp/rmt && { rm -r latest/ 2>/dev/null || true; ls -A backups | wc -l; test -L latest && echo link-kept; }
       expect: { exit_code: 0, stdout_regex: "^0\\nlink-kept\\n?$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Options b and c lengthened so the key is not the longest option; verify command made safe under set -e." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [rm, symbolic-link, directory]
 
   - id: 101-104.6-0019
@@ -665,9 +682,10 @@ questions:
       command: cd /tmp/rel && ln -sfn releases/1.5 current && readlink current && ls -A releases/1.4 | wc -l
       expect: { exit_code: 0, stdout_regex: "^releases/1\\.5\\n0\\n?$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [ln, symbolic-link, directory]
 
   - id: 101-104.6-0020
@@ -690,7 +708,7 @@ questions:
         rationale: Correct. -samefile compares both the device and the inode number, so it matches only names of this very file.
       - id: b
         text: "`find / -inum 21`"
-        rationale: Wrong. Inode numbers are unique only within one filesystem; other filesystems have their own inode 21 (on the test system, /usr was one).
+        rationale: Wrong. Inode numbers are unique only within one filesystem; other filesystems can have their own inode 21, and those files would be listed too.
       - id: c
         text: "`find -L / -samefile /tmp/q104-6/archive/notes.txt`"
         rationale: Wrong. -L makes find follow symbolic links, so links that resolve to the file are listed as well.
@@ -705,9 +723,10 @@ questions:
       (-L) adds names that are not hard links.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.6", lesson: 1, section: Managing Hard Links }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Rationale b: dropped the test-system aside." }
     tags: [find, inode, hard-link]
 
   # --------------------------------------------------------------------------- practice (CLI)
@@ -741,9 +760,10 @@ questions:
       command: cd /tmp && ln report.odt report-final.odt && stat -c %h report.odt
       expect: { exit_code: 0, stdout_contains: "2" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [ln, hard-link]
 
   - id: 101-104.6-0022
@@ -772,9 +792,10 @@ questions:
       still shows it with its arrow, but opening it fails with "No such file or directory".
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.6", lesson: 1, section: Understanding Links }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [symbolic-link, dangling-link]
 
   - id: 101-104.6-0023
@@ -787,8 +808,7 @@ questions:
       destination first.
     fill_in:
       accepted:
-        - '((sudo\s+)?((/usr)?/bin/)?ln\s+((-s|--symbolic)\s+)?)?(-f|--force)(\s+(-s|--symbolic))?'
-        - '((sudo\s+)?((/usr)?/bin/)?ln\s+)?-(sf|fs)'
+        - '((sudo\s+)?((/usr)?/bin/)?ln\s+)?((-s|--symbolic|-n|--no-dereference|-T|--no-target-directory)\s+)*(-f|--force|-(?=[snT]*f)[sfnT]{2,4})(\s+(-s|--symbolic|-n|--no-dereference|-T|--no-target-directory))*'
       match: regex
       case_sensitive: true
     explanation: >
@@ -803,9 +823,10 @@ questions:
       command: ln -sf /tmp/ng/avail/shop /tmp/ng/enabled/shop && readlink /tmp/ng/enabled/shop
       expect: { exit_code: 0, stdout_contains: "/tmp/ng/avail/shop" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Fill-in now accepts -sfn, -n -f and -s -f (all work). Pattern supplied by the reviewer; tested by the reviewer and the writer." }
     tags: [ln, symbolic-link]
 
   - id: 101-104.6-0024
@@ -834,9 +855,10 @@ questions:
       The file disappears for good only after its last name is removed and no process holds it open.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.6", lesson: 1, section: Moving and Removing Hard Links }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [rm, hard-link, link-count]
 
   - id: 101-104.6-0025
@@ -868,9 +890,10 @@ questions:
       command: stat /tmp/st
       expect: { exit_code: 0, stdout_regex: "(?s).*Inode: \\d+\\s+Links: 2.*" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [stat, inode, link-count]
 
   - id: 101-104.6-0026
@@ -899,9 +922,10 @@ questions:
       so data.csv stays at 1 and data.lnk has a count of 1 of its own.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.6", lesson: 1, section: Managing Hard Links }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [link-count, symbolic-link]
 
   - id: 101-104.6-0027
@@ -926,9 +950,10 @@ questions:
       command: realpath /tmp/rp/bin/../lib/current
       expect: { exit_code: 0, stdout_regex: "^/tmp/rp/lib/v3\\n?$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Accepted forms extended to realpath -e/-m/-P and readlink -m." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [realpath, readlink]
 
   - id: 101-104.6-0028
@@ -964,9 +989,10 @@ questions:
       command: cd /tmp && cp -l a.txt b.txt && test "$(stat -c %i a.txt)" = "$(stat -c %i b.txt)" && echo same
       expect: { exit_code: 0, stdout_contains: "same" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [cp, ln, hard-link]
 
   - id: 101-104.6-0029
@@ -1009,9 +1035,10 @@ questions:
       command: cd /tmp/xt && find . -xtype l
       expect: { exit_code: 0, stdout_regex: "^\\./shared/old\\.pdf\\n?$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [find, dangling-link]
 
   - id: 101-104.6-0030
@@ -1049,7 +1076,8 @@ questions:
       differently: the name gets a new inode and other hard links keep the old data.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.6", lesson: 1, section: Managing Hard Links }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Option a lengthened so the key is not the longest option." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [cp, hard-link, inode]
