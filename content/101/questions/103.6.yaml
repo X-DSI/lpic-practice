@@ -35,9 +35,10 @@ questions:
       command: nice
       expect: { exit_code: 0, stdout_regex: "^0\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
     tags: [nice, default]
 
   - id: 101-103.6-0002
@@ -67,9 +68,10 @@ questions:
       command: nice -n 30 nice
       expect: { exit_code: 0, stdout_regex: "^19\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
     tags: [nice, range]
 
   - id: 101-103.6-0003
@@ -98,9 +100,10 @@ questions:
       running. top can also renice a running process interactively.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.6", lesson: 1, section: Process Niceness }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Distractor nproc replaced by taskset so the correct option is not the longest." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
     tags: [renice]
 
   - id: 101-103.6-0004
@@ -129,9 +132,10 @@ questions:
       favourable) nice value, so the job only gets CPU time that other work leaves free.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.6", lesson: 1, section: Process Niceness }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
     tags: [nice]
 
   - id: 101-103.6-0005
@@ -159,9 +163,10 @@ questions:
       nice, and in particular going below 0, needs root or the CAP_SYS_NICE capability.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.6", lesson: 1, section: Process Niceness }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
     tags: [nice, permissions]
 
   - id: 101-103.6-0006
@@ -192,9 +197,10 @@ questions:
       process, so ps -el and ps -Al give the same listing.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.6", lesson: 1, section: Reading Priorities }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
     tags: [ps, NI]
 
   - id: 101-103.6-0007
@@ -223,9 +229,10 @@ questions:
       default) and then for the new nice value. The same permission rules as renice apply.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.6", lesson: 1, section: Process Niceness }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
     tags: [top, renice]
 
   - id: 101-103.6-0008
@@ -247,9 +254,10 @@ questions:
       command: nice nice
       expect: { exit_code: 0, stdout_regex: "^10\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
     tags: [nice, default]
 
   - id: 101-103.6-0009
@@ -279,9 +287,10 @@ questions:
       130, PRI 90 and PR 30.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.6", lesson: 1, section: Reading Priorities }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
     tags: [top, ps, PR, PRI]
 
   - id: 101-103.6-0010
@@ -289,8 +298,8 @@ questions:
     difficulty: 3
     pool: holdout
     stem: >
-      Process 4182 is running at nice value 2. Write the complete `renice` command that sets its
-      nice value to exactly 7.
+      Process 4182 is running at nice value 2. Write the complete `renice` command that sets its nice
+      value to 7, whatever its current value is.
     fill_in:
       accepted: ['(sudo\s+)?((/usr)?/bin/)?renice\s+((-n|--priority)\s+)?\+?7\s+((-p|--pid)\s+)?4182']
       match: regex
@@ -301,9 +310,10 @@ questions:
       (unless POSIXLY_CORRECT is set), so the result is 7 regardless of the current value.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.6", lesson: 1, section: Process Niceness }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Stem now asks for 7 whatever the current value is, so renice --relative 5 is no longer a defensible answer." }
     tags: [renice]
 
   - id: 101-103.6-0011
@@ -335,9 +345,10 @@ questions:
       command: nice -n 5 nice -n 3 nice
       expect: { exit_code: 0, stdout_regex: "^8\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
     tags: [nice]
 
   - id: 101-103.6-0012
@@ -369,9 +380,10 @@ questions:
       (users). The new value goes first, with or without -n.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.6", lesson: 1, section: Process Niceness }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
     tags: [renice, user]
 
   - id: 101-103.6-0013
@@ -400,9 +412,10 @@ questions:
       where lower means more favoured. Nice value 0 maps to 120, so -5 maps to 115.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.6", lesson: 1, section: Reading Priorities }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
     tags: [proc, priority]
 
   - id: 101-103.6-0014
@@ -437,9 +450,10 @@ questions:
       process started at 0. Only root (CAP_SYS_NICE) can lower it.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.6", lesson: 1, section: Process Niceness }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
     tags: [renice, permissions]
 
   - id: 101-103.6-0015
@@ -469,9 +483,10 @@ questions:
       status is returned as usual.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.6", lesson: 1, section: Process Niceness }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Lengthened option b so the correct option is not the longest; rationale a quoted for YAML and made precise." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
     tags: [nice, permissions]
 
   - id: 101-103.6-0016
@@ -503,9 +518,10 @@ questions:
       minus 40 and top shows it minus 100. On all three scales a lower number means more favoured.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.6", lesson: 1, section: Reading Priorities }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
     tags: [ps, top, PRI, PR]
 
   - id: 101-103.6-0017
@@ -536,9 +552,10 @@ questions:
       inherits the new value.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.6", lesson: 1, section: Process Niceness }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
     tags: [renice, inheritance]
 
   - id: 101-103.6-0018
@@ -568,9 +585,10 @@ questions:
       prints a warning and runs ./job at the inherited 10.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.6", lesson: 1, section: Process Niceness }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
     tags: [nice, permissions]
 
   - id: 101-103.6-0019
@@ -589,9 +607,10 @@ questions:
       2200 changes every process in group 2200. Lowering the value below 0 needs root.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.6", lesson: 1, section: Process Niceness }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
     tags: [renice, process-group]
 
   - id: 101-103.6-0020
@@ -623,9 +642,10 @@ questions:
       or without -p (--pid). --relative adds to the current value instead of replacing it.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.6", lesson: 1, section: Process Niceness }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
     tags: [renice]
 
   # ---------------------------------------------------------------- practice (study mode)
@@ -656,9 +676,10 @@ questions:
       and therefore favoured over the one at 15.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.6", lesson: 1, section: Process Niceness }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
     tags: [nice]
 
   - id: 101-103.6-0022
@@ -685,9 +706,10 @@ questions:
       ps -l uses the same NI heading.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.6", lesson: 1, section: Reading Priorities }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
     tags: [top, NI]
 
   - id: 101-103.6-0023
@@ -714,9 +736,10 @@ questions:
       renice -n 5 -u alice.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.6", lesson: 1, section: Process Niceness }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
     tags: [renice]
 
   - id: 101-103.6-0024
@@ -746,9 +769,10 @@ questions:
       to 10, so it is now less favoured.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.6", lesson: 1, section: Process Niceness }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
     tags: [renice]
 
   - id: 101-103.6-0025
@@ -776,9 +800,10 @@ questions:
       real-time processes are scheduled.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.6", lesson: 1, section: Reading Priorities }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Lengthened distractors b and d so the correct option is not the longest." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
     tags: [top, real-time]
 
   - id: 101-103.6-0026
@@ -814,9 +839,10 @@ questions:
       PR 25.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.6", lesson: 1, section: Reading Priorities }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Reworked from which-process-is-favoured to a PRI/NI-to-PR mapping, to stay clear of the lesson exercise on reading a ps -el listing." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
     tags: [ps, PRI, NI]
 
   - id: 101-103.6-0027
@@ -847,9 +873,10 @@ questions:
       processes. Lowering it needs root (CAP_SYS_NICE).
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.6", lesson: 1, section: Process Niceness }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
     tags: [nice, inheritance, permissions]
 
   - id: 101-103.6-0028
@@ -884,9 +911,10 @@ questions:
       command: nice -19 nice
       expect: { exit_code: 0, stdout_regex: "^19\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
     tags: [nice]
 
   - id: 101-103.6-0029
@@ -905,9 +933,10 @@ questions:
       would show PRI 95 for the same process.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.6", lesson: 1, section: Reading Priorities }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
     tags: [top, PR, NI]
 
   - id: 101-103.6-0030
@@ -915,8 +944,9 @@ questions:
     difficulty: 2
     pool: practice
     stem: >
-      Using only the `ps` options for "every process" and "long format", type a command that lists
-      all processes with their PRI and NI columns.
+      You want a one-shot listing of every process on the system that includes the PRI and NI columns,
+      without choosing columns with `-o`. Type the `ps` command, using UNIX-style (single-dash)
+      options only.
     fill_in:
       accepted: ['(sudo\s+)?((/usr)?/bin/)?ps\s+(-(el|le|Al|lA)|-[eA]\s+-l|-l\s+-[eA])']
       match: regex
@@ -926,7 +956,8 @@ questions:
       ps -el.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.6", lesson: 1, section: Reading Priorities }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Stem narrowed to UNIX-style options: BSD ps axl also lists every process with PRI and NI, and the old wording echoed Explorational Exercise 1." }
     tags: [ps]
