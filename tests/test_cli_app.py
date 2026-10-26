@@ -147,3 +147,68 @@ def test_second_exam_is_selectable(tmp_path: Path) -> None:
                 assert app.screen.query_one("#objective", Select).value == "104.1"
 
     asyncio.run(run())
+
+
+def test_vim_keys_answer_and_advance(tmp_path: Path) -> None:
+    # Keyboard only: j/k/g/G move, Space or l toggles, Enter submits, Enter on feedback goes on.
+    async def run() -> None:
+        store = Store(tmp_path / "results.sqlite")
+        app = PracticeApp(store, FIXTURE_CONTENT, rng=random.Random(0))
+        async with app.run_test(size=SIZE) as pilot:
+            await pilot.pause()
+            await pilot.click("#start")
+            await pilot.pause()
+            seen = []
+            for _ in range(3):
+                screen = app.screen
+                assert isinstance(screen, QuestionScreen)
+                q = screen.question
+                ids = [o.id for o in q.options]
+                if q.type == "single_choice":
+                    # Wander first (G, k) so the test checks that Enter takes the *highlighted* option.
+                    await pilot.press("G", "k", "g", *["j"] * ids.index(q.answer[0]), "enter")
+                elif q.type == "multi_choice":
+                    await pilot.press("G", "g")
+                    position = 0
+                    for keys, option in zip(["space", "l"] * len(q.answer), q.answer, strict=False):
+                        target = ids.index(option)
+                        await pilot.press(*["j"] * (target - position), keys)
+                        position = target
+                    await pilot.press("enter")
+                else:
+                    await pilot.press(*"jk ls -i", "enter")  # j and k are typed, not navigation
+                await pilot.pause()
+                feedback = app.screen
+                assert isinstance(feedback, FeedbackScreen), q.id
+                seen.append((q.type, feedback.result.correct))
+                await pilot.press("j", "k", "enter")
+                await pilot.pause()
+            assert isinstance(app.screen, SummaryScreen)
+        types = dict(seen)
+        assert types["single_choice"] and types["multi_choice"]
+        assert types["fill_in"] is False  # "jk ls -i" proves j/k reach the text box
+        store.close()
+
+    asyncio.run(run())
+
+
+def test_enter_on_a_choose_n_question_needs_n_options(tmp_path: Path) -> None:
+    async def run() -> None:
+        store = Store(tmp_path / "results.sqlite")
+        app = PracticeApp(store, FIXTURE_CONTENT, rng=random.Random(0))
+        async with app.run_test(size=SIZE) as pilot:
+            await pilot.pause()
+            await pilot.click("#start")
+            await pilot.pause()
+            while app.screen.question.type != "multi_choice":
+                await pilot.press(*("x" if app.screen.question.type == "fill_in" else ""), "enter")
+                await pilot.pause()
+                await pilot.press("enter")  # feedback → next question
+                await pilot.pause()
+            await pilot.press("space", "enter")  # one option chosen, more needed: refused
+            await pilot.pause()
+            assert isinstance(app.screen, QuestionScreen)
+        assert all(a["question_id"] != app.screen.question.id for a in store.answers())
+        store.close()
+
+    asyncio.run(run())

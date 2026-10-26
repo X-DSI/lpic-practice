@@ -1,8 +1,10 @@
 """Textual practice app: setup → question → feedback (→ flag) → … → summary.
 
-Keyboard-first: Tab moves between controls, arrow keys and Enter pick an option, Space toggles a
-choice in "choose N" questions, Ctrl+S submits an answer, `n` goes to the next question, `f` flags
-the current one and Escape ends the session early. Session logic lives in `engine.practice`.
+Keyboard-first, with vim keys: in a question, `j`/`k` (or the arrow keys) move between options,
+`g`/`G` jump to the first/last, Space or `l` toggles a choice in "choose N" questions, and Enter
+submits (for "choose one", the highlighted option). Ctrl+S also submits. On the feedback screen
+`j`/`k` scroll, Enter or `n` goes to the next question and `f` flags the current one. Escape ends
+the session early. Session logic lives in `engine.practice`.
 """
 
 from __future__ import annotations
@@ -14,6 +16,7 @@ from typing import cast
 
 from rich.text import Text
 from textual.app import App, ComposeResult
+from textual.binding import Binding
 from textual.containers import Horizontal, Vertical, VerticalScroll
 from textual.content import Content
 from textual.screen import ModalScreen, Screen
@@ -54,6 +57,60 @@ def _plain(text: str) -> Content:
 
 def _format_response(response: str | tuple[str, ...]) -> str:
     return response if isinstance(response, str) else ", ".join(response) or "(nothing)"
+
+
+class ChoiceList(RadioSet):
+    """A "choose one" list with vim keys; Enter submits the highlighted option."""
+
+    BINDINGS = [
+        Binding("j", "next_button", show=False),
+        Binding("k", "previous_button", show=False),
+        Binding("g", "first", show=False),
+        Binding("G", "last", show=False),
+        Binding("l,space", "toggle_button", show=False),
+        Binding("enter", "submit", "Submit"),
+    ]
+
+    def on_mount(self) -> None:
+        # Highlight the first option so j/k and Enter work straight away.
+        if self._selected is None and self._nodes:
+            self._selected = 0
+
+    @property
+    def highlighted_button(self) -> RadioButton | None:
+        # RadioSet keeps the highlighted index in `_selected`; Textual has no public accessor.
+        index = self._selected
+        return cast(RadioButton, self._nodes[index]) if index is not None else None
+
+    def action_first(self) -> None:
+        if self._nodes:
+            self._selected = 0
+
+    def action_last(self) -> None:
+        if self._nodes:
+            self._selected = len(self._nodes) - 1
+
+    def action_submit(self) -> None:
+        button = self.highlighted_button or self.pressed_button
+        if button is not None and not button.value:
+            button.toggle()
+        cast(QuestionScreen, self.screen).submit_choice(button)
+
+
+class MultiChoiceList(SelectionList[str]):
+    """A "choose N" list with vim keys; Space or `l` toggles, Enter submits."""
+
+    BINDINGS = [
+        Binding("j", "cursor_down", show=False),
+        Binding("k", "cursor_up", show=False),
+        Binding("g", "first", show=False),
+        Binding("G", "last", show=False),
+        Binding("l", "select", show=False),
+        Binding("enter", "submit", "Submit"),
+    ]
+
+    def action_submit(self) -> None:
+        cast(QuestionScreen, self.screen).action_submit()
 
 
 class PracticeScreen(Screen):
@@ -174,13 +231,13 @@ class QuestionScreen(PracticeScreen):
             if q.exhibit:
                 yield Static(q.exhibit, id="exhibit", markup=False)
             if q.type == "single_choice":
-                yield Label("Choose one.")
-                with RadioSet(id="answer"):
+                yield Label("Choose one: j/k to move, Enter to submit.")
+                with ChoiceList(id="answer"):
                     for o in q.options:
                         yield RadioButton(_plain(f"{o.id}) {o.text}"), id=f"opt-{o.id}")
             elif q.type == "multi_choice":
-                yield Label(f"Choose {q.select_count}. Space toggles an option.")
-                yield SelectionList[str](*((_plain(f"{o.id}) {o.text}"), o.id) for o in q.options), id="answer")
+                yield Label(f"Choose {q.select_count}: j/k to move, Space or l to toggle, Enter to submit.")
+                yield MultiChoiceList(*((_plain(f"{o.id}) {o.text}"), o.id) for o in q.options), id="answer")
             else:
                 yield Label("Type your answer and press Enter.")
                 yield Input(id="answer", placeholder="Your answer")
@@ -219,10 +276,19 @@ class QuestionScreen(PracticeScreen):
             return None
         return typed
 
+    def submit_choice(self, button: RadioButton | None) -> None:
+        """Submit a "choose one" answer straight from the highlighted option (Enter)."""
+        if button is None or button.id is None:
+            self.notify("Choose an answer first.", severity="warning")
+            return
+        self.record(button.id.removeprefix("opt-"))
+
     def action_submit(self) -> None:
         response = self.response()
-        if response is None:
-            return
+        if response is not None:
+            self.record(response)
+
+    def record(self, response: str | list[str]) -> None:
         elapsed_ms = int((time.monotonic() - self.started) * 1000)
         result = self.session.answer(response, elapsed_ms)
         self.app.switch_screen(FeedbackScreen(self.session, result))
@@ -232,7 +298,13 @@ class QuestionScreen(PracticeScreen):
 
 
 class FeedbackScreen(PracticeScreen):
-    BINDINGS = [("n", "next", "Next"), ("f", "flag", "Flag question"), ("escape", "end", "End session")]
+    BINDINGS = [
+        ("n", "next", "Next"),
+        ("f", "flag", "Flag question"),
+        ("escape", "end", "End session"),
+        Binding("j", "scroll(1)", show=False),
+        Binding("k", "scroll(-1)", show=False),
+    ]
 
     def __init__(self, session: PracticeSession, result: Graded) -> None:
         super().__init__()
@@ -280,6 +352,9 @@ class FeedbackScreen(PracticeScreen):
             self.action_next()
         elif event.button.id == "flag":
             self.action_flag()
+
+    def action_scroll(self, lines: int) -> None:
+        self.query_one(VerticalScroll).scroll_relative(y=lines, animate=False)
 
     def action_next(self) -> None:
         if self.session.current is not None:
