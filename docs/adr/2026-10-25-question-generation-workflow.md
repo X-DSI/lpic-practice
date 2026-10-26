@@ -1,6 +1,6 @@
 ---
 title: Generate questions in topic-sized batches, checked by the writer and an independent agent, signed off by the maintainer in use
-status: Proposed
+status: Accepted
 date: 2026-10-25
 deciders: [X-DSI]
 origin: web

@@ -1,6 +1,6 @@
 ---
 title: Store practice results and question flags in one local SQLite database with a fixed layout
-status: Proposed
+status: Accepted
 date: 2026-10-25
 deciders: [X-DSI]
 origin: code

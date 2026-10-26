@@ -42,6 +42,8 @@ objective contributes.
 7. **Scoring.** Raw percentage plus per-topic, per-objective, per-type and time-per-question
    breakdowns. A pass estimate uses 500/800 on a linear scale and is labelled as an estimate — LPI's
    real scaling is not public.
+   *Replaced by [Score like LPI](2026-10-24-lpi-style-scoring.md) (accepted 2026-10-26): items are
+   all-or-nothing and results use the piecewise 200–800 scale with 500 to pass.*
 
 ## Consequences
 - Content target per exam: 600 holdout questions plus a separate practice pool (initial target:

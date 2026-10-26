@@ -11,3 +11,6 @@ Accepted decisions live here; proposals live in [`proposed/`](proposed/).
 | 2026-10-22 | [Original questions only; LPI Learning Materials never enter the repository](2026-10-22-content-licensing-and-sources.md) | Accepted |
 | 2026-10-23 | [Adopt the agent-workflow protocol for this project](2026-10-23-adopt-agent-workflow.md) | Accepted |
 | 2026-10-23 | [License the code and original content under MIT](2026-10-23-mit-license.md) | Accepted |
+| 2026-10-24 | [Score like LPI — all-or-nothing items, 200–800 scale, 500 to pass](2026-10-24-lpi-style-scoring.md) | Accepted |
+| 2026-10-25 | [Generate questions in topic-sized batches, checked by the writer and an independent agent, signed off in use](2026-10-25-question-generation-workflow.md) | Accepted |
+| 2026-10-25 | [Store practice results and question flags in one local SQLite database](2026-10-25-results-database.md) | Accepted |

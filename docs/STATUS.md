@@ -9,15 +9,13 @@
 
 - [x] Protect `main` with a ruleset (PR required, 0 approvals, Code Owner review, no force pushes or
       deletions) — active since 2026-10-23.
-- [ ] Add `Validate content` and `Lint and test engine` to the ruleset's required status checks.
-      Only `commit-identity / Commit identity` is required today, so invalid content or failing
-      tests could still merge.
-- [ ] Confirm the ruleset's bypass list contains only the maintainer (not visible to the agent
-      account).
+- [x] Add `Validate content` and `Lint and test engine` to the ruleset's required status checks
+      (2026-10-26).
+- [x] Confirm the ruleset's bypass list contains only the maintainer (2026-10-26).
 - [x] Turn on auto-merge and automatic branch deletion.
 - [x] Invite the agent machine account (`X-DSI-agent`) as a collaborator with the **Write** role.
-- [ ] Ask `learning@lpi.org` whether publishing original questions keyed to their objectives is
-      acceptable (open question in the content-licensing ADR).
+- [x] ~~Ask `learning@lpi.org` about publishing original questions~~ — not needed: the bank uses
+      original wording only (maintainer, 2026-10-26).
 
 ## Open handoffs
 
@@ -29,11 +27,7 @@ Done: [Content build and engine core](handoff/2026-10-23-build-and-engine-core.m
 
 ## Proposed ADRs awaiting acceptance
 
-| ADR | Needed by |
-|---|---|
-| [Score like LPI — all-or-nothing items, 200–800 scale, 500 to pass](adr/proposed/2026-10-24-lpi-style-scoring.md) | build-and-engine-core handoff |
-| [Results database: sessions, answers and flags in one SQLite file](adr/proposed/2026-10-25-results-database.md) | web UI |
-| [Generate questions in topic-sized batches, checked by the writer and an independent agent, signed off in use](adr/proposed/2026-10-25-question-generation-workflow.md) | every content PR |
+None. Scoring, question-generation workflow and results database were accepted on 2026-10-26.
 
 ## Question bank
 

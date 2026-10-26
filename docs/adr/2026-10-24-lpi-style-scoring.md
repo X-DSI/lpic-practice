@@ -1,6 +1,6 @@
 ---
 title: Score like LPI — all-or-nothing items, results on the 200–800 scale with 500 to pass
-status: Proposed
+status: Accepted
 date: 2026-10-24
 deciders: [X-DSI]
 origin: web

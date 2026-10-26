@@ -1,7 +1,7 @@
 # Writing and checking questions
 
 The rules every generated question follows. The workflow around them (batches, counts, who checks
-what) is in `docs/adr/proposed/2026-10-25-question-generation-workflow.md`; the schema is in `schemas/`.
+what) is in `docs/adr/2026-10-25-question-generation-workflow.md`; the schema is in `schemas/`.
 
 ## Writing
 
