@@ -1,0 +1,1329 @@
+# 103.8 Basic file editing — weight 3 → 30 holdout + 15 practice.
+# Original questions written from LPI Learning Materials 101-500, objective 103.8, lesson 1.
+schema_version: 1
+exam: "101"
+objective: "103.8"
+questions:
+  # ---------------------------------------------------------------- holdout (mock exams only)
+
+  - id: 101-103.8-0001
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: You open `/etc/fstab` with `vi`. In which mode is the editor when the file first appears?
+    options:
+      - id: a
+        text: Normal mode
+        rationale: Correct. vi always starts in normal mode, where keys are commands rather than text.
+      - id: b
+        text: Insert mode
+        rationale: Wrong. Insert mode has to be entered with a command such as i, a or o.
+      - id: c
+        text: Visual mode
+        rationale: Wrong. Visual mode is only entered with v, V or Ctrl-V from normal mode.
+      - id: d
+        text: Replace mode
+        rationale: Wrong. Replace mode is entered with R from normal mode.
+    answer: [a]
+    explanation: >
+      vi opens every file in normal mode, also called command mode. Typing letters there runs
+      commands, which is why new users are surprised when text does not appear. An insertion
+      command switches to insert mode, and Esc returns to normal mode.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Option a shortened so the correct answer is not the longest." }
+    tags: [vi, modes]
+
+  - id: 101-103.8-0002
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: In vi normal mode, which key moves the cursor down by one line?
+    options:
+      - id: a
+        text: "`h`"
+        rationale: Wrong. h moves the cursor one character to the left.
+      - id: b
+        text: "`j`"
+        rationale: Correct. j moves the cursor down one line.
+      - id: c
+        text: "`k`"
+        rationale: Wrong. k moves the cursor up one line.
+      - id: d
+        text: "`l`"
+        rationale: Wrong. l moves the cursor one character to the right.
+    answer: [b]
+    explanation: >
+      The home-row keys h, j, k and l move the cursor left, down, up and right in normal mode. They
+      work on any terminal, even one where the arrow keys are not mapped correctly.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [vi, navigation]
+
+  - id: 101-103.8-0003
+    type: multi_choice
+    difficulty: 1
+    pool: holdout
+    stem: Which **TWO** vi normal-mode keys move the cursor sideways within the current line?
+    select_count: 2
+    options:
+      - id: a
+        text: "`h`"
+        rationale: Correct. h moves one character to the left.
+      - id: b
+        text: "`j`"
+        rationale: Wrong. j moves down to the next line.
+      - id: c
+        text: "`k`"
+        rationale: Wrong. k moves up to the previous line.
+      - id: d
+        text: "`l`"
+        rationale: Correct. l moves one character to the right.
+    answer: [a, d]
+    explanation: >
+      h and l are the horizontal movements (left and right); j and k are the vertical ones (down
+      and up).
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [vi, navigation]
+
+  - id: 101-103.8-0004
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: >
+      Programs such as `crontab -e` need to start a text editor for you. Which environment variable
+      do they read to learn which editor you prefer?
+    options:
+      - id: a
+        text: "`PAGER`"
+        rationale: Wrong. PAGER names the program used to page through output, such as less.
+      - id: b
+        text: "`TERM`"
+        rationale: Wrong. TERM describes the terminal type, not a preferred program.
+      - id: c
+        text: "`EDITOR`"
+        rationale: Correct. EDITOR (or VISUAL, when set) names the user's preferred text editor.
+      - id: d
+        text: "`DISPLAY`"
+        rationale: Wrong. DISPLAY tells graphical programs which X server to use.
+    answer: [c]
+    explanation: >
+      Tools that open an editor on your behalf (crontab -e, sudoedit, git and others) look at
+      VISUAL and EDITOR. Setting `export EDITOR=nano`, for example, makes them start nano.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Alternative Editors }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Distractor SHELL replaced by DISPLAY so the correct answer is not the longest." }
+    tags: [EDITOR]
+
+  - id: 101-103.8-0005
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: You have finished typing a paragraph in vi insert mode. Which key brings you back to normal mode?
+    options:
+      - id: a
+        text: "`Enter`"
+        rationale: Wrong. In insert mode Enter just starts a new line of text.
+      - id: b
+        text: "`Tab`"
+        rationale: Wrong. In insert mode Tab inserts a tab character (or spaces).
+      - id: c
+        text: "`:`"
+        rationale: Wrong. In insert mode a colon is typed into the text like any other character.
+      - id: d
+        text: "`Esc`"
+        rationale: Correct. Esc ends insert mode and returns to normal mode.
+    answer: [d]
+    explanation: >
+      Esc leaves insert mode. Pressing it in normal mode does no harm, so many users press it
+      whenever they are unsure which mode they are in.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Insert Mode }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [vi, modes]
+
+  - id: 101-103.8-0006
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      You edited `/etc/hosts` in vi by mistake and want to leave without writing any of your changes
+      to disk. Which command do you type in normal mode?
+    options:
+      - id: a
+        text: "`:wq`"
+        rationale: Wrong. :wq writes the changes to the file and then quits.
+      - id: b
+        text: "`:w!`"
+        rationale: Wrong. :w! forces a write of the buffer; it saves the changes and does not quit.
+      - id: c
+        text: "`:q!`"
+        rationale: Correct. :q! quits and throws away unsaved changes.
+      - id: d
+        text: "`:q`"
+        rationale: Wrong. With unsaved changes, :q refuses to quit (E37 No write since last change).
+    answer: [c]
+    explanation: >
+      The ! on :q! overrides the safety check that stops :q from abandoning a modified buffer. The
+      file on disk keeps the content it had when it was last written.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Colon Commands }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [vi, quit]
+
+  - id: 101-103.8-0007
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: The cursor is on an obsolete line in a configuration file. Which vi command removes that whole line?
+    options:
+      - id: a
+        text: "`dd`"
+        rationale: Correct. dd deletes the current line (and keeps it in a register for pasting).
+      - id: b
+        text: "`x`"
+        rationale: Wrong. x deletes only the character under the cursor.
+      - id: c
+        text: "`yy`"
+        rationale: Wrong. yy copies (yanks) the line; the file is not changed.
+      - id: d
+        text: "`D`"
+        rationale: Wrong. D deletes from the cursor to the end of the line and leaves the (possibly empty) line in place.
+    answer: [a]
+    explanation: >
+      dd deletes the current line. A count in front deletes several lines, for example 3dd. The
+      deleted text can be pasted elsewhere with p or P.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [vi, delete]
+
+  - id: 101-103.8-0008
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      You want to add a new line of text directly below the line the cursor is on and start typing
+      on it. Which single vi normal-mode key does this?
+    options:
+      - id: a
+        text: "`O`"
+        rationale: Wrong. O opens the new line above the current line.
+      - id: b
+        text: "`o`"
+        rationale: Correct. o opens a new line below the current one and enters insert mode.
+      - id: c
+        text: "`A`"
+        rationale: Wrong. A enters insert mode at the end of the current line, without a new line.
+      - id: d
+        text: "`a`"
+        rationale: Wrong. a enters insert mode just after the cursor, on the same line.
+    answer: [b]
+    explanation: >
+      o opens a line below and O opens a line above; both switch to insert mode immediately.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [vi, insert]
+
+  - id: 101-103.8-0009
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      The cursor is near the end of a long Apache configuration file. Which vi command searches
+      toward the **beginning** of the file for the word `Listen`?
+    options:
+      - id: a
+        text: "`/Listen`"
+        rationale: Wrong. / searches forward, toward the end of the file.
+      - id: b
+        text: "`:s/Listen`"
+        rationale: Wrong. :s is the substitute command for the current line; it does not search the file.
+      - id: c
+        text: "`n`"
+        rationale: Wrong. n repeats the previous search; it does not start a search for a new word.
+      - id: d
+        text: "`?Listen`"
+        rationale: Correct. ? searches backward from the cursor.
+    answer: [d]
+    explanation: >
+      /pattern searches forward and ?pattern searches backward. After either, n jumps to the next
+      match in the same direction and N to the next match in the opposite direction.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [vi, search]
+
+  - id: 101-103.8-0010
+    type: fill_in
+    difficulty: 2
+    pool: holdout
+    stem: >
+      Type the complete command that opens `/etc/hosts` in `vi` with the cursor already placed on
+      line 12, using vi's `+` start-up option.
+    fill_in:
+      accepted: ['(sudo\s+)?((/usr)?/bin/)?vim?\s+(\+12\s+/etc/hosts|/etc/hosts\s+\+12)']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      `vi +12 /etc/hosts` opens the file at line 12. A plus sign with no number (`vi + file`) opens
+      the file at its last line, and `vi +/pattern file` at the first line matching the pattern.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Introduction }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "verify block removed: vi is not installed in debian:stable-slim; behaviour checked with vim 9.1 -es instead." }
+    tags: [vi, startup]
+
+  - id: 101-103.8-0011
+    type: multi_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      Which **TWO** terminal text editors insert every character you type directly into the file,
+      giving commands through Ctrl (and Meta/Alt) key combinations instead of a separate command mode?
+    select_count: 2
+    options:
+      - id: a
+        text: vim
+        rationale: Wrong. vim, like vi, starts in normal mode and needs an insertion command before typed text appears.
+      - id: b
+        text: GNU nano
+        rationale: Correct. nano inserts keystrokes as text and uses Ctrl and Meta combinations for commands.
+      - id: c
+        text: GNU Emacs
+        rationale: Correct. Emacs inserts typed text directly and uses key chords such as Ctrl-x Ctrl-s for commands.
+      - id: d
+        text: vi
+        rationale: Wrong. vi is the classic modal editor, with separate normal and insert modes.
+    answer: [b, c]
+    explanation: >
+      vi and vim are modal: keys are commands in normal mode and text only in insert mode. nano and
+      Emacs are not modal in that sense; ordinary keys insert text and commands use modifier keys,
+      e.g. Ctrl-O/Ctrl-X in nano and Ctrl-x Ctrl-s / Ctrl-x Ctrl-c in Emacs.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Alternative Editors }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [nano, emacs, vim]
+
+  - id: 101-103.8-0012
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      You want to duplicate the current line somewhere else in the file. Which vi command copies the
+      line into a register without changing the file?
+    options:
+      - id: a
+        text: "`dd`"
+        rationale: Wrong. dd also stores the line in a register, but it removes the line from the file.
+      - id: b
+        text: "`p`"
+        rationale: Wrong. p pastes the register contents; it does not copy anything.
+      - id: c
+        text: "`yy`"
+        rationale: Correct. yy yanks (copies) the current line and leaves the file unchanged.
+      - id: d
+        text: "`x`"
+        rationale: Wrong. x deletes the character under the cursor.
+    answer: [c]
+    explanation: >
+      y is vi's copy ("yank") operator and yy yanks the whole current line. Move to the target
+      position and press p (after) or P (before) to paste it.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [vi, yank]
+
+  - id: 101-103.8-0013
+    type: multi_choice
+    difficulty: 3
+    pool: holdout
+    stem: Which **TWO** vi commands write the file to disk and then exit the editor?
+    select_count: 2
+    options:
+      - id: a
+        text: "`:wq`"
+        rationale: Correct. :wq writes the buffer and quits.
+      - id: b
+        text: "`:q!`"
+        rationale: Wrong. :q! quits without writing.
+      - id: c
+        text: "`ZZ`"
+        rationale: Correct. ZZ writes the file if it was modified and quits.
+      - id: d
+        text: "`ZQ`"
+        rationale: Wrong. ZQ quits without writing, like :q!.
+      - id: e
+        text: "`:w`"
+        rationale: Wrong. :w writes the file but stays in the editor.
+    answer: [a, c]
+    explanation: >
+      :wq, :x and ZZ all save and leave (ZZ and :x only write when there are changes). :q! and ZQ
+      leave without saving, and :w saves without leaving.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Colon Commands }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [vi, quit, ZZ]
+
+  - id: 101-103.8-0014
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      The cursor is on the first character of the line `PermitRootLogin no`. You want to add a
+      comment at the very end of that line. Which single vi key puts you in insert mode at the
+      right place?
+    options:
+      - id: a
+        text: "`A`"
+        rationale: Correct. A enters insert mode at the end of the current line, wherever the cursor is.
+      - id: b
+        text: "`a`"
+        rationale: Wrong. a inserts after the character under the cursor, here after the P.
+      - id: c
+        text: "`I`"
+        rationale: Wrong. I inserts at the beginning of the line (before the first non-blank character).
+      - id: d
+        text: "`O`"
+        rationale: Wrong. O opens a new empty line above the current one.
+    answer: [a]
+    explanation: >
+      Lower-case i and a insert before and after the cursor; the capital versions I and A insert at
+      the beginning and the end of the line.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [vi, insert]
+
+  - id: 101-103.8-0015
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: The cursor is on line 10 of a file. What does typing `3yy` in vi normal mode do?
+    options:
+      - id: a
+        text: Copies line 10 three times into the file below the cursor
+        rationale: Wrong. yy only copies into a register; nothing is added to the file until you paste.
+      - id: b
+        text: Copies line 3 into the register
+        rationale: Wrong. The count says how many lines to yank, not which line number.
+      - id: c
+        text: Deletes lines 10 to 12 and keeps them in a register
+        rationale: Wrong. Deleting lines is done with d (3dd); y only copies.
+      - id: d
+        text: Copies lines 10, 11 and 12 into a register
+        rationale: Correct. The count 3 makes yy yank the current line and the two lines after it.
+    answer: [d]
+    explanation: >
+      A number in front of a normal-mode command repeats it or extends it. 3yy yanks three lines
+      starting at the cursor, ready to be pasted with p or P.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [vi, yank, count]
+
+  - id: 101-103.8-0016
+    type: fill_in
+    difficulty: 3
+    pool: holdout
+    stem: >
+      Type a vi normal-mode command (not a colon command) that moves the cursor to the first line
+      of the file.
+    fill_in:
+      accepted: ['gg|1G|1gg']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      gg (vim) or 1G (classic vi and vim) jump to the first line; G alone jumps to the last line,
+      and a number before G jumps to that line, for example 25G. The colon command :1 does the same
+      from command-line mode.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [vi, navigation]
+
+  - id: 101-103.8-0017
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      The cursor is in the middle of a file that mentions `oldhost` several times on many of its
+      lines. Which vi command replaces
+      **every** occurrence with `newhost` throughout the file?
+    options:
+      - id: a
+        text: "`:s/oldhost/newhost/g`"
+        rationale: Wrong. Without an address, :s works on the current line only.
+      - id: b
+        text: "`:%s/oldhost/newhost/g`"
+        rationale: Correct. % addresses every line and g replaces every match on each line.
+      - id: c
+        text: "`:%s/oldhost/newhost/`"
+        rationale: Wrong. Without g, only the first match on each line is replaced.
+      - id: d
+        text: "`:.,$s/oldhost/newhost/g`"
+        rationale: Wrong. The range .,$ runs from the cursor line to the end, so lines above the cursor are skipped.
+    answer: [b]
+    explanation: >
+      The substitute command follows sed syntax: [range]s/pattern/replacement/[flags]. % means the
+      whole file (the same as 1,$), and the g flag makes it replace all matches on a line, not just
+      the first.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Colon Commands }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Distractor /oldhost/... replaced by a .,$ range (cursor position added to stem) to avoid a longest-correct giveaway." }
+    tags: [vi, substitute]
+
+  - id: 101-103.8-0018
+    type: fill_in
+    difficulty: 3
+    pool: holdout
+    stem: >
+      You searched a log file in vi with `/timeout` and pressed Enter. Type the single normal-mode
+      key that jumps to the next match in the same direction.
+    fill_in:
+      accepted: ['n']
+      match: exact
+      case_sensitive: true
+    explanation: >
+      n repeats the last search in the same direction; N repeats it in the opposite direction. After
+      a backward search with ?, n continues backward.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [vi, search]
+
+  - id: 101-103.8-0019
+    type: multi_choice
+    difficulty: 3
+    pool: holdout
+    stem: Which **TWO** statements about vim compared with the original vi are true?
+    select_count: 2
+    options:
+      - id: a
+        text: vim needs a graphical desktop session to run
+        rationale: Wrong. vim is a terminal program; a separate GUI version (gvim) exists but is optional.
+      - id: b
+        text: vim can undo a whole series of changes, not just the last one
+        rationale: Correct. vim keeps a multi-level undo history, with Ctrl-R to redo.
+      - id: c
+        text: vim uses different keys, so vi commands do not work in it
+        rationale: Wrong. vim is backward compatible with vi; vi commands behave the same way.
+      - id: d
+        text: vim can highlight the syntax of source code and configuration files
+        rationale: Correct. Syntax highlighting is one of vim's additions over vi.
+    answer: [b, d]
+    explanation: >
+      vim ("vi improved") keeps vi's commands and adds features such as syntax highlighting,
+      multi-level undo/redo and editing several files at once. Many distributions install vim (or a
+      minimal build of it) as their vi.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Introduction }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [vim]
+
+  - id: 101-103.8-0020
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      A file contains the lines shown. The cursor is on line 2 (`server1`) in normal mode, and you
+      type `ddp`. What does the file contain afterwards?
+    exhibit: |
+      # servers
+      server1
+      server2
+      server3
+    options:
+      - id: a
+        text: "`# servers`, `server2`, `server3`, `server1`"
+        rationale: Wrong. p pastes after the line the cursor is on (server2), not at the end of the file.
+      - id: b
+        text: "`# servers`, `server1`, `server1`, `server2`, `server3`"
+        rationale: Wrong. That would be the result of yyp; dd removed the original line first.
+      - id: c
+        text: "`server1`, `# servers`, `server2`, `server3`"
+        rationale: Wrong. That would need P on line 1; ddp moves the line down, not up.
+      - id: d
+        text: "`# servers`, `server2`, `server1`, `server3`"
+        rationale: Correct. dd deletes server1 and leaves the cursor on server2; p puts server1 below it.
+    answer: [d]
+    explanation: >
+      dd cuts the current line into the unnamed register, and the cursor lands on the line that
+      moved up. p then pastes the cut line below that line, so ddp swaps the current line with the
+      next one.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "verify block removed: vi is not installed in debian:stable-slim; behaviour checked with vim 9.1 -es instead." }
+    tags: [vi, delete, paste]
+
+  - id: 101-103.8-0021
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      A file contains the five lines shown. The cursor is on line 2 (`b2`) in normal mode. You type
+      `dd` and then press `.` once. Which lines remain?
+    exhibit: |
+      a1
+      b2
+      c3
+      d4
+      e5
+    options:
+      - id: a
+        text: "`a1`, `d4`, `e5`"
+        rationale: Correct. dd deletes b2; . repeats the deletion on the line now under the cursor, c3.
+      - id: b
+        text: "`a1`, `c3`, `d4`, `e5`"
+        rationale: Wrong. That ignores the . key, which repeats the last change.
+      - id: c
+        text: "`a1`, `b2`, `c3`, `d4`, `e5`"
+        rationale: Wrong. That would be the effect of u (undo), not . (repeat).
+      - id: d
+        text: "`a1`, `b2`, `e5`"
+        rationale: Wrong. The deletion starts at the cursor line (b2), so b2 is removed first.
+    answer: [a]
+    explanation: >
+      The . command repeats the last change. After dd removes b2, the cursor sits on c3, and . removes
+      that line too.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "verify block removed: vi is not installed in debian:stable-slim; behaviour checked with vim 9.1 -es instead." }
+    tags: [vi, repeat]
+
+  - id: 101-103.8-0022
+    type: multi_choice
+    difficulty: 4
+    pool: holdout
+    stem: Which **TWO** statements about leaving vim with `:x`, `:wq` and `:e` are true?
+    select_count: 2
+    options:
+      - id: a
+        text: "`:x` throws away unsaved changes and quits"
+        rationale: Wrong. :x saves changes before quitting; :q! is the one that discards them.
+      - id: b
+        text: "`:e` saves the file and quits, just like `:x`"
+        rationale: Wrong. :e edits (reloads) a file and never quits; with unsaved changes it refuses with E37.
+      - id: c
+        text: "`:wq` writes the file even when nothing has changed"
+        rationale: Correct. :wq always writes, so the file's modification time is updated.
+      - id: d
+        text: "`:x` writes the file only if the buffer was modified"
+        rationale: Correct. :x (like ZZ) skips the write when there are no changes, then quits.
+    answer: [c, d]
+    explanation: >
+      :wq always writes and quits; :x and ZZ write only when needed and then quit. :e is the edit
+      command: without a file name it reloads the current file, and it will not abandon unsaved
+      changes unless written as :e!.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Colon Commands }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [vi, quit]
+
+  - id: 101-103.8-0023
+    type: fill_in
+    difficulty: 4
+    pool: holdout
+    stem: >
+      The cursor is in the middle of a line. Type a vi normal-mode command that deletes everything
+      from the cursor to the end of the line and stays in normal mode.
+    fill_in:
+      accepted: ['D|d\$']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      D is a shortcut for d$: the d operator combined with the $ (end of line) motion. C and c$ do
+      the same deletion but then enter insert mode.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [vi, delete]
+
+  - id: 101-103.8-0024
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      Your shell environment contains `VISUAL=/usr/bin/vim` and `EDITOR=/usr/bin/nano`, both
+      exported. You run `crontab -e`. Which editor opens?
+    options:
+      - id: a
+        text: nano, because EDITOR is checked before VISUAL
+        rationale: Wrong. crontab checks VISUAL first and only uses EDITOR when VISUAL is unset.
+      - id: b
+        text: vim, because VISUAL is checked before EDITOR
+        rationale: Correct. When both are set, crontab (like sudoedit) uses VISUAL.
+      - id: c
+        text: None; crontab reports that the two settings conflict
+        rationale: Wrong. There is no conflict check; one variable simply takes precedence.
+      - id: d
+        text: The editor that the system-wide default editor link points to
+        rationale: Wrong. The system default (e.g. sensible-editor or /usr/bin/vi) is only a fallback when neither variable is set.
+    answer: [b]
+    explanation: >
+      Programs that launch an editor normally try VISUAL, then EDITOR, then a built-in default. To
+      be sure of the result, set both, or unset the one you do not want.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Alternative Editors }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [EDITOR, VISUAL, crontab]
+
+  - id: 101-103.8-0025
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      After many edits you decide the file was better as it is on disk. You want to drop every
+      unsaved change and start again from the saved version, without leaving vim. Which command does this?
+    options:
+      - id: a
+        text: "`:q!`"
+        rationale: Wrong. :q! discards the changes, but it also exits the editor.
+      - id: b
+        text: "`u`"
+        rationale: Wrong. One u undoes only the most recent change, not all of them.
+      - id: c
+        text: "`:e!`"
+        rationale: Correct. :e! reloads the file from disk, discarding all changes in the buffer.
+      - id: d
+        text: "`:w!`"
+        rationale: Wrong. :w! writes the edited buffer over the saved file, the opposite of what you want.
+    answer: [c]
+    explanation: >
+      :e (edit) loads a file into the buffer; with no file name it reloads the current one. The ! lets
+      it throw away unsaved changes, which plain :e refuses to do.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Colon Commands }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "verify block removed: vi is not installed in debian:stable-slim; behaviour checked with vim 9.1 -es instead." }
+    tags: [vi, revert]
+
+  - id: 101-103.8-0026
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      A file contains the lines shown. The cursor is on the first character of line 1 in normal
+      mode. You type `/Listen`, press Enter, then type `n` and `dd`. Which line is deleted?
+    exhibit: |
+      Listen 80
+      ServerName www.example.com
+      # Listen 8080
+      DocumentRoot /var/www
+      Listen 443
+    options:
+      - id: a
+        text: "`Listen 443`"
+        rationale: Correct. The search starts after the cursor and lands on line 3; n moves on to line 5, which dd deletes.
+      - id: b
+        text: "`# Listen 8080`"
+        rationale: Wrong. That is where /Listen lands; n then moves on to the next match.
+      - id: c
+        text: "`Listen 80`"
+        rationale: Wrong. A forward search starts after the cursor position, so the match under the cursor is skipped at first.
+      - id: d
+        text: "`DocumentRoot /var/www`"
+        rationale: Wrong. That line does not contain Listen, so neither the search nor n stops there.
+    answer: [a]
+    explanation: >
+      A forward search looks for the next match after the cursor, so /Listen goes to line 3
+      (`# Listen 8080`). n repeats the search forward to line 5, and dd deletes that line. Only
+      after another n would the search wrap around to line 1.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [vi, search]
+
+  - id: 101-103.8-0027
+    type: multi_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      You made changes in vi that you do **not** want to keep. Which **TWO** commands exit the
+      editor and leave the file on disk as it was?
+    select_count: 2
+    options:
+      - id: a
+        text: "`:q!`"
+        rationale: Correct. :q! quits and discards unsaved changes.
+      - id: b
+        text: "`ZQ`"
+        rationale: Correct. ZQ is the normal-mode equivalent of :q!.
+      - id: c
+        text: "`ZZ`"
+        rationale: Wrong. ZZ writes the changes (when there are any) before quitting.
+      - id: d
+        text: "`:x`"
+        rationale: Wrong. :x writes the modified buffer and then quits.
+      - id: e
+        text: "`:wq`"
+        rationale: Wrong. :wq writes the file and then quits.
+    answer: [a, b]
+    explanation: >
+      ZZ and ZQ are the normal-mode ways to leave vi: ZZ saves (like :x), ZQ discards (like :q!).
+      The colon forms :q! on one side and :x / :wq on the other do the same jobs.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "verify block removed: vi is not installed in debian:stable-slim; behaviour checked with vim 9.1 -es instead." }
+    tags: [vi, quit, ZZ]
+
+  - id: 101-103.8-0028
+    type: fill_in
+    difficulty: 5
+    pool: holdout
+    stem: >
+      An interface was renamed. Type the vi colon command that replaces every occurrence of `eth0`
+      with `ens3` on every line of the open file, without asking for confirmation.
+    fill_in:
+      accepted: [':?\s*(%|1,\$)\s*s(u(b(s(t(i(t(u(te?)?)?)?)?)?)?)?)?(?P<d>[/#|!@+,])eth0(?P=d)ens3(?P=d)g']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      `:%s/eth0/ens3/g` — % is the range for the whole file (the same as 1,$), s is substitute, and
+      the g flag replaces all matches on each line. Adding c (gc) would ask for confirmation at each
+      match. Another delimiter, such as #, works too.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Colon Commands }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "verify block removed: vi is not installed in debian:stable-slim; behaviour checked with vim 9.1 -es instead." }
+    tags: [vi, substitute]
+
+  - id: 101-103.8-0029
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      In a 20-line file you want to replace **every** `a` with `A` on lines 2 and 3 only, leaving the
+      other lines untouched. Which command does exactly that?
+    options:
+      - id: a
+        text: "`:%s/a/A/g`"
+        rationale: Wrong. % selects every line of the file, not just lines 2 and 3.
+      - id: b
+        text: "`:2,3s/a/A/`"
+        rationale: Wrong. Without the g flag only the first a on each of the two lines is replaced.
+      - id: c
+        text: "`:2,$s/a/A/g`"
+        rationale: Wrong. The range 2,$ runs from line 2 to the last line, not just to line 3.
+      - id: d
+        text: "`:2,3s/a/A/g`"
+        rationale: Correct. The range 2,3 limits the substitution to those lines, and g replaces every match on them.
+    answer: [d]
+    explanation: >
+      vi's substitute command accepts sed-style addresses: a single line number, a range such as
+      2,3, or % for the whole file. The g flag is still needed to go past the first match on each line.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Colon Commands }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Distractor :2s replaced by :2,$s to avoid a longest-correct giveaway. verify block removed: vi is not installed in debian:stable-slim; behaviour checked with vim 9.1 -es instead." }
+    tags: [vi, substitute]
+
+  - id: 101-103.8-0030
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      A line reads `one two three`, and the cursor is on its first character in normal mode. You
+      type `dwwP`. What does the line read afterwards?
+    options:
+      - id: a
+        text: "`two three one `"
+        rationale: Wrong. P pastes before the cursor, not at the end of the line.
+      - id: b
+        text: "`two one three`"
+        rationale: Correct. dw cuts "one ", w moves to "three", and P pastes "one " in front of it.
+      - id: c
+        text: "`one two three`"
+        rationale: Wrong. That would happen with dwP, which pastes the word back where it came from.
+      - id: d
+        text: "`one two one three`"
+        rationale: Wrong. dw removed "one " from the start of the line, so it is not there any more.
+    answer: [b]
+    explanation: >
+      dw deletes from the cursor to the start of the next word, including the space, and keeps the
+      text in a register. The cursor is then on "two"; w moves to "three"; P puts the deleted text
+      before the cursor, giving `two one three`.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Implausible distractor replaced. verify block removed: vi is not installed in debian:stable-slim; behaviour checked with vim 9.1 -es instead." }
+    tags: [vi, delete, paste]
+
+  # ---------------------------------------------------------------- practice (study mode)
+
+  - id: 101-103.8-0031
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: In vi normal mode, which key moves the cursor up by one line?
+    options:
+      - id: a
+        text: "`h`"
+        rationale: Wrong. h moves one character to the left.
+      - id: b
+        text: "`l`"
+        rationale: Wrong. l moves one character to the right.
+      - id: c
+        text: "`k`"
+        rationale: Correct. k moves up one line.
+      - id: d
+        text: "`j`"
+        rationale: Wrong. j moves down one line.
+    answer: [c]
+    explanation: h, j, k and l move left, down, up and right in normal mode.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [vi, navigation]
+
+  - id: 101-103.8-0032
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: A colleague new to vim asks how to practise the basic commands. What does the `vimtutor` command provide?
+    options:
+      - id: a
+        text: A hands-on lesson opened in vim, on a copy you can edit freely
+        rationale: Correct. vimtutor opens a working copy of a tutorial file in vim for practice.
+      - id: b
+        text: A converter that turns a vi configuration into a ~/.vimrc file
+        rationale: Wrong. No such conversion is done; vim reads ~/.vimrc as written.
+      - id: c
+        text: A tool that recovers files from vim swap files after a crash
+        rationale: Wrong. Recovery is done with vim -r (or from the swap-file prompt).
+      - id: d
+        text: A viewer that shows vim's help pages without opening the editor
+        rationale: Wrong. vim's help is read inside vim with :help.
+    answer: [a]
+    explanation: >
+      vimtutor starts vim on a temporary copy of a step-by-step tutorial, so you can try every
+      command on real text without risk.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Colon Commands }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [vimtutor]
+
+  - id: 101-103.8-0033
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: A word has a stray extra letter, and the cursor is on that letter. Which vi command removes just that one character?
+    options:
+      - id: a
+        text: "`dd`"
+        rationale: Wrong. dd deletes the whole line.
+      - id: b
+        text: "`u`"
+        rationale: Wrong. u undoes the last change.
+      - id: c
+        text: "`p`"
+        rationale: Wrong. p pastes text from a register.
+      - id: d
+        text: "`x`"
+        rationale: Correct. x deletes the character under the cursor.
+    answer: [d]
+    explanation: x deletes the character under the cursor; with a count (3x) it deletes several characters.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [vi, delete]
+
+  - id: 101-103.8-0034
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: >
+      You yanked a line with `yy` and moved the cursor to another line. Which key pastes the copied
+      line **above** the line the cursor is on?
+    options:
+      - id: a
+        text: "`p`"
+        rationale: Wrong. p pastes a yanked line below the current line.
+      - id: b
+        text: "`P`"
+        rationale: Correct. P pastes a yanked line above the current line.
+      - id: c
+        text: "`yy`"
+        rationale: Wrong. yy would yank the current line, replacing what you copied.
+      - id: d
+        text: "`O`"
+        rationale: Wrong. O opens an empty line above and enters insert mode; it does not paste.
+    answer: [b]
+    explanation: p puts register contents after the cursor (below, for whole lines), P puts them before (above).
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "verify block removed: vi is not installed in debian:stable-slim; behaviour checked with vim 9.1 -es instead." }
+    tags: [vi, paste]
+
+  - id: 101-103.8-0035
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: You pressed `u` in vim once too often and undid a change you wanted. Which key brings that change back?
+    options:
+      - id: a
+        text: "`Ctrl-U`"
+        rationale: Wrong. In normal mode Ctrl-U scrolls the window up half a screen.
+      - id: b
+        text: "`.`"
+        rationale: Wrong. . repeats the last change at the cursor; it does not redo an undone change.
+      - id: c
+        text: "`Ctrl-R`"
+        rationale: Correct. Ctrl-R redoes the change that u undid.
+      - id: d
+        text: "`U`"
+        rationale: Wrong. U undoes all recent changes on the last changed line; it is not redo.
+    answer: [c]
+    explanation: In vim, u undoes and Ctrl-R redoes, through several levels of history.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Distractor u replaced by Ctrl-U to avoid a longest-correct giveaway." }
+    tags: [vim, undo]
+
+  - id: 101-103.8-0036
+    type: single_choice
+    difficulty: 3
+    pool: practice
+    stem: >
+      The cursor is somewhere in the middle of a line, and you want to type text in front of the
+      line's first non-blank character. Which single vi key enters insert mode there?
+    options:
+      - id: a
+        text: "`I`"
+        rationale: Correct. I inserts before the first non-blank character of the line.
+      - id: b
+        text: "`i`"
+        rationale: Wrong. i inserts before the cursor, here in the middle of the line.
+      - id: c
+        text: "`O`"
+        rationale: Wrong. O opens a new line above instead of inserting on this one.
+      - id: d
+        text: "`0`"
+        rationale: Wrong. 0 only moves the cursor to column one; it does not enter insert mode.
+    answer: [a]
+    explanation: i and a insert at the cursor; I and A insert at the start and end of the line.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [vi, insert]
+
+  - id: 101-103.8-0037
+    type: single_choice
+    difficulty: 3
+    pool: practice
+    stem: >
+      The cursor is on the lower-case `w` of `Hello world`. Which vi command turns it into a capital
+      `W` and leaves you in normal mode?
+    options:
+      - id: a
+        text: "`sW`"
+        rationale: Wrong. s replaces the character but leaves you in insert mode until Esc.
+      - id: b
+        text: "`RW`"
+        rationale: Wrong. R starts replace mode, which keeps overwriting characters until Esc.
+      - id: c
+        text: "`cwW`"
+        rationale: Wrong. cw replaces the whole word "world" with W and stays in insert mode.
+      - id: d
+        text: "`rW`"
+        rationale: Correct. r replaces the single character under the cursor and stays in normal mode.
+    answer: [d]
+    explanation: >
+      r followed by a character overwrites one character and returns straight to normal mode. s, R
+      and c-commands all leave you in an insert-type mode.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [vi, replace]
+
+  - id: 101-103.8-0038
+    type: single_choice
+    difficulty: 3
+    pool: practice
+    stem: The cursor is in the middle of the word `configuration`. Which vi motion moves it back to the first letter of that word?
+    options:
+      - id: a
+        text: "`w`"
+        rationale: Wrong. w moves forward to the start of the next word.
+      - id: b
+        text: "`b`"
+        rationale: Correct. b moves back to the start of the current (or previous) word.
+      - id: c
+        text: "`e`"
+        rationale: Wrong. e moves forward to the end of the word.
+      - id: d
+        text: "`$`"
+        rationale: Wrong. $ moves to the end of the line.
+    answer: [b]
+    explanation: w and b move forward and back by word starts; e moves to word ends. W, B and E do the same treating punctuation as part of the word.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [vi, navigation]
+
+  - id: 101-103.8-0039
+    type: single_choice
+    difficulty: 4
+    pool: practice
+    stem: >
+      The line shown starts with four spaces, and the cursor is on its last character. Which key
+      sequence deletes the letter `i` of `indented`?
+    exhibit: "    indented text"
+    options:
+      - id: a
+        text: "`0x`"
+        rationale: Wrong. 0 goes to column one, which is a space, so x deletes a space.
+      - id: b
+        text: "`Ix`"
+        rationale: Wrong. I enters insert mode, so x is typed into the text instead of deleting.
+      - id: c
+        text: "`^x`"
+        rationale: Correct. ^ goes to the first non-blank character, the i, and x deletes it.
+      - id: d
+        text: "`$x`"
+        rationale: Wrong. $ stays at the end of the line, so x deletes the final t.
+    answer: [c]
+    explanation: 0 goes to the very first column, ^ to the first non-blank character, and $ to the end of the line.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "verify block removed: vi is not installed in debian:stable-slim; behaviour checked with vim 9.1 -es instead." }
+    tags: [vi, navigation]
+
+  - id: 101-103.8-0040
+    type: single_choice
+    difficulty: 3
+    pool: practice
+    stem: In GNU nano, which key combination cuts the current line (so it can be pasted with Ctrl-U)?
+    options:
+      - id: a
+        text: "`Ctrl-K`"
+        rationale: Correct. Ctrl-K cuts the current line (or the marked selection).
+      - id: b
+        text: "`Ctrl-X`"
+        rationale: Wrong. Ctrl-X exits nano.
+      - id: c
+        text: "`Ctrl-O`"
+        rationale: Wrong. Ctrl-O writes the file out (saves it).
+      - id: d
+        text: "`Ctrl-W`"
+        rationale: Wrong. Ctrl-W searches ("Where Is").
+    answer: [a]
+    explanation: >
+      nano lists its main shortcuts at the bottom of the screen: ^K Cut, ^U Paste, ^O Write Out,
+      ^X Exit, ^W Where Is, ^\ Replace, M-U Undo, M-E Redo.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Alternative Editors }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [nano]
+
+  - id: 101-103.8-0041
+    type: multi_choice
+    difficulty: 3
+    pool: practice
+    stem: Which **TWO** vi commands create a new empty line and put you in insert mode on it?
+    select_count: 2
+    options:
+      - id: a
+        text: "`A`"
+        rationale: Wrong. A inserts at the end of the current line; no new line is created.
+      - id: b
+        text: "`o`"
+        rationale: Correct. o opens a new line below the current one.
+      - id: c
+        text: "`i`"
+        rationale: Wrong. i inserts before the cursor on the current line.
+      - id: d
+        text: "`O`"
+        rationale: Correct. O opens a new line above the current one.
+    answer: [b, d]
+    explanation: o opens a line below, O a line above; both enter insert mode at once.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [vi, insert]
+
+  - id: 101-103.8-0042
+    type: multi_choice
+    difficulty: 4
+    pool: practice
+    stem: Which **TWO** statements about the `EDITOR` variable in bash are true?
+    select_count: 2
+    options:
+      - id: a
+        text: "`export EDITOR=nano` makes programs started from that shell use nano"
+        rationale: Correct. Exported variables are passed to child processes such as crontab.
+      - id: b
+        text: "`export EDITOR=nano` at the prompt changes the editor for other users too"
+        rationale: Wrong. It only affects the current shell and the processes it starts.
+      - id: c
+        text: "An `export EDITOR=nano` line in ~/.bash_profile applies it to later login sessions"
+        rationale: Correct. bash reads ~/.bash_profile at each login, so the setting is re-applied every time.
+      - id: d
+        text: "EDITOR must hold a full path such as /usr/bin/nano, not just a name"
+        rationale: Wrong. A plain command name is looked up in PATH like any other command.
+    answer: [a, c]
+    explanation: >
+      Setting and exporting EDITOR changes the preferred editor for the current session only. To
+      keep it, put the export line in a shell start-up file such as ~/.bash_profile.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Alternative Editors }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [EDITOR]
+
+  - id: 101-103.8-0043
+    type: multi_choice
+    difficulty: 5
+    pool: practice
+    stem: >
+      The cursor is on line 1 of the four-line file shown. Which **TWO** key sequences put a copy of
+      line 1 directly below line 2 (so the file becomes L1, L2, L1, L3, L4)?
+    exhibit: |
+      L1
+      L2
+      L3
+      L4
+    select_count: 2
+    options:
+      - id: a
+        text: "`yyjP`"
+        rationale: Wrong. On line 2, P pastes above it, giving L1, L1, L2, L3, L4.
+      - id: b
+        text: "`yyjp`"
+        rationale: Correct. j moves to line 2 and p pastes the yanked line below it.
+      - id: c
+        text: "`yyjjP`"
+        rationale: Correct. jj moves to line 3 and P pastes above it, which is the same place.
+      - id: d
+        text: "`yyGp`"
+        rationale: Wrong. G moves to the last line, so p pastes after L4.
+    answer: [b, c]
+    explanation: >
+      For whole lines, p pastes below the cursor line and P above it. Pasting below line 2 and
+      pasting above line 3 put the text in the same place.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "verify block removed: vi is not installed in debian:stable-slim; behaviour checked with vim 9.1 -es instead." }
+    tags: [vi, yank, paste]
+
+  - id: 101-103.8-0044
+    type: fill_in
+    difficulty: 2
+    pool: practice
+    stem: Type the vi colon command that saves the file but keeps it open for more editing.
+    fill_in:
+      accepted: [':?\s*w(r(i(te?)?)?)?']
+      match: regex
+      case_sensitive: true
+    explanation: :w (short for :write) writes the buffer to the file; :w! forces the write, and :wq writes and quits.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Colon Commands }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+    tags: [vi, write]
+
+  - id: 101-103.8-0045
+    type: fill_in
+    difficulty: 4
+    pool: practice
+    stem: >
+      Type vi normal-mode keystrokes (no colon command) that delete four whole lines, starting with
+      the line the cursor is on, in a single command.
+    fill_in:
+      accepted: ['4dd|d4d|d3j']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      A count before dd repeats it: 4dd deletes the current line and the three below. d4d and d3j
+      (delete down three more lines) give the same result.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "verify block removed: vi is not installed in debian:stable-slim; behaviour checked with vim 9.1 -es instead." }
+    tags: [vi, delete, count]
