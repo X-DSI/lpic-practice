@@ -189,11 +189,16 @@ def test_an_infeasible_difficulty_mix_is_reported() -> None:
     )
 
 
-def test_the_real_101_bank_fills_ten_mocks(tmp_path: Path) -> None:
+def test_the_committed_101_mocks_are_the_assembler_output(tmp_path: Path) -> None:
+    # The mocks in content/ are generated, not hand-edited: re-assembling the real bank with the
+    # recorded seed must reproduce them byte for byte.
+    committed = sorted((ROOT / "content" / "101" / "mocks").glob("*.yaml"))
+    assert [f.name for f in committed] == [f"mock-{k:02d}.yaml" for k in range(1, 11)]
+    seed = yaml.safe_load(committed[0].read_text(encoding="utf-8"))["assembly_seed"]
     content = tmp_path / "content"
     shutil.copytree(ROOT / "content", content)
-    assert main(["101", "--content-dir", str(content)]) == 0
-    assert len(mock_files(content)) == 10
+    assert main(["101", "--content-dir", str(content), "--seed", str(seed)]) == 0
+    assert [f.read_bytes() for f in mock_files(content)] == [f.read_bytes() for f in committed]
     errors, _ = validate(content, strict=True)
     assert errors == []
 

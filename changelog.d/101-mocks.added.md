@@ -1,0 +1,1 @@
+- The 10 exam 101 mock exams (`content/101/mocks/`), assembled with seed 1. CI now validates content with `--strict`, and a test checks that the committed mocks are exactly the assembler's output.

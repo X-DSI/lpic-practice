@@ -21,7 +21,7 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install jsonschema pyyaml
-      - run: python tools/validate.py
+      - run: python tools/validate.py --strict
 
   engine:
     name: Lint and test engine
