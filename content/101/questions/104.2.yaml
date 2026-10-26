@@ -36,9 +36,10 @@ questions:
       command: df /
       expect: { exit_code: 0, stdout_contains: "Mounted on" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [df]
 
   - id: 101-104.2-0002
@@ -67,9 +68,10 @@ questions:
       boot-time check makes it run xfs_repair.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.2", lesson: 1, section: Maintaining XFS Filesystems }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Explanation corrected: fsck.xfs normally exits 0 without checking, but runs xfs_repair on a forced non-interactive boot check." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [xfs_repair, xfs]
 
   - id: 101-104.2-0003
@@ -97,9 +99,10 @@ questions:
       remembering where it stopped for the next run.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.2", lesson: 1, section: Maintaining XFS Filesystems }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [xfs_fsr, xfs]
 
   - id: 101-104.2-0004
@@ -131,9 +134,10 @@ questions:
       command: df -i / | head -n 1
       expect: { exit_code: 0, stdout_contains: "IUse%" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [df, inodes]
 
   - id: 101-104.2-0005
@@ -163,9 +167,10 @@ questions:
       continue" when asked to repair a mounted filesystem.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.2", lesson: 1, section: "Maintaining ext2, ext3 and ext4 Filesystems" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [e2fsck, fsck, umount]
 
   - id: 101-104.2-0006
@@ -197,9 +202,10 @@ questions:
       command: du -h -d 1 /var | tail -n 1
       expect: { exit_code: 0, stdout_regex: "/var$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [du]
 
   - id: 101-104.2-0007
@@ -229,9 +235,10 @@ questions:
       filesystem is mounted.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.2", lesson: 1, section: Maintaining XFS Filesystems }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [xfs_db, xfs]
 
   - id: 101-104.2-0008
@@ -261,9 +268,10 @@ questions:
       an inode. It opens the filesystem read-only unless -w is given.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.2", lesson: 1, section: Fine Tuning an ext Filesystem }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [debugfs, ext4]
 
   - id: 101-104.2-0009
@@ -293,9 +301,10 @@ questions:
       every block group, including where the backup superblocks are.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.2", lesson: 1, section: Fine Tuning an ext Filesystem }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [tune2fs, dumpe2fs, superblock]
 
   - id: 101-104.2-0010
@@ -306,7 +315,7 @@ questions:
       `e2fsck /dev/sdb1` prints `/dev/sdb1: clean, ...` and exits without checking anything. Type
       the `e2fsck` option that makes it check the filesystem even though it is marked clean.
     fill_in:
-      accepted: ['((sudo\s+)?((/usr)?/s?bin/)?(e2fsck|fsck(\.ext[234])?)\s+)?-(f[npy]?|[npy]f)(\s+/dev/sdb1)?']
+      accepted: ['((sudo\s+)?((/usr)?/s?bin/)?(e2fsck|fsck(\.ext[234])?)\s+)?(-[npy]\s+)?-(f[npy]?|[npy]f)(\s+-[npy])?(\s+/dev/sdb1)?']
       match: regex
       case_sensitive: true
     explanation: >
@@ -314,9 +323,10 @@ questions:
       (force) is given. -f is often combined with -n (report only) or -y (fix everything).
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.2", lesson: 1, section: "Maintaining ext2, ext3 and ext4 Filesystems" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Also accept -f combined with -n, -p or -y (e.g. -fy), which also force the check." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Regex now also accepts -f with a separate -n/-p/-y in either order. Text supplied by the reviewer; verified by the reviewer." }
     tags: [e2fsck]
 
   - id: 101-104.2-0011
@@ -347,9 +357,10 @@ questions:
       still running other services.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.2", lesson: 1, section: Maintaining XFS Filesystems }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Rewritten: the original (xfs_repair -n to check without changes) restated a lesson Guided Exercise; now tests -m against -l, -r, -t." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [xfs_repair, xfs]
 
   - id: 101-104.2-0012
@@ -367,8 +378,8 @@ questions:
         text: "`df -x tmpfs`"
         rationale: Correct. -x (--exclude-type) removes filesystems of the given type from the listing.
       - id: c
-        text: "`df -T tmpfs`"
-        rationale: Wrong. -T only adds a type column; "tmpfs" is then read as a file name and df reports that it does not exist.
+        text: "`df -a`"
+        rationale: Wrong. -a adds pseudo, duplicate and inaccessible filesystems to the listing; it excludes nothing.
       - id: d
         text: "`du -x tmpfs`"
         rationale: Wrong. du -x stays on one filesystem while summing a directory; here it would look for a file named tmpfs.
@@ -381,9 +392,10 @@ questions:
       command: df -x tmpfs -x devtmpfs | head -n 1
       expect: { exit_code: 0, stdout_contains: "Filesystem" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Option c changed from df -T to df -a, further from Explorational Exercise 5. Text supplied by the reviewer; verified by the reviewer." }
     tags: [df]
 
   - id: 101-104.2-0013
@@ -405,9 +417,10 @@ questions:
       count instead, and -c 0 or -c -1 turns the mount-count check off.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.2", lesson: 1, section: Fine Tuning an ext Filesystem }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [tune2fs, mount-count]
 
   - id: 101-104.2-0014
@@ -445,9 +458,10 @@ questions:
       number of inodes is fixed when the filesystem is created.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.2", lesson: 1, section: Checking for Free Space }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [df, inodes, troubleshooting]
 
   - id: 101-104.2-0015
@@ -488,9 +502,10 @@ questions:
       with -y, finishes the job: here it reconnects the unattached inode into lost+found.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.2", lesson: 1, section: "Maintaining ext2, ext3 and ext4 Filesystems" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [e2fsck, troubleshooting]
 
   - id: 101-104.2-0016
@@ -527,9 +542,10 @@ questions:
       already mounted read-write. `fsck -A -R -N` shows the plan without running anything.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.2", lesson: 1, section: "Maintaining ext2, ext3 and ext4 Filesystems" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [fsck, fstab]
 
   - id: 101-104.2-0017
@@ -545,11 +561,7 @@ questions:
       Phase 2 - using internal log
               - zero log...
       ERROR: The filesystem has valuable metadata changes in a log which needs to
-      be replayed.  Mount the filesystem to replay the log, and unmount it before
-      re-running xfs_repair.  If you are unable to mount the filesystem, then use
-      the -L option to destroy the log and attempt a repair.
-      Note that destroying the log may cause corruption -- please attempt a mount
-      of the filesystem before doing this.
+      be replayed.  [...]
     options:
       - id: a
         text: Run `xfs_repair -L /dev/sdc1`
@@ -570,9 +582,10 @@ questions:
       do you fall back to xfs_repair -L, accepting possible data loss.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.2", lesson: 1, section: Maintaining XFS Filesystems }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Exhibit trimmed after the replay sentence; the full message named the answer." }
     tags: [xfs_repair, xfs, log, troubleshooting]
 
   - id: 101-104.2-0018
@@ -585,7 +598,7 @@ questions:
     exhibit: |
       # df -h /var/log
       Filesystem      Size  Used Avail Use% Mounted on
-      /dev/sdb2        56M   31M   25M  56% /var/log
+      /dev/sdb2        56M   31M   22M  59% /var/log
       # du -sh /var/log
       20K     /var/log
     options:
@@ -609,9 +622,10 @@ questions:
       finding it with `lsof +L1`) releases the space.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.2", lesson: 1, section: Checking for Free Space }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "df line replaced with real output from a default 64 MiB ext4 (reserved blocks shown). Text supplied by the reviewer; verified by the reviewer." }
     tags: [df, du, troubleshooting]
 
   - id: 101-104.2-0019
@@ -653,9 +667,10 @@ questions:
       them and, after the check, updates the primary superblock.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.2", lesson: 1, section: "Maintaining ext2, ext3 and ext4 Filesystems" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [e2fsck, mke2fs, dumpe2fs, superblock]
 
   - id: 101-104.2-0020
@@ -686,9 +701,10 @@ questions:
       Plan the inode density with mke2fs for filesystems that will hold many small files.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.2", lesson: 1, section: Fine Tuning an ext Filesystem }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [mke2fs, tune2fs, inodes]
 
   # --------------------------------------------------------------------------- practice (CLI)
@@ -717,9 +733,10 @@ questions:
       front end can find it by filesystem type.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.2", lesson: 1, section: "Maintaining ext2, ext3 and ext4 Filesystems" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Rationale for d corrected (fsck.xfs is not purely do-nothing); verify block removed, e2fsprogs may be missing from debian:stable-slim." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [fsck, e2fsck]
 
   - id: 101-104.2-0022
@@ -747,9 +764,10 @@ questions:
       directly.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.2", lesson: 1, section: "Maintaining ext2, ext3 and ext4 Filesystems" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [fsck]
 
   - id: 101-104.2-0023
@@ -779,9 +797,10 @@ questions:
       and more.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.2", lesson: 1, section: Fine Tuning an ext Filesystem }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [tune2fs]
 
   - id: 101-104.2-0024
@@ -808,9 +827,10 @@ questions:
       erases whatever was there, so make sure the device is the right one.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.2", lesson: 1, section: "Maintaining ext2, ext3 and ext4 Filesystems" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [mke2fs]
 
   - id: 101-104.2-0025
@@ -847,9 +867,10 @@ questions:
       xfs_repair.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.2", lesson: 1, section: Maintaining XFS Filesystems }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Option b changed from fsck -f to fsck -N: fsck.xfs -f runs xfs_repair when stdin is not a terminal, so it was arguably right." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [fsck, xfs_repair, xfs]
 
   - id: 101-104.2-0026
@@ -873,9 +894,10 @@ questions:
       command: du -s /etc | wc -l
       expect: { exit_code: 0, stdout_regex: "^1\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Also accept -d 0 / --max-depth=0 (same single-line result) and forms with -h." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [du]
 
   - id: 101-104.2-0027
@@ -904,9 +926,10 @@ questions:
       remount-ro stops further writes as soon as an error is detected; panic halts the system.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.2", lesson: 1, section: Fine Tuning an ext Filesystem }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [tune2fs]
 
   - id: 101-104.2-0028
@@ -939,9 +962,10 @@ questions:
       needs -w, and e2fsck should be run after any change made with debugfs.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.2", lesson: 1, section: Fine Tuning an ext Filesystem }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [debugfs]
 
   - id: 101-104.2-0029
@@ -984,9 +1008,10 @@ questions:
       by the user. Boot scripts use it to decide what to do next.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.2", lesson: 1, section: "Maintaining ext2, ext3 and ext4 Filesystems" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [e2fsck, exit-status]
 
   - id: 101-104.2-0030
@@ -1020,7 +1045,8 @@ questions:
       command: df --output=target,fstype,ipcent / | head -n 1
       expect: { exit_code: 0, stdout_regex: "^Mounted on +Type +IUse%" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [df]

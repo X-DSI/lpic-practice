@@ -30,9 +30,10 @@ questions:
       slots is used for an extended partition, which acts as a container for logical partitions.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Primary vs Extended Partitions }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [mbr, primary-partition]
 
   - id: 101-104.1-0002
@@ -61,9 +62,10 @@ questions:
       Swap is not a filesystem, so the mkfs front end has no swap helper.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Creating Swap Partitions }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "mkfs -t swap tested: \"failed to execute mkfs.swap\"." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [mkswap, swap]
 
   - id: 101-104.1-0003
@@ -93,9 +95,10 @@ questions:
       quitting.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Managing Partitions with GNU Parted }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [parted, fdisk, gdisk]
 
   - id: 101-104.1-0004
@@ -124,9 +127,10 @@ questions:
       backup header and table at the end of the disk for recovery.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Understanding MBR and GPT }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "128 entries checked with gdisk 1.0.10 on a test image." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [gpt, mbr]
 
   - id: 101-104.1-0005
@@ -155,9 +159,10 @@ questions:
       that already has partitions throws the old table away, and parted does it immediately.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Creating a Partition Table on an Empty Disk }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "Distractors tested with parted 3.6 on a blank image: all three fail." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [parted, mklabel, gpt]
 
   - id: 101-104.1-0006
@@ -187,9 +192,10 @@ questions:
       mkswap still has to prepare it.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Changing the Partition Type }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "Codes checked in fdisk 2.39.3 (l) and gdisk 1.0.10 (L)." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [fdisk, partition-type, swap]
 
   - id: 101-104.1-0007
@@ -217,9 +223,10 @@ questions:
       same pool.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Managing Subvolumes }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "mount -o subvol=data tested on a loop-mounted Btrfs image." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [btrfs, subvolume]
 
   - id: 101-104.1-0008
@@ -250,9 +257,10 @@ questions:
       FAT32's 4 GiB.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Creating an exFAT Filesystem }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [exfat, vfat, mkfs]
 
   - id: 101-104.1-0009
@@ -263,7 +271,7 @@ questions:
       Before formatting `/dev/sdb1`, you want `mkfs.ext4` to show what it would create (block size,
       inode count, superblock backups) without writing anything. Type the option that does this.
     fill_in:
-      accepted: ['((sudo\s+)?((/usr)?/s?bin/)?(mkfs\.ext4|mke2fs\s+-t\s+ext4)\s+((?!-)\S+\s+)?)?-n(\s+(?!-)\S+)?']
+      accepted: ['((sudo\s+)?((/usr)?/s?bin/)?(mkfs\.ext4|(mke2fs|mkfs)\s+-t\s+ext4)\s+((?!-)\S+\s+)?)?-n(\s+(?!-)\S+)?']
       match: regex
       case_sensitive: true
     explanation: >
@@ -272,9 +280,10 @@ questions:
       existing filesystem are, if it was made with the same parameters.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Command Line Parameters }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "mkfs.ext4 -n tested on an ext2 image: output printed, filesystem type unchanged. Matching tested: -n, mkfs.ext4 -n, mkfs.ext4 -n /dev/sdb1, sudo mkfs.ext4 -n /dev/sdb1, mke2fs -t ext4 -n /dev/sdb1, /sbin/mkfs.ext4 /dev/sdb1 -n accepted; -N, -c, -q, n, mkfs.xfs -n, mkfs.ext4 -n -F /dev/sdb1 rejected." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Regex widened to accept 'mkfs -t ext4 -n', consistent with 0026. Text supplied by the reviewer; verified by the reviewer." }
     tags: [mke2fs, mkfs.ext4, dry-run]
 
   - id: 101-104.1-0010
@@ -303,9 +312,10 @@ questions:
       lowercase -n introduces naming options instead.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Creating an XFS Filesystem }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "mkfs.xfs 6.6.0: -N -f printed parameters and left the existing ext4 signature; bare -n rejected as unknown option." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [mkfs.xfs, dry-run]
 
   - id: 101-104.1-0011
@@ -333,9 +343,10 @@ questions:
       label, at most 11 characters. Most other mkfs tools use -L for the label, which is a common trap.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Creating a FAT or VFAT Filesystem }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "dosfstools 4.2 tested on an image: -F 32 -n CAMERA works; -L and -t rejected as invalid options; 12-character label rejected." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [mkfs.fat, vfat, label]
 
   - id: 101-104.1-0012
@@ -364,9 +375,10 @@ questions:
       data blocks, so it takes almost no space at first. Adding -r freezes it, which suits backups.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Working with Snapshots }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "btrfs-progs 6.6.3 on a loop-mounted image: snapshot -r created a read-only snapshot (touch failed with Read-only file system); create -r and btrfs snapshot rejected." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [btrfs, snapshot]
 
   - id: 101-104.1-0013
@@ -374,9 +386,9 @@ questions:
     difficulty: 3
     pool: holdout
     stem: >
-      You accidentally ran `rm 3` in `parted`, removing a partition that still holds an ext4
-      filesystem. Type the `parted` command (just its name) that scans a range of the disk for the
-      lost partition and offers to add it back.
+      A colleague ran `mklabel gpt` on `/dev/sdb` by mistake. The disk had held one ext4 partition
+      from 1MiB to 600MiB on an MBR table. Type the `parted` command (just its name) that searches a
+      range of the disk for a filesystem signature and offers to add a partition for it.
     fill_in:
       accepted: ['((sudo\s+)?((/usr)?/s?bin/)?parted\s+((-s|--script)\s+)?/dev/\S+\s+)?rescue(\s+\S+\s+\S+)?']
       match: regex
@@ -385,12 +397,14 @@ questions:
       `rescue START END` searches between the two positions for a filesystem signature and asks
       whether to recreate the partition that held it. It only finds partitions that contained a
       filesystem, and the range should start a little before and end a little after the old
-      partition.
+      partition. It works after a single partition was removed and also after the whole table was
+      replaced.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Recovering Partitions }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "parted 3.6 on an image: rm 3 then rescue 990MB 1310MB found and restored the ext4 partition. Matching tested: rescue, rescue 990MB 1310MB, parted /dev/sdb rescue 990MB 1310MB, sudo parted -s /dev/sdb rescue 1G 2G accepted; recover, resc, rescue -f, mkpart, testdisk, Rescue rejected." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Stem rewritten; the deleted-in-parted scenario restated Explorational Exercise 4. Text supplied by the reviewer; verified by the reviewer." }
     tags: [parted, rescue]
 
   - id: 101-104.1-0014
@@ -398,7 +412,7 @@ questions:
     difficulty: 4
     pool: holdout
     stem: >
-      Using the layout below, you want a new 300 MB partition named `backup` directly after partition
+      Using the layout below, you want a new 450 MB partition named `backup` directly after partition
       2. Which command at the `(parted)` prompt creates it?
     exhibit: |
       (parted) unit MB
@@ -415,17 +429,17 @@ questions:
               1000MB  2097MB  1097MB  Free Space
     options:
       - id: a
-        text: "`mkpart backup ext4 1000MB 300MB`"
-        rationale: Wrong. The last value is an end position on the disk, not a size; 300MB is before 1000MB, so parted refuses ("Can't have the end before the start").
+        text: "`mkpart backup ext4 1000MB 450MB`"
+        rationale: Wrong. The last value is an end position on the disk, not a size; 450MB is before 1000MB, so parted refuses ("Can't have the end before the start").
       - id: b
-        text: "`mkpart backup ext4 300MB`"
-        rationale: Wrong. 300MB is taken as the start position, which lies inside partition 1; it is not read as a size.
+        text: "`mkpart backup ext4 450MB`"
+        rationale: Wrong. 450MB is taken as the start position, which lies inside partition 2; it is not read as a size.
       - id: c
-        text: "`resizepart 3 1300MB`"
+        text: "`resizepart 3 1450MB`"
         rationale: Wrong. resizepart changes the end of an existing partition, and there is no partition 3 yet.
       - id: d
-        text: "`mkpart backup ext4 1000MB 1300MB`"
-        rationale: Correct. The partition starts where free space begins (1000MB) and ends 300 MB later, at 1300MB from the start of the disk.
+        text: "`mkpart backup ext4 1000MB 1450MB`"
+        rationale: Correct. The partition starts where free space begins (1000MB) and ends 450 MB later, at 1450MB from the start of the disk.
     answer: [d]
     explanation: >
       mkpart takes a start and an end, both measured from the beginning of the disk, so the size is
@@ -434,9 +448,10 @@ questions:
       partition.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Creating a Partition }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "Exhibit from parted 3.6 on a 2000 MiB image file, path replaced with /dev/sdc and the Model line dropped. Key creates 3 1000MB-1300MB 300MB with an empty File system column; option a fails with end-before-start." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Size changed from 300 MB to 450 MB so it no longer mirrors Guided Exercise 4; option b's rationale now names partition 2. Text supplied by the reviewer; verified by the reviewer." }
     tags: [parted, mkpart]
 
   - id: 101-104.1-0015
@@ -475,9 +490,10 @@ questions:
       is also added to /etc/fstab.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Creating Swap Partitions }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "Output from util-linux 2.39.3 on a 64 MiB file (path shortened to /swapfile); swapon exited 0 and swapon --show listed the file, which was then turned off." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [swap, mkswap, swapon, permissions]
 
   - id: 101-104.1-0016
@@ -525,9 +541,10 @@ questions:
       partitions, or to use GPT instead, which has room for 128 entries.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Primary vs Extended Partitions }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "Exhibit from fdisk 2.39.3 on a 2 GiB image (file renamed to /dev/sdd, same column widths)." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [fdisk, mbr, primary-partition]
 
   - id: 101-104.1-0017
@@ -567,9 +584,10 @@ questions:
       data. With -d raid1 -m raid1 the usable size is about that of one device.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Creating a Btrfs Filesystem }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "btrfs-progs 6.6.3 on two 1 GiB image files (paths renamed): -m raid1 gives Data single; -d raid1 -m raid1 gives Data RAID1; -m raid10 with two devices gives Data single." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [btrfs, multi-device, raid]
 
   - id: 101-104.1-0018
@@ -611,9 +629,10 @@ questions:
       new size.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Resizing ext2/3/4 Partitions }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "Exhibit from parted 3.6 on a sparse 64 GiB image with ext4 in both partitions (path renamed, Model line dropped). Checked: resize2fs refuses on-line shrinking; resizepart to an end before the start fails." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [resize2fs, parted, resizepart, shrink]
 
   - id: 101-104.1-0019
@@ -653,9 +672,10 @@ questions:
       d (backup header from main) and e (backup table from main). Nothing is saved until w.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Recovery Options }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "gdisk 1.0.10 on an image with sector 1 zeroed: exhibit is its real output; r, b, w repaired it and sgdisk -v reported no problems." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [gdisk, gpt, recovery]
 
   - id: 101-104.1-0020
@@ -685,9 +705,10 @@ questions:
       mount option whenever the filesystem is mounted.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Creating an XFS Filesystem }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "mkfs.xfs 6.6.0 with image files: -l logdev= works; -l size=<path>, -m logdev=, -L <14-char path> all rejected." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [mkfs.xfs, log, journal]
 
   # --------------------------------------------------------------------------- practice (CLI)
@@ -716,9 +737,10 @@ questions:
       with q if something goes wrong.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Managing MBR Partitions with FDISK }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [fdisk]
 
   - id: 101-104.1-0022
@@ -745,9 +767,10 @@ questions:
       transparent compression and checksums built in.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Getting to Know the Btrfs Filesystem }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [btrfs]
 
   - id: 101-104.1-0023
@@ -775,9 +798,10 @@ questions:
       which are numbered from 5. For Linux, logical and primary partitions work the same way.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Primary vs Extended Partitions }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "fdisk 2.39.3 on an image: logical partitions became 5 and 6; deleting extended partition 2 removed both." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [mbr, extended-partition, logical-partition]
 
   - id: 101-104.1-0024
@@ -806,9 +830,10 @@ questions:
       in fdisk the same letter does something else entirely (it creates a Sun disk label).
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Deleting a Partition }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "Command letters checked in the gdisk 1.0.10 and fdisk 2.39.3 menus." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [gdisk, gpt]
 
   - id: 101-104.1-0025
@@ -836,9 +861,10 @@ questions:
       hold both kinds.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: A Few Words on Compression }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "Loop-mounted Btrfs with -o compress shows compress=zlib:3 in /proc/mounts." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [btrfs, compression]
 
   - id: 101-104.1-0026
@@ -847,7 +873,7 @@ questions:
     pool: practice
     stem: Type the `mkfs.fat` option that sets the volume label of the new filesystem.
     fill_in:
-      accepted: ['((sudo\s+)?((/usr)?/s?bin/)?(mkfs\.v?fat|mkfs\s+-t\s+v?fat)\s+)?-n(\s*(?!-)\S+)?(\s+(?!-)\S+)?']
+      accepted: ['((sudo\s+)?((/usr)?/s?bin/)?(mkfs\.(v?fat|msdos)|mkdosfs|mkfs\s+-t\s+(v?fat|msdos))\s+(-F\s*(12|16|32)\s+)?)?-n(\s*(?!-)\S+)?(\s+(?!-)\S+)?']
       match: regex
       case_sensitive: true
     explanation: >
@@ -855,9 +881,10 @@ questions:
       which use -L, mkfs.fat has no -L option.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Creating a FAT or VFAT Filesystem }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "Matching tested: -n, -n CAMERA, -nCAMERA, mkfs.fat -n, mkfs.vfat -n CAMERA /dev/sdc1, sudo mkfs.fat -n CAMERA /dev/sdc1, mkfs -t vfat -n CAMERA accepted; -L, -N, --label, mkfs.fat -L CAMERA, mkfs.exfat -n, -n CAMERA -F 32 rejected." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Regex widened to accept -F before -n and the mkdosfs/mkfs.msdos names. Text supplied by the reviewer; verified by the reviewer." }
     tags: [mkfs.fat, label]
 
   - id: 101-104.1-0027
@@ -886,14 +913,15 @@ questions:
       it is called by or from -t. Plain mke2fs creates ext2 unless told otherwise.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Creating an ext2/ext3/ext4 Filesystem }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "e2fsprogs 1.47.0: mke2fs -L ext4 produced TYPE=ext2 LABEL=ext4; mkfs.ext* are symlinks to mke2fs on Ubuntu 24.04." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [mke2fs, mkfs.ext4]
 
   - id: 101-104.1-0028
     type: single_choice
-    difficulty: 3
+    difficulty: 2
     pool: practice
     stem: >
       In `gdisk`, which type code do you give a GPT partition that will be used as Linux swap?
@@ -916,9 +944,10 @@ questions:
       EFI system. After setting the type and writing with w, mkswap prepares the partition.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Creating Swap Partitions }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Difficulty 3 -> 2 to match its mirror question 0006." }
     tags: [gdisk, partition-type, swap]
 
   - id: 101-104.1-0029
@@ -945,9 +974,10 @@ questions:
       activation with swapon. An /etc/fstab entry makes it come back after a reboot.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Creating Swap Partitions }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "mkswap on an empty file: \"swap area needs to be at least 40 KiB\"; mkfs -t swap: \"failed to execute mkfs.swap\"." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [swap, mkswap, swapon, dd]
 
   - id: 101-104.1-0030
@@ -980,7 +1010,8 @@ questions:
       add -f. mke2fs uses -F for a similar purpose, which is an easy pair to mix up.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.1", lesson: 1, section: Creating an XFS Filesystem }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "Exhibit from mkfs.xfs 6.6.0 on an ext4 image (path renamed); -f succeeds." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [mkfs.xfs, force]
