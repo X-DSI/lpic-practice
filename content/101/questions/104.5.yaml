@@ -34,9 +34,10 @@ questions:
       command: ls -l /dev/null | cut -c1
       expect: { exit_code: 0, stdout_contains: "c" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [ls, file-types]
 
   - id: 101-104.5-0002
@@ -63,9 +64,10 @@ questions:
       rw- is 6, r-x is 5 and rwx is 7.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Octal Mode }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [chmod, octal]
 
   - id: 101-104.5-0003
@@ -92,9 +94,10 @@ questions:
       or both.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Modifying File Ownership }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [chgrp]
 
   - id: 101-104.5-0004
@@ -123,9 +126,10 @@ questions:
       third triplet in a long listing shows the permissions for o.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Symbolic Mode }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [chmod, symbolic-mode]
 
   - id: 101-104.5-0005
@@ -146,9 +150,10 @@ questions:
       command: sh -c 'umask 027; umask'
       expect: { exit_code: 0, stdout_contains: "027" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "Matching tested: umask, umask -S, umask -p accepted; umask 022, mask, umask -s, Umask, sudo umask rejected." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [umask]
 
   - id: 101-104.5-0006
@@ -177,9 +182,10 @@ questions:
       outright, so anything not listed is cleared.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Symbolic Mode }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [chmod, symbolic-mode]
 
   - id: 101-104.5-0007
@@ -208,9 +214,10 @@ questions:
       command: f=$(mktemp) && chmod 750 "$f" && stat -c %A "$f"
       expect: { exit_code: 0, stdout_contains: "-rwxr-x---" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [chmod, octal]
 
   - id: 101-104.5-0008
@@ -239,9 +246,10 @@ questions:
       group. New subdirectories also inherit the SGID bit, so the behaviour carries down the tree.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Set GID }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "Tested as non-root users: a file and a subdirectory created in a 2775 directory took its group; the subdirectory also got SGID." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [sgid, directories]
 
   - id: 101-104.5-0009
@@ -271,9 +279,10 @@ questions:
       for this.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Permissions on Directories }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "Tested as non-root: with write but no execute (776) creating a file failed; with 733 creating worked." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [directories, permissions]
 
   - id: 101-104.5-0010
@@ -303,9 +312,10 @@ questions:
       the group, exactly like chgrp GROUP.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Modifying File Ownership }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Rationale for option d corrected: chmod rejects g=staff as an invalid mode (tested)." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [chown, chgrp]
 
   - id: 101-104.5-0011
@@ -336,9 +346,10 @@ questions:
       command: ls -l /usr/bin/passwd | cut -c1-4
       expect: { exit_code: 0, stdout_contains: "-rws" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [suid]
 
   - id: 101-104.5-0012
@@ -358,9 +369,10 @@ questions:
       command: f=$(mktemp) && chmod 710 "$f" && stat -c %A "$f"
       expect: { exit_code: 0, stdout_contains: "-rwx--x---" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "Matching tested: 710, 0710 accepted; 701, 0701, 7100, 711, rwx--x--- rejected." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [chmod, octal]
 
   - id: 101-104.5-0013
@@ -392,9 +404,10 @@ questions:
       command: sh -c 'umask 077; d=$(mktemp -d); touch "$d/f"; mkdir "$d/x"; stat -c %A "$d/f" "$d/x" | tr "\n" " "'
       expect: { exit_code: 0, stdout_contains: "-rw------- drwx------" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Was \"umask 077, what mode does a new file get\", too close to a guided exercise. Reworked to choose the umask; 077, 066, 700 and 600 tested for files and directories." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [umask]
 
   - id: 101-104.5-0014
@@ -425,9 +438,10 @@ questions:
       command: d=$(mktemp -d) && chmod 2755 "$d" && stat -c %A "$d"
       expect: { exit_code: 0, stdout_contains: "drwxr-sr-x" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [sgid, chmod, octal]
 
   - id: 101-104.5-0015
@@ -446,9 +460,10 @@ questions:
       dot as the separator (bob.devs); current coreutils still does, with a warning.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Modifying File Ownership }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "Matching tested: chown bob:devs app.log, sudo chown bob:devs app.log, /bin/chown bob:devs ./app.log, chown bob.devs app.log accepted; chown devs:bob app.log, chown bob app.log, chgrp devs app.log, chown bob: app.log, chown -R bob:devs app.log rejected. bob.devs separator checked: works with a warning on coreutils 9.4." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [chown]
 
   - id: 101-104.5-0016
@@ -479,9 +494,10 @@ questions:
       there before.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Modifying File Permissions }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "All four commands run on a 644 file: 754, 750, 710, 750." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [chmod, symbolic-mode, octal]
 
   - id: 101-104.5-0017
@@ -513,9 +529,10 @@ questions:
       command: f=$(mktemp) && chmod 777 "$f" && chmod go= "$f" && stat -c %A "$f"
       expect: { exit_code: 0, stdout_contains: "-rwx------" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "Checked: chmod go- exits 0 and leaves 754 unchanged." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [chmod, symbolic-mode]
 
   - id: 101-104.5-0018
@@ -543,9 +560,10 @@ questions:
       rwsr-x---.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Set UID }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [suid, octal]
 
   - id: 101-104.5-0019
@@ -570,9 +588,10 @@ questions:
       command: d=$(mktemp -d) && chmod 755 "$d" && chmod o+t "$d" && stat -c %A "$d"
       expect: { exit_code: 0, stdout_contains: "drwxr-xr-t" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "Checked: o+t, +t, a+t set the bit; u+t does not. Matching tested: o+t, +t, a+t, ugo+t, chmod o+t /srv/inbox, sudo chmod +t /srv/inbox accepted; u+t, g+t, o-t, 1755, o+s, chmod -R o+t /srv/inbox rejected." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [sticky-bit, chmod, symbolic-mode]
 
   - id: 101-104.5-0020
@@ -605,9 +624,10 @@ questions:
       generous, which lets you exclude a group explicitly.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Understanding Permissions }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Section corrected to Understanding Permissions. Reproduced with throwaway users: group member denied, non-member could read. Names and IDs in the exhibit renamed from the test users." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [permissions, groups, ls]
 
   - id: 101-104.5-0021
@@ -643,9 +663,10 @@ questions:
       the details), but opening a file inside fails with Permission denied.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Permissions on Directories }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Stem reworded to say clearly that bob is neither owner nor group member; option a lengthened to avoid a length giveaway. Reproduced as a non-root user: ls printed todo.txt, cat and cd were denied." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [directories, permissions]
 
   - id: 101-104.5-0022
@@ -680,9 +701,10 @@ questions:
       command: d=$(mktemp -d) && chmod 3760 "$d" && stat -c %A "$d"
       expect: { exit_code: 0, stdout_contains: "drwxrwS--T" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Exhibit was drwxrws--T, which made option d true as well (group x present). Changed to drwxrwS--T (3760, produced with chmod) so only a holds. Correct option shortened (length giveaway)." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [sgid, sticky-bit, ls]
 
   - id: 101-104.5-0023
@@ -716,9 +738,10 @@ questions:
       Adding the sticky bit (or a umask of 002 for group-editable files) would change those outcomes.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Set GID }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "Reproduced with throwaway users in a 2770 directory: file got the directory's group, the other member's append failed, renaming the file succeeded (rename and unlink need the same directory permissions)." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [sgid, umask, directories, groups]
 
   - id: 101-104.5-0024
@@ -749,9 +772,10 @@ questions:
       command: sh -c 'umask 0026; d=$(mktemp -d); mkdir "$d/x"; stat -c %A "$d/x"'
       expect: { exit_code: 0, stdout_contains: "drwxr-x--x" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [umask, directories]
 
   - id: 101-104.5-0025
@@ -777,9 +801,10 @@ questions:
       command: f=$(mktemp) && chmod 750 "$f" && chmod 4750 "$f" && stat -c %A "$f"
       expect: { exit_code: 0, stdout_contains: "-rwsr-x---" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "Matching tested: chmod 4750 backup.sh, sudo chmod 4750 backup.sh, /bin/chmod 04750 ./backup.sh accepted; chmod 4755 backup.sh, chmod 2750 backup.sh, chmod u+s backup.sh, chmod 750 backup.sh, chmod -R 4750 backup.sh rejected." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [suid, chmod, octal]
 
   - id: 101-104.5-0026
@@ -814,9 +839,10 @@ questions:
       command: f=$(mktemp) && chmod 6755 "$f" && chown nobody:nogroup "$f" && stat -c %A "$f"
       expect: { exit_code: 0, stdout_contains: "-rwxr-xr-x" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "Reproduced as root on a copy of /bin/true with 6755: after chown to a user and group both bits were gone." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [chown, suid, sgid]
 
   - id: 101-104.5-0027
@@ -849,9 +875,10 @@ questions:
       command: d=$(mktemp -d) && chmod 2775 "$d" && chmod 0775 "$d" && a=$(stat -c %a "$d") && chmod g-s "$d" && echo "$a $(stat -c %a "$d")"
       expect: { exit_code: 0, stdout_contains: "2775 775" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "Tested as a non-root owner (coreutils 9.4): 0775 and 775 kept SGID, 1775 gave 3775, g-s, 00775 and =775 cleared it." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [sgid, chmod, directories]
 
   - id: 101-104.5-0028
@@ -884,9 +911,10 @@ questions:
       command: sh -c 'umask 027; f=$(mktemp); chmod 640 "$f"; chmod +x "$f"; stat -c %A "$f"'
       expect: { exit_code: 0, stdout_contains: "-rwxr-x---" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "Tested as a non-root user: +x gave rwxr-x---, a+x and ugo+x gave rwxr-x--x." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [chmod, umask, symbolic-mode]
 
   - id: 101-104.5-0029
@@ -916,9 +944,10 @@ questions:
       to any group they are a member of, with either chgrp or chown (including chown to themselves).
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Modifying File Ownership }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "Reproduced with throwaway users: chgrp to own group and chown self:group succeeded; chown to another user and chgrp to a non-member group gave Operation not permitted." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [chown, chgrp, groups]
 
   - id: 101-104.5-0030
@@ -954,9 +983,10 @@ questions:
       other's files in a shared writable directory, set the sticky bit on it.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Permissions on Directories }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "Reproduced as a non-root user by renaming the file (same directory permission check as unlink); the rm itself could not be run inside su in this session. With sticky bit added, the rename failed with Operation not permitted." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [directories, permissions, sticky-bit]
 
   # --------------------------------------------------------------------------- practice (CLI)
@@ -983,9 +1013,10 @@ questions:
     explanation: chmod ("change mode") sets read, write, execute and the special bits, in symbolic or octal form.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Modifying File Permissions }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [chmod]
 
   - id: 101-104.5-0032
@@ -1012,9 +1043,10 @@ questions:
       character devices), s (socket) and p (named pipe).
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Understanding Filetypes }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [ls, file-types]
 
   - id: 101-104.5-0033
@@ -1039,9 +1071,10 @@ questions:
     explanation: Each octal digit adds up r (4), w (2) and x (1) for one class of users.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Octal Mode }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [octal]
 
   - id: 101-104.5-0034
@@ -1056,9 +1089,10 @@ questions:
     explanation: chown changes the user owner, and optionally the group owner with USER:GROUP.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Modifying File Ownership }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "Matching tested: chown, /bin/chown, /usr/bin/chown accepted; chgrp, chmod, Chown, chown -R, own rejected." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [chown]
 
   - id: 101-104.5-0035
@@ -1083,9 +1117,10 @@ questions:
     explanation: rwx is 4+2+1 = 7 and r-x is 4+1 = 5, so the mode is 755.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Octal Mode }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [octal]
 
   - id: 101-104.5-0036
@@ -1115,9 +1150,10 @@ questions:
       command: stat -c %a /tmp
       expect: { exit_code: 0, stdout_contains: "1777" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Correct option shortened (length giveaway); exemptions moved to the rationale. Reproduced as a non-root user: rename of another user's file in a 1777 directory gave Operation not permitted." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [sticky-bit]
 
   - id: 101-104.5-0037
@@ -1143,9 +1179,10 @@ questions:
     explanation: Device files are either block (b) or character (c) devices; they live mostly under /dev.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Understanding Filetypes }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [file-types, ls]
 
   - id: 101-104.5-0038
@@ -1172,9 +1209,10 @@ questions:
       user's groups, and getent group lists all groups and their members.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Querying Groups }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Distractor ls -l carol replaced with getent passwd carol so the correct option is not the longest." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [groups]
 
   - id: 101-104.5-0039
@@ -1204,9 +1242,10 @@ questions:
       command: sh -c 'umask 002; d=$(mktemp -d); mkdir "$d/x"; stat -c %A "$d/x"'
       expect: { exit_code: 0, stdout_contains: "drwxrwxr-x" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [umask]
 
   - id: 101-104.5-0040
@@ -1225,9 +1264,10 @@ questions:
       also strip execute from every subdirectory, so symbolic modes (or X) are often safer.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Symbolic Mode }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "Matching tested: -R, --recursive, chmod -R, sudo chmod --recursive accepted; -r, --recurse, -R 755, chown -R, -Rv rejected." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [chmod]
 
   - id: 101-104.5-0041
@@ -1257,9 +1297,10 @@ questions:
       command: f=$(mktemp) && chmod 644 "$f" && chmod o=u "$f" && stat -c %A "$f"
       expect: { exit_code: 0, stdout_contains: "-rw-r--rw-" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [chmod, symbolic-mode]
 
   - id: 101-104.5-0042
@@ -1289,9 +1330,10 @@ questions:
       command: bash -c 'umask 0027; umask -S'
       expect: { exit_code: 0, stdout_contains: "u=rwx,g=rx,o=" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [umask]
 
   - id: 101-104.5-0043
@@ -1322,9 +1364,10 @@ questions:
       could delete it depends on the directory's permissions, not on this file.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Understanding Permissions }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [permissions, ls]
 
   - id: 101-104.5-0044
@@ -1353,9 +1396,10 @@ questions:
       whose names they know) but cannot see what is there.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Permissions on Directories }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "Reproduced as a non-root user: touch succeeded, ls gave Permission denied." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [directories, permissions]
 
   - id: 101-104.5-0045
@@ -1386,7 +1430,8 @@ questions:
       effective GID that of the group, regardless of who starts the program.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Set UID }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [suid, sgid]
