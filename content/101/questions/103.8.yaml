@@ -31,9 +31,10 @@ questions:
       command switches to insert mode, and Esc returns to normal mode.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Option a shortened so the correct answer is not the longest." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [vi, modes]
 
   - id: 101-103.8-0002
@@ -60,9 +61,10 @@ questions:
       work on any terminal, even one where the arrow keys are not mapped correctly.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [vi, navigation]
 
   - id: 101-103.8-0003
@@ -90,9 +92,10 @@ questions:
       and up).
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [vi, navigation]
 
   - id: 101-103.8-0004
@@ -121,9 +124,10 @@ questions:
       VISUAL and EDITOR. Setting `export EDITOR=nano`, for example, makes them start nano.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Alternative Editors }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Distractor SHELL replaced by DISPLAY so the correct answer is not the longest." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [EDITOR]
 
   - id: 101-103.8-0005
@@ -150,9 +154,10 @@ questions:
       whenever they are unsure which mode they are in.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Insert Mode }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [vi, modes]
 
   - id: 101-103.8-0006
@@ -181,9 +186,10 @@ questions:
       file on disk keeps the content it had when it was last written.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Colon Commands }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [vi, quit]
 
   - id: 101-103.8-0007
@@ -210,9 +216,10 @@ questions:
       deleted text can be pasted elsewhere with p or P.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [vi, delete]
 
   - id: 101-103.8-0008
@@ -240,9 +247,10 @@ questions:
       o opens a line below and O opens a line above; both switch to insert mode immediately.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [vi, insert]
 
   - id: 101-103.8-0009
@@ -271,9 +279,10 @@ questions:
       match in the same direction and N to the next match in the opposite direction.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [vi, search]
 
   - id: 101-103.8-0010
@@ -292,9 +301,10 @@ questions:
       the file at its last line, and `vi +/pattern file` at the first line matching the pattern.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Introduction }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "verify block removed: vi is not installed in debian:stable-slim; behaviour checked with vim 9.1 -es instead." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked. Reviewer suggested difficulty 3; kept at 2 to hold the holdout split." }
     tags: [vi, startup]
 
   - id: 101-103.8-0011
@@ -325,9 +335,10 @@ questions:
       e.g. Ctrl-O/Ctrl-X in nano and Ctrl-x Ctrl-s / Ctrl-x Ctrl-c in Emacs.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Alternative Editors }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [nano, emacs, vim]
 
   - id: 101-103.8-0012
@@ -356,9 +367,10 @@ questions:
       position and press p (after) or P (before) to paste it.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [vi, yank]
 
   - id: 101-103.8-0013
@@ -389,9 +401,10 @@ questions:
       leave without saving, and :w saves without leaving.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Colon Commands }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [vi, quit, ZZ]
 
   - id: 101-103.8-0014
@@ -421,9 +434,10 @@ questions:
       the beginning and the end of the line.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [vi, insert]
 
   - id: 101-103.8-0015
@@ -450,9 +464,10 @@ questions:
       starting at the cursor, ready to be pasted with p or P.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [vi, yank, count]
 
   - id: 101-103.8-0016
@@ -472,9 +487,10 @@ questions:
       from command-line mode.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [vi, navigation]
 
   - id: 101-103.8-0017
@@ -505,9 +521,10 @@ questions:
       the first.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Colon Commands }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Distractor /oldhost/... replaced by a .,$ range (cursor position added to stem) to avoid a longest-correct giveaway." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [vi, substitute]
 
   - id: 101-103.8-0018
@@ -526,9 +543,10 @@ questions:
       a backward search with ?, n continues backward.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [vi, search]
 
   - id: 101-103.8-0019
@@ -546,7 +564,7 @@ questions:
         rationale: Correct. vim keeps a multi-level undo history, with Ctrl-R to redo.
       - id: c
         text: vim uses different keys, so vi commands do not work in it
-        rationale: Wrong. vim is backward compatible with vi; vi commands behave the same way.
+        rationale: Wrong. vim keeps vi's commands, so a vi user can work in it straight away; only small details such as multi-level undo differ.
       - id: d
         text: vim can highlight the syntax of source code and configuration files
         rationale: Correct. Syntax highlighting is one of vim's additions over vi.
@@ -557,9 +575,10 @@ questions:
       minimal build of it) as their vi.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Introduction }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Option c rationale reworded. Reviewer suggested difficulty 2; kept at 3 to hold the holdout split." }
     tags: [vim]
 
   - id: 101-103.8-0020
@@ -594,9 +613,10 @@ questions:
       next one.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "verify block removed: vi is not installed in debian:stable-slim; behaviour checked with vim 9.1 -es instead." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [vi, delete, paste]
 
   - id: 101-103.8-0021
@@ -631,9 +651,10 @@ questions:
       that line too.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "verify block removed: vi is not installed in debian:stable-slim; behaviour checked with vim 9.1 -es instead." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [vi, repeat]
 
   - id: 101-103.8-0022
@@ -662,9 +683,10 @@ questions:
       changes unless written as :e!.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Colon Commands }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "No question change. Lesson lists :e as save-and-exit; vim 9.1 :e reloads and refuses a modified buffer with E37. The question tests real behaviour." }
     tags: [vi, quit]
 
   - id: 101-103.8-0023
@@ -683,9 +705,10 @@ questions:
       the same deletion but then enter insert mode.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [vi, delete]
 
   - id: 101-103.8-0024
@@ -714,9 +737,10 @@ questions:
       be sure of the result, set both, or unset the one you do not want.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Alternative Editors }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [EDITOR, VISUAL, crontab]
 
   - id: 101-103.8-0025
@@ -745,9 +769,10 @@ questions:
       it throw away unsaved changes, which plain :e refuses to do.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Colon Commands }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "verify block removed: vi is not installed in debian:stable-slim; behaviour checked with vim 9.1 -es instead." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [vi, revert]
 
   - id: 101-103.8-0026
@@ -783,9 +808,10 @@ questions:
       after another n would the search wrap around to line 1.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [vi, search]
 
   - id: 101-103.8-0027
@@ -804,23 +830,25 @@ questions:
         text: "`ZQ`"
         rationale: Correct. ZQ is the normal-mode equivalent of :q!.
       - id: c
-        text: "`ZZ`"
-        rationale: Wrong. ZZ writes the changes (when there are any) before quitting.
+        text: "`:w!`"
+        rationale: Wrong. :w! forces the changes to be written to the file and does not exit.
       - id: d
-        text: "`:x`"
-        rationale: Wrong. :x writes the modified buffer and then quits.
+        text: "`:e`"
+        rationale: Wrong. :e does not exit; with unsaved changes it refuses to reload the file (E37).
       - id: e
-        text: "`:wq`"
-        rationale: Wrong. :wq writes the file and then quits.
+        text: "`:wq!`"
+        rationale: Wrong. :wq! forces the changes to be written and then quits.
     answer: [a, b]
     explanation: >
-      ZZ and ZQ are the normal-mode ways to leave vi: ZZ saves (like :x), ZQ discards (like :q!).
-      The colon forms :q! on one side and :x / :wq on the other do the same jobs.
+      :q! and its normal-mode equivalent ZQ abandon the buffer and exit, so the file keeps the
+      content it had when it was last written. Any command containing w writes the changes, and :e
+      never leaves the editor.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "verify block removed: vi is not installed in debian:stable-slim; behaviour checked with vim 9.1 -es instead." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Distractors ZZ, :x, :wq (shared with 0013) replaced by :w!, :e, :wq!; rationales checked in vim 9.1. Reviewer suggested difficulty 3 or 4; kept at 5 to hold the holdout split. Needs re-check." }
     tags: [vi, quit, ZZ]
 
   - id: 101-103.8-0028
@@ -831,7 +859,7 @@ questions:
       An interface was renamed. Type the vi colon command that replaces every occurrence of `eth0`
       with `ens3` on every line of the open file, without asking for confirmation.
     fill_in:
-      accepted: [':?\s*(%|1,\$)\s*s(u(b(s(t(i(t(u(te?)?)?)?)?)?)?)?)?(?P<d>[/#|!@+,])eth0(?P=d)ens3(?P=d)g']
+      accepted: [':?\s*(%|1,\$)\s*s(u(b(s(t(i(t(u(te?)?)?)?)?)?)?)?)?(?P<d>[/#!@+,])eth0(?P=d)ens3(?P=d)g[eI]?']
       match: regex
       case_sensitive: true
     explanation: >
@@ -840,9 +868,10 @@ questions:
       match. Another delimiter, such as #, works too.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Colon Commands }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "verify block removed: vi is not installed in debian:stable-slim; behaviour checked with vim 9.1 -es instead." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Regex no longer accepts | as delimiter (vim gives E492); optional e or I flag after g accepted. Reviewer suggested difficulty 4; kept at 5 to hold the holdout split." }
     tags: [vi, substitute]
 
   - id: 101-103.8-0029
@@ -871,9 +900,10 @@ questions:
       2,3, or % for the whole file. The g flag is still needed to go past the first match on each line.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Colon Commands }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Distractor :2s replaced by :2,$s to avoid a longest-correct giveaway. verify block removed: vi is not installed in debian:stable-slim; behaviour checked with vim 9.1 -es instead." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked. Reviewer suggested difficulty 4; kept at 5 to hold the holdout split." }
     tags: [vi, substitute]
 
   - id: 101-103.8-0030
@@ -903,9 +933,10 @@ questions:
       before the cursor, giving `two one three`.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Implausible distractor replaced. verify block removed: vi is not installed in debian:stable-slim; behaviour checked with vim 9.1 -es instead." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [vi, delete, paste]
 
   # ---------------------------------------------------------------- practice (study mode)
@@ -932,9 +963,10 @@ questions:
     explanation: h, j, k and l move left, down, up and right in normal mode.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [vi, navigation]
 
   - id: 101-103.8-0032
@@ -961,9 +993,10 @@ questions:
       command on real text without risk.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Colon Commands }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [vimtutor]
 
   - id: 101-103.8-0033
@@ -988,9 +1021,10 @@ questions:
     explanation: x deletes the character under the cursor; with a count (3x) it deletes several characters.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [vi, delete]
 
   - id: 101-103.8-0034
@@ -1017,9 +1051,10 @@ questions:
     explanation: p puts register contents after the cursor (below, for whole lines), P puts them before (above).
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "verify block removed: vi is not installed in debian:stable-slim; behaviour checked with vim 9.1 -es instead." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [vi, paste]
 
   - id: 101-103.8-0035
@@ -1044,9 +1079,10 @@ questions:
     explanation: In vim, u undoes and Ctrl-R redoes, through several levels of history.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Distractor u replaced by Ctrl-U to avoid a longest-correct giveaway." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [vim, undo]
 
   - id: 101-103.8-0036
@@ -1073,9 +1109,10 @@ questions:
     explanation: i and a insert at the cursor; I and A insert at the start and end of the line.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [vi, insert]
 
   - id: 101-103.8-0037
@@ -1104,9 +1141,10 @@ questions:
       and c-commands all leave you in an insert-type mode.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [vi, replace]
 
   - id: 101-103.8-0038
@@ -1131,9 +1169,10 @@ questions:
     explanation: w and b move forward and back by word starts; e moves to word ends. W, B and E do the same treating punctuation as part of the word.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [vi, navigation]
 
   - id: 101-103.8-0039
@@ -1161,14 +1200,15 @@ questions:
     explanation: 0 goes to the very first column, ^ to the first non-blank character, and $ to the end of the line.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "verify block removed: vi is not installed in debian:stable-slim; behaviour checked with vim 9.1 -es instead." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [vi, navigation]
 
   - id: 101-103.8-0040
     type: single_choice
-    difficulty: 3
+    difficulty: 2
     pool: practice
     stem: In GNU nano, which key combination cuts the current line (so it can be pasted with Ctrl-U)?
     options:
@@ -1190,9 +1230,10 @@ questions:
       ^X Exit, ^W Where Is, ^\ Replace, M-U Undo, M-E Redo.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Alternative Editors }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Difficulty 3 -> 2." }
     tags: [nano]
 
   - id: 101-103.8-0041
@@ -1218,9 +1259,10 @@ questions:
     explanation: o opens a line below, O a line above; both enter insert mode at once.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [vi, insert]
 
   - id: 101-103.8-0042
@@ -1231,8 +1273,8 @@ questions:
     select_count: 2
     options:
       - id: a
-        text: "`export EDITOR=nano` makes programs started from that shell use nano"
-        rationale: Correct. Exported variables are passed to child processes such as crontab.
+        text: "`export EDITOR=nano` is passed on to programs started from that shell"
+        rationale: Correct. Exported variables reach child processes such as crontab, which use EDITOR when VISUAL is not set.
       - id: b
         text: "`export EDITOR=nano` at the prompt changes the editor for other users too"
         rationale: Wrong. It only affects the current shell and the processes it starts.
@@ -1248,9 +1290,10 @@ questions:
       keep it, put the export line in a shell start-up file such as ~/.bash_profile.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Alternative Editors }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Option a text and rationale reworded (VISUAL precedence)." }
     tags: [EDITOR]
 
   - id: 101-103.8-0043
@@ -1285,9 +1328,10 @@ questions:
       pasting above line 3 put the text in the same place.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "verify block removed: vi is not installed in debian:stable-slim; behaviour checked with vim 9.1 -es instead." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [vi, yank, paste]
 
   - id: 101-103.8-0044
@@ -1296,15 +1340,16 @@ questions:
     pool: practice
     stem: Type the vi colon command that saves the file but keeps it open for more editing.
     fill_in:
-      accepted: [':?\s*w(r(i(te?)?)?)?']
+      accepted: [':?\s*(w(r(i(te?)?)?)?|up(d(a(te?)?)?)?)']
       match: regex
       case_sensitive: true
     explanation: :w (short for :write) writes the buffer to the file; :w! forces the write, and :wq writes and quits.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Colon Commands }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Also accept :update / :up." }
     tags: [vi, write]
 
   - id: 101-103.8-0045
@@ -1315,7 +1360,7 @@ questions:
       Type vi normal-mode keystrokes (no colon command) that delete four whole lines, starting with
       the line the cursor is on, in a single command.
     fill_in:
-      accepted: ['4dd|d4d|d3j']
+      accepted: ['4dd|d4d|d3j|3dj|d3\+']
       match: regex
       case_sensitive: true
     explanation: >
@@ -1323,7 +1368,8 @@ questions:
       (delete down three more lines) give the same result.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.8", lesson: 1, section: Normal Mode }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "verify block removed: vi is not installed in debian:stable-slim; behaviour checked with vim 9.1 -es instead." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Also accept 3dj and d3+ (both tested in vim 9.1)." }
     tags: [vi, delete, count]
