@@ -30,9 +30,10 @@ questions:
       that character is in the list. Add a quantifier after the closing bracket to repeat it.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 1, section: Bracket Expression }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [bracket-expression]
 
   - id: 101-103.7-0002
@@ -60,9 +61,10 @@ questions:
       obsolescent (Debian and Ubuntu patch the warning out), so scripts should use `grep -F` and `grep -E`.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 2, section: "The Pattern Finder: grep" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [fgrep, grep-F]
 
   - id: 101-103.7-0003
@@ -89,9 +91,10 @@ questions:
       `*` to match any run of characters.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 1, section: Introduction }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [dot, metacharacter]
 
   - id: 101-103.7-0004
@@ -118,9 +121,10 @@ questions:
       with a semicolon and shows everything else.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 2, section: "The Pattern Finder: grep" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Correct option shortened; it was the longest option." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [grep-v]
 
   - id: 101-103.7-0005
@@ -148,9 +152,10 @@ questions:
       why they are called anchors. `^$` therefore matches an empty line.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 1, section: Introduction }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [anchors]
 
   - id: 101-103.7-0006
@@ -179,9 +184,10 @@ questions:
       result line starts with the file name. `-R` does the same but also follows symbolic links.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 1, section: Searching with Regular Expressions }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [grep-r, recursive]
 
   - id: 101-103.7-0007
@@ -198,7 +204,7 @@ questions:
         rationale: Wrong. This matches lines that hold exactly one space, not empty lines.
       - id: c
         text: "`'$^'`"
-        rationale: Wrong. In a basic regex, `$` not at the end and `^` not at the start are literal, so this looks for the text `$^`.
+        rationale: Wrong. In a basic regex, a `$` at the very start and a `^` at the very end are ordinary characters, so this looks for the literal text `$^`.
       - id: d
         text: "`'^$'`"
         rationale: Correct. The start of the line is followed immediately by its end, so the line has no characters.
@@ -211,9 +217,10 @@ questions:
       command: printf 'a\n\n \nb\n' | grep -c '^$'
       expect: { exit_code: 0, stdout_regex: "^1\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Option c rationale reworded for accuracy." }
     tags: [anchors, empty-lines]
 
   - id: 101-103.7-0008
@@ -241,9 +248,10 @@ questions:
       and empty lines.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 1, section: Bracket Expression }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [bracket-expression, negation]
 
   - id: 101-103.7-0009
@@ -272,9 +280,10 @@ questions:
       `[Tt][Ii][Mm][Ee][Oo][Uu][Tt]`.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 2, section: "The Pattern Finder: grep" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [grep-i]
 
   - id: 101-103.7-0010
@@ -303,9 +312,10 @@ questions:
       `fgrep` search for fixed strings.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 2, section: "The Pattern Finder: grep" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [egrep, grep-E, BRE, ERE]
 
   - id: 101-103.7-0011
@@ -337,9 +347,10 @@ questions:
       command: echo 'cat cat cat' | sed 's/cat/dog/g'
       expect: { exit_code: 0, stdout_contains: "dog dog dog" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [sed, substitute, g-flag]
 
   - id: 101-103.7-0012
@@ -347,8 +358,8 @@ questions:
     difficulty: 2
     pool: holdout
     stem: >
-      Type the `grep` option that prints how many lines matched instead of printing the lines
-      themselves.
+      `grep 'Failed password' /var/log/auth.log` scrolls hundreds of lines past. You only want to
+      know how many attempts there were, as a single number. Type the `grep` option to add.
     fill_in:
       accepted: ['((sudo\s+)?((/usr)?/bin/)?grep\s+)?(-c|--count)(\s+(?!-)\S+)*']
       match: regex
@@ -361,9 +372,10 @@ questions:
       command: printf 'err 1\nok\nerr 2\n' | grep -c err
       expect: { exit_code: 0, stdout_regex: "^2\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Stem rewritten; it restated a lesson 2 Guided Exercise. Text supplied by the reviewer; verified by the writer." }
     tags: [grep-c]
 
   - id: 101-103.7-0013
@@ -396,9 +408,10 @@ questions:
       command: printf 'abbc\nac\nab+c\n' | grep 'ab\+c'
       expect: { exit_code: 0, stdout_regex: "^abbc\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [BRE, quantifiers]
 
   - id: 101-103.7-0014
@@ -429,9 +442,10 @@ questions:
       command: printf 'cat\ndog\nbird\n' | grep -c 'cat\|dog'
       expect: { exit_code: 0, stdout_regex: "^2\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [alternation, BRE, ERE]
 
   - id: 101-103.7-0015
@@ -439,23 +453,26 @@ questions:
     difficulty: 3
     pool: holdout
     stem: >
-      `grep -E '[0-9]+(\.[0-9]+){3}' access.log` prints whole log lines. Type the additional `grep`
-      option that prints only the matched addresses, each on its own line.
+      `grep -E '[[:alnum:]._-]+@[[:alnum:].-]+' contacts.txt` prints whole lines, some holding two
+      addresses. Type the additional `grep` option that prints only the matched e-mail addresses,
+      each on its own line.
     fill_in:
       accepted: ['((sudo\s+)?((/usr)?/bin/)?grep\s+)?(-o|--only-matching)(\s+(?!-)\S+)*']
       match: regex
       case_sensitive: true
     explanation: >
       `-o` (`--only-matching`) prints each non-empty match on a separate line instead of the whole
-      line, so two addresses on one line give two output lines.
+      line, so a line holding two e-mail addresses gives two output lines and the surrounding text
+      is dropped.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 2, section: "The Pattern Finder: grep" }
     verify:
-      command: printf 'ip 10.0.0.5 and 192.168.1.20\nnone\n' | grep -oE '[0-9]+(\.[0-9]+){3}'
-      expect: { exit_code: 0, stdout_regex: "^10\\.0\\.0\\.5\\n192\\.168\\.1\\.20\\s*$" }
+      command: printf 'a x@y.org and z@w.net\n' | grep -oE '[[:alnum:]._-]+@[[:alnum:].-]+'
+      expect: { exit_code: 0, stdout_regex: "^x@y\\.org\\nz@w\\.net\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Stem, explanation and verify rewritten around e-mail addresses; it restated a lesson 2 Guided Exercise. Text supplied by the reviewer; verified by the writer." }
     tags: [grep-o]
 
   - id: 101-103.7-0016
@@ -475,7 +492,7 @@ questions:
         rationale: Wrong. `-x` needs the whole line to be `root`, so no line is printed.
       - id: b
         text: "`grep -o root accounts`"
-        rationale: Wrong. `-o` still matches all three lines and prints the matched text `root` from each.
+        rationale: Wrong. `-o` still matches all three lines and prints each occurrence of `root` on its own line (three from the first line).
       - id: c
         text: "`grep -w root accounts`"
         rationale: Correct. `-w` only accepts matches bordered by non-word characters or the line edges, which rules out `chrootuser` and `rooted`.
@@ -491,9 +508,10 @@ questions:
       command: printf 'root:x:0:0\nchrootuser:x\nrooted:x\n' | grep -w root
       expect: { exit_code: 0, stdout_regex: "^root:x:0:0\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Option b rationale made precise (three matches from the first line)." }
     tags: [grep-w]
 
   - id: 101-103.7-0017
@@ -522,9 +540,10 @@ questions:
       command substitution, e.g. `vi $(grep -l disk *.log)`.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 2, section: "The Pattern Finder: grep" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [grep-l]
 
   - id: 101-103.7-0018
@@ -556,9 +575,10 @@ questions:
       command: printf 'rm -rf /tmp/x\nls -l\n' | grep -e -rf
       expect: { exit_code: 0, stdout_regex: "^rm -rf /tmp/x\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [grep-e]
 
   - id: 101-103.7-0019
@@ -580,9 +600,10 @@ questions:
       command: echo ababc | sed -E 's/(ab)+/X/'
       expect: { exit_code: 0, stdout_contains: "Xc" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [sed, sed-E, ERE]
 
   - id: 101-103.7-0020
@@ -623,9 +644,10 @@ questions:
         printf '# sshd settings\nPort 2222\n\n#PermitRootLogin yes\nPermitRootLogin no\n  # indented comment\nPasswordAuthentication no\n' | grep -vc '^#'
       expect: { exit_code: 0, stdout_regex: "^5\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "verify command put in a block scalar; the # in the printf text was read as a YAML comment." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [grep-v, grep-c, anchors]
 
   - id: 101-103.7-0021
@@ -659,9 +681,10 @@ questions:
       command: printf 'id 7\nport 8080\nv 1.2\n' | grep '[0-9]\{2,\}'
       expect: { exit_code: 0, stdout_regex: "^port 8080\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [bounds, BRE, ERE]
 
   - id: 101-103.7-0022
@@ -694,9 +717,10 @@ questions:
       command: echo 'Smith, John' | sed -E 's/([^,]*), (.*)/\2 \1/'
       expect: { exit_code: 0, stdout_regex: "^John Smith\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [sed, back-references]
 
   - id: 101-103.7-0023
@@ -719,9 +743,10 @@ questions:
       command: printf 'admin\nsysadmin\nadmin2\nadmin tools\n' | grep -x admin
       expect: { exit_code: 0, stdout_regex: "^admin\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [grep-x]
 
   - id: 101-103.7-0024
@@ -759,9 +784,10 @@ questions:
         printf 'UUID=1234 / ext4\n# swap\n\n  #tmpfs /tmp\n/dev/sdb1 /data\n' | grep -c '^[^#]'
       expect: { exit_code: 0, stdout_regex: "^3\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "verify command put in a block scalar; the # in the printf text was read as a YAML comment." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [bracket-expression, anchors, negation]
 
   - id: 101-103.7-0025
@@ -797,9 +823,10 @@ questions:
       command: cd /tmp && find proj -regex '.*\.log' | wc -l
       expect: { exit_code: 0, stdout_regex: "^2\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [find, regex]
 
   - id: 101-103.7-0026
@@ -835,9 +862,10 @@ questions:
       command: printf 'cat\nCow\ndogs\nyak bat\nfox\n' | grep -E '^[[:lower:]]{3}$' | tr '\n' ' '
       expect: { exit_code: 0, stdout_regex: "^cat fox\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [bounds, anchors, grep-x, grep-w, character-classes]
 
   - id: 101-103.7-0027
@@ -870,36 +898,51 @@ questions:
       command: echo '<b>bold</b> and <i>it</i>' | sed 's/<.*>//' | wc -c
       expect: { exit_code: 0, stdout_regex: "^1\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [sed, greedy-matching]
 
   - id: 101-103.7-0028
-    type: fill_in
+    type: single_choice
     difficulty: 5
     pool: holdout
     stem: >
-      Some file names under `/srv` contain spaces, so you use
-      `find /srv -name '*.conf' -print0 | grep ___ prod | xargs -0 ls -l`.
-      Type the `grep` option that makes grep treat each NUL-terminated name as one record.
-    fill_in:
-      accepted: ['((sudo\s+)?((/usr)?/bin/)?grep\s+)?(-z|--null-data)(\s+(?!-)\S+)*']
-      match: regex
-      case_sensitive: true
+      The command below prints `grep: (standard input): binary file matches` and nothing else.
+      Why?
+    exhibit: |
+      $ printf 'a b.conf\0prod web.conf\0' | grep prod
+      grep: (standard input): binary file matches
+    options:
+      - id: a
+        text: grep reads the stream as one line containing NUL bytes; `grep -z` would fix it
+        rationale: Correct. There is no newline, so the whole input is one "line" with NULs in it, which grep treats as binary. With -z, grep splits records at NUL bytes and prints `prod web.conf`.
+      - id: b
+        text: The pattern has no regex characters, so grep needs `-F` to print it
+        rationale: Wrong. A plain word is a valid regex; `grep -F prod` gives exactly the same message.
+      - id: c
+        text: printf cannot write `\0`, so grep received an empty or broken stream
+        rationale: Wrong. printf does write NUL bytes (od -c shows them), and the message itself says grep found a match.
+      - id: d
+        text: grep hides binary output unless `-a` is given; `-a` would list `prod web.conf`
+        rationale: Wrong. -a would print the matching "line", which is the whole stream, both names and their NULs together, not one record per name.
+    answer: [a]
     explanation: >
-      `-z` (`--null-data`) makes grep split its input at NUL bytes instead of newlines and end each
-      output record with a NUL, so the result can go straight to `xargs -0`. Without it, grep sees the
-      whole stream as one binary "line".
+      grep normally splits its input at newlines. NUL-separated data, as produced by `find -print0`
+      or `printf '...\0'`, has none, so it arrives as one line containing NUL bytes, and grep only
+      reports that a binary file matched. `-z` (`--null-data`) splits records at NUL bytes instead and
+      ends each output record with a NUL, so the result can be passed to `xargs -0`.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 2, section: "The Pattern Finder: grep" }
     verify:
       command: printf 'a b.conf\0prod web.conf\0' | grep -z prod | tr '\0' '\n'
       expect: { exit_code: 0, stdout_regex: "^prod web\\.conf\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
-    tags: [grep-z, find, xargs]
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Rewritten as single choice on the binary-file-matches symptom; the fill-in restated a lesson 2 Guided Exercise. Needs re-check." }
+    tags: [grep-z, binary, find]
 
   - id: 101-103.7-0029
     type: multi_choice
@@ -936,9 +979,10 @@ questions:
       command: printf '1+1=2\n11=2\n1=2\n' | grep '1+1=2'
       expect: { exit_code: 0, stdout_regex: "^1\\+1=2\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [BRE, ERE, grep-F, quantifiers]
 
   - id: 101-103.7-0030
@@ -977,9 +1021,10 @@ questions:
       command: printf '[main]\nname=app\n[db]\nhost=localhost\nport=5432\n[log]\nlevel=info\n' | sed -n '/^\[db\]/,/^\[/p' | tr '\n' ' '
       expect: { exit_code: 0, stdout_regex: "^\\[db\\] host=localhost port=5432 \\[log\\]\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Option a lengthened; the correct option was the only long one." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [sed, address-range]
 
   # --------------------------------------------------------------------------- practice (CLI)
@@ -1004,13 +1049,15 @@ questions:
         rationale: Wrong. Any single character is matched by `.`.
     answer: [a]
     explanation: >
-      `grep '\.conf$'` matches lines ending in `.conf`. `$` is only an anchor at the end of the
-      pattern; elsewhere in a basic regex it is an ordinary character.
+      `grep '\.conf$'` matches lines ending in `.conf`. `$` is an anchor at the end of the
+      pattern (or of a group or branch); in most other positions in a basic regex it is an ordinary
+      character.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 1, section: Introduction }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Explanation refined: $ is also an anchor at the end of a group or branch." }
     tags: [anchors]
 
   - id: 101-103.7-0032
@@ -1037,9 +1084,10 @@ questions:
       obsolescent" when it is used (Debian and Ubuntu disable that warning), so prefer `grep -E`.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 2, section: "The Pattern Finder: grep" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [egrep, grep-E]
 
   - id: 101-103.7-0033
@@ -1066,9 +1114,10 @@ questions:
       and the differences between basic and extended regular expressions.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 1, section: Quantifiers }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Options reordered to spread answer positions." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [regex-7, man]
 
   - id: 101-103.7-0034
@@ -1100,9 +1149,10 @@ questions:
       command: printf 'name,qty\npen,1\ncup,12\n' | sed 1d | head -n 1
       expect: { exit_code: 0, stdout_regex: "^pen,1\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [sed, sed-delete, addresses]
 
   - id: 101-103.7-0035
@@ -1129,9 +1179,10 @@ questions:
       regular expressions.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 1, section: Quantifiers }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [quantifiers]
 
   - id: 101-103.7-0036
@@ -1159,12 +1210,13 @@ questions:
       `[:blank:]` is the narrower class (space and tab); `[:space:]` adds the other whitespace characters.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 1, section: Bracket Expression }
     verify:
-      command: printf 'a\tb\n' | grep -c '[[:blank:]]'
+      command: printf '\t\n' | grep -c '[[:blank:]]'
       expect: { exit_code: 0, stdout_regex: "^1\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "verify now tests a lone tab." }
     tags: [character-classes]
 
   - id: 101-103.7-0037
@@ -1184,9 +1236,10 @@ questions:
       command: printf 'a\nb\nc\n' | grep -n c
       expect: { exit_code: 0, stdout_regex: "^3:c\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [grep-n]
 
   - id: 101-103.7-0038
@@ -1215,9 +1268,10 @@ questions:
       command: printf 'colour\ncolor\ncolr\n' | grep -cE 'colou?r'
       expect: { exit_code: 0, stdout_regex: "^2\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [quantifiers, ERE]
 
   - id: 101-103.7-0039
@@ -1245,16 +1299,17 @@ questions:
       matching line but still print it.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 2, section: "The Pattern Finder: grep" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [grep-c, grep-l]
 
   - id: 101-103.7-0040
     type: single_choice
     difficulty: 3
     pool: practice
-    stem: With plain `grep` (basic regular expressions), how do you write "exactly four digits in a row"?
+    stem: With plain `grep` (basic regular expressions), how do you write a run of four digits?
     options:
       - id: a
         text: "`[0-9]{4}`"
@@ -1277,9 +1332,10 @@ questions:
       command: printf 'year 2026\nid 42\n' | grep '[0-9]\{4\}'
       expect: { exit_code: 0, stdout_regex: "^year 2026\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Distractor [0-9]4 changed to [[:digit:]]4 so the correct option is not the longest." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Stem reworded to a run of four digits." }
     tags: [bounds, BRE]
 
   - id: 101-103.7-0041
@@ -1308,9 +1364,10 @@ questions:
       gives it a single file, so `-H` is needed to force the prefix.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 2, section: "The Pattern Finder: grep" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [grep-H]
 
   - id: 101-103.7-0042
@@ -1343,9 +1400,10 @@ questions:
       command: printf 'F\ng\n7\n' | grep -c '[[:xdigit:]]'
       expect: { exit_code: 0, stdout_regex: "^2\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [character-classes, bracket-expression]
 
   - id: 101-103.7-0043
@@ -1380,9 +1438,10 @@ questions:
       command: printf 'INFO start\nERROR disk\nWARN low\nERROR net\n' | sed -n '/ERROR/p' | tr '\n' ' '
       expect: { exit_code: 0, stdout_regex: "^ERROR disk ERROR net\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [sed, sed-n, addresses]
 
   - id: 101-103.7-0044
@@ -1404,9 +1463,10 @@ questions:
       command: printf 'category\nbobcat\nmy cat\n' | grep -w cat
       expect: { exit_code: 0, stdout_regex: "^my cat\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [grep-w]
 
   - id: 101-103.7-0045
@@ -1443,7 +1503,8 @@ questions:
       command: printf 'level\nabc\nx\nnoon\nmoon\n' | grep -E '^(.).*\1$' | tr '\n' ' '
       expect: { exit_code: 0, stdout_regex: "^level noon\\s*$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Rationale of the correct option rewritten (it was a draft note); options reordered to spread positions." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [back-references, anchors, ERE]
