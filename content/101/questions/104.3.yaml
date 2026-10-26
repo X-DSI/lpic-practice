@@ -33,9 +33,10 @@ questions:
       and is shown through /proc/self/mounts, which /etc/mtab points to.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Mounting Filesystems on Bootup }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [fstab]
 
   - id: 101-104.3-0002
@@ -65,9 +66,10 @@ questions:
       hand.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: "Where to Mount?" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [media, fhs]
 
   - id: 101-104.3-0003
@@ -96,9 +98,10 @@ questions:
       name the mount point or the device that is mounted there.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Additional Command Line Parameters }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [umount]
 
   - id: 101-104.3-0004
@@ -128,9 +131,10 @@ questions:
       deliberately, so it is the safer way to refer to the filesystem in /etc/fstab.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Using UUIDs and Labels }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Option lengths rebalanced; the key was the longest option." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [uuid, fstab]
 
   - id: 101-104.3-0005
@@ -160,9 +164,10 @@ questions:
       mounts it on first access.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Mounting Disks with Systemd }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [systemd, mount-unit]
 
   - id: 101-104.3-0006
@@ -170,17 +175,18 @@ questions:
     difficulty: 2
     pool: holdout
     stem: >
-      You want to put a UUID-based entry for the filesystem on `/dev/sdb1` into `/etc/fstab`. Which
-      command shows you that filesystem's UUID?
+      `mount -a` reports that it cannot find the device for the line
+      `UUID=… /data ext4 defaults 0 2`. Which command lists the UUIDs of the filesystems the system
+      can see, so you can compare them?
     options:
       - id: a
-        text: "`blkid /dev/sdb1`"
-        rationale: Correct. blkid prints the attributes of the filesystem on a block device, including UUID, LABEL and TYPE.
+        text: "`blkid`"
+        rationale: Correct. Without arguments, blkid prints the attributes of every filesystem it finds, including UUID, LABEL and TYPE.
       - id: b
-        text: "`fdisk -l /dev/sdb`"
-        rationale: Wrong. fdisk shows the partition table and its disk identifier, not the UUID stored inside a filesystem.
+        text: "`fdisk -l`"
+        rationale: Wrong. fdisk -l shows partition tables and disk identifiers, not the UUID stored inside a filesystem.
       - id: c
-        text: "`df -T /dev/sdb1`"
+        text: "`df -T`"
         rationale: Wrong. df -T adds the filesystem type to the usage report; it does not show UUIDs.
       - id: d
         text: "`mount -l`"
@@ -191,9 +197,10 @@ questions:
       example UUID="…" TYPE="ext4". lsblk -f shows the same information as columns.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Using UUIDs and Labels }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Removed verify block (blkid --help proves nothing about the key)." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Stem rewritten (troubleshooting a UUID line); the old one restated Guided Exercise 4. Text supplied by the reviewer; verified by the reviewer." }
     tags: [blkid, uuid]
 
   - id: 101-104.3-0007
@@ -223,9 +230,10 @@ questions:
       processes, so you can close them before unmounting.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Dealing with Open Files }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [fuser, busy]
 
   - id: 101-104.3-0008
@@ -255,9 +263,10 @@ questions:
       and set-group-ID bits) and nodev (ignore device files).
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Mounting Filesystems on Bootup }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [noexec, mount-options]
 
   - id: 101-104.3-0009
@@ -287,9 +296,10 @@ questions:
       known.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Mounting Filesystems on Bootup }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [remount]
 
   - id: 101-104.3-0010
@@ -309,9 +319,10 @@ questions:
       the next boot does; `findmnt --verify` checks the file without mounting anything.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Additional Command Line Parameters }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [mount, fstab]
 
   - id: 101-104.3-0011
@@ -342,9 +353,10 @@ questions:
       unique by the administrator; UUIDs are unique by design.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Using UUIDs and Labels }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [uuid, label, fstab]
 
   - id: 101-104.3-0012
@@ -374,9 +386,10 @@ questions:
       their own when the source is a regular file.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Mounting and Unmounting Filesystems }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [loop, mount]
 
   - id: 101-104.3-0013
@@ -384,22 +397,23 @@ questions:
     difficulty: 3
     pool: holdout
     stem: >
-      You are writing a systemd mount unit that mounts a disk on `/var/lib/backups`. Type the file
-      name the unit must have.
+      `systemctl list-units` shows a mount unit named `var-lib-backups.mount`. Type the absolute path
+      of the directory it mounts.
     fill_in:
-      accepted: ['(/etc/systemd/system/)?var-lib-backups\.mount']
+      accepted: ['/var/lib/backups/?']
       match: regex
       case_sensitive: true
     explanation: >
-      A mount unit's name must be its mount point path, with the leading slash dropped, the other
-      slashes turned into dashes and .mount appended: /var/lib/backups becomes
-      var-lib-backups.mount. Local units go in /etc/systemd/system/. `systemd-escape -p
-      --suffix=mount /var/lib/backups` prints the name.
+      A mount unit's name is its mount point path with the leading slash dropped, the other slashes
+      turned into dashes and .mount appended, so var-lib-backups.mount mounts /var/lib/backups. A
+      real dash in the path is escaped as \x2d. `systemd-escape -p -u var-lib-backups` converts the
+      name back to the path.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Mounting Disks with Systemd }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Removed verify block (systemd-escape is not in debian:stable-slim)." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Turned around (unit name to mount point); the old direction restated Explorational Exercise 5. Text supplied by the reviewer; verified by the reviewer." }
     tags: [systemd, mount-unit, naming]
 
   - id: 101-104.3-0014
@@ -427,9 +441,10 @@ questions:
       execution.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Mounting Filesystems on Bootup }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [defaults, mount-options]
 
   - id: 101-104.3-0015
@@ -459,9 +474,10 @@ questions:
       it. Both also imply noexec, nosuid and nodev unless later options override them.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Mounting Filesystems on Bootup }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Option lengths rebalanced; the key was the longest option." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [user, users, mount-options]
 
   - id: 101-104.3-0016
@@ -484,9 +500,10 @@ questions:
       command: lsblk --help
       expect: { exit_code: 0, stdout_regex: "-f, --fs" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [lsblk]
 
   - id: 101-104.3-0017
@@ -517,9 +534,10 @@ questions:
       symbolic link, it also works where a chroot cannot follow a link out of its tree.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Mounting and Unmounting Filesystems }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [bind]
 
   - id: 101-104.3-0018
@@ -550,9 +568,10 @@ questions:
       closing the user with lsof or fuser is the cleaner fix when possible.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Dealing with Open Files }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [umount, busy]
 
   - id: 101-104.3-0019
@@ -584,9 +603,10 @@ questions:
       root. Both fields may be omitted, and then default to 0.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Mounting Filesystems on Bootup }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Option lengths rebalanced; the key was the longest option." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [fstab, fsck]
 
   - id: 101-104.3-0020
@@ -622,9 +642,10 @@ questions:
       up. Removable media are usually marked noauto so a missing device does not break the boot.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Mounting Filesystems on Bootup }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [fstab, noauto, mount]
 
   - id: 101-104.3-0021
@@ -660,9 +681,10 @@ questions:
       directory, its child must finish, and tail must close the file before umount succeeds.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Dealing with Open Files }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [lsof, busy, troubleshooting]
 
   - id: 101-104.3-0022
@@ -708,9 +730,10 @@ questions:
       the name match, but would mount the disk in the wrong place.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Mounting Disks with Systemd }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [systemd, mount-unit, naming, troubleshooting]
 
   - id: 101-104.3-0023
@@ -718,32 +741,33 @@ questions:
     difficulty: 4
     pool: holdout
     stem: >
-      Which **TWO** commands list only the ext4 and XFS filesystems that are mounted at the moment,
-      without changing anything?
+      A monitoring script must list every XFS filesystem that is mounted right now, and must not
+      mount anything. Which **TWO** commands are suitable?
     select_count: 2
     options:
       - id: a
-        text: "`mount -a -t ext4,xfs`"
+        text: "`mount -a -t xfs`"
         rationale: Wrong. -a mounts the matching fstab entries that are not mounted yet; it changes the system instead of just listing.
       - id: b
-        text: "`mount -t ext4,xfs`"
+        text: "`mount -t xfs`"
         rationale: Correct. Without a source or target, mount lists the mounted filesystems, and -t limits the list to the given types.
       - id: c
-        text: "`blkid -t TYPE=ext4`"
-        rationale: Wrong. blkid shows devices containing ext4 whether mounted or not, and leaves XFS out.
+        text: "`blkid -t TYPE=xfs`"
+        rationale: Wrong. blkid shows every device containing XFS, whether it is mounted or not.
       - id: d
-        text: "`findmnt -t ext4,xfs`"
+        text: "`findmnt -t xfs`"
         rationale: Correct. findmnt shows the current mounts, and -t restricts them to the listed types.
     answer: [b, d]
     explanation: >
-      With no device or directory, mount prints the current mount table; -t with a comma-separated
-      list filters by type. findmnt accepts the same -t filter and prints a tree. Combined with -a,
+      With no device or directory, mount prints the current mount table; -t (which also takes a
+      comma-separated list) filters by type. findmnt accepts the same -t filter and prints a tree. Combined with -a,
       the type list would instead select which fstab entries to mount.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Listing Mounted Filesystems }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Reworded (XFS only, monitoring script) to move away from Guided Exercise 6. Text supplied by the reviewer; verified by the reviewer." }
     tags: [mount, findmnt]
 
   - id: 101-104.3-0024
@@ -768,17 +792,18 @@ questions:
         text: "`/srv/photos  LABEL=PHOTOS  ext4  defaults  0  2`"
         rationale: Wrong. The first field must be the source and the second the mount point; they are swapped.
       - id: d
-        text: "`LABEL=PHOTOS  /srv/photos  xfs  defaults  0  2`"
-        rationale: Wrong. blkid reports TYPE="ext4", so mounting it as xfs fails.
+        text: "`LABEL=photos  /srv/photos  ext4  defaults  0  2`"
+        rationale: Wrong. Labels are case-sensitive; the label is PHOTOS, so mount reports that it can't find LABEL=photos.
     answer: [a]
     explanation: >
       An fstab line is: source (device, LABEL= or UUID=), mount point, type, options, dump, pass.
       Each value has to match the real filesystem, which blkid (or lsblk -f) shows.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Using UUIDs and Labels }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Option d changed from an easy xfs mismatch to a lowercase label, which fails because labels are case-sensitive (tested: mount -T reports can't find LABEL=photos)." }
     tags: [fstab, blkid, label]
 
   - id: 101-104.3-0025
@@ -793,7 +818,7 @@ questions:
         text: Add `Automount=yes` to the `[Mount]` section of `srv-backup.mount`, then run `systemctl daemon-reload` and restart the unit
         rationale: Wrong. There is no Automount= key; systemd warns about an unknown key and ignores it.
       - id: b
-        text: Create `srv-backup.automount` with `[Automount]` and `Where=/srv/backup`, then enable that unit instead of the mount unit
+        text: Create `srv-backup.automount` with `[Automount]` `Where=/srv/backup` and an `[Install]` section, then enable that unit instead of the mount unit
         rationale: Correct. An automount unit with the same base name watches the path and starts the matching mount unit on first access.
       - id: c
         text: Rename `srv-backup.mount` to `srv-backup.automount`, keep its contents unchanged and enable the renamed unit
@@ -808,9 +833,10 @@ questions:
       makes systemd mount the filesystem on first access via the matching .mount unit.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Automounting a Mount Unit }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Option lengths rebalanced; the key was the longest option." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Option b now mentions the [Install] section that enabling needs." }
     tags: [systemd, automount]
 
   - id: 101-104.3-0026
@@ -852,9 +878,10 @@ questions:
       running code.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Mounting Filesystems on Bootup }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [noexec, mount-options]
 
   - id: 101-104.3-0027
@@ -884,9 +911,10 @@ questions:
       The resulting mount shows noexec or not in the mount or findmnt output.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Mounting Filesystems on Bootup }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [user, noexec, mount-options]
 
   - id: 101-104.3-0028
@@ -937,9 +965,10 @@ questions:
       dependency on the device.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Automounting a Mount Unit }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [systemd, automount, fstab, naming]
 
   - id: 101-104.3-0029
@@ -970,9 +999,10 @@ questions:
       applies to the filesystem's superblock and so affects every place it is mounted.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Mounting Filesystems on Bootup }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [bind, remount, ro]
 
   - id: 101-104.3-0030
@@ -992,9 +1022,10 @@ questions:
       shell (for example systemctl status 'srv-web\x2ddata.mount') so the backslash survives.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Mounting Disks with Systemd }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [systemd, systemd-escape, naming]
 
   # --------------------------------------------------------------------------- practice (CLI)
@@ -1025,9 +1056,10 @@ questions:
       often mounted automatically by the desktop.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: "Where to Mount?" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [mnt, fhs]
 
   - id: 101-104.3-0032
@@ -1057,9 +1089,10 @@ questions:
       command: mount
       expect: { exit_code: 0, stdout_regex: " on / type " }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Option lengths rebalanced; the key was the longest option." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [mount]
 
   - id: 101-104.3-0033
@@ -1087,9 +1120,10 @@ questions:
       mount that filesystem by naming its mount point or device, as in mount /media/usb.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Mounting Filesystems on Bootup }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [user, mount-options]
 
   - id: 101-104.3-0034
@@ -1108,9 +1142,10 @@ questions:
       KEY="value" pairs. lsblk -f shows the same data as table columns.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Using UUIDs and Labels }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [blkid]
 
   - id: 101-104.3-0035
@@ -1118,20 +1153,20 @@ questions:
     difficulty: 2
     pool: practice
     stem: >
-      `umount /dev/sdb1` fails with "target is busy". Which command shows the open files on that
-      filesystem and the processes holding them?
+      Before you pull a USB stick mounted on `/media/usb`, you want to see whether any program still
+      has a file open on it, with the file names and process IDs. Which command shows this?
     options:
       - id: a
-        text: "`blkid /dev/sdb1`"
+        text: "`blkid /media/usb`"
         rationale: Wrong. blkid prints the filesystem's label, UUID and type, not processes.
       - id: b
-        text: "`ps -ef /dev/sdb1`"
+        text: "`ps -ef /media/usb`"
         rationale: Wrong. ps lists processes but cannot filter them by the filesystem they use.
       - id: c
-        text: "`lsof /dev/sdb1`"
-        rationale: Correct. Given a mounted device (or its mount point), lsof lists every open file on that filesystem with the command and PID.
+        text: "`lsof /media/usb`"
+        rationale: Correct. Given a mount point (or a mounted device), lsof lists every open file on that filesystem with the command and PID.
       - id: d
-        text: "`lsblk /dev/sdb1`"
+        text: "`lsblk /media/usb`"
         rationale: Wrong. lsblk shows device details and mount points, not who is using them.
     answer: [c]
     explanation: >
@@ -1140,9 +1175,10 @@ questions:
       unmount again.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Dealing with Open Files }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Stem rewritten (USB stick before removal); the old one restated Guided Exercise 2. Text supplied by the reviewer; verified by the reviewer." }
     tags: [lsof, busy]
 
   - id: 101-104.3-0036
@@ -1169,9 +1205,10 @@ questions:
       options, dump flag and fsck pass number.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Mounting Filesystems on Bootup }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [fstab]
 
   - id: 101-104.3-0037
@@ -1179,20 +1216,21 @@ questions:
     difficulty: 2
     pool: practice
     stem: >
-      `/srv/data` is mounted read-write. Fill in the blank so the command makes it read-only without
-      unmounting it: `mount -o ____,ro /srv/data`
+      `/srv/data` is mounted. Fill in the blank so it stops updating access times without being
+      unmounted: `mount -o ____,noatime /srv/data`
     fill_in:
       accepted: [remount]
       match: normalized
       case_sensitive: true
     explanation: >
-      `mount -o remount,ro /srv/data` applies new options to the mounted filesystem in place. The
+      `mount -o remount,noatime /srv/data` applies new options to the mounted filesystem in place. The
       mount point (or device) is enough; type and source are already known.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Mounting Filesystems on Bootup }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Stem changed to remount with noatime; the read-only version restated Guided Exercise 5. Text supplied by the reviewer; verified by the reviewer." }
     tags: [remount]
 
   - id: 101-104.3-0038
@@ -1219,9 +1257,10 @@ questions:
       defaults when someone runs mount with its mount point or device. It suits removable media.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Mounting Filesystems on Bootup }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Option lengths rebalanced; the key was the longest option." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [noauto, fstab]
 
   - id: 101-104.3-0039
@@ -1254,9 +1293,10 @@ questions:
       nosuid and nodev. A later option such as exec can turn one back on: user,exec.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Mounting Filesystems on Bootup }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [user, mount-options]
 
   - id: 101-104.3-0040
@@ -1284,9 +1324,10 @@ questions:
       whoever runs it. nosuid makes the kernel ignore the setuid and setgid bits on that filesystem.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Mounting Filesystems on Bootup }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Option lengths rebalanced; the key was the longest option." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [nosuid, mount-options]
 
   - id: 101-104.3-0041
@@ -1316,9 +1357,10 @@ questions:
       mount unit's, with .automount instead of .mount.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Automounting a Mount Unit }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [systemd, automount]
 
   - id: 101-104.3-0042
@@ -1338,9 +1380,10 @@ questions:
       the loop device again on umount.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Mounting and Unmounting Filesystems }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [loop]
 
   - id: 101-104.3-0043
@@ -1371,9 +1414,10 @@ questions:
       enable --now does both at once.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Mounting Disks with Systemd }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [systemd, mount-unit]
 
   - id: 101-104.3-0044
@@ -1409,14 +1453,15 @@ questions:
       write noauto,user,exec.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Mounting Filesystems on Bootup }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [user, mount-options]
 
   - id: 101-104.3-0045
     type: single_choice
-    difficulty: 4
+    difficulty: 3
     pool: practice
     stem: >
       After adding the fstab line below, `mount -a` prints an error. `blkid -L DATA` finds the
@@ -1446,7 +1491,8 @@ questions:
       /etc/fstab for this and similar problems without mounting anything.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.3", lesson: 1, section: Mounting and Unmounting Filesystems }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Difficulty 4 -> 3; the error message points at the answer." }
     tags: [fstab, troubleshooting]
