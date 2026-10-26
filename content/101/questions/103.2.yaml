@@ -1,0 +1,1070 @@
+# 103.2 Process text streams using filters — weight 2 → 20 holdout + 10 practice.
+# Original questions written from LPI Learning Materials 101-500, objective 103.2, lesson 1.
+schema_version: 1
+exam: "101"
+objective: "103.2"
+questions:
+  # ---------------------------------------------------------------- holdout (mock exams only)
+
+  - id: 101-103.2-0001
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: >
+      You want to read `backup.log.gz`, a gzip-compressed log, on the terminal without leaving a
+      decompressed copy on disk. Which command do you use?
+    options:
+      - id: a
+        text: "`bzcat backup.log.gz`"
+        rationale: Wrong. bzcat reads bzip2 data; on a gzip file it stops with "is not a bzip2 file".
+      - id: b
+        text: "`xzcat backup.log.gz`"
+        rationale: Wrong. xzcat reads xz (and lzma) data; it reports "File format not recognized" for gzip.
+      - id: c
+        text: "`zcat backup.log.gz`"
+        rationale: Correct. zcat decompresses gzip data to standard output and leaves the .gz file as it is.
+      - id: d
+        text: "`gzip backup.log.gz`"
+        rationale: Wrong. gzip compresses; it refuses a file that already has the .gz suffix and prints no content.
+    answer: [c]
+    explanation: >
+      Each compression format has its own "cat" tool that writes the decompressed data to standard
+      output: zcat for gzip (.gz), bzcat for bzip2 (.bz2) and xzcat for xz (.xz). The compressed
+      file is not changed and no decompressed file is written.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.2", lesson: 1, section: Reading a Compressed File }
+    verify:
+      setup: ["printf 'job ok\\n' | gzip > /tmp/backup.log.gz"]
+      command: zcat /tmp/backup.log.gz
+      expect: { exit_code: 0, stdout_contains: "job ok" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [zcat, compression]
+
+  - id: 101-103.2-0002
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: When `tail` is given a file name and no options, how many lines of the file does it print?
+    options:
+      - id: a
+        text: "5"
+        rationale: Wrong. Five lines would need -n 5.
+      - id: b
+        text: "10"
+        rationale: Correct. Both head and tail show ten lines unless -n says otherwise.
+      - id: c
+        text: "20"
+        rationale: Wrong. Twenty lines would need -n 20.
+      - id: d
+        text: As many as fit on one screen of the terminal
+        rationale: Wrong. tail does not look at the terminal size; that is what a pager such as less does.
+    answer: [b]
+    explanation: >
+      tail prints the last 10 lines of a file by default (head prints the first 10). Use -n NUM to
+      ask for a different number of lines.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.2", lesson: 1, section: Getting a Portion of a Text File }
+    verify:
+      setup: ["seq 30 > /tmp/n.txt"]
+      command: tail /tmp/n.txt | wc -l
+      expect: { exit_code: 0, stdout_regex: "^10\\s*$" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [tail]
+
+  - id: 101-103.2-0003
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: >
+      Which command prints a file's contents as numbers, in octal unless told otherwise, with the
+      byte offset at the start of each output line?
+    options:
+      - id: a
+        text: "`od`"
+        rationale: Correct. od ("octal dump") prints offsets and the file's contents, by default as octal two-byte words.
+      - id: b
+        text: "`nl`"
+        rationale: Wrong. nl copies text lines and puts a line number in front of them.
+      - id: c
+        text: "`wc`"
+        rationale: Wrong. wc only prints counts of lines, words and bytes.
+      - id: d
+        text: "`split`"
+        rationale: Wrong. split cuts a file into several smaller files.
+    answer: [a]
+    explanation: >
+      od dumps a file's contents in octal by default. Options change the format, for example -x for
+      hexadecimal and -c for characters, which makes it handy for finding hidden characters.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.2", lesson: 1, section: Looking Deeper into Files }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Stem and od rationale reworded: od prints the contents as octal two-byte words by default, not byte by byte." }
+    tags: [od]
+
+  - id: 101-103.2-0004
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: Which command prints the contents of `report.txt` with every lowercase letter changed to uppercase?
+    options:
+      - id: a
+        text: "`sed 's/a-z/A-Z/' report.txt`"
+        rationale: Wrong. Here a-z is the literal three-character string "a-z", so ordinary text is printed unchanged.
+      - id: b
+        text: "`tr 'a-z' 'A-Z' report.txt`"
+        rationale: Wrong. tr reads only standard input and takes no file name; it fails with "extra operand".
+      - id: c
+        text: "`sort -f report.txt`"
+        rationale: Wrong. -f ignores case while comparing lines, but the lines are printed as they are.
+      - id: d
+        text: "`tr 'a-z' 'A-Z' < report.txt`"
+        rationale: Correct. tr maps each character of the first set to the matching one in the second; the file is fed on standard input.
+    answer: [d]
+    explanation: >
+      tr translates characters from one set to another and works only on standard input, so the
+      file has to be redirected (or piped) into it. tr '[:lower:]' '[:upper:]' does the same job.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.2", lesson: 1, section: Summary }
+    verify:
+      setup: ["printf 'disk full\\n' > /tmp/report.txt"]
+      command: tr 'a-z' 'A-Z' < /tmp/report.txt
+      expect: { exit_code: 0, stdout_contains: "DISK FULL" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [tr]
+
+  - id: 101-103.2-0005
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      You downloaded `netinst.iso` and the file `SHA256SUMS`, which lists the expected SHA-256
+      digest of the image. Which command compares the image with the listed value and reports OK or
+      FAILED?
+    options:
+      - id: a
+        text: "`sha256sum -c SHA256SUMS`"
+        rationale: Correct. -c reads digests and file names from the list, recomputes each one and reports the result.
+      - id: b
+        text: "`sha256sum netinst.iso SHA256SUMS`"
+        rationale: Wrong. This just prints a digest for each of the two files; nothing is compared.
+      - id: c
+        text: "`md5sum -c SHA256SUMS`"
+        rationale: Wrong. md5sum expects 32-character MD5 digests and reports "no properly formatted checksum lines found".
+      - id: d
+        text: "`sha256sum -c netinst.iso`"
+        rationale: Wrong. -c treats its argument as a checksum list; the ISO image is not one, so the check fails.
+    answer: [a]
+    explanation: >
+      The check option (-c) of md5sum, sha256sum and sha512sum reads lines of "digest  filename",
+      recomputes the digest of each named file and prints OK or FAILED. The list must have been made
+      with the same algorithm as the tool used to check it.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.2", lesson: 1, section: Ensuring Data Integrity }
+    verify:
+      setup: ["cd /tmp && echo data > netinst.iso && sha256sum netinst.iso > SHA256SUMS"]
+      command: cd /tmp && sha256sum -c SHA256SUMS
+      expect: { exit_code: 0, stdout_contains: "netinst.iso: OK" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [sha256sum, checksum]
+
+  - id: 101-103.2-0006
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      You need to look through a 300 MB application log, moving backwards and forwards through it and
+      searching for an error message as you go. Which command suits this best?
+    options:
+      - id: a
+        text: "`cat app.log`"
+        rationale: Wrong. cat writes the whole file to the terminal at once, with no way to page or search.
+      - id: b
+        text: "`head app.log`"
+        rationale: Wrong. head prints only the first ten lines and exits.
+      - id: c
+        text: "`less app.log`"
+        rationale: Correct. less is a pager that scrolls both ways and searches with / and ?.
+      - id: d
+        text: "`nl app.log`"
+        rationale: Wrong. nl numbers the lines and prints them all; it does not page or search.
+    answer: [c]
+    explanation: >
+      less shows a file one screen at a time, lets you move back and forth with the arrow and page
+      keys, and searches forward with / and backward with ?. It does not need to read the whole file
+      before showing it, so it suits very large files.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.2", lesson: 1, section: Viewing a File in a Pager }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [less, pager]
+
+  - id: 101-103.2-0007
+    type: multi_choice
+    difficulty: 2
+    pool: holdout
+    stem: Which **TWO** commands print the decompressed contents of `inventory.bz2` to standard output?
+    select_count: 2
+    options:
+      - id: a
+        text: "`bzcat inventory.bz2`"
+        rationale: Correct. bzcat decompresses bzip2 data to standard output.
+      - id: b
+        text: "`zcat inventory.bz2`"
+        rationale: Wrong. zcat handles gzip data; it reports "not in gzip format" for a bzip2 file.
+      - id: c
+        text: "`bzip2 -dc inventory.bz2`"
+        rationale: Correct. -d decompresses and -c writes to standard output, which is what bzcat does.
+      - id: d
+        text: "`xzcat inventory.bz2`"
+        rationale: Wrong. xzcat does not understand bzip2 data and reports "File format not recognized".
+      - id: e
+        text: "`cat inventory.bz2`"
+        rationale: Wrong. cat prints the compressed bytes as they are, not the original text.
+    answer: [a, c]
+    explanation: >
+      bzcat is the same as bzip2 -dc (decompress to standard output); bunzip2 -c works too. The
+      viewer must match the compression format: zcat for gzip, bzcat for bzip2, xzcat for xz.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.2", lesson: 1, section: Reading a Compressed File }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [bzcat, compression]
+
+  - id: 101-103.2-0008
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      `ifs` holds one interface name per line and `ips` holds the matching address on the same line
+      number. Which command produced the output shown?
+    exhibit: |
+      $ cat ifs
+      eth0
+      eth1
+      lo
+      $ cat ips
+      10.0.0.5
+      10.0.1.7
+      127.0.0.1
+      $ ???
+      eth0	10.0.0.5
+      eth1	10.0.1.7
+      lo	127.0.0.1
+    options:
+      - id: a
+        text: "`cat ifs ips`"
+        rationale: Wrong. cat prints one file after the other, giving six lines.
+      - id: b
+        text: "`paste ifs ips`"
+        rationale: Correct. paste joins line N of each file into one line, separated by a tab by default.
+      - id: c
+        text: "`cut -f1,2 ifs ips`"
+        rationale: Wrong. cut processes each file in turn; these lines contain no tab, so they are printed unchanged, six lines in all.
+      - id: d
+        text: "`sort ifs ips`"
+        rationale: Wrong. sort merges the lines of both files into one sorted list of six lines.
+    answer: [b]
+    explanation: >
+      paste merges files side by side: the first lines of all files form the first output line, and
+      so on. The separator is a tab unless -d gives another one, for example paste -d= ifs ips.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.2", lesson: 1, section: Summary }
+    verify:
+      setup: ["cd /tmp && printf 'eth0\\neth1\\n' > ifs && printf '10.0.0.5\\n10.0.1.7\\n' > ips"]
+      command: cd /tmp && paste ifs ips | head -n 1
+      expect: { exit_code: 0, stdout_regex: "^eth0\\t10\\.0\\.0\\.5\\s*$" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [paste]
+
+  - id: 101-103.2-0009
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: Which command produced the output shown from `hosts.txt`?
+    exhibit: |
+      $ cat hosts.txt
+      web01 up
+      db01 down
+      web02 up
+      cache01 down
+      $ ???
+      web01 up
+      db01 down
+      db01 down
+      web02 up
+      cache01 down
+      cache01 down
+    options:
+      - id: a
+        text: "`sed -n '/down/p' hosts.txt`"
+        rationale: Wrong. -n turns off the automatic printing, so only the two "down" lines appear, once each.
+      - id: b
+        text: "`sed '/down/d' hosts.txt`"
+        rationale: Wrong. d removes matching lines, leaving only the two "up" lines.
+      - id: c
+        text: "`grep -v up hosts.txt`"
+        rationale: Wrong. This prints just the two lines that do not contain "up".
+      - id: d
+        text: "`sed '/down/p' hosts.txt`"
+        rationale: Correct. sed prints every line automatically, and p prints matching lines a second time.
+    answer: [d]
+    explanation: >
+      By default sed prints each input line after running the script on it. The p command prints the
+      current line as well, so matching lines appear twice. Adding -n suppresses the automatic
+      printing, which turns sed '/x/p' into a grep-like filter.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.2", lesson: 1, section: "The Basics of sed, the Stream Editor" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [sed]
+
+  - id: 101-103.2-0010
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      Which command prints only the item name and the price (the 2nd and 4th fields) of every line
+      in `stock.csv`?
+    exhibit: |
+      $ cat stock.csv
+      id,item,qty,price
+      101,cable,4,3.50
+      102,switch,1,89.00
+      103,patch panel,2,41.25
+    options:
+      - id: a
+        text: "`cut -d, -f2,4 stock.csv`"
+        rationale: Correct. -d, makes the comma the field delimiter and -f2,4 selects fields 2 and 4.
+      - id: b
+        text: "`cut -f2,4 stock.csv`"
+        rationale: Wrong. Without -d, cut splits on tabs; lines with no tab are printed whole.
+      - id: c
+        text: "`cut -c2,4 stock.csv`"
+        rationale: Wrong. -c selects character positions 2 and 4, giving output such as "di" and "0,".
+      - id: d
+        text: "`cut -d, -f2-4 stock.csv`"
+        rationale: Wrong. 2-4 is a range, so the quantity (field 3) is printed too.
+    answer: [a]
+    explanation: >
+      cut -d sets a one-character delimiter (tab by default) and -f lists the fields to keep, as
+      single numbers, comma-separated lists or ranges. The selected fields are printed joined by the
+      same delimiter. -c and -b select by character or byte position instead.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.2", lesson: 1, section: Summary }
+    verify:
+      setup: ["printf '101,cable,4,3.50\\n' > /tmp/stock.csv"]
+      command: cut -d, -f2,4 /tmp/stock.csv
+      expect: { exit_code: 0, stdout_regex: "^cable,3\\.50\\s*$" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [cut]
+
+  - id: 101-103.2-0011
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      `svc.txt` lists one service name per connection. `uniq -c` gave the output shown, with `ssh`
+      counted in three places. Which command prints one line per service with its total count?
+    exhibit: |
+      $ uniq -c svc.txt
+            1 ssh
+            1 http
+            2 ssh
+            1 http
+            1 dns
+            1 ssh
+    options:
+      - id: a
+        text: "`uniq -u svc.txt`"
+        rationale: Wrong. -u prints only lines that are not repeated next to themselves, and no counts.
+      - id: b
+        text: "`uniq -c svc.txt | sort`"
+        rationale: Wrong. Sorting afterwards only reorders the separate partial counts; they are never added up.
+      - id: c
+        text: "`sort svc.txt | uniq -c`"
+        rationale: Correct. Sorting first makes identical lines adjacent, so uniq -c counts each service once.
+      - id: d
+        text: "`sort -u svc.txt | uniq -c`"
+        rationale: Wrong. sort -u already removed the duplicates, so every count is 1.
+    answer: [c]
+    explanation: >
+      uniq only compares each line with the one before it, so repeated lines must be adjacent. That
+      is why it is nearly always used after sort. Here the result is 1 dns, 2 http, 4 ssh.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.2", lesson: 1, section: Summary }
+    verify:
+      setup: ["printf 'ssh\\nhttp\\nssh\\nssh\\nhttp\\ndns\\nssh\\n' > /tmp/svc.txt"]
+      command: sort /tmp/svc.txt | uniq -c
+      expect: { exit_code: 0, stdout_regex: "4 ssh" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [uniq, sort]
+
+  - id: 101-103.2-0012
+    type: fill_in
+    difficulty: 3
+    pool: holdout
+    stem: >
+      Type the `tail` option that keeps the file open after printing its last lines and goes on
+      printing new lines as they are appended to it.
+    fill_in:
+      accepted: ['((sudo\s+)?((/usr)?/bin/)?tail\s+((-n\s*\+?\d+|--lines(=|\s+)\+?\d+)\s+)?)?(-f|-F|--follow(=(name|descriptor))?)(\s+(-n\s*\+?\d+|--lines(=|\s+)\+?\d+))?(\s+(?!-)\S+)*']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      tail -f (--follow) waits for more data and prints it as it arrives, which is the usual way to
+      watch a log. Stop it with Ctrl+C. -F (--follow=name --retry) also follows, and keeps going
+      when the log is rotated and replaced by a new file.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.2", lesson: 1, section: Summary }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Regex also accepts -n/--lines NUM before or after -f (e.g. tail -n 0 -f file)." }
+    tags: [tail]
+
+  - id: 101-103.2-0013
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      `sizes` holds one number per line. Plain `sort` gave the order shown. Which option makes
+      `sort` order the lines by numeric value, 3 first and 1024 last?
+    exhibit: |
+      $ sort sizes
+      1024
+      120
+      15
+      3
+      8
+    options:
+      - id: a
+        text: "`-r`"
+        rationale: Wrong. -r reverses the text order, giving 8, 3, 15, 120, 1024.
+      - id: b
+        text: "`-u`"
+        rationale: Wrong. -u drops duplicate lines but keeps the text order.
+      - id: c
+        text: "`-f`"
+        rationale: Wrong. -f folds lowercase into uppercase for comparing; digits are unaffected.
+      - id: d
+        text: "`-n`"
+        rationale: Correct. -n compares the leading numbers by value instead of character by character.
+    answer: [d]
+    explanation: >
+      Without options sort compares lines as text, so "1024" comes before "3" because "1" sorts before
+      "3". sort -n compares numeric values; add -r for largest first.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.2", lesson: 1, section: Summary }
+    verify:
+      command: printf '8\n120\n15\n3\n1024\n' | sort -n | tr '\n' ' '
+      expect: { exit_code: 0, stdout_contains: "3 8 15 120 1024" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [sort]
+
+  - id: 101-103.2-0014
+    type: multi_choice
+    difficulty: 4
+    pool: holdout
+    stem: "`events.log` has several hundred lines. Which **TWO** commands print exactly lines 20 to 30 (inclusive) of it?"
+    select_count: 2
+    options:
+      - id: a
+        text: "`head -n 30 events.log | tail -n 10`"
+        rationale: Wrong. The last 10 of the first 30 lines are lines 21 to 30.
+      - id: b
+        text: "`sed -n '20,30p' events.log`"
+        rationale: Correct. -n stops automatic printing and 20,30p prints just that address range.
+      - id: c
+        text: "`tail -n +20 events.log | head -n 10`"
+        rationale: Wrong. tail -n +20 starts at line 20, but head -n 10 stops at line 29.
+      - id: d
+        text: "`head -n 30 events.log | tail -n 11`"
+        rationale: Correct. Lines 20 to 30 are the last 11 of the first 30 lines.
+      - id: e
+        text: "`sed '20,30p' events.log`"
+        rationale: Wrong. Without -n, sed prints every line of the file and lines 20 to 30 twice.
+    answer: [b, d]
+    explanation: >
+      Lines 20 to 30 inclusive are 11 lines. head and tail can cut them out together, and sed can
+      select a line range directly when automatic printing is turned off with -n.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.2", lesson: 1, section: Getting a Portion of a Text File }
+    verify:
+      setup: ["seq 50 > /tmp/events.log"]
+      command: head -n 30 /tmp/events.log | tail -n 11 | tr '\n' ' '
+      expect: { exit_code: 0, stdout_regex: "^20 21 22 23 24 25 26 27 28 29 30 $" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Stem states the file is long enough, so every option is judged on lines 20-30 of a large file." }
+    tags: [head, tail, sed]
+
+  - id: 101-103.2-0015
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      A service rejects `app.conf`, which was edited on a Windows machine. `od -c` shows its bytes.
+      Which command writes a copy that the service will accept to `app.unix.conf`?
+    exhibit: |
+      $ od -c app.conf
+      0000000   h   o   s   t   =   d   b   0   1  \r  \n   p   o   r   t   =
+      0000020   5   4   3   2  \r  \n
+      0000026
+    options:
+      - id: a
+        text: "`tr -s '\\n' < app.conf > app.unix.conf`"
+        rationale: Wrong. -s squeezes repeated newlines; the \r before each newline stays.
+      - id: b
+        text: "`tr -d '\\r' < app.conf > app.unix.conf`"
+        rationale: Correct. -d deletes every carriage return, leaving plain \n line endings.
+      - id: c
+        text: "`cut -d'\\r' -f1 app.conf > app.unix.conf`"
+        rationale: Wrong. cut takes '\r' as two characters and stops with "the delimiter must be a single character".
+      - id: d
+        text: "`uniq app.conf > app.unix.conf`"
+        rationale: Wrong. uniq only removes adjacent duplicate lines; the line endings are not touched.
+    answer: [b]
+    explanation: >
+      od -c shows each byte as a character or a backslash escape, which reveals the carriage return
+      (\r) that Windows puts before each newline. tr -d deletes the listed characters from its input,
+      so tr -d '\r' converts the file to Unix line endings.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.2", lesson: 1, section: Looking Deeper into Files }
+    verify:
+      command: printf 'a\r\nb\r\n' | tr -d '\r' | od -c
+      expect: { exit_code: 0, stdout_contains: "a  \\n   b  \\n" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [od, tr]
+
+  - id: 101-103.2-0016
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: Which statement correctly describes the result shown?
+    exhibit: |
+      $ cat SHA256SUMS
+      2c8b08da5ce60398e1f19af0e5dccc744df274b826abe585eaba68c525434806  tool-1.4.tar.gz
+      27dd8ed44a83ff94d557f9fd0412ed5a8cbca69ea04922d88c01184a07300a5a  tool-1.4.sig
+      f6936912184481f5edd4c304ce27c5a1a827804fc7f329f43d273b8621870776  notes.txt
+      $ sha256sum -c SHA256SUMS
+      tool-1.4.tar.gz: OK
+      tool-1.4.sig: FAILED
+      sha256sum: notes.txt: No such file or directory
+      notes.txt: FAILED open or read
+      sha256sum: WARNING: 1 listed file could not be read
+      sha256sum: WARNING: 1 computed checksum did NOT match
+    options:
+      - id: a
+        text: tool-1.4.sig has changed since the list was made, and notes.txt is missing
+        rationale: Correct. FAILED means the recomputed digest differs; "No such file" means notes.txt could not be opened.
+      - id: b
+        text: notes.txt was read, but its contents differ from when the list was made
+        rationale: Wrong. "FAILED open or read" and "No such file or directory" mean no digest was computed for it.
+      - id: c
+        text: The command exits with status 0 because at least one file was verified
+        rationale: Wrong. sha256sum -c exits with status 1 when any listed file fails or cannot be read.
+      - id: d
+        text: tool-1.4.sig is a signature file, which sha256sum always reports as FAILED
+        rationale: Wrong. sha256sum treats every file as plain bytes; a matching .sig file would show OK.
+    answer: [a]
+    explanation: >
+      sha256sum -c prints OK for each file whose digest matches and FAILED for each that does not. A
+      listed file that is missing is reported as "FAILED open or read" and counted separately in the
+      warnings. The exit status is non-zero unless every file checks out.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.2", lesson: 1, section: Ensuring Data Integrity }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Correct option shortened; it was the longest." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [sha256sum, checksum]
+
+  - id: 101-103.2-0017
+    type: fill_in
+    difficulty: 4
+    pool: holdout
+    stem: >
+      Type the `od` option that shows each byte of a file as a printable character or a backslash
+      escape such as `\t`, `\r` or `\n`, so hidden characters become visible.
+    fill_in:
+      accepted: ['((sudo\s+)?((/usr)?/bin/)?od\s+((-A\s*n|--address-radix(=|\s+)n)\s+)?)?(-c|-t\s*c|--format(=|\s+)c)(\s+(-A\s*n|--address-radix(=|\s+)n))?(\s+(?!-)\S+)*']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      od -c (the same as -t c) prints printable bytes as themselves and others as C escapes such as
+      \t, \r, \n or as octal numbers. It is a quick way to spot carriage returns, tabs or trailing
+      spaces. -a is similar but uses names such as cr and nl instead of escapes.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.2", lesson: 1, section: Looking Deeper into Files }
+    verify:
+      command: printf 'a\tb\n' | od -c
+      expect: { exit_code: 0, stdout_contains: "\\t" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Regex also accepts od -An -c (address column turned off)." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Regex also accepts sudo and -An/--address-radix=n after the -c option." }
+    tags: [od]
+
+  - id: 101-103.2-0018
+    type: multi_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      An admin meant to edit `site.conf` in place with GNU sed and keep a backup, but typed
+      `sed -ie 's/8080/9090/' site.conf`. Which **TWO** statements describe the result?
+    select_count: 2
+    options:
+      - id: a
+        text: "`site.conf` now contains 9090 where it had 8080"
+        rationale: Correct. The script still runs and the file is edited in place.
+      - id: b
+        text: A backup named `site.conf.bak` was created
+        rationale: Wrong. The backup suffix is whatever directly follows -i, and no ".bak" was given.
+      - id: c
+        text: "`site.conf` is unchanged and the edited text went to standard output"
+        rationale: Wrong. -i is in effect, so sed writes the result back to the file instead of to standard output.
+      - id: d
+        text: A copy of the original file was saved as `site.confe`
+        rationale: Correct. GNU sed reads the "e" right after -i as the backup suffix.
+      - id: e
+        text: sed stopped with an error because the script follows -e
+        rationale: Wrong. The e was taken as the suffix, so the script is the first non-option argument and sed runs normally.
+    answer: [a, d]
+    explanation: >
+      With GNU sed, -i takes an optional suffix that must be attached to it: -i.bak keeps the
+      original as FILE.bak. In -ie the "e" is that suffix, not the -e option, so sed edits the file and
+      leaves the original as site.confe. Write -i -e or -e ... -i to avoid this.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.2", lesson: 1, section: "The Basics of sed, the Stream Editor" }
+    verify:
+      setup: ["cd /tmp && printf 'listen=8080\\n' > site.conf"]
+      command: cd /tmp && sed -ie 's/8080/9090/' site.conf && cat site.confe site.conf
+      expect: { exit_code: 0, stdout_regex: "listen=8080\\s+listen=9090" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [sed]
+
+  - id: 101-103.2-0019
+    type: multi_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      Each line of `access.log` starts with the client address followed by a space. Which **TWO**
+      pipelines print the address that made the most requests together with its correct request
+      count?
+    exhibit: |
+      $ head -n 3 access.log
+      10.0.0.7 - - [26/Oct/2026:09:01:12] "GET / HTTP/1.1" 200
+      10.0.0.9 - - [26/Oct/2026:09:01:15] "GET /login HTTP/1.1" 200
+      10.0.0.7 - - [26/Oct/2026:09:01:20] "GET /about HTTP/1.1" 200
+    select_count: 2
+    options:
+      - id: a
+        text: "`cut -d' ' -f1 access.log | uniq -c | sort -rn | head -n 1`"
+        rationale: Wrong. Without sorting first, uniq counts only runs of adjacent lines, so the counts are split up.
+      - id: b
+        text: "`cut -d' ' -f1 access.log | sort | uniq -c | sort -rn | head -n 1`"
+        rationale: Correct. Sort, count each address, sort the counts largest first and keep the top line.
+      - id: c
+        text: "`cut -d' ' -f1 access.log | sort | uniq -c | sort -n | tail -n 1`"
+        rationale: Correct. Counts sorted smallest first put the busiest address on the last line.
+      - id: d
+        text: "`cut -d' ' -f1 access.log | sort -u | uniq -c | sort -rn | head -n 1`"
+        rationale: Wrong. sort -u leaves one line per address, so every count is 1.
+      - id: e
+        text: "`cut -d' ' -f1 access.log | sort | uniq -d | head -n 1`"
+        rationale: Wrong. uniq -d prints each repeated address once, without counts, in sorted order.
+    answer: [b, c]
+    explanation: >
+      The classic "top N" pipeline is cut | sort | uniq -c | sort -rn | head. uniq needs sorted
+      input to see all copies of a line together, and the second sort must be numeric because the
+      counts are numbers.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.2", lesson: 1, section: Summary }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [cut, sort, uniq, head, tail]
+
+  - id: 101-103.2-0020
+    type: fill_in
+    difficulty: 5
+    pool: holdout
+    stem: >
+      Type the full command that splits `capture.log` into pieces of 100 MiB each, named
+      `log_00`, `log_01`, `log_02` and so on.
+    fill_in:
+      accepted: ['(?=.*(\s-d|\s--numeric-suffixes))(?=.*(\s-d?b|\s--bytes))(sudo\s+)?((/usr)?/bin/)?split(\s+(-b\s*(100M|100MiB|104857600)|--bytes(=|\s+)(100M|100MiB|104857600)|-db\s*(100M|100MiB|104857600)|-d|--numeric-suffixes(=0+)?|-a\s*2|--suffix-length(=|\s+)2))*\s+(\./)?capture\.log\s+log_(\s+(-b\s*(100M|100MiB|104857600)|--bytes(=|\s+)(100M|100MiB|104857600)|-db\s*(100M|100MiB|104857600)|-d|--numeric-suffixes(=0+)?|-a\s*2|--suffix-length(=|\s+)2))*']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      split -b SIZE starts a new piece every SIZE bytes; the suffixes K, M, G are powers of 1024
+      (KB, MB, GB are powers of 1000). -d gives numeric suffixes 00, 01, ... instead of aa, ab, ...,
+      and the last argument is the prefix.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.2", lesson: 1, section: Summary }
+    verify:
+      setup: ["cd /tmp && head -c 250M /dev/zero > capture.log"]
+      command: cd /tmp && split -b 100M -d capture.log log_ && ls log_* && stat -c %s log_00
+      expect: { exit_code: 0, stdout_regex: "log_00\\s+log_01\\s+log_02\\s+104857600" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Regex also accepts options after the operands (GNU getopt permutes them)." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Rewritten as a size-based split (-b 100M -d); the line-based version restated Explorational Exercise 5. Text supplied by the reviewer; verified live by the writer." }
+    tags: [split]
+
+  # --------------------------------------------------------------------------- practice (CLI)
+
+  - id: 101-103.2-0021
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: >
+      You have `part1.txt` and `part2.txt` and want a single file `whole.txt` that holds all of
+      part1 followed by all of part2. Which command does this?
+    options:
+      - id: a
+        text: "`paste part1.txt part2.txt > whole.txt`"
+        rationale: Wrong. paste puts the files side by side, joining line N of each into one line.
+      - id: b
+        text: "`cat part1.txt part2.txt > whole.txt`"
+        rationale: Correct. cat concatenates files one after the other on standard output, which is redirected to whole.txt.
+      - id: c
+        text: "`split part1.txt part2.txt > whole.txt`"
+        rationale: Wrong. split breaks one file into pieces; the second name is taken as the output prefix.
+      - id: d
+        text: "`cut part1.txt part2.txt > whole.txt`"
+        rationale: Wrong. cut needs a -b, -c or -f selection and fails without one.
+    answer: [b]
+    explanation: >
+      cat (from "concatenate") writes the named files to standard output in the order given. With
+      > the output goes to a new file; >> would append to an existing one instead.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.2", lesson: 1, section: A Quick Review on Redirections and Pipes }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [cat]
+
+  - id: 101-103.2-0022
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: Which command shows only the first five lines of `queue.txt`?
+    options:
+      - id: a
+        text: "`tail -n 5 queue.txt`"
+        rationale: Wrong. tail shows the last five lines.
+      - id: b
+        text: "`head -c 5 queue.txt`"
+        rationale: Wrong. -c counts bytes, so this prints only the first five bytes.
+      - id: c
+        text: "`cut -c1-5 queue.txt`"
+        rationale: Wrong. This keeps the first five characters of every line.
+      - id: d
+        text: "`head -n 5 queue.txt`"
+        rationale: Correct. head -n sets how many lines to print from the start.
+    answer: [d]
+    explanation: >
+      head prints the start of a file (ten lines by default) and tail the end. -n NUM sets the
+      number of lines and -c NUM a number of bytes instead.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.2", lesson: 1, section: Getting a Portion of a Text File }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [head]
+
+  - id: 101-103.2-0023
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: Which command prints the text inside the xz-compressed file `dmesg.old.xz`?
+    options:
+      - id: a
+        text: "`xzcat dmesg.old.xz`"
+        rationale: Correct. xzcat decompresses xz data to standard output.
+      - id: b
+        text: "`zcat dmesg.old.xz`"
+        rationale: Wrong. zcat is for gzip data and reports that the file is not in gzip format.
+      - id: c
+        text: "`bzcat dmesg.old.xz`"
+        rationale: Wrong. bzcat is for bzip2 data and reports that the file is not a bzip2 file.
+      - id: d
+        text: "`unxz dmesg.old.xz`"
+        rationale: Wrong. unxz decompresses the file into `dmesg.old` and removes the .xz file; nothing is printed.
+    answer: [a]
+    explanation: >
+      Match the viewer to the compression: xzcat for .xz, bzcat for .bz2, zcat for .gz. Each one
+      writes the decompressed text to standard output and leaves the compressed file alone.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.2", lesson: 1, section: Reading a Compressed File }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Option d replaced with unxz: less -c also shows the text because LESSOPEN uses lesspipe. Text supplied by the reviewer; verified live by the writer." }
+    tags: [xzcat, compression]
+
+  - id: 101-103.2-0024
+    type: single_choice
+    difficulty: 3
+    pool: practice
+    stem: Which command produced the output shown? (`todo.txt` contains two empty lines.)
+    exhibit: |
+      $ ??? todo.txt
+           1	mount /data
+
+           2	check quota
+           3	rotate logs
+
+           4	notify admin
+    options:
+      - id: a
+        text: "`cat -n todo.txt`"
+        rationale: Wrong. cat -n numbers every line, empty ones included, so it would reach 6.
+      - id: b
+        text: "`nl -b a todo.txt`"
+        rationale: Wrong. -b a tells nl to number all lines, including the empty ones.
+      - id: c
+        text: "`nl todo.txt`"
+        rationale: Correct. By default nl numbers only non-empty lines (-b t), so the empty lines get no number.
+      - id: d
+        text: "`wc -l todo.txt`"
+        rationale: Wrong. wc -l prints just a count and the file name, not the lines.
+    answer: [c]
+    explanation: >
+      nl numbers lines, but its default body style (-b t) skips empty lines. cat -n and nl -b a
+      number every line.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.2", lesson: 1, section: Getting a Portion of a Text File }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [nl, cat]
+
+  - id: 101-103.2-0025
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: According to the output shown, how many words does `todo.txt` contain?
+    exhibit: |
+      $ wc todo.txt
+       6  8 51 todo.txt
+    options:
+      - id: a
+        text: "6"
+        rationale: Wrong. The first number is the line count.
+      - id: b
+        text: "51"
+        rationale: Wrong. The third number is the byte count.
+      - id: c
+        text: "1"
+        rationale: Wrong. wc counted one file, but it does not print a file count.
+      - id: d
+        text: "8"
+        rationale: Correct. With no options wc prints lines, words, then bytes, so the second number is the words.
+    answer: [d]
+    explanation: >
+      With no options wc prints the line, word and byte counts, in that order, followed by the file
+      name. -l, -w and -c select single counts; -m counts characters.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.2", lesson: 1, section: Getting a Portion of a Text File }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Difficulty 3 -> 2 (reading wc column order is choosing/recall, not option knowledge)." }
+    tags: [wc]
+
+  - id: 101-103.2-0026
+    type: single_choice
+    difficulty: 3
+    pool: practice
+    stem: >
+      The command shown replaced only one "red" on the first line. Which command replaces every
+      "red" on every line?
+    exhibit: |
+      $ sed 's/red/pink/' col.txt
+      pink red green
+      blue pink
+    options:
+      - id: a
+        text: "`sed 's/red/pink/g' col.txt`"
+        rationale: Correct. The g flag makes s replace every match on the line, not only the first.
+      - id: b
+        text: "`sed -n 's/red/pink/' col.txt`"
+        rationale: Wrong. -n turns off automatic printing, so nothing is printed at all.
+      - id: c
+        text: "`sed 's/red/pink/2' col.txt`"
+        rationale: Wrong. The 2 flag replaces only the second match on each line, so "blue red" keeps its red.
+      - id: d
+        text: "`sed -i 's/red/pink/' col.txt`"
+        rationale: Wrong. -i writes the result back to the file, but still replaces only the first match per line.
+    answer: [a]
+    explanation: >
+      sed's s command replaces the first match on each line. A trailing g replaces all matches on
+      the line, and a number N replaces only the Nth match.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.2", lesson: 1, section: "The Basics of sed, the Stream Editor" }
+    verify:
+      command: printf 'red red green\n' | sed 's/red/pink/g'
+      expect: { exit_code: 0, stdout_contains: "pink pink green" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [sed]
+
+  - id: 101-103.2-0027
+    type: multi_choice
+    difficulty: 2
+    pool: practice
+    stem: Which **TWO** commands compute a message digest (hash) of a file that can later be checked with `-c`?
+    select_count: 2
+    options:
+      - id: a
+        text: "`od`"
+        rationale: Wrong. od dumps the file's bytes; it computes no digest.
+      - id: b
+        text: "`nl`"
+        rationale: Wrong. nl numbers lines.
+      - id: c
+        text: "`md5sum`"
+        rationale: Correct. md5sum computes MD5 digests and checks them with -c.
+      - id: d
+        text: "`split`"
+        rationale: Wrong. split breaks a file into smaller files.
+      - id: e
+        text: "`sha512sum`"
+        rationale: Correct. sha512sum computes SHA-512 digests and checks them with -c.
+    answer: [c, e]
+    explanation: >
+      md5sum, sha256sum and sha512sum each print a digest followed by the file name, and with -c
+      they read such lines back and check the files. SHA-256 and SHA-512 are stronger than MD5.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.2", lesson: 1, section: Ensuring Data Integrity }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [md5sum, sha512sum, checksum]
+
+  - id: 101-103.2-0028
+    type: multi_choice
+    difficulty: 3
+    pool: practice
+    stem: >
+      Which **TWO** commands print the lines of `fruit.txt` in reverse alphabetical order with each
+      distinct line shown only once?
+    select_count: 2
+    options:
+      - id: a
+        text: "`sort -ru fruit.txt`"
+        rationale: Correct. -r reverses the order and -u keeps one copy of equal lines.
+      - id: b
+        text: "`uniq fruit.txt | sort -r`"
+        rationale: Wrong. uniq runs before sorting, so duplicates that are not adjacent survive.
+      - id: c
+        text: "`sort -R -u fruit.txt`"
+        rationale: Wrong. -R shuffles the lines into a random order instead of reversing them.
+      - id: d
+        text: "`sort -r fruit.txt | uniq`"
+        rationale: Correct. After sorting, equal lines are adjacent, so uniq removes the repeats.
+    answer: [a, d]
+    explanation: >
+      sort -u is the same as sort followed by uniq. uniq alone only removes repeats that are next to
+      each other, so it needs sorted input.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.2", lesson: 1, section: Summary }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [sort, uniq]
+
+  - id: 101-103.2-0029
+    type: fill_in
+    difficulty: 2
+    pool: practice
+    stem: Type the command that prints the SHA-256 digest of the file `image.iso`.
+    fill_in:
+      accepted: ['(sudo\s+)?((/usr)?/bin/)?sha256sum\s+(-b\s+|--binary\s+|--tag\s+)?(\./)?image\.iso']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      sha256sum FILE prints the 64-hex-digit SHA-256 digest followed by the file name. Redirect it to
+      a file to check the image later with sha256sum -c.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.2", lesson: 1, section: Ensuring Data Integrity }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Regex also accepts -b, --binary or --tag before the file name." }
+    tags: [sha256sum]
+
+  - id: 101-103.2-0030
+    type: fill_in
+    difficulty: 3
+    pool: practice
+    stem: >
+      Type the `tr` option that replaces each run of a repeated character, such as several spaces
+      in a row, with a single copy of it.
+    fill_in:
+      accepted: ['(tr\s+)?(-s|--squeeze-repeats)']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      tr -s (--squeeze-repeats) collapses each run of a listed character into a single one:
+      echo 'a    b' | tr -s ' ' prints "a b". Combined with a second set, as in tr -s 'x' 'y',
+      it translates first and then squeezes the result.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.2", lesson: 1, section: Summary }
+    verify:
+      command: echo 'a    b' | tr -s ' '
+      expect: { exit_code: 0, stdout_regex: "^a b\\s*$" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Explanation reworded to avoid echoing an explorational exercise (tr -s before cut)." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Regex no longer accepts trailing operands; the stem asks only for the option." }
+    tags: [tr]

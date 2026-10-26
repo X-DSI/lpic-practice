@@ -1,0 +1,1939 @@
+# 103.4 Use streams, pipes and redirects — weight 4 → 40 holdout + 20 practice.
+# Original questions written from LPI Learning Materials 101-500, objective 103.4, lessons 1 and 2.
+schema_version: 1
+exam: "101"
+objective: "103.4"
+questions:
+  # ---------------------------------------------------------------- holdout (mock exams only)
+
+  - id: 101-103.4-0001
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: Which file descriptor number does a Linux process use for its standard error stream?
+    options:
+      - id: a
+        text: "0"
+        rationale: Wrong. File descriptor 0 is standard input.
+      - id: b
+        text: "1"
+        rationale: Wrong. File descriptor 1 is standard output.
+      - id: c
+        text: "2"
+        rationale: Correct. Standard error is file descriptor 2, which is why 2> redirects error messages.
+      - id: d
+        text: "3"
+        rationale: Wrong. Descriptors 3 and above are not opened by default; programs use them for extra files.
+    answer: [c]
+    explanation: >
+      Every process starts with three open descriptors: 0 (stdin), 1 (stdout) and 2 (stderr). The
+      numbers are what you write in front of a redirection operator, as in 2>errors.log.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 1, section: Introduction }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [file-descriptors, stderr]
+
+  - id: 101-103.4-0002
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: >
+      You want each run of a nightly script to add its output to the end of `history.log`, keeping
+      what earlier runs wrote. Which operator do you use after the script name?
+    options:
+      - id: a
+        text: "`>>`"
+        rationale: Correct. >> opens the file for appending and creates it if it does not exist.
+      - id: b
+        text: "`>`"
+        rationale: Wrong. > truncates the file first, so earlier runs' output would be lost.
+      - id: c
+        text: "`<<`"
+        rationale: Wrong. << starts a here document, which feeds typed text to standard input.
+      - id: d
+        text: "`|`"
+        rationale: Wrong. A pipe sends output to another command, not to a file.
+    answer: [a]
+    explanation: >
+      `script >> history.log` appends standard output to the file. A single > would empty the file
+      on every run before writing.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 1, section: Redirects }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [redirection, append]
+
+  - id: 101-103.4-0003
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: In the command line `dmesg | less`, what does the `|` character do?
+    options:
+      - id: a
+        text: It runs `less` only if `dmesg` exits successfully
+        rationale: Wrong. That is the && operator; a pipe does not depend on exit status.
+      - id: b
+        text: It writes the output of `dmesg` to a file named `less`
+        rationale: Wrong. Writing to a file is done with >; the target of a pipe is a command.
+      - id: c
+        text: It runs `dmesg` and `less` one after the other with no connection between them
+        rationale: Wrong. That is what ; does. A pipe connects the two commands.
+      - id: d
+        text: It connects the standard output of `dmesg` to the standard input of `less`
+        rationale: Correct. The pipe feeds whatever dmesg writes to stdout into less's stdin.
+    answer: [d]
+    explanation: >
+      A pipe joins two processes: the left command's standard output becomes the right command's
+      standard input. Data flows left to right and the target is always another command.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 2, section: Pipes }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [pipe]
+
+  - id: 101-103.4-0004
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: Which command copies the data it reads on standard input both to standard output and to one or more files?
+    options:
+      - id: a
+        text: "`xargs`"
+        rationale: Wrong. xargs turns its input into arguments for another command.
+      - id: b
+        text: "`tee`"
+        rationale: Correct. tee writes its input to stdout and to every file named on its command line.
+      - id: c
+        text: "`cat`"
+        rationale: Wrong. cat copies input or files to standard output only; it does not also write to a file.
+      - id: d
+        text: "`split`"
+        rationale: Wrong. split cuts its input into pieces stored in several files and prints nothing.
+    answer: [b]
+    explanation: >
+      tee is named after a T-shaped pipe fitting: data goes in once and comes out twice, on the
+      screen (or the next command) and in the named files.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 2, section: Pipes }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [tee]
+
+  - id: 101-103.4-0005
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: Which redirection operator makes a command read its standard input from a file?
+    options:
+      - id: a
+        text: "`>`"
+        rationale: Wrong. > sends standard output to a file.
+      - id: b
+        text: "`<`"
+        rationale: Correct. `command < file` connects the file to the command's stdin.
+      - id: c
+        text: "`2>`"
+        rationale: Wrong. 2> sends standard error to a file.
+      - id: d
+        text: "`&>`"
+        rationale: Wrong. &> sends both standard output and standard error to a file.
+    answer: [b]
+    explanation: >
+      With <, data flows from the file on the right into the command on the left, as in
+      `wc -l < users.txt`. Without a number in front it applies to file descriptor 0.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 1, section: Redirects }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [redirection, stdin]
+
+  - id: 101-103.4-0006
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: To throw away output you never want to see, you redirect it to which file?
+    options:
+      - id: a
+        text: "`/dev/null`"
+        rationale: Correct. Anything written to /dev/null is discarded, and any user may write to it.
+      - id: b
+        text: "`/dev/tty`"
+        rationale: Wrong. /dev/tty is the controlling terminal, so the output would still appear on screen.
+      - id: c
+        text: "`/dev/stdout`"
+        rationale: Wrong. This refers to the process's own standard output, so the data would still appear.
+      - id: d
+        text: "`/tmp/null`"
+        rationale: Wrong. This is just an ordinary file name; the data would be stored there.
+    answer: [a]
+    explanation: >
+      /dev/null is a character device that accepts writes and keeps nothing. `cmd 2>/dev/null`
+      is the usual way to hide error messages.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 1, section: Redirects }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Distractor /dev/zero replaced by /dev/tty (writes to /dev/zero are also discarded)." }
+    tags: [dev-null]
+
+  - id: 101-103.4-0007
+    type: multi_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      `ls /etc/hosts /nonexistent` prints one listing and one error message. Which **TWO** commands
+      still show the listing on the terminal but keep the error message off it?
+    select_count: 2
+    options:
+      - id: a
+        text: "`ls /etc/hosts /nonexistent 2>/dev/null`"
+        rationale: Correct. Only stderr is sent to /dev/null; stdout still reaches the terminal.
+      - id: b
+        text: "`ls /etc/hosts /nonexistent >/dev/null`"
+        rationale: Wrong. This discards the listing (stdout) and leaves the error on the screen.
+      - id: c
+        text: "`ls /etc/hosts /nonexistent 2>ls-errors.txt`"
+        rationale: Correct. stderr goes into the file, so only the listing appears on screen.
+      - id: d
+        text: "`ls /etc/hosts /nonexistent &>/dev/null`"
+        rationale: Wrong. Both streams are discarded, so the listing disappears too.
+      - id: e
+        text: "`ls /etc/hosts /nonexistent 1>&2`"
+        rationale: Wrong. stdout is sent where stderr goes, so both still appear on the terminal.
+    answer: [a, c]
+    explanation: >
+      Error messages travel on file descriptor 2. Redirecting only that descriptor, to /dev/null or
+      to a file, removes them from the terminal while descriptor 1 still prints the listing.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 1, section: Redirects }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [stderr, dev-null]
+
+  - id: 101-103.4-0008
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      A search over the whole filesystem prints many "Permission denied" messages. You want those
+      messages saved in `denied.txt` so you can check them later, while the found paths still print
+      on screen. Which command does that?
+    options:
+      - id: a
+        text: "`find / -name '*.conf' > denied.txt`"
+        rationale: Wrong. This saves the found paths and leaves the error messages on screen.
+      - id: b
+        text: "`find / -name '*.conf' < denied.txt`"
+        rationale: Wrong. < feeds the file to find's stdin; it does not capture anything.
+      - id: c
+        text: "`find / -name '*.conf' 2> denied.txt`"
+        rationale: Correct. 2> sends only standard error, where find writes its errors, to the file.
+      - id: d
+        text: "`find / -name '*.conf' | tee denied.txt`"
+        rationale: Wrong. A pipe carries only stdout, so the file gets the paths and not the errors.
+    answer: [c]
+    explanation: >
+      find writes results to stdout and complaints to stderr. Prefixing > with the descriptor number
+      2 redirects just the complaints.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 1, section: Redirects }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [stderr, redirection]
+
+  - id: 101-103.4-0009
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      You start typing `cat <<STOP > notes.txt` at a Bash prompt and then enter several lines of
+      text. What ends the input?
+    options:
+      - id: a
+        text: A line that contains only the word `STOP`
+        rationale: Correct. The here document ends at a line holding nothing but the delimiter.
+      - id: b
+        text: Any line in which the word `STOP` appears
+        rationale: Wrong. STOP inside a longer line is ordinary text; the line must hold only the delimiter.
+      - id: c
+        text: An empty line
+        rationale: Wrong. Empty lines are kept as part of the document.
+      - id: d
+        text: The text `EOF` on a line by itself
+        rationale: Wrong. EOF is only a common choice of delimiter; here the delimiter is STOP.
+    answer: [a]
+    explanation: >
+      The word after << is the delimiter. Bash collects lines until one consists of exactly that
+      word, then hands the collected text to the command's standard input.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 1, section: Here Document and Here String }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [here-document]
+
+  - id: 101-103.4-0010
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: In a Bash script, which line stores the kernel release printed by `uname -r` in the variable `KREL`?
+    options:
+      - id: a
+        text: "`KREL=uname -r`"
+        rationale: Wrong. Bash sets KREL=uname for one command and then tries to run a command named -r.
+      - id: b
+        text: "`KREL=$(uname -r)`"
+        rationale: Correct. $( ) runs the command and replaces itself with the command's standard output.
+      - id: c
+        text: "`KREL=${uname -r}`"
+        rationale: Wrong. ${ } is parameter expansion; this is a "bad substitution" error in Bash.
+      - id: d
+        text: "`KREL='uname -r'`"
+        rationale: Wrong. Single quotes store the literal text "uname -r", not its output.
+    answer: [b]
+    explanation: >
+      Command substitution, written $(command) or with backquotes, is replaced by the command's
+      output, so it can be assigned to a variable or used as an argument.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 2, section: Command Substitution }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [command-substitution]
+
+  - id: 101-103.4-0011
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      A file holds one package name per line. Which utility reads such a list on standard input and
+      runs another command with the names as its arguments?
+    options:
+      - id: a
+        text: "`tee`"
+        rationale: Wrong. tee copies its input to stdout and files; it runs no commands.
+      - id: b
+        text: "`exec`"
+        rationale: Wrong. exec replaces the shell with a command or changes the shell's own redirections.
+      - id: c
+        text: "`env`"
+        rationale: Wrong. env runs a command in a modified environment; it does not read arguments from stdin.
+      - id: d
+        text: "`xargs`"
+        rationale: Correct. xargs builds command lines from the items it reads on stdin and runs them.
+    answer: [d]
+    explanation: >
+      `xargs cmd < list` (or `cat list | xargs cmd`) appends the items read from standard input to
+      cmd's arguments and runs it, so output of one program becomes arguments of another.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 2, section: Command Substitution }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [xargs]
+
+  - id: 101-103.4-0012
+    type: fill_in
+    difficulty: 2
+    pool: holdout
+    stem: >
+      Type a command that makes the current Bash session refuse to overwrite existing files with
+      the `>` redirection.
+    fill_in:
+      accepted: ['set\s+(-C|-o\s+noclobber)']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      `set -o noclobber` (short form `set -C`) turns on noclobber. After that, > into an existing
+      file fails with "cannot overwrite existing file". `set +o noclobber` or `set +C` turns it off.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 1, section: Redirects }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [noclobber, set]
+
+  - id: 101-103.4-0013
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: What does the command `grep -c error <<< "$LINE"` give to `grep`?
+    options:
+      - id: a
+        text: The value of the variable `LINE` on its standard input
+        rationale: Correct. <<< is a here string; the expanded word is fed to stdin, followed by a newline.
+      - id: b
+        text: The contents of the file whose name is stored in `LINE`
+        rationale: Wrong. That would need < "$LINE"; a here string passes the text itself.
+      - id: c
+        text: The value of `LINE` as an extra command-line argument
+        rationale: Wrong. The text goes to standard input, not to grep's argument list.
+      - id: d
+        text: Lines typed at the keyboard until one equals the value of `LINE`
+        rationale: Wrong. That describes a here document (<<), not a here string.
+    answer: [a]
+    explanation: >
+      A here string (<<<) sends one word, after expansion, to the command's standard input. Quote
+      it when it may contain spaces so it stays one word.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 1, section: Here Document and Here String }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [here-string]
+
+  - id: 101-103.4-0014
+    type: multi_choice
+    difficulty: 1
+    pool: holdout
+    stem: >
+      Which **TWO** commands write the standard output of `uname -a` to `sysinfo.txt`, replacing
+      anything already in the file?
+    select_count: 2
+    options:
+      - id: a
+        text: "`uname -a >> sysinfo.txt`"
+        rationale: Wrong. >> appends; the old content is kept.
+      - id: b
+        text: "`uname -a > sysinfo.txt`"
+        rationale: Correct. > redirects stdout and truncates the file first.
+      - id: c
+        text: "`uname -a 2> sysinfo.txt`"
+        rationale: Wrong. 2> captures standard error; uname's normal output still goes to the screen.
+      - id: d
+        text: "`uname -a 1> sysinfo.txt`"
+        rationale: Correct. 1> names stdout explicitly and behaves exactly like >.
+      - id: e
+        text: "`uname -a < sysinfo.txt`"
+        rationale: Wrong. < feeds the file to uname's stdin and writes nothing to it.
+    answer: [b, d]
+    explanation: >
+      When no descriptor number is written before >, Bash uses 1 (stdout). So > and 1> are the same
+      operation and both truncate the target before writing.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 1, section: Redirects }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Command changed from date/now.txt to uname -a/sysinfo.txt (was Guided Exercise 2's command); keys unchanged." }
+    tags: [redirection, stdout]
+
+  - id: 101-103.4-0015
+    type: fill_in
+    difficulty: 2
+    pool: holdout
+    stem: >
+      Type the redirection that, placed after a command, sends its standard error to wherever its
+      standard output is currently going.
+    fill_in:
+      accepted: ['2>&\s*1']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      `2>&1` makes descriptor 2 a copy of descriptor 1. The & tells Bash that 1 is a file
+      descriptor; without it, `2>1` would write errors to a file named 1.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 1, section: Redirects }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [stderr, fd-duplication]
+
+  - id: 101-103.4-0016
+    type: multi_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      Which **TWO** commands create a directory whose name is the output of `hostname`?
+    select_count: 2
+    options:
+      - id: a
+        text: "`mkdir $(hostname)`"
+        rationale: Correct. $( ) is replaced by the output of hostname before mkdir runs.
+      - id: b
+        text: "`mkdir 'hostname'`"
+        rationale: Wrong. Single quotes make this the literal name "hostname".
+      - id: c
+        text: "`mkdir | hostname`"
+        rationale: Wrong. This pipes mkdir's (empty) output to hostname; mkdir fails with a missing operand.
+      - id: d
+        text: "`` mkdir `hostname` ``"
+        rationale: Correct. Backquotes are the older form of command substitution.
+      - id: e
+        text: "`mkdir < hostname`"
+        rationale: Wrong. This tries to read a file named hostname as stdin; mkdir ignores stdin anyway.
+    answer: [a, d]
+    explanation: >
+      Command substitution has two forms, $(command) and `command`. Both are replaced by the
+      command's standard output, which then becomes an argument of the outer command.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 2, section: Command Substitution }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [command-substitution]
+
+  - id: 101-103.4-0017
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: What does the following pipeline print?
+    exhibit: |
+      $ printf 'red\ngreen\nblue\n' | xargs
+    options:
+      - id: a
+        text: Nothing, because no command was given to `xargs`
+        rationale: Wrong. With no command, xargs runs a default command rather than doing nothing.
+      - id: b
+        text: "`red`, `green` and `blue` on three separate lines"
+        rationale: Wrong. The default command receives all three words as arguments of one call.
+      - id: c
+        text: "`red green blue` on a single line"
+        rationale: Correct. Without a command xargs runs echo, which prints its arguments on one line.
+      - id: d
+        text: An error saying `xargs` needs a command name
+        rationale: Wrong. A command is optional; xargs falls back to echo.
+    answer: [c]
+    explanation: >
+      When xargs is given no command it uses echo. All input items fit in one command line, so a
+      single `echo red green blue` runs.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 2, section: Command Substitution }
+    verify:
+      command: printf 'red\ngreen\nblue\n' | xargs
+      expect: { exit_code: 0, stdout_contains: "red green blue" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [xargs]
+
+  - id: 101-103.4-0018
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: Which option, placed in the blank, produces the output shown?
+    exhibit: |
+      $ echo jan feb mar apr may | xargs ____ echo
+      jan feb
+      mar apr
+      may
+    options:
+      - id: a
+        text: "`-L 2`"
+        rationale: Wrong. -L counts input lines; the input is one line, so a single echo prints all five words.
+      - id: b
+        text: "`-n 2`"
+        rationale: Correct. -n 2 passes at most two arguments to each run of echo.
+      - id: c
+        text: "`-P 2`"
+        rationale: Wrong. -P sets how many commands run in parallel, not how many arguments each gets.
+      - id: d
+        text: "`-I 2`"
+        rationale: Wrong. -I sets a replacement string; echo has no "2" to replace, so one blank line is printed.
+    answer: [b]
+    explanation: >
+      `-n N` (--max-args) limits the number of arguments per command line, so the five words are
+      handed out two at a time. -L limits by input lines instead, which differs when a line holds
+      several words.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 2, section: Command Substitution }
+    verify:
+      command: echo jan feb mar apr may | xargs -n 2 echo
+      expect: { exit_code: 0, stdout_regex: "^jan feb\\nmar apr\\nmay\\s*$" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "verify no longer pipes xargs into head (avoids signal 13 noise); checks full output." }
+    tags: [xargs]
+
+  - id: 101-103.4-0019
+    type: fill_in
+    difficulty: 3
+    pool: holdout
+    stem: >
+      `find /data -type f -print0` separates file names with null characters. Type the `xargs`
+      option that tells `xargs` to split its input on null characters.
+    fill_in:
+      accepted: ['(xargs\s+)?(-0|--null)']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      `xargs -0` (long form --null) treats the null character as the only separator, so names with
+      spaces, quotes or newlines are passed through intact. It pairs with find's -print0.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 2, section: Command Substitution }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [xargs, find, print0]
+
+  - id: 101-103.4-0020
+    type: fill_in
+    difficulty: 3
+    pool: holdout
+    stem: >
+      `tee` normally truncates the files it writes to. Type the `tee` option that makes it add to
+      the end of the files instead.
+    fill_in:
+      accepted: ['(tee\s+)?(-a|--append)']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      `tee -a file` (long form --append) appends its input to the file while still copying it to
+      standard output.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 2, section: Pipes }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [tee]
+
+  - id: 101-103.4-0021
+    type: multi_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      A program `sync-job` reports problems on standard output or standard error, depending on the
+      problem. In Bash, which **TWO** command lines make `grep` search **both** streams for `fail`?
+    select_count: 2
+    options:
+      - id: a
+        text: "`sync-job | grep fail 2>&1`"
+        rationale: Wrong. Here 2>&1 applies to grep, not to sync-job, so sync-job's stderr bypasses the pipe.
+      - id: b
+        text: "`sync-job 2>&1 | grep fail`"
+        rationale: Correct. sync-job's stderr is joined to its stdout before the pipe carries both to grep.
+      - id: c
+        text: "`sync-job |& grep fail`"
+        rationale: Correct. In Bash, |& is shorthand for 2>&1 followed by a pipe.
+      - id: d
+        text: "`sync-job 2> grep fail`"
+        rationale: Wrong. This writes stderr to a file named grep and passes "fail" as an argument to sync-job.
+      - id: e
+        text: "`sync-job 2>&1 > grep`"
+        rationale: Wrong. This writes stdout to a file named grep; no grep command runs.
+    answer: [b, c]
+    explanation: >
+      A pipe carries only standard output. To search error messages as well, copy stderr onto stdout
+      with 2>&1 before the |, or use Bash's |& operator, which does the same.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 2, section: Pipes }
+    verify:
+      command: >
+        bash -c 'j(){ echo fail-out; echo fail-err >&2; };
+        a=$(j 2>&1 | grep -c fail); b=$(j |& grep -c fail); echo "$a$b"'
+      expect: { exit_code: 0, stdout_contains: "22" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [pipe, stderr]
+
+  - id: 101-103.4-0022
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: Which command is equivalent to `sort < names.txt`?
+    options:
+      - id: a
+        text: "`sort << names.txt`"
+        rationale: Wrong. This starts a here document whose delimiter is the word names.txt.
+      - id: b
+        text: "`sort <<< names.txt`"
+        rationale: Wrong. This sorts the literal text "names.txt", not the file's contents.
+      - id: c
+        text: "`sort 0< names.txt`"
+        rationale: Correct. < without a number applies to descriptor 0, so 0< is the same redirection.
+      - id: d
+        text: "`sort 2< names.txt`"
+        rationale: Wrong. This opens the file on descriptor 2; sort still reads its stdin, which is unchanged.
+    answer: [c]
+    explanation: >
+      An input redirection defaults to file descriptor 0 (standard input) when no number is written,
+      so `< file` and `0< file` are identical.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 1, section: Redirects }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [redirection, stdin, file-descriptors]
+
+  - id: 101-103.4-0023
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      After `set -o noclobber`, the file `audit.log` already exists. Which command can still write
+      to it?
+    options:
+      - id: a
+        text: "`echo done > audit.log`"
+        rationale: Wrong. noclobber blocks > on an existing regular file.
+      - id: b
+        text: "`echo done 1> audit.log`"
+        rationale: Wrong. 1> is the same as > and is blocked the same way.
+      - id: c
+        text: "`echo done &> audit.log`"
+        rationale: Wrong. &> also truncates the target, so noclobber refuses it.
+      - id: d
+        text: "`echo done >> audit.log`"
+        rationale: Correct. Appending does not overwrite existing data, so noclobber allows it.
+    answer: [d]
+    explanation: >
+      noclobber only prevents redirections that would truncate an existing file. Appending with >>
+      keeps the old contents and is still allowed.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 1, section: Redirects }
+    verify:
+      command: >
+        bash -c 'cd /tmp; rm -f nc.t; set -C; echo a > nc.t; echo b >> nc.t;
+        echo c &> nc.t 2>/dev/null; wc -l < nc.t'
+      expect: { exit_code: 0, stdout_contains: "2" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [noclobber, append]
+
+  - id: 101-103.4-0024
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: What does `3<>state.db` on a command line do for the command being started?
+    options:
+      - id: a
+        text: Opens `state.db` on file descriptor 3 for both reading and writing
+        rationale: Correct. <> opens the file read-write, and the 3 picks the descriptor number.
+      - id: b
+        text: Copies the first three lines of `state.db` to standard input
+        rationale: Wrong. Redirections do not select lines; 3 is a descriptor number.
+      - id: c
+        text: Sends standard output to `state.db` and reads standard input from it
+        rationale: Wrong. Only descriptor 3 is opened; stdin and stdout are unchanged.
+      - id: d
+        text: Swaps descriptor 3 with standard error for the command
+        rationale: Wrong. Nothing is swapped; the file is simply opened on descriptor 3.
+    answer: [a]
+    explanation: >
+      Programs may use descriptors 3 and above for extra data channels. `n<>file` opens the file
+      for reading and writing on descriptor n, so one descriptor can serve both directions.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 1, section: Redirects }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [file-descriptors]
+
+  - id: 101-103.4-0025
+    type: multi_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      Which **TWO** commands make `tr a-z A-Z` print `HELLO WORLD`?
+    select_count: 2
+    options:
+      - id: a
+        text: "`tr a-z A-Z \"hello world\"`"
+        rationale: Wrong. tr reads only stdin; the extra argument makes it fail with "extra operand".
+      - id: b
+        text: "`tr a-z A-Z < \"hello world\"`"
+        rationale: Wrong. This tries to open a file called "hello world", which normally does not exist.
+      - id: c
+        text: "`echo \"hello world\" | tr a-z A-Z`"
+        rationale: Correct. echo writes the text to the pipe, and tr reads it on stdin.
+      - id: d
+        text: "`tr a-z A-Z <<< \"hello world\"`"
+        rationale: Correct. The here string sends the quoted text to tr's stdin.
+      - id: e
+        text: "`tr a-z A-Z <<< hello world`"
+        rationale: Wrong. Without quotes only "hello" is the here string; "world" becomes an extra operand and tr fails.
+    answer: [c, d]
+    explanation: >
+      tr only processes standard input. Text can reach it through a pipe or a here string; a here
+      string must be quoted when it contains spaces.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 1, section: Here Document and Here String }
+    verify:
+      command: bash -c 'tr a-z A-Z <<< "hello world"'
+      expect: { exit_code: 0, stdout_contains: "HELLO WORLD" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [here-string, pipe, tr]
+
+  - id: 101-103.4-0026
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: As root, you run `echo test > /etc`. What happens?
+    options:
+      - id: a
+        text: The text replaces the contents of every file in `/etc`
+        rationale: Wrong. A redirection target is one path; it never writes into the files of a directory.
+      - id: b
+        text: Bash reports "Is a directory" and nothing is written
+        rationale: Correct. A directory cannot be opened as an output file, so the redirection fails and echo does not run.
+      - id: c
+        text: A file named `/etc/echo` is created containing the text
+        rationale: Wrong. No file is created inside the directory.
+      - id: d
+        text: The text is written, because root may overwrite anything
+        rationale: Wrong. Root privileges do not let a directory be opened for writing as a file.
+    answer: [b]
+    explanation: >
+      If the redirection target cannot be opened for writing (a directory, a read-only file), Bash
+      prints an error, leaves the target unchanged and does not run the command.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 1, section: Redirects }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [redirection, errors]
+
+  - id: 101-103.4-0027
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      As an ordinary user with sudo rights, `sudo echo "Maintenance tonight" > /etc/motd` fails
+      with "Permission denied". Which command writes the text to `/etc/motd`?
+    options:
+      - id: a
+        text: "`echo \"Maintenance tonight\" | sudo tee /etc/motd`"
+        rationale: Correct. tee runs as root and opens the file itself, so the write is allowed.
+      - id: b
+        text: "`sudo echo \"Maintenance tonight\" >> /etc/motd`"
+        rationale: Wrong. The >> is still opened by your own unprivileged shell, so it fails the same way.
+      - id: c
+        text: "`echo \"Maintenance tonight\" | sudo cat /etc/motd`"
+        rationale: Wrong. cat with a file argument prints that file; it does not write stdin into it.
+      - id: d
+        text: "`sudo echo \"Maintenance tonight\" 2>&1 /etc/motd`"
+        rationale: Wrong. This only joins echo's stderr to stdout and passes /etc/motd as text to echo.
+    answer: [a]
+    explanation: >
+      Redirections are set up by your shell before sudo starts, so they run with your own
+      permissions. Piping into `sudo tee file` moves the file opening into a root process. Add
+      `> /dev/null` if you do not want the copy on screen.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 2, section: Pipes }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [tee, sudo, redirection]
+
+  - id: 101-103.4-0028
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      `/srv/archive` does not exist. After `RESULT=$(ls /srv/archive)` in an interactive shell, what
+      is the situation?
+    options:
+      - id: a
+        text: "`RESULT` holds the error message from `ls`"
+        rationale: Wrong. Command substitution captures only stdout; the message went to stderr.
+      - id: b
+        text: "`RESULT` holds the exit status of `ls`"
+        rationale: Wrong. Exit status is in $?, not in the substituted text.
+      - id: c
+        text: The assignment is refused and `RESULT` keeps its old value
+        rationale: Wrong. The assignment happens; it just assigns the (empty) output.
+      - id: d
+        text: "`RESULT` is empty; the error shows on screen"
+        rationale: Correct. ls wrote nothing to stdout, and its stderr was not redirected.
+    answer: [d]
+    explanation: >
+      $( ) is replaced by the command's standard output only. Standard error still goes wherever it
+      was going, here the terminal. Use 2>&1 inside the substitution to capture errors too.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 2, section: Command Substitution }
+    verify:
+      command: bash -c 'R=$(ls /srv/nonexistent-dir 2>/dev/null); echo "[$R]"'
+      expect: { stdout_contains: "[]" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Correct option shortened so it is not the longest." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [command-substitution, stderr]
+
+  - id: 101-103.4-0029
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      `/etc/hostname` exists and `/nonexistent` does not. After the command below, what does
+      `out.txt` contain?
+    exhibit: |
+      $ ls /etc/hostname /nonexistent | tee out.txt
+      ls: cannot access '/nonexistent': No such file or directory
+      /etc/hostname
+    options:
+      - id: a
+        text: Both the error message and `/etc/hostname`
+        rationale: Wrong. The error went to stderr, which the pipe does not carry.
+      - id: b
+        text: Only the error message
+        rationale: Wrong. That is the stream that bypassed tee.
+      - id: c
+        text: Only `/etc/hostname`
+        rationale: Correct. tee received ls's stdout, which held just the listing.
+      - id: d
+        text: Nothing, because `ls` exited with an error
+        rationale: Wrong. The exit status does not stop the data that ls already sent to stdout.
+    answer: [c]
+    explanation: >
+      Both lines appear on the screen, but only stdout passes through the pipe. The error was
+      printed directly by ls on stderr, so tee never saw it.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 2, section: Pipes }
+    verify:
+      command: bash -c 'cd /tmp; ls /etc/hostname /nonexistent 2>/dev/null | tee out29.txt >/dev/null; cat out29.txt'
+      expect: { stdout_regex: "^/etc/hostname\\s*$" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [tee, pipe, stderr]
+
+  - id: 101-103.4-0030
+    type: multi_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      You want `names.txt` to end up containing its own lines in sorted order. Which **TWO**
+      commands achieve that?
+    select_count: 2
+    options:
+      - id: a
+        text: "`sort -o names.txt names.txt`"
+        rationale: Correct. sort reads all input before it opens the -o file, so the same file is safe.
+      - id: b
+        text: "`sort names.txt > sorted.tmp && mv sorted.tmp names.txt`"
+        rationale: Correct. The sorted copy is written elsewhere and then replaces the original.
+      - id: c
+        text: "`sort names.txt > names.txt`"
+        rationale: Wrong. The shell truncates names.txt before sort starts, so sort reads an empty file.
+      - id: d
+        text: "`sort < names.txt > names.txt`"
+        rationale: Wrong. The output redirection still truncates the file before sort reads it.
+      - id: e
+        text: "`sort names.txt >> names.txt`"
+        rationale: Wrong. The sorted lines are appended after the original unsorted ones.
+    answer: [a, b]
+    explanation: >
+      The shell opens and truncates output files before the command runs. Redirecting a command's
+      output to its own input file therefore destroys the input.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 1, section: Redirects }
+    verify:
+      command: bash -c 'cd /tmp; printf "b\na\n" > s30; sort s30 > s30; wc -c < s30'
+      expect: { stdout_regex: "^0\\s*$" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "verify uses an exact regex instead of stdout_contains 0." }
+    tags: [redirection, sort, truncation]
+
+  - id: 101-103.4-0031
+    type: multi_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      Under `~/cache` some file names contain spaces, such as `old copy.tmp`. Which **TWO** command
+      lines remove every `.tmp` file there correctly?
+    select_count: 2
+    options:
+      - id: a
+        text: "`find ~/cache -name '*.tmp' | xargs rm`"
+        rationale: Wrong. xargs splits on blanks, so rm gets "old" and "copy.tmp" as separate names.
+      - id: b
+        text: "`find ~/cache -name '*.tmp' -print0 | xargs -0 rm`"
+        rationale: Correct. Names are null-separated and xargs -0 splits only on nulls.
+      - id: c
+        text: "`find ~/cache -name '*.tmp' -print0 | xargs rm`"
+        rationale: Wrong. Without -0, xargs warns about the null characters and still splits on blanks.
+      - id: d
+        text: "`find ~/cache -name '*.tmp' -exec rm {} +`"
+        rationale: Correct. find passes each path to rm itself, with no text parsing in between.
+      - id: e
+        text: "`find ~/cache -name '*.tmp' | xargs -0 rm`"
+        rationale: Wrong. The list is newline-separated, so xargs -0 sees one huge name containing newlines.
+    answer: [b, d]
+    explanation: >
+      Default xargs input parsing breaks on spaces and newlines. Pair find -print0 with xargs -0, or
+      let find run the command with -exec, when names may contain blanks.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 2, section: Command Substitution }
+    verify:
+      command: >
+        bash -c 'd=$(mktemp -d); touch "$d/old copy.tmp" "$d/b.tmp";
+        find "$d" -name "*.tmp" -print0 | xargs -0 rm; ls "$d" | wc -l'
+      expect: { exit_code: 0, stdout_regex: "^0\\s*$" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "verify uses an exact regex instead of stdout_contains 0." }
+    tags: [xargs, find, print0]
+
+  - id: 101-103.4-0032
+    type: fill_in
+    difficulty: 4
+    pool: holdout
+    stem: >
+      Type a complete command line that runs `ls -R /etc`, saves its normal output in `list.txt`
+      and discards its error messages.
+    fill_in:
+      accepted: ['(sudo\s+)?ls\s+(-R|--recursive)\s+/etc/?\s+(1?>\s*list\.txt\s+2>\s*/dev/null|2>\s*/dev/null(\s+1?>|>)\s*list\.txt)']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      Two independent redirections are needed: > (or 1>) list.txt for stdout and 2>/dev/null for
+      stderr. Because they touch different descriptors, their order does not matter.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 1, section: Redirects }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Fill-in also accepts a sudo prefix and 2>/dev/null>list.txt with no space." }
+    tags: [redirection, dev-null, stderr]
+
+  - id: 101-103.4-0033
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      `moves.txt` contains the line `a.txt b.txt`, and both files and the directory `backup/`
+      exist. Why does the command below fail?
+    exhibit: |
+      $ xargs mv backup/ < moves.txt
+      mv: target 'b.txt': Not a directory
+    options:
+      - id: a
+        text: "`xargs` cannot read its input from a redirected file"
+        rationale: Wrong. xargs reads standard input, and < supplies it from the file without problem.
+      - id: b
+        text: "`xargs` runs `mv` once per name, so `mv` lacks a destination"
+        rationale: Wrong. By default xargs passes as many names as fit into one command line.
+      - id: c
+        text: The trailing slash in `backup/` must not be used with `mv`
+        rationale: Wrong. A trailing slash on a directory destination is fine.
+      - id: d
+        text: "`backup/` ends up first, so `mv` treats `b.txt` as the target"
+        rationale: Correct. The command run is `mv backup/ a.txt b.txt`; mv's last argument is the target.
+    answer: [d]
+    explanation: >
+      xargs appends the items it reads after the fixed arguments. For commands whose last argument
+      must be a destination, use `-I` with a placeholder (`xargs -I F mv F backup/`) or an option
+      such as `mv -t backup/`.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 2, section: Command Substitution }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Correct option shortened so it is not the longest." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Correct option reworded to avoid being a giveaway." }
+    tags: [xargs]
+
+  - id: 101-103.4-0034
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: What number does `wc -c <<< "abc"` print?
+    options:
+      - id: a
+        text: "`4`"
+        rationale: Correct. A here string is followed by a newline, so wc counts a, b, c and the newline.
+      - id: b
+        text: "`3`"
+        rationale: Wrong. This ignores the newline Bash adds after the here string.
+      - id: c
+        text: "`5`"
+        rationale: Wrong. The quotes are removed by the shell and are not counted.
+      - id: d
+        text: "`1`"
+        rationale: Wrong. That would be a line or word count; -c counts bytes.
+    answer: [a]
+    explanation: >
+      Bash appends a newline to a here string before feeding it to standard input. "abc" plus the
+      newline is 4 bytes.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 1, section: Here Document and Here String }
+    verify:
+      command: bash -c 'wc -c <<< "abc"'
+      expect: { exit_code: 0, stdout_regex: "^4\\s*$" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [here-string, wc]
+
+  - id: 101-103.4-0035
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: Which of these commands prints **nothing** on the terminal?
+    options:
+      - id: a
+        text: "`echo hi 1>&2 2>/dev/null`"
+        rationale: Wrong. stdout was copied to the terminal's stderr first; moving stderr afterwards does not change that copy.
+      - id: b
+        text: "`echo hi 2>/dev/null 1>&2`"
+        rationale: Correct. stderr points at /dev/null first, then stdout is copied from it, so "hi" is discarded.
+      - id: c
+        text: "`echo hi 2>&1 2>/dev/null`"
+        rationale: Wrong. Only stderr ends at /dev/null; stdout still goes to the terminal.
+      - id: d
+        text: "`echo hi 2>/dev/null | cat`"
+        rationale: Wrong. stdout goes through the pipe to cat, which prints it.
+    answer: [b]
+    explanation: >
+      Redirections are applied left to right, and `n>&m` copies where m points **at that moment**.
+      In b, stderr already points at /dev/null when stdout copies it.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 1, section: Redirects }
+    verify:
+      command: bash -c 'a=$( (echo hi 2>/dev/null 1>&2) 2>&1 ); echo "[$a]"'
+      expect: { stdout_contains: "[]" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [redirection, order, fd-duplication]
+
+  - id: 101-103.4-0036
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      `missing.txt` does not exist and `out.txt` does not exist either. You run
+      `cat < missing.txt > out.txt`. What is the result?
+    options:
+      - id: a
+        text: "`out.txt` is created and contains the error message"
+        rationale: Wrong. Error messages go to stderr, which is not redirected here.
+      - id: b
+        text: "`out.txt` is created empty and `cat` waits for keyboard input"
+        rationale: Wrong. cat never starts, because a redirection failed.
+      - id: c
+        text: An error is printed and `out.txt` is not created
+        rationale: Correct. Bash processes the < first, it fails, and Bash stops before opening out.txt or running cat.
+      - id: d
+        text: "`out.txt` is created empty and an error is printed"
+        rationale: Wrong. Redirections are handled left to right, and processing stops at the first failure.
+    answer: [c]
+    explanation: >
+      Bash sets up redirections left to right. When one fails, the remaining ones are not
+      performed and the command is not run, so out.txt is never opened.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 1, section: Redirects }
+    verify:
+      command: bash -c 'cd "$(mktemp -d)"; { cat < missing.txt > out.txt; } 2>/dev/null; ls out.txt 2>/dev/null | wc -l'
+      expect: { stdout_regex: "^0\\s*$" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "verify uses an exact regex instead of stdout_contains 0." }
+    tags: [redirection, order, errors]
+
+  - id: 101-103.4-0037
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      A build script writes progress to standard output and warnings to standard error; some lines
+      on both streams contain `WARN`. What does `grep` count in the command below?
+    exhibit: |
+      $ ./build.sh 2>&1 >build.log | grep -c WARN
+    options:
+      - id: a
+        text: The `WARN` lines from both streams
+        rationale: Wrong. stdout is moved to build.log after stderr copied the pipe, so stdout never reaches grep.
+      - id: b
+        text: The `WARN` lines from standard output only
+        rationale: Wrong. Standard output goes into build.log, not into the pipe.
+      - id: c
+        text: Nothing; `grep` reads `build.log` instead of the pipe
+        rationale: Wrong. grep reads its stdin, which is the pipe; build.log is only where stdout was sent.
+      - id: d
+        text: The `WARN` lines from standard error only
+        rationale: Correct. stderr copies stdout while it still points at the pipe, then stdout moves to the file.
+    answer: [d]
+    explanation: >
+      The pipe is set up first, so stdout initially points at it. 2>&1 then sends stderr into the
+      pipe, and >build.log moves only stdout to the file. This is a common way to filter just the
+      error stream.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 2, section: Pipes }
+    verify:
+      command: >
+        bash -c 'cd /tmp; b(){ echo WARN-out; echo WARN-err >&2; echo ok; };
+        b 2>&1 >b37.log | grep -c WARN'
+      expect: { exit_code: 0, stdout_regex: "^1\\s*$" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [pipe, order, stderr]
+
+  - id: 101-103.4-0038
+    type: multi_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      `set -C` is active and `report.txt` already exists. Which **TWO** commands succeed in writing
+      to `report.txt`?
+    select_count: 2
+    options:
+      - id: a
+        text: "`date >> report.txt`"
+        rationale: Correct. Appending is allowed under noclobber.
+      - id: b
+        text: "`date &> report.txt`"
+        rationale: Wrong. &> truncates the file, so noclobber refuses it.
+      - id: c
+        text: "`date >| report.txt`"
+        rationale: Correct. >| explicitly overrides noclobber for this one redirection.
+      - id: d
+        text: "`date 1> report.txt`"
+        rationale: Wrong. 1> is the same as > and is blocked.
+      - id: e
+        text: "`date > report.txt 2>&1`"
+        rationale: Wrong. The > part is blocked, so the command fails before date runs.
+    answer: [a, c]
+    explanation: >
+      noclobber (set -C) blocks redirections that would overwrite an existing file. >> only adds to
+      the end, and >| is Bash's deliberate "overwrite anyway" operator.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 1, section: Redirects }
+    verify:
+      command: >
+        bash -c 'cd /tmp; rm -f r38; set -C; echo a > r38; date >> r38 && date >| r38 && echo both-ok'
+      expect: { exit_code: 0, stdout_contains: "both-ok" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [noclobber]
+
+  - id: 101-103.4-0039
+    type: fill_in
+    difficulty: 5
+    pool: holdout
+    stem: >
+      Type a complete command line that runs `./backup.sh`, shows both its standard output and its
+      standard error on the terminal, and also **appends** both streams to `/var/log/backup.log`.
+      Use `tee`.
+    fill_in:
+      accepted: ['(sudo\s+)?(\./)?backup\.sh(\s+2>&\s*1\s*\||\s*\|&)\s*(sudo\s+)?tee\s+((-a|--append)\s+/var/log/backup\.log|/var/log/backup\.log\s+(-a|--append))']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      stderr must join stdout before the pipe (2>&1 |, or |& in Bash), because a pipe carries only
+      stdout. tee -a then shows the data and appends it to the log.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 2, section: Pipes }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Fill-in also accepts a sudo prefix and 2>& 1." }
+    tags: [tee, pipe, stderr]
+
+  - id: 101-103.4-0040
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: What is the output of the command below?
+    exhibit: |
+      $ printf 'a b\nc\n' | xargs -I{} echo "<{}>"
+    options:
+      - id: a
+        text: "`<a>`, `<b>` and `<c>` on three lines"
+        rationale: Wrong. With -I, blanks inside a line do not split items; each whole line is one item.
+      - id: b
+        text: "`<a b>` and `<c>` on two lines"
+        rationale: Correct. -I makes xargs run the command once per input line and put the whole line in place of {}.
+      - id: c
+        text: "`<a b c>` on one line"
+        rationale: Wrong. -I never combines several lines into one command.
+      - id: d
+        text: "`<{}>` twice, because the braces are quoted"
+        rationale: Wrong. The double quotes are removed by the shell; xargs still sees {} and replaces it.
+    answer: [b]
+    explanation: >
+      `-I replace-str` implies one command per input line and treats the line, blanks included, as
+      a single item that replaces every occurrence of the string.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 2, section: Command Substitution }
+    verify:
+      command: printf 'a b\nc\n' | xargs -I{} echo "<{}>"
+      expect: { exit_code: 0, stdout_contains: "<a b>" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [xargs]
+
+  # ---------------------------------------------------------------- practice (study mode)
+
+  - id: 101-103.4-0041
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: In an interactive shell, where does a command read its standard input from when nothing is redirected?
+    options:
+      - id: a
+        text: The keyboard (terminal)
+        rationale: Correct. Without redirection, stdin is attached to the terminal, so input comes from the keyboard.
+      - id: b
+        text: The file `/dev/null`
+        rationale: Wrong. /dev/null is only used when you redirect to or from it.
+      - id: c
+        text: The previous command's output
+        rationale: Wrong. That only happens when a pipe connects the commands.
+      - id: d
+        text: The user's `~/.bash_history` file
+        rationale: Wrong. That file stores command history; it is not anyone's stdin.
+    answer: [a]
+    explanation: >
+      In a terminal session, stdin is the keyboard and both stdout and stderr are the screen.
+      Redirections and pipes change these defaults for one command.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 1, section: Introduction }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [stdin]
+
+  - id: 101-103.4-0042
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: Which standard stream uses file descriptor 1?
+    options:
+      - id: a
+        text: Standard input
+        rationale: Wrong. Standard input is descriptor 0.
+      - id: b
+        text: Standard error
+        rationale: Wrong. Standard error is descriptor 2.
+      - id: c
+        text: Standard output
+        rationale: Correct. Standard output is descriptor 1, the default for >.
+      - id: d
+        text: The terminal's control channel
+        rationale: Wrong. There is no such default descriptor; 0, 1 and 2 are the three standard streams.
+    answer: [c]
+    explanation: >
+      0 is stdin, 1 is stdout and 2 is stderr. > without a number means 1>.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 1, section: Introduction }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [file-descriptors]
+
+  - id: 101-103.4-0043
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: Which path refers to the standard error of the process that opens it?
+    options:
+      - id: a
+        text: "`/dev/tty0`"
+        rationale: Wrong. This is the first virtual console device, not a per-process stream.
+      - id: b
+        text: "`/dev/stderr`"
+        rationale: Correct. /dev/stderr is a link to /proc/self/fd/2.
+      - id: c
+        text: "`/var/log/stderr`"
+        rationale: Wrong. No such standard file exists; stderr is not a log file.
+      - id: d
+        text: "`/proc/stderr`"
+        rationale: Wrong. Per-process descriptors live under /proc/self/fd/ or /proc/PID/fd/.
+    answer: [b]
+    explanation: >
+      /dev/stdin, /dev/stdout and /dev/stderr are symbolic links to /proc/self/fd/0, 1 and 2, so
+      programs can name the standard streams as file paths.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 1, section: Introduction }
+    verify:
+      command: readlink /dev/stderr
+      expect: { exit_code: 0, stdout_contains: "/proc/self/fd/2" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [dev-stderr]
+
+  - id: 101-103.4-0044
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: In Bash, what does `make &> build.log` do?
+    options:
+      - id: a
+        text: Runs `make` in the background and creates an empty `build.log`
+        rationale: Wrong. That would be `make & > build.log`, with a space after the &.
+      - id: b
+        text: Saves only the error messages of `make` in `build.log`
+        rationale: Wrong. That is 2>; &> covers both streams.
+      - id: c
+        text: Sends both stdout and stderr of `make` to `build.log`
+        rationale: Correct. &> redirects stdout and stderr to the same file.
+      - id: d
+        text: Appends the output of `make` to `build.log`
+        rationale: Wrong. &> truncates the file; appending both streams is &>>.
+    answer: [c]
+    explanation: >
+      &> (also written >&) sends both streams to one file. The & must be attached to >; with a
+      space between & and >, Bash reads & as "run in the background".
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 1, section: Redirects }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Correct option shortened; explanation now says a space between & and >." }
+    tags: [redirection, stderr]
+
+  - id: 101-103.4-0045
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: Which command creates a directory named like `logs-2026-10-25`, using today's date?
+    options:
+      - id: a
+        text: "`mkdir logs-'date +%F'`"
+        rationale: Wrong. Single quotes keep the text literal, so the name contains "date +%F".
+      - id: b
+        text: "`mkdir logs- | date +%F`"
+        rationale: Wrong. This creates "logs-" and pipes nothing useful to date.
+      - id: c
+        text: "`mkdir logs-${date +%F}`"
+        rationale: Wrong. ${ } is parameter expansion and fails with "bad substitution".
+      - id: d
+        text: "`mkdir logs-$(date +%F)`"
+        rationale: Correct. The substitution is replaced by the date, giving one argument such as logs-2026-10-25.
+    answer: [d]
+    explanation: >
+      Command substitution can form part of a word. `date +%F` prints the date as YYYY-MM-DD.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 2, section: Command Substitution }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [command-substitution]
+
+  - id: 101-103.4-0046
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: In `find /tmp -name '*.bak' | xargs rm`, what is the job of `xargs`?
+    options:
+      - id: a
+        text: It passes the names it reads as arguments to `rm`
+        rationale: Correct. rm ignores stdin, so xargs places the names on rm's command line.
+      - id: b
+        text: It asks for confirmation before each file is removed
+        rationale: Wrong. That is xargs -p or rm -i; plain xargs does not prompt.
+      - id: c
+        text: It filters out the names that do not end in `.bak`
+        rationale: Wrong. find already selected the names; xargs does no filtering.
+      - id: d
+        text: It sends rm's error messages back to find
+        rationale: Wrong. Data in a pipeline flows only left to right.
+    answer: [a]
+    explanation: >
+      Many commands, such as rm, take file names as arguments and never read stdin. xargs bridges
+      that gap by reading the list and running the command with it.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 2, section: Command Substitution }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Correct option shortened to avoid being a giveaway." }
+    tags: [xargs]
+
+  - id: 101-103.4-0047
+    type: fill_in
+    difficulty: 2
+    pool: practice
+    stem: >
+      Type the name of the command that you put at the end of a pipeline to see its output on screen
+      and save it in a file at the same time.
+    fill_in:
+      accepted: ['((/usr)?/bin/)?tee']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      `... | tee file` copies its input to stdout and to the file. Use -a to append instead of
+      overwrite.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 2, section: Pipes }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [tee]
+
+  - id: 101-103.4-0048
+    type: multi_choice
+    difficulty: 2
+    pool: practice
+    stem: Which **TWO** commands count the lines of `users.txt` by giving its contents to `wc -l` on standard input?
+    select_count: 2
+    options:
+      - id: a
+        text: "`wc -l < users.txt`"
+        rationale: Correct. < connects the file to wc's stdin.
+      - id: b
+        text: "`wc -l > users.txt`"
+        rationale: Wrong. This truncates users.txt and waits for keyboard input.
+      - id: c
+        text: "`wc -l << users.txt`"
+        rationale: Wrong. This starts a here document ended by a line "users.txt"; the file is not read.
+      - id: d
+        text: "`cat users.txt | wc -l`"
+        rationale: Correct. cat writes the file to the pipe and wc reads it on stdin.
+      - id: e
+        text: "`wc -l <<< users.txt`"
+        rationale: Wrong. This counts the one-line string "users.txt", so it always prints 1.
+    answer: [a, d]
+    explanation: >
+      Input redirection (<) and a pipe from cat both deliver the file's bytes on standard input.
+      wc then prints just the count, without a file name.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 2, section: Pipes }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [redirection, pipe, stdin]
+
+  - id: 101-103.4-0049
+    type: single_choice
+    difficulty: 3
+    pool: practice
+    stem: >
+      Each line of `jobs.txt` holds a host name and a port, such as `db1 5432`. Which `xargs`
+      option runs `check-port` once per line with both words as arguments?
+    options:
+      - id: a
+        text: "`-n 1`"
+        rationale: Wrong. -n 1 passes one word per run, splitting the host from its port.
+      - id: b
+        text: "`-L 1`"
+        rationale: Correct. -L 1 uses one input line, all of its words, for each command run.
+      - id: c
+        text: "`-0`"
+        rationale: Wrong. -0 changes the separator to null; the file has none, so everything becomes one item.
+      - id: d
+        text: "`-r`"
+        rationale: Wrong. -r only skips running the command when the input is empty.
+    answer: [b]
+    explanation: >
+      `xargs -L 1 check-port < jobs.txt` runs `check-port db1 5432` and so on, one run per line.
+      -n counts arguments, -L counts lines.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 2, section: Command Substitution }
+    verify:
+      command: printf 'db1 5432\nweb 80\n' | xargs -L 1 echo
+      expect: { exit_code: 0, stdout_regex: "^db1 5432\\nweb 80\\s*$" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "verify no longer pipes xargs into head (avoids signal 13 noise); checks full output." }
+    tags: [xargs]
+
+  - id: 101-103.4-0050
+    type: single_choice
+    difficulty: 3
+    pool: practice
+    stem: >
+      Instead of piping `find` into `xargs -n 1 gzip`, which `find` action runs `gzip` for each
+      result directly?
+    options:
+      - id: a
+        text: "`-print0 gzip`"
+        rationale: Wrong. -print0 only prints names with null separators; it runs nothing.
+      - id: b
+        text: "`-delete gzip`"
+        rationale: Wrong. -delete removes the files found.
+      - id: c
+        text: "`-exec gzip {} \\;`"
+        rationale: Correct. -exec runs the command for each result, with {} replaced by the path.
+      - id: d
+        text: "`-ok gzip`"
+        rationale: Wrong. -ok needs {} and a terminating \;, and it asks for confirmation each time.
+    answer: [c]
+    explanation: >
+      `find ... -exec cmd {} \;` runs cmd once per file. Ending with + instead of \; passes many
+      paths per run, much like plain xargs.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 2, section: Command Substitution }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [find, exec, xargs]
+
+  - id: 101-103.4-0051
+    type: single_choice
+    difficulty: 3
+    pool: practice
+    stem: In a script, what does the line `echo "config file missing" >&2` do?
+    options:
+      - id: a
+        text: Writes the message to a file named `2`
+        rationale: Wrong. The & marks 2 as a descriptor; a file named 2 would need >2.
+      - id: b
+        text: Runs `echo` in the background with priority 2
+        rationale: Wrong. & attached to > is part of the redirection, not a background request.
+      - id: c
+        text: Discards the message
+        rationale: Wrong. Nothing is sent to /dev/null; the message is printed on stderr.
+      - id: d
+        text: Sends the message to standard error
+        rationale: Correct. >&2 (1>&2) makes stdout a copy of stderr for this command.
+    answer: [d]
+    explanation: >
+      Scripts send error messages to stderr with >&2, so that callers who redirect or pipe the
+      normal output still see the error.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 1, section: Redirects }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Correct option shortened to avoid being a giveaway." }
+    tags: [stderr, fd-duplication]
+
+  - id: 101-103.4-0052
+    type: multi_choice
+    difficulty: 3
+    pool: practice
+    stem: Which **TWO** statements about a pipeline such as `cmd1 | cmd2` are true?
+    select_count: 2
+    options:
+      - id: a
+        text: "`cmd2` starts only after `cmd1` has finished"
+        rationale: Wrong. The shell starts all commands of a pipeline together; data streams between them.
+      - id: b
+        text: Only the standard output of `cmd1` is passed to `cmd2`
+        rationale: Correct. stderr of cmd1 still goes to the terminal unless redirected.
+      - id: c
+        text: "`cmd1` and `cmd2` run at the same time"
+        rationale: Correct. They run concurrently, with cmd2 reading data as cmd1 produces it.
+      - id: d
+        text: "`cmd2` may be the name of a file to write to"
+        rationale: Wrong. The right side of | must be a command; writing to a file needs >.
+      - id: e
+        text: The data flows from `cmd2` to `cmd1`
+        rationale: Wrong. Data flows left to right.
+    answer: [b, c]
+    explanation: >
+      A pipe links cmd1's stdout to cmd2's stdin. Both processes are started at once, which is why
+      long pipelines can process data as it arrives.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 2, section: Pipes }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [pipe]
+
+  - id: 101-103.4-0053
+    type: fill_in
+    difficulty: 3
+    pool: practice
+    stem: >
+      Type the `xargs` option that takes a placeholder string and replaces it, anywhere in the
+      command, with each input line (for example so the name can go before a destination).
+    fill_in:
+      accepted: ['(xargs\s+)?(-I(\s*(?!-)\S+)?|--replace(=\S+)?)']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      `xargs -I {} cp {} /backup/` puts each line where {} appears instead of at the end. GNU xargs
+      also has the long form --replace=R.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 2, section: Command Substitution }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [xargs]
+
+  - id: 101-103.4-0054
+    type: single_choice
+    difficulty: 4
+    pool: practice
+    stem: What does `echo $(printf 'one\ntwo\n')` print?
+    options:
+      - id: a
+        text: "`one two` on one line"
+        rationale: Correct. The unquoted substitution is split into words, and echo joins them with a space.
+      - id: b
+        text: "`one` and `two` on separate lines"
+        rationale: Wrong. That needs quotes, as in echo "$(printf ...)".
+      - id: c
+        text: "`one\\ntwo` literally"
+        rationale: Wrong. printf turns \n into real newlines before the substitution sees the text.
+      - id: d
+        text: An empty line, because `printf` output is not captured
+        rationale: Wrong. printf writes to stdout, which command substitution captures.
+    answer: [a]
+    explanation: >
+      Command substitution removes trailing newlines. Left unquoted, the result is also split into
+      words on whitespace, so embedded newlines disappear. Quote it to keep the lines.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 2, section: Command Substitution }
+    verify:
+      command: bash -c "echo \$(printf 'one\ntwo\n')"
+      expect: { stdout_regex: "^one two\\s*$" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [command-substitution, word-splitting]
+
+  - id: 101-103.4-0055
+    type: single_choice
+    difficulty: 4
+    pool: practice
+    stem: >
+      With GNU `xargs`, `grep -l TODO *.c | xargs wc -l` misbehaves when no file matches: `wc`
+      runs anyway and prints a meaningless `0`. Which option stops `xargs` from running the
+      command when its input is empty?
+    options:
+      - id: a
+        text: "`-t`"
+        rationale: Wrong. -t prints each command line to stderr before running it.
+      - id: b
+        text: "`-r`"
+        rationale: Correct. -r (--no-run-if-empty) skips the command when there is no input.
+      - id: c
+        text: "`-p`"
+        rationale: Wrong. -p asks for confirmation before each run; it still runs with empty input if you agree.
+      - id: d
+        text: "`-x`"
+        rationale: Wrong. -x makes xargs exit if a command line would exceed the size limit.
+    answer: [b]
+    explanation: >
+      GNU xargs runs the command once even with empty input, unless -r / --no-run-if-empty is
+      given. Without arguments, wc then counts its stdin, which GNU xargs connects to /dev/null.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 2, section: Command Substitution }
+    verify:
+      command: printf '' | xargs -r echo RAN; echo end
+      expect: { stdout_regex: "^end\\s*$" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Stem fixed: GNU xargs gives the child /dev/null as stdin, so wc prints 0 instead of waiting for input." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [xargs]
+
+  - id: 101-103.4-0056
+    type: multi_choice
+    difficulty: 4
+    pool: practice
+    stem: Which **TWO** command lines leave the output of `uptime` in both `a.log` and `b.log`?
+    select_count: 2
+    options:
+      - id: a
+        text: "`uptime | tee a.log b.log`"
+        rationale: Correct. tee writes its input to every file named, and also to stdout.
+      - id: b
+        text: "`uptime > a.log > b.log`"
+        rationale: Wrong. stdout is moved to b.log by the second redirection; a.log is left empty.
+      - id: c
+        text: "`uptime | tee a.log > b.log`"
+        rationale: Correct. tee writes a.log, and its stdout copy is redirected into b.log.
+      - id: d
+        text: "`uptime | tee a.log | b.log`"
+        rationale: Wrong. b.log is not a command, so the last stage fails with "command not found".
+      - id: e
+        text: "`uptime > a.log | tee b.log`"
+        rationale: Wrong. stdout is already sent to a.log, so nothing goes through the pipe and b.log is empty.
+    answer: [a, c]
+    explanation: >
+      One output stream can have only one destination. tee is the tool that duplicates it, either
+      into several files or into a file plus its own standard output.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 2, section: Pipes }
+    verify:
+      command: >
+        bash -c 'cd "$(mktemp -d)"; echo up | tee a.log > b.log; [ -s a.log ] && [ -s b.log ] && echo both'
+      expect: { stdout_contains: "both" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "verify uses echo instead of uptime (procps is not in debian:stable-slim)." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [tee, redirection]
+
+  - id: 101-103.4-0057
+    type: single_choice
+    difficulty: 4
+    pool: practice
+    stem: What does the Bash command line `> app.log` (with no command before it) do?
+    options:
+      - id: a
+        text: It prints the contents of `app.log`
+        rationale: Wrong. Nothing is read; > opens the file for writing.
+      - id: b
+        text: It waits for keyboard input and writes it into `app.log`
+        rationale: Wrong. No command runs, so nothing reads the keyboard.
+      - id: c
+        text: It is a syntax error, because a redirection needs a command
+        rationale: Wrong. Bash accepts a redirection on its own.
+      - id: d
+        text: It empties `app.log`, or creates it empty if it does not exist
+        rationale: Correct. The redirection opens and truncates the file, and no command writes anything.
+    answer: [d]
+    explanation: >
+      An output redirection truncates its target as soon as it is set up, even if no command runs.
+      This is a quick way to empty a log file without deleting it (noclobber would block it).
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 1, section: Redirects }
+    verify:
+      command: bash -c 'cd /tmp; echo data > a57.log; > a57.log; wc -c < a57.log'
+      expect: { stdout_regex: "^0\\s*$" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [redirection, truncation]
+
+  - id: 101-103.4-0058
+    type: single_choice
+    difficulty: 5
+    pool: practice
+    stem: >
+      A function prints `out` on standard output and then `err` on standard error. What does
+      `run.txt` contain after the command below?
+    exhibit: |
+      $ myfunc > run.txt 2> run.txt
+    options:
+      - id: a
+        text: "`out` followed by `err`"
+        rationale: Wrong. That needs one shared open file, as with > run.txt 2>&1.
+      - id: b
+        text: Only `out`
+        rationale: Wrong. stderr was written to the file too, at the same starting position.
+      - id: c
+        text: Only `err`, written over `out`
+        rationale: Correct. Each redirection opens the file separately at offset 0, so the later write overwrites the earlier one.
+      - id: d
+        text: Nothing; Bash refuses to redirect two streams to one file
+        rationale: Wrong. Bash allows it; the two descriptors simply do not share a file position.
+    answer: [c]
+    explanation: >
+      `> f 2> f` opens the file twice, each descriptor with its own offset. Writes clobber each
+      other. Use `> f 2>&1` or `&> f` so both streams share one open file.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 1, section: Redirects }
+    verify:
+      command: bash -c 'cd /tmp; f(){ echo out; echo err >&2; }; f > r58.txt 2> r58.txt; cat r58.txt'
+      expect: { stdout_regex: "^err\\s*$" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [redirection, stderr]
+
+  - id: 101-103.4-0059
+    type: multi_choice
+    difficulty: 5
+    pool: practice
+    stem: >
+      `list.txt` holds one path per line; some paths contain spaces, none contain newlines. Which
+      **TWO** commands copy every listed file into `/srv/backup/`?
+    select_count: 2
+    options:
+      - id: a
+        text: "`xargs cp -t /srv/backup/ < list.txt`"
+        rationale: Wrong. Default parsing splits on spaces, so a path like "my file" becomes two names.
+      - id: b
+        text: "`tr '\\n' '\\0' < list.txt | xargs -0 cp -t /srv/backup/`"
+        rationale: Correct. Newlines become nulls, and xargs -0 splits only on nulls.
+      - id: c
+        text: "`cat list.txt | xargs -0 cp -t /srv/backup/`"
+        rationale: Wrong. The input has no nulls, so the whole list, newlines included, becomes one name.
+      - id: d
+        text: "`xargs -d '\\n' cp -t /srv/backup/ < list.txt`"
+        rationale: Correct. GNU xargs -d sets newline as the only delimiter, so spaces are kept.
+      - id: e
+        text: "`xargs cp /srv/backup/ < list.txt`"
+        rationale: Wrong. The names are appended after /srv/backup/, so cp uses the last name as the target; spaces also split names.
+    answer: [b, d]
+    explanation: >
+      Plain xargs splits on blanks and newlines. Either convert the list to null-separated form and
+      use -0, or use GNU xargs -d '\n'. cp -t names the destination first, so the appended names
+      are all sources.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 2, section: Command Substitution }
+    verify:
+      command: >
+        bash -c 'd=$(mktemp -d); mkdir "$d/dst"; touch "$d/my file" "$d/b";
+        printf "%s\n" "$d/my file" "$d/b" > "$d/list";
+        xargs -d "\n" cp -t "$d/dst/" < "$d/list"; ls "$d/dst" | wc -l'
+      expect: { exit_code: 0, stdout_contains: "2" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [xargs, tr]
+
+  - id: 101-103.4-0060
+    type: fill_in
+    difficulty: 5
+    pool: practice
+    stem: >
+      Type the redirection(s) that, written after `cmd`, **append** both its standard output and
+      its standard error to `run.log`.
+    fill_in:
+      accepted: ['(cmd\s+)?(&>>\s*run\.log|1?>>\s*run\.log\s+(2>&\s*1|2>>\s*run\.log)|2>>\s*run\.log\s+(1?>&\s*2|1?>>\s*run\.log))']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      `>> run.log 2>&1` appends stdout and then makes stderr share it; Bash also has the shorthand
+      `&>> run.log`. The order matters: `2>&1 >> run.log` would leave stderr on the terminal.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.4", lesson: 1, section: Redirects }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Fill-in also accepts >> run.log 2>> run.log and 2>> run.log 1>&2 (and equivalents); wrong forms still rejected." }
+    tags: [redirection, append, stderr]

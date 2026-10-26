@@ -1,0 +1,1510 @@
+# 103.7 Search text files using regular expressions — weight 3 → 30 holdout + 15 practice.
+# Original questions written from LPI Learning Materials 101-500, objective 103.7, lessons 1 and 2.
+schema_version: 1
+exam: "101"
+objective: "103.7"
+questions:
+  # ---------------------------------------------------------------- holdout (mock exams only)
+
+  - id: 101-103.7-0001
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: In a regular expression, what does the bracket expression `[xyz]` match?
+    options:
+      - id: a
+        text: The three-character string `xyz`
+        rationale: Wrong. Without brackets, `xyz` would match that string; with brackets it is a single-character atom.
+      - id: b
+        text: Exactly one character, which is `x`, `y` or `z`
+        rationale: Correct. A bracket expression is one atom that matches any single character from its list.
+      - id: c
+        text: Any one character except `x`, `y` and `z`
+        rationale: Wrong. That is `[^xyz]`; the list only negates when it starts with a caret.
+      - id: d
+        text: One or more characters taken from `x`, `y` and `z`
+        rationale: Wrong. Repetition needs a quantifier such as `[xyz]*` or `[xyz]+`; the bracket alone matches one character.
+    answer: [b]
+    explanation: >
+      Brackets group a list of characters into one atom. The atom matches a single character, provided
+      that character is in the list. Add a quantifier after the closing bracket to repeat it.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 1, section: Bracket Expression }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [bracket-expression]
+
+  - id: 101-103.7-0002
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: Which command behaves the same as `fgrep`?
+    options:
+      - id: a
+        text: "`grep -E`"
+        rationale: Wrong. `grep -E` is the equivalent of `egrep` (extended regular expressions).
+      - id: b
+        text: "`grep -f`"
+        rationale: Wrong. Lowercase `-f FILE` reads the patterns from a file; it does not switch off regex parsing.
+      - id: c
+        text: "`grep -x`"
+        rationale: Wrong. `-x` only accepts matches that cover the whole line.
+      - id: d
+        text: "`grep -F`"
+        rationale: Correct. `-F` (`--fixed-strings`) treats the patterns as plain strings, which is what `fgrep` does.
+    answer: [d]
+    explanation: >
+      `fgrep` is `grep -F`: the pattern is a fixed string, so characters such as `.`, `*` and `$` have
+      no special meaning. Upstream GNU grep 3.8 and later print a warning that `fgrep` and `egrep` are
+      obsolescent (Debian and Ubuntu patch the warning out), so scripts should use `grep -F` and `grep -E`.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 2, section: "The Pattern Finder: grep" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [fgrep, grep-F]
+
+  - id: 101-103.7-0003
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: What does an unescaped `.` (dot) match in a regular expression?
+    options:
+      - id: a
+        text: Any single character
+        rationale: Correct. The dot is a one-character wildcard.
+      - id: b
+        text: Only a literal period
+        rationale: Wrong. A literal period needs `\.`, a bracket expression `[.]`, or fixed-string mode (`grep -F`).
+      - id: c
+        text: Any sequence of characters, including none
+        rationale: Wrong. That is `.*`; the dot on its own stands for exactly one character.
+      - id: d
+        text: The end of a line
+        rationale: Wrong. The end-of-line anchor is `$`.
+    answer: [a]
+    explanation: >
+      `.` matches one character of any kind, so `b.t` matches `bat`, `b7t` and `b t`. Combine it with
+      `*` to match any run of characters.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 1, section: Introduction }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [dot, metacharacter]
+
+  - id: 101-103.7-0004
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: What does `grep -v` do?
+    options:
+      - id: a
+        text: Prints grep's version number
+        rationale: Wrong. The version is printed by `grep -V` (capital) or `--version`.
+      - id: b
+        text: Prints extra diagnostic messages while searching
+        rationale: Wrong. grep has no verbose mode; `-v` is not "verbose" here.
+      - id: c
+        text: Prints only the non-matching lines
+        rationale: Correct. `-v` (`--invert-match`) selects the non-matching lines.
+      - id: d
+        text: Prints only the part of each line that matches
+        rationale: Wrong. That is `-o` (`--only-matching`).
+    answer: [c]
+    explanation: >
+      `-v` inverts the selection. `grep -v '^;' php.ini`, for example, hides every line that starts
+      with a semicolon and shows everything else.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 2, section: "The Pattern Finder: grep" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Correct option shortened; it was the longest option." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [grep-v]
+
+  - id: 101-103.7-0005
+    type: multi_choice
+    difficulty: 1
+    pool: holdout
+    stem: Which **TWO** regular expression characters are anchors, matching a position rather than a character?
+    select_count: 2
+    options:
+      - id: a
+        text: "`*`"
+        rationale: Wrong. `*` is a quantifier (zero or more of the preceding atom).
+      - id: b
+        text: "`^`"
+        rationale: Correct. At the start of a pattern, `^` matches the beginning of the line.
+      - id: c
+        text: "`.`"
+        rationale: Wrong. The dot matches one character; it is not a position.
+      - id: d
+        text: "`$`"
+        rationale: Correct. At the end of a pattern, `$` matches the end of the line.
+    answer: [b, d]
+    explanation: >
+      `^` and `$` tie a match to the start or end of the line without consuming a character, which is
+      why they are called anchors. `^$` therefore matches an empty line.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 1, section: Introduction }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [anchors]
+
+  - id: 101-103.7-0006
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      You want to know which files anywhere below `/etc/nginx` contain the text `server_name`, and to
+      see the matching lines. Which command does it?
+    options:
+      - id: a
+        text: "`grep -l server_name /etc/nginx`"
+        rationale: Wrong. Without recursion grep refuses the argument with "Is a directory"; `-l` also prints only file names, not the lines.
+      - id: b
+        text: "`find /etc/nginx -name server_name`"
+        rationale: Wrong. This looks for files called server_name; it does not read file contents.
+      - id: c
+        text: "`grep -r server_name /etc/nginx`"
+        rationale: Correct. `-r` makes grep descend into the directory and print each matching line prefixed with its file name.
+      - id: d
+        text: "`grep -c server_name /etc/nginx`"
+        rationale: Wrong. Without recursion grep reports "Is a directory"; `-c` would only print counts anyway.
+    answer: [c]
+    explanation: >
+      `grep -r PATTERN DIR` searches every file below DIR. Because several files are involved, each
+      result line starts with the file name. `-R` does the same but also follows symbolic links.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 1, section: Searching with Regular Expressions }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [grep-r, recursive]
+
+  - id: 101-103.7-0007
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: Which pattern makes `grep -c PATTERN notes.txt` count the completely empty lines in the file?
+    options:
+      - id: a
+        text: "`'^.*$'`"
+        rationale: Wrong. `.*` can match zero or more characters, so this matches every line.
+      - id: b
+        text: "`'^ $'`"
+        rationale: Wrong. This matches lines that hold exactly one space, not empty lines.
+      - id: c
+        text: "`'$^'`"
+        rationale: Wrong. In a basic regex, a `$` at the very start and a `^` at the very end are ordinary characters, so this looks for the literal text `$^`.
+      - id: d
+        text: "`'^$'`"
+        rationale: Correct. The start of the line is followed immediately by its end, so the line has no characters.
+    answer: [d]
+    explanation: >
+      Anchoring both ends with nothing in between selects lines of length zero. To include lines that
+      hold only spaces or tabs, use `'^[[:space:]]*$'`.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 1, section: Introduction }
+    verify:
+      command: printf 'a\n\n \nb\n' | grep -c '^$'
+      expect: { exit_code: 0, stdout_regex: "^1\\s*$" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Option c rationale reworded for accuracy." }
+    tags: [anchors, empty-lines]
+
+  - id: 101-103.7-0008
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: What does the regular expression `[^0-9]` match?
+    options:
+      - id: a
+        text: A digit at the beginning of a line
+        rationale: Wrong. That would be `^[0-9]`; inside brackets the leading caret means negation, not an anchor.
+      - id: b
+        text: One character that is not a digit
+        rationale: Correct. A caret as the first character in a bracket expression negates the list.
+      - id: c
+        text: A line that contains no digits at all
+        rationale: Wrong. The atom matches a single non-digit anywhere, so a line such as `12a` matches too.
+      - id: d
+        text: Zero or more digits
+        rationale: Wrong. That is `[0-9]*`.
+    answer: [b]
+    explanation: >
+      `[^...]` matches any one character not in the list. `grep '[^0-9]'` therefore selects every line
+      that has at least one non-digit character, including `12a`, and skips lines made only of digits
+      and empty lines.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 1, section: Bracket Expression }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [bracket-expression, negation]
+
+  - id: 101-103.7-0009
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      An application log writes the word *timeout* as `Timeout`, `TIMEOUT` or `timeout`. Which
+      command shows all of those lines?
+    options:
+      - id: a
+        text: "`grep -i timeout app.log`"
+        rationale: Correct. `-i` (`--ignore-case`) ignores case in both pattern and data.
+      - id: b
+        text: "`grep -w timeout app.log`"
+        rationale: Wrong. `-w` only demands a whole-word match; the search is still case-sensitive.
+      - id: c
+        text: "`grep -F timeout app.log`"
+        rationale: Wrong. `-F` turns off regex parsing but stays case-sensitive.
+      - id: d
+        text: "`grep -x timeout app.log`"
+        rationale: Wrong. `-x` requires the whole line to be `timeout`, in lowercase.
+    answer: [a]
+    explanation: >
+      `grep -i` treats upper and lower case as equal. Without it you would need a pattern such as
+      `[Tt][Ii][Mm][Ee][Oo][Uu][Tt]`.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 2, section: "The Pattern Finder: grep" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [grep-i]
+
+  - id: 101-103.7-0010
+    type: multi_choice
+    difficulty: 2
+    pool: holdout
+    stem: Which **TWO** commands interpret their pattern as an extended regular expression (ERE)?
+    select_count: 2
+    options:
+      - id: a
+        text: "`grep -E`"
+        rationale: Correct. `-E` (`--extended-regexp`) selects ERE syntax.
+      - id: b
+        text: "`fgrep`"
+        rationale: Wrong. `fgrep` (`grep -F`) does not parse regular expressions at all.
+      - id: c
+        text: "`egrep`"
+        rationale: Correct. `egrep` runs `grep -E`; current upstream GNU grep warns that the name is obsolescent, but it still works.
+      - id: d
+        text: "`grep -G`"
+        rationale: Wrong. `-G` (`--basic-regexp`) selects basic regular expressions, grep's default.
+    answer: [a, c]
+    explanation: >
+      grep reads basic regular expressions by default (`-G`). `grep -E` and its old alias `egrep`
+      switch to ERE, where `+`, `?`, `|`, `()` and `{}` are special without a backslash. `grep -F` /
+      `fgrep` search for fixed strings.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 2, section: "The Pattern Finder: grep" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [egrep, grep-E, BRE, ERE]
+
+  - id: 101-103.7-0011
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      `echo 'cat cat cat' | sed 's/cat/dog/'` prints `dog cat cat`. What change makes it replace every
+      `cat` on the line?
+    options:
+      - id: a
+        text: Add the `p` flag, as in `s/cat/dog/p`
+        rationale: Wrong. `p` prints the line again after a successful substitution; it still replaces only the first match.
+      - id: b
+        text: Run `sed -g 's/cat/dog/'`
+        rationale: Wrong. GNU sed has no `-g` option and stops with "invalid option".
+      - id: c
+        text: Run `sed -n 's/cat/dog/'`
+        rationale: Wrong. `-n` suppresses automatic printing, so nothing is output at all.
+      - id: d
+        text: Add the `g` flag, as in `s/cat/dog/g`
+        rationale: Correct. The `g` flag applies the substitution to every match on the line.
+    answer: [d]
+    explanation: >
+      By default `s` replaces only the first match on each line. The `g` (global) flag replaces them
+      all; a number such as `s/cat/dog/2` replaces only that occurrence.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 2, section: "The Stream Editor: sed" }
+    verify:
+      command: echo 'cat cat cat' | sed 's/cat/dog/g'
+      expect: { exit_code: 0, stdout_contains: "dog dog dog" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [sed, substitute, g-flag]
+
+  - id: 101-103.7-0012
+    type: fill_in
+    difficulty: 2
+    pool: holdout
+    stem: >
+      `grep 'Failed password' /var/log/auth.log` scrolls hundreds of lines past. You only want to
+      know how many attempts there were, as a single number. Type the `grep` option to add.
+    fill_in:
+      accepted: ['((sudo\s+)?((/usr)?/bin/)?grep\s+)?(-c|--count)(\s+(?!-)\S+)*']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      `grep -c` (`--count`) prints the number of selected lines; with several files it prints one
+      `file:count` line per file. Combined with `-v` it counts the non-matching lines.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 2, section: "The Pattern Finder: grep" }
+    verify:
+      command: printf 'err 1\nok\nerr 2\n' | grep -c err
+      expect: { exit_code: 0, stdout_regex: "^2\\s*$" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Stem rewritten; it restated a lesson 2 Guided Exercise. Text supplied by the reviewer; verified by the writer." }
+    tags: [grep-c]
+
+  - id: 101-103.7-0013
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      Using GNU grep **without** `-E` or `-F`, which command selects lines containing an `a`, then one
+      or more `b` characters, then a `c` (such as `abc` or `abbbc`)?
+    options:
+      - id: a
+        text: "`grep 'ab+c'`"
+        rationale: Wrong. In a basic regex `+` is an ordinary character, so this matches the literal text `ab+c`.
+      - id: b
+        text: "`grep 'ab\\+c'`"
+        rationale: Correct. GNU basic regexes accept `\+` as the one-or-more quantifier.
+      - id: c
+        text: "`grep 'ab{1}c'`"
+        rationale: Wrong. Unescaped braces are literal in a basic regex, so this looks for the text `ab{1}c`.
+      - id: d
+        text: "`grep 'a.b*c'`"
+        rationale: Wrong. `b*` allows zero `b`s and the dot accepts any character, so `axc` would match.
+    answer: [b]
+    explanation: >
+      In basic regular expressions `+`, `?`, `{`, `}`, `|`, `(` and `)` are literal; GNU tools give them
+      their special meaning when they are escaped (`\+`, `\?`, `\{n\}`, `\|`, `\( \)`). In extended
+      regexes (`grep -E`) it is the other way round.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 1, section: Quantifiers }
+    verify:
+      command: printf 'abbc\nac\nab+c\n' | grep 'ab\+c'
+      expect: { exit_code: 0, stdout_regex: "^abbc\\s*$" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [BRE, quantifiers]
+
+  - id: 101-103.7-0014
+    type: multi_choice
+    difficulty: 3
+    pool: holdout
+    stem: Which **TWO** commands print the lines of `pets.txt` that contain `cat` or `dog`?
+    select_count: 2
+    options:
+      - id: a
+        text: "`grep 'cat|dog' pets.txt`"
+        rationale: Wrong. In a basic regex `|` is literal, so only lines containing the text `cat|dog` match.
+      - id: b
+        text: "`grep -F 'cat|dog' pets.txt`"
+        rationale: Wrong. With -F the whole pattern is a fixed string, so again only `cat|dog` literally matches.
+      - id: c
+        text: "`grep -E 'cat|dog' pets.txt`"
+        rationale: Correct. In an extended regex `|` separates alternative branches.
+      - id: d
+        text: "`grep 'cat\\|dog' pets.txt`"
+        rationale: Correct. GNU basic regexes treat `\|` as alternation.
+    answer: [c, d]
+    explanation: >
+      Alternation is `|` in ERE and `\|` in GNU BRE. Another way is to give several patterns:
+      `grep -e cat -e dog pets.txt`.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 1, section: Branches and Back References }
+    verify:
+      command: printf 'cat\ndog\nbird\n' | grep -c 'cat\|dog'
+      expect: { exit_code: 0, stdout_regex: "^2\\s*$" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [alternation, BRE, ERE]
+
+  - id: 101-103.7-0015
+    type: fill_in
+    difficulty: 3
+    pool: holdout
+    stem: >
+      `grep -E '[[:alnum:]._-]+@[[:alnum:].-]+' contacts.txt` prints whole lines, some holding two
+      addresses. Type the additional `grep` option that prints only the matched e-mail addresses,
+      each on its own line.
+    fill_in:
+      accepted: ['((sudo\s+)?((/usr)?/bin/)?grep\s+)?(-o|--only-matching)(\s+(?!-)\S+)*']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      `-o` (`--only-matching`) prints each non-empty match on a separate line instead of the whole
+      line, so a line holding two e-mail addresses gives two output lines and the surrounding text
+      is dropped.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 2, section: "The Pattern Finder: grep" }
+    verify:
+      command: printf 'a x@y.org and z@w.net\n' | grep -oE '[[:alnum:]._-]+@[[:alnum:].-]+'
+      expect: { exit_code: 0, stdout_regex: "^x@y\\.org\\nz@w\\.net\\s*$" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Stem, explanation and verify rewritten around e-mail addresses; it restated a lesson 2 Guided Exercise. Text supplied by the reviewer; verified by the writer." }
+    tags: [grep-o]
+
+  - id: 101-103.7-0016
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      A file holds the lines below. Which command prints only the first line, where `root` appears as
+      a word of its own?
+    exhibit: |
+      root:x:0:0:root:/root:/bin/bash
+      chrootuser:x:1001:1001::/home/c:/bin/sh
+      rooted:x:1002:1002::/home/r:/bin/sh
+    options:
+      - id: a
+        text: "`grep -x root accounts`"
+        rationale: Wrong. `-x` needs the whole line to be `root`, so no line is printed.
+      - id: b
+        text: "`grep -o root accounts`"
+        rationale: Wrong. `-o` still matches all three lines and prints each occurrence of `root` on its own line (three from the first line).
+      - id: c
+        text: "`grep -w root accounts`"
+        rationale: Correct. `-w` only accepts matches bordered by non-word characters or the line edges, which rules out `chrootuser` and `rooted`.
+      - id: d
+        text: "`grep -i root accounts`"
+        rationale: Wrong. Ignoring case does not stop `root` matching inside longer words.
+    answer: [c]
+    explanation: >
+      With `-w` (`--word-regexp`) the match must not be preceded or followed by a letter, digit or
+      underscore. The colons around `root` in the first line count as word boundaries.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 2, section: "The Pattern Finder: grep" }
+    verify:
+      command: printf 'root:x:0:0\nchrootuser:x\nrooted:x\n' | grep -w root
+      expect: { exit_code: 0, stdout_regex: "^root:x:0:0\\s*$" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Option b rationale made precise (three matches from the first line)." }
+    tags: [grep-w]
+
+  - id: 101-103.7-0017
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      You need just the names of the `*.log` files in the current directory that mention `disk`, one
+      name per line. Which command gives that?
+    options:
+      - id: a
+        text: "`grep -l disk *.log`"
+        rationale: Correct. `-l` (`--files-with-matches`) prints each matching file name once.
+      - id: b
+        text: "`grep -L disk *.log`"
+        rationale: Wrong. `-L` lists the files that do **not** contain a match.
+      - id: c
+        text: "`grep -c disk *.log`"
+        rationale: Wrong. `-c` prints every file with its count, including files with a count of 0.
+      - id: d
+        text: "`grep -H disk *.log`"
+        rationale: Wrong. `-H` prefixes each matching line with its file name but still prints the lines.
+    answer: [a]
+    explanation: >
+      `grep -l` stops reading a file at its first match and prints the file name. It is handy in
+      command substitution, e.g. `vi $(grep -l disk *.log)`.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 2, section: "The Pattern Finder: grep" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [grep-l]
+
+  - id: 101-103.7-0018
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      You want the lines of `notes.txt` that contain the text `-rf`. Which command does that
+      correctly?
+    options:
+      - id: a
+        text: "`grep '-rf' notes.txt`"
+        rationale: Wrong. The quotes are removed by the shell, so grep reads `-r -f notes.txt`, uses notes.txt as a pattern file and searches the current directory recursively.
+      - id: b
+        text: "`grep -F -rf notes.txt`"
+        rationale: Wrong. `-rf` is still parsed as options; `-F` does not change option parsing.
+      - id: c
+        text: "`grep -w -rf notes.txt`"
+        rationale: Wrong. As with the others, `-rf` is taken as the options `-r` and `-f`.
+      - id: d
+        text: "`grep -e -rf notes.txt`"
+        rationale: Correct. `-e` takes the next argument as the pattern, even if it starts with a dash.
+    answer: [d]
+    explanation: >
+      `-e PATTERN` marks its argument as a pattern, so it is the safe way to search for text that
+      begins with `-`. `-e` can also be repeated to search for several patterns at once.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 2, section: "The Pattern Finder: grep" }
+    verify:
+      command: printf 'rm -rf /tmp/x\nls -l\n' | grep -e -rf
+      expect: { exit_code: 0, stdout_regex: "^rm -rf /tmp/x\\s*$" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [grep-e]
+
+  - id: 101-103.7-0019
+    type: fill_in
+    difficulty: 3
+    pool: holdout
+    stem: >
+      Complete the command so that sed reads its script as an extended regular expression and the
+      parentheses group without backslashes: `sed ___ 's/(ab)+/X/' input.txt`. Type the option.
+    fill_in:
+      accepted: ['(sed\s+)?(-E|-r|--regexp-extended)(\s+(?!-)\S+)*']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      GNU sed accepts `-E`, `-r` or `--regexp-extended` to switch to extended regexes; `-E` is the
+      POSIX spelling. Without it, grouping needs `\(ab\)\+`.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 2, section: "The Stream Editor: sed" }
+    verify:
+      command: echo ababc | sed -E 's/(ab)+/X/'
+      expect: { exit_code: 0, stdout_contains: "Xc" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [sed, sed-E, ERE]
+
+  - id: 101-103.7-0020
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: The file `sshd.conf` is shown below with line numbers. What does `grep -vc '^#' sshd.conf` print?
+    exhibit: |
+      $ cat -n sshd.conf
+           1  # sshd settings
+           2  Port 2222
+           3
+           4  #PermitRootLogin yes
+           5  PermitRootLogin no
+           6    # indented comment
+           7  PasswordAuthentication no
+    options:
+      - id: a
+        text: "`3`"
+        rationale: Wrong. This leaves out the empty line 3 and the indented comment on line 6, which both lack a `#` in the first column.
+      - id: b
+        text: "`5`"
+        rationale: Correct. Only lines 1 and 4 start with `#`; the other five lines are counted.
+      - id: c
+        text: "`4`"
+        rationale: Wrong. The empty line does not start with `#`, so it is counted as well.
+      - id: d
+        text: "`2`"
+        rationale: Wrong. 2 is the number of lines that do start with `#`; -v counts the rest.
+    answer: [b]
+    explanation: >
+      `-v` selects lines that do not match and `-c` counts them. `^#` only matches a `#` in the first
+      column, so the blank line and the indented comment are counted. To skip both, use
+      `grep -Evc '^[[:space:]]*(#|$)'`.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 2, section: "The Pattern Finder: grep" }
+    verify:
+      command: >-
+        printf '# sshd settings\nPort 2222\n\n#PermitRootLogin yes\nPermitRootLogin no\n  # indented comment\nPasswordAuthentication no\n' | grep -vc '^#'
+      expect: { exit_code: 0, stdout_regex: "^5\\s*$" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "verify command put in a block scalar; the # in the printf text was read as a YAML comment." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [grep-v, grep-c, anchors]
+
+  - id: 101-103.7-0021
+    type: multi_choice
+    difficulty: 4
+    pool: holdout
+    stem: Which **TWO** commands select exactly the lines that contain a run of at least two consecutive digits?
+    select_count: 2
+    options:
+      - id: a
+        text: "`grep -E '[0-9]{2,}' data`"
+        rationale: Correct. In ERE, `{2,}` means two or more of the preceding atom.
+      - id: b
+        text: "`grep '[0-9]{2,}' data`"
+        rationale: Wrong. In a basic regex unescaped braces are literal, so this looks for a digit followed by the text `{2,}`.
+      - id: c
+        text: "`grep '[0-9][0-9]*' data`"
+        rationale: Wrong. `[0-9]*` allows zero more digits, so any line with a single digit also matches.
+      - id: d
+        text: "`grep '[0-9]\\{2,\\}' data`"
+        rationale: Correct. A basic regex writes the same bound with escaped braces.
+      - id: e
+        text: "`grep -E '[0-9]{,2}' data`"
+        rationale: Wrong. `{,2}` means zero to two, so every line matches.
+    answer: [a, d]
+    explanation: >
+      Bounds are `{n}`, `{n,}` and `{n,m}` in ERE and `\{n\}`, `\{n,\}`, `\{n,m\}` in BRE. With
+      lines `id 7`, `port 8080` and `v 1.2`, both correct commands print only `port 8080`.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 1, section: Bounds }
+    verify:
+      command: printf 'id 7\nport 8080\nv 1.2\n' | grep '[0-9]\{2,\}'
+      expect: { exit_code: 0, stdout_regex: "^port 8080\\s*$" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [bounds, BRE, ERE]
+
+  - id: 101-103.7-0022
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: What is the output of the following command?
+    exhibit: |
+      $ echo 'Smith, John' | sed -E 's/([^,]*), (.*)/\2 \1/'
+    options:
+      - id: a
+        text: "`Smith John`"
+        rationale: Wrong. The back-references are used in reverse order, so the groups swap places.
+      - id: b
+        text: "`\\2 \\1`"
+        rationale: Wrong. In the replacement, `\1` and `\2` are replaced by the text the groups captured.
+      - id: c
+        text: "`John Smith`"
+        rationale: Correct. Group 1 captures `Smith`, group 2 captures `John`, and the replacement writes group 2, a space, then group 1.
+      - id: d
+        text: "`John, Smith`"
+        rationale: Wrong. The comma is part of the matched text but is not in any group, and the replacement does not add it back.
+    answer: [c]
+    explanation: >
+      Parentheses capture parts of the match; `\1`, `\2` and so on insert them in the replacement.
+      Without `-E`, the same command needs `\(` and `\)`, otherwise sed rejects `\2` as an invalid
+      reference.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 1, section: Branches and Back References }
+    verify:
+      command: echo 'Smith, John' | sed -E 's/([^,]*), (.*)/\2 \1/'
+      expect: { exit_code: 0, stdout_regex: "^John Smith\\s*$" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [sed, back-references]
+
+  - id: 101-103.7-0023
+    type: fill_in
+    difficulty: 4
+    pool: holdout
+    stem: >
+      `grep admin users.txt` also prints lines such as `sysadmin` and `admin2`. Type the `grep` option
+      that only accepts a match covering the entire line, so that only lines consisting of exactly
+      `admin` are printed.
+    fill_in:
+      accepted: ['((sudo\s+)?((/usr)?/bin/)?grep\s+)?(-x|--line-regexp)(\s+(?!-)\S+)*']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      `-x` (`--line-regexp`) behaves as if the pattern were wrapped in `^...$`. `-w` would not be enough
+      for a line like `admin tools`, where `admin` is a whole word but not the whole line.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 2, section: "The Pattern Finder: grep" }
+    verify:
+      command: printf 'admin\nsysadmin\nadmin2\nadmin tools\n' | grep -x admin
+      expect: { exit_code: 0, stdout_regex: "^admin\\s*$" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [grep-x]
+
+  - id: 101-103.7-0024
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: The file below is shown with line numbers. Which lines does `grep '^[^#]' fstab.sample` print?
+    exhibit: |
+      $ cat -n fstab.sample
+           1  UUID=1234 / ext4 defaults 0 1
+           2  # swap was on /dev/sda2
+           3
+           4    #tmpfs /tmp tmpfs defaults 0 0
+           5  /dev/sdb1 /data xfs noatime 0 2
+    options:
+      - id: a
+        text: Lines 1, 4 and 5
+        rationale: Correct. Each of these starts with a character other than `#`; line 4 starts with a space.
+      - id: b
+        text: Lines 1 and 5
+        rationale: Wrong. Line 4 begins with spaces, and a space satisfies `[^#]`.
+      - id: c
+        text: Lines 1, 3, 4 and 5
+        rationale: Wrong. The empty line 3 has no first character, so `[^#]` has nothing to match.
+      - id: d
+        text: Lines 1, 2, 4 and 5
+        rationale: Wrong. Line 2 starts with `#`, which the negated bracket excludes.
+    answer: [a]
+    explanation: >
+      `^[^#]` needs one character at the start of the line, and that character must not be `#`. That
+      drops comments starting in column one and also empty lines, but not indented comments.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 1, section: Bracket Expression }
+    verify:
+      command: >-
+        printf 'UUID=1234 / ext4\n# swap\n\n  #tmpfs /tmp\n/dev/sdb1 /data\n' | grep -c '^[^#]'
+      expect: { exit_code: 0, stdout_regex: "^3\\s*$" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "verify command put in a block scalar; the # in the printf text was read as a YAML comment." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [bracket-expression, anchors, negation]
+
+  - id: 101-103.7-0025
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      The directory `proj` contains `proj/notes.log`, `proj/logs/app.log`, `proj/logs/app.log.1` and
+      `proj/src/main.c`. Which command lists exactly the two files whose names end in `.log`?
+    options:
+      - id: a
+        text: "`find proj -regex '\\.log$'`"
+        rationale: Wrong. find's `-regex` must match the whole path, and no path consists only of `.log`, so nothing is printed.
+      - id: b
+        text: "`find proj -regex '.*\\.log'`"
+        rationale: Correct. `.*` covers the directory part and file name, and the expression must end at `.log` because it matches the whole path.
+      - id: c
+        text: "`find proj -regex 'app.*'`"
+        rationale: Wrong. The pattern would have to match the whole path starting with `proj/`, so nothing is printed.
+      - id: d
+        text: "`find proj -regex '.*\\.log.*'`"
+        rationale: Wrong. The trailing `.*` also lets `app.log.1` match.
+    answer: [b]
+    explanation: >
+      Unlike grep, find's `-regex` test is anchored to the whole path it examines (`proj/logs/app.log`),
+      so patterns usually start with `.*`. `-iregex` is the case-insensitive version, and
+      `-regextype posix-extended` switches to ERE syntax.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 1, section: Searching with Regular Expressions }
+    verify:
+      setup:
+        - mkdir -p /tmp/proj/logs /tmp/proj/src
+        - touch /tmp/proj/notes.log /tmp/proj/logs/app.log /tmp/proj/logs/app.log.1 /tmp/proj/src/main.c
+      command: cd /tmp && find proj -regex '.*\.log' | wc -l
+      expect: { exit_code: 0, stdout_regex: "^2\\s*$" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [find, regex]
+
+  - id: 101-103.7-0026
+    type: multi_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      Which **TWO** commands print only the lines of `words.txt` that consist of exactly three
+      lowercase letters and nothing else (such as `fox`, but not `dogs` or `yak bat`)?
+    select_count: 2
+    options:
+      - id: a
+        text: "`grep -w '[[:lower:]]\\{3\\}' words.txt`"
+        rationale: Wrong. `-w` accepts a three-letter word anywhere, so `yak bat` is printed too.
+      - id: b
+        text: "`grep -x '[[:lower:]]\\{3\\}' words.txt`"
+        rationale: Correct. `-x` requires the match to cover the whole line, and the BRE bound is written with escaped braces.
+      - id: c
+        text: "`grep '^[[:lower:]]{3}$' words.txt`"
+        rationale: Wrong. In a basic regex `{3}` is literal text, so this matches a single lowercase letter followed by `{3}`.
+      - id: d
+        text: "`grep -E '[[:lower:]]{3}' words.txt`"
+        rationale: Wrong. Without anchors, any line containing three lowercase letters in a row matches, such as `dogs`.
+      - id: e
+        text: "`grep -E '^[[:lower:]]{3}$' words.txt`"
+        rationale: Correct. Both anchors and the ERE bound together allow exactly three lowercase letters.
+    answer: [b, e]
+    explanation: >
+      To match a whole line, either anchor the pattern with `^` and `$` or use `grep -x`. The bound
+      syntax depends on the dialect: `{3}` in ERE, `\{3\}` in BRE.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 1, section: Bounds }
+    verify:
+      command: printf 'cat\nCow\ndogs\nyak bat\nfox\n' | grep -E '^[[:lower:]]{3}$' | tr '\n' ' '
+      expect: { exit_code: 0, stdout_regex: "^cat fox\\s*$" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [bounds, anchors, grep-x, grep-w, character-classes]
+
+  - id: 101-103.7-0027
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: What does this command print?
+    exhibit: |
+      $ echo '<b>bold</b> and <i>it</i>' | sed 's/<.*>//'
+    options:
+      - id: a
+        text: "`bold and it`"
+        rationale: Wrong. That needs a pattern that stops at the first `>`, such as `s/<[^>]*>//g`.
+      - id: b
+        text: "`bold</b> and <i>it</i>`"
+        rationale: Wrong. That is the result of `s/<[^>]*>//`, which removes only the first tag.
+      - id: c
+        text: "`and`"
+        rationale: Wrong. sed does not remove tags pairwise; `.*` is not limited to one tag.
+      - id: d
+        text: An empty line
+        rationale: Correct. `.*` is greedy, so the match runs from the first `<` to the last `>`, which is the whole line.
+    answer: [d]
+    explanation: >
+      POSIX regexes choose the longest match starting at the leftmost position. Here the line both
+      begins with `<` and ends with `>`, so everything is replaced by nothing. A negated bracket such
+      as `[^>]*` keeps each match inside one tag.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 1, section: Bounds }
+    verify:
+      command: echo '<b>bold</b> and <i>it</i>' | sed 's/<.*>//' | wc -c
+      expect: { exit_code: 0, stdout_regex: "^1\\s*$" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [sed, greedy-matching]
+
+  - id: 101-103.7-0028
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      The command below prints `grep: (standard input): binary file matches` and nothing else.
+      Why?
+    exhibit: |
+      $ printf 'a b.conf\0prod web.conf\0' | grep prod
+      grep: (standard input): binary file matches
+    options:
+      - id: a
+        text: grep reads the stream as one line containing NUL bytes; `grep -z` would fix it
+        rationale: Correct. There is no newline, so the whole input is one "line" with NULs in it, which grep treats as binary. With -z, grep splits records at NUL bytes and prints `prod web.conf`.
+      - id: b
+        text: The pattern has no regex characters, so grep needs `-F` to print it
+        rationale: Wrong. A plain word is a valid regex; `grep -F prod` gives exactly the same message.
+      - id: c
+        text: printf cannot write `\0`, so grep received an empty or broken stream
+        rationale: Wrong. printf does write NUL bytes (od -c shows them), and the message itself says grep found a match.
+      - id: d
+        text: "grep hides binary output unless `-a` is given; `-a` would print only `prod web.conf`"
+        rationale: 'Wrong. -a prints the whole matching "line", which is the entire stream: `a b.conf`, a NUL, `prod web.conf` and another NUL. The name that does not match is printed too.'
+    answer: [a]
+    explanation: >
+      grep normally splits its input at newlines. NUL-separated data, as produced by `find -print0`
+      or `printf '...\0'`, has none, so it arrives as one line containing NUL bytes, and grep only
+      reports that a binary file matched. `-z` (`--null-data`) splits records at NUL bytes instead and
+      ends each output record with a NUL, so the result can be passed to `xargs -0`.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 2, section: "The Pattern Finder: grep" }
+    verify:
+      command: printf 'a b.conf\0prod web.conf\0' | grep -z prod | tr '\0' '\n'
+      expect: { exit_code: 0, stdout_regex: "^prod web\\.conf\\s*$" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Rewritten as single choice on the binary-file-matches symptom; the fill-in restated a lesson 2 Guided Exercise. Re-check: option d reworded so it is clearly false (-a prints both names); otherwise matches key." }
+    tags: [grep-z, binary, find]
+
+  - id: 101-103.7-0029
+    type: multi_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      `results.txt` contains the lines shown below. Which **TWO** commands print only the line that
+      contains the literal text `1+1=2`?
+    exhibit: |
+      1+1=2
+      11=2
+      1=2
+    select_count: 2
+    options:
+      - id: a
+        text: "`grep '1+1=2' results.txt`"
+        rationale: Correct. In a basic regex `+` is an ordinary character, so the pattern is the literal text.
+      - id: b
+        text: "`grep -E '1+1=2' results.txt`"
+        rationale: Wrong. In ERE `1+` means one or more 1s, so it prints `11=2` and not `1+1=2`.
+      - id: c
+        text: "`grep -F '1+1=2' results.txt`"
+        rationale: Correct. Fixed-string mode never treats `+` specially.
+      - id: d
+        text: "`grep '1\\+1=2' results.txt`"
+        rationale: Wrong. In GNU BRE `\+` is the one-or-more quantifier, so this behaves like the ERE version and prints `11=2`.
+    answer: [a, c]
+    explanation: >
+      The backslash rules are opposite in the two dialects: in BRE a bare `+` is literal and `\+` is a
+      GNU quantifier; in ERE a bare `+` is the quantifier and `\+` is literal. `grep -F` avoids the
+      question entirely.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 1, section: Quantifiers }
+    verify:
+      command: printf '1+1=2\n11=2\n1=2\n' | grep '1+1=2'
+      expect: { exit_code: 0, stdout_regex: "^1\\+1=2\\s*$" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [BRE, ERE, grep-F, quantifiers]
+
+  - id: 101-103.7-0030
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: Given `config.ini` below, what does `sed -n '/^\[db\]/,/^\[/p' config.ini` print?
+    exhibit: |
+      [main]
+      name=app
+      [db]
+      host=localhost
+      port=5432
+      [log]
+      level=info
+    options:
+      - id: a
+        text: "`host=localhost` and `port=5432`, without either header line"
+        rationale: Wrong. The lines that start and end a range are part of it, so both header lines are printed.
+      - id: b
+        text: Everything from `[db]` to the end of the file
+        rationale: Wrong. The end address is searched for from the line after `[db]`, so the range closes at `[log]`.
+      - id: c
+        text: "`[db]`, `host=localhost`, `port=5432` and `[log]`"
+        rationale: Correct. The range opens at `[db]`, closes at the next line starting with `[`, and includes both ends.
+      - id: d
+        text: "`[db]` only"
+        rationale: Wrong. sed does not test the end address on the line that opened the range, so the range does not close at `[db]` itself.
+    answer: [c]
+    explanation: >
+      An address range `/start/,/end/` begins at a line matching the first regex and ends at the next
+      later line matching the second. `-n` turns off automatic printing and `p` prints the range.
+      The brackets are escaped so they are matched literally rather than read as bracket expressions.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 2, section: "The Stream Editor: sed" }
+    verify:
+      command: printf '[main]\nname=app\n[db]\nhost=localhost\nport=5432\n[log]\nlevel=info\n' | sed -n '/^\[db\]/,/^\[/p' | tr '\n' ' '
+      expect: { exit_code: 0, stdout_regex: "^\\[db\\] host=localhost port=5432 \\[log\\]\\s*$" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Option a lengthened; the correct option was the only long one." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [sed, address-range]
+
+  # --------------------------------------------------------------------------- practice (CLI)
+
+  - id: 101-103.7-0031
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: What does `$` mean at the end of a regular expression such as `\.conf$`?
+    options:
+      - id: a
+        text: The match must be at the end of the line
+        rationale: Correct. A trailing `$` anchors the match to the end of the line.
+      - id: b
+        text: The name of a shell variable follows
+        rationale: Wrong. In single quotes the shell leaves `$` alone, and in the regex it is an anchor.
+      - id: c
+        text: The match must be at the start of the line
+        rationale: Wrong. The start-of-line anchor is `^`.
+      - id: d
+        text: Any single character
+        rationale: Wrong. Any single character is matched by `.`.
+    answer: [a]
+    explanation: >
+      `grep '\.conf$'` matches lines ending in `.conf`. `$` is an anchor at the end of the
+      pattern (or of a group or branch); in most other positions in a basic regex it is an ordinary
+      character.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 1, section: Introduction }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Explanation refined: $ is also an anchor at the end of a group or branch." }
+    tags: [anchors]
+
+  - id: 101-103.7-0032
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: Which command is equivalent to `egrep`?
+    options:
+      - id: a
+        text: "`grep -e`"
+        rationale: Wrong. `-e` marks the next argument as a pattern; it does not change the regex dialect.
+      - id: b
+        text: "`grep -F`"
+        rationale: Wrong. `grep -F` is the equivalent of `fgrep` (fixed strings).
+      - id: c
+        text: "`grep -E`"
+        rationale: Correct. `egrep` runs grep with extended regular expressions, exactly like `grep -E`.
+      - id: d
+        text: "`grep -x`"
+        rationale: Wrong. `-x` restricts matches to whole lines.
+    answer: [c]
+    explanation: >
+      `egrep` is `grep -E`. Upstream GNU grep 3.8 and later print "egrep: warning: egrep is
+      obsolescent" when it is used (Debian and Ubuntu disable that warning), so prefer `grep -E`.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 2, section: "The Pattern Finder: grep" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [egrep, grep-E]
+
+  - id: 101-103.7-0033
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: Which manual page describes the syntax of POSIX basic and extended regular expressions?
+    options:
+      - id: a
+        text: "`grep(5)`"
+        rationale: Wrong. Section 5 is for file formats, and there is no grep page there.
+      - id: b
+        text: "`regex(7)`"
+        rationale: Correct. Section 7 (overviews and conventions) has the regex page, opened with `man 7 regex`.
+      - id: c
+        text: "`sed(8)`"
+        rationale: Wrong. sed is a user command documented in section 1, and it does not describe regex syntax in full.
+      - id: d
+        text: "`regex(1)`"
+        rationale: Wrong. Section 1 is for user commands, and there is no regex command.
+    answer: [b]
+    explanation: >
+      `man 7 regex` explains atoms, bracket expressions, character classes, quantifiers and bounds,
+      and the differences between basic and extended regular expressions.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 1, section: Quantifiers }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Options reordered to spread answer positions." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [regex-7, man]
+
+  - id: 101-103.7-0034
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: >
+      `inventory.csv` starts with a header line `name,qty`. Which command prints the file without that
+      first line?
+    options:
+      - id: a
+        text: "`sed -n 1p inventory.csv`"
+        rationale: Wrong. This prints only the first line, the opposite of what is wanted.
+      - id: b
+        text: "`sed '/1/d' inventory.csv`"
+        rationale: Wrong. This deletes every line containing the character 1, not line 1.
+      - id: c
+        text: "`sed d1 inventory.csv`"
+        rationale: Wrong. The address comes before the command; sed reports "extra characters after command".
+      - id: d
+        text: "`sed 1d inventory.csv`"
+        rationale: Correct. Address 1 selects the first line and `d` deletes it; the rest is printed.
+    answer: [d]
+    explanation: >
+      A sed command can start with an address: a line number, a range such as `2,5`, or a regex
+      between slashes. `1d` deletes line 1 only.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 2, section: "The Stream Editor: sed" }
+    verify:
+      command: printf 'name,qty\npen,1\ncup,12\n' | sed 1d | head -n 1
+      expect: { exit_code: 0, stdout_regex: "^pen,1\\s*$" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [sed, sed-delete, addresses]
+
+  - id: 101-103.7-0035
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: In the pattern `grep 'ab*c'`, what does the `*` mean?
+    options:
+      - id: a
+        text: Any string of characters between `ab` and `c`, as in a shell wildcard
+        rationale: Wrong. That is the shell glob meaning; in a regex any string is written `.*`.
+      - id: b
+        text: Zero or more `b` characters
+        rationale: Correct. `*` repeats the atom just before it any number of times, including zero.
+      - id: c
+        text: One or more `b` characters
+        rationale: Wrong. One or more is `\+` in GNU BRE or `+` in ERE; `*` also allows none, so `ac` matches.
+      - id: d
+        text: Zero or more repetitions of `ab`
+        rationale: Wrong. A quantifier applies to one atom; repeating `ab` needs a group, `\(ab\)*`.
+    answer: [b]
+    explanation: >
+      `ab*c` matches `ac`, `abc`, `abbbc` and so on. `*` works the same way in basic and extended
+      regular expressions.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 1, section: Quantifiers }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [quantifiers]
+
+  - id: 101-103.7-0036
+    type: multi_choice
+    difficulty: 3
+    pool: practice
+    stem: Which **TWO** bracket expressions match a tab character?
+    select_count: 2
+    options:
+      - id: a
+        text: "`[[:blank:]]`"
+        rationale: Correct. `[:blank:]` is a space or a tab.
+      - id: b
+        text: "`[[:punct:]]`"
+        rationale: Wrong. `[:punct:]` covers printable punctuation; a tab is a control character.
+      - id: c
+        text: "`[[:print:]]`"
+        rationale: Wrong. `[:print:]` covers printable characters and the space, not the tab.
+      - id: d
+        text: "`[[:space:]]`"
+        rationale: Correct. `[:space:]` includes space, tab, newline, carriage return, form feed and vertical tab.
+    answer: [a, d]
+    explanation: >
+      Character classes are only valid inside a bracket expression, hence the double brackets.
+      `[:blank:]` is the narrower class (space and tab); `[:space:]` adds the other whitespace characters.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 1, section: Bracket Expression }
+    verify:
+      command: printf '\t\n' | grep -c '[[:blank:]]'
+      expect: { exit_code: 0, stdout_regex: "^1\\s*$" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "verify now tests a lone tab." }
+    tags: [character-classes]
+
+  - id: 101-103.7-0037
+    type: fill_in
+    difficulty: 2
+    pool: practice
+    stem: Type the `grep` option that puts the line number in front of each matching line.
+    fill_in:
+      accepted: ['((sudo\s+)?((/usr)?/bin/)?grep\s+)?(-n|--line-number)(\s+(?!-)\S+)*']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      `grep -n` (`--line-number`) prints `NUMBER:line`, and `file:NUMBER:line` when several files are
+      searched. Editors such as vi can then jump straight to that line.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 2, section: "The Pattern Finder: grep" }
+    verify:
+      command: printf 'a\nb\nc\n' | grep -n c
+      expect: { exit_code: 0, stdout_regex: "^3:c\\s*$" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [grep-n]
+
+  - id: 101-103.7-0038
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: Which command matches both `color` and `colour`?
+    options:
+      - id: a
+        text: "`grep -E 'colou?r'`"
+        rationale: Correct. In ERE `?` makes the preceding `u` optional.
+      - id: b
+        text: "`grep 'colou?r'`"
+        rationale: Wrong. In a basic regex `?` is literal, so the pattern needs the text `colou?r`.
+      - id: c
+        text: "`grep -E 'colo[u]r'`"
+        rationale: Wrong. The bracket expression requires exactly one `u`, so `color` does not match.
+      - id: d
+        text: "`grep -F 'colou?r'`"
+        rationale: Wrong. Fixed-string mode looks for the literal text `colou?r`.
+    answer: [a]
+    explanation: >
+      `?` means "zero or one of the preceding atom". It needs `-E` (or `\?` in GNU basic regexes).
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 1, section: Quantifiers }
+    verify:
+      command: printf 'colour\ncolor\ncolr\n' | grep -cE 'colou?r'
+      expect: { exit_code: 0, stdout_regex: "^2\\s*$" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [quantifiers, ERE]
+
+  - id: 101-103.7-0039
+    type: multi_choice
+    difficulty: 3
+    pool: practice
+    stem: Which **TWO** `grep` options print a summary instead of the matching lines themselves?
+    select_count: 2
+    options:
+      - id: a
+        text: "`-n`"
+        rationale: Wrong. `-n` still prints the matching lines, adding line numbers.
+      - id: b
+        text: "`-c`"
+        rationale: Correct. `-c` prints only the number of matching lines.
+      - id: c
+        text: "`-l`"
+        rationale: Correct. `-l` prints only the names of files that contain a match.
+      - id: d
+        text: "`-H`"
+        rationale: Wrong. `-H` still prints the matching lines, adding the file name.
+    answer: [b, c]
+    explanation: >
+      `-c` gives a count per file and `-l` a list of file names. `-n` and `-H` decorate each
+      matching line but still print it.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 2, section: "The Pattern Finder: grep" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [grep-c, grep-l]
+
+  - id: 101-103.7-0040
+    type: single_choice
+    difficulty: 3
+    pool: practice
+    stem: With plain `grep` (basic regular expressions), how do you write a run of four digits?
+    options:
+      - id: a
+        text: "`[0-9]{4}`"
+        rationale: Wrong. That is the ERE form; in BRE the braces are literal characters.
+      - id: b
+        text: "`[[:digit:]]4`"
+        rationale: Wrong. This matches one digit followed by the character 4.
+      - id: c
+        text: "`[0-9]\\{4\\}`"
+        rationale: Correct. BRE bounds use escaped braces.
+      - id: d
+        text: "`[0-9]*4`"
+        rationale: Wrong. This matches any number of digits followed by a 4, such as just `4`.
+    answer: [c]
+    explanation: >
+      Bounds exist in both dialects: `{4}` with `grep -E` and `\{4\}` in a basic regex. Add anchors or
+      `-w` if the four digits must not be part of a longer number.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 1, section: Bounds }
+    verify:
+      command: printf 'year 2026\nid 42\n' | grep '[0-9]\{4\}'
+      expect: { exit_code: 0, stdout_regex: "^year 2026\\s*$" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Distractor [0-9]4 changed to [[:digit:]]4 so the correct option is not the longest." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Stem reworded to a run of four digits." }
+    tags: [bounds, BRE]
+
+  - id: 101-103.7-0041
+    type: single_choice
+    difficulty: 3
+    pool: practice
+    stem: >
+      A script runs `for f in *.conf; do grep Listen "$f"; done`. The output shows the matching lines
+      but not which file each came from. Which option added to grep fixes that?
+    options:
+      - id: a
+        text: "`-l`"
+        rationale: Wrong. `-l` prints only the file names and drops the lines.
+      - id: b
+        text: "`-n`"
+        rationale: Wrong. `-n` adds line numbers, not file names.
+      - id: c
+        text: "`-c`"
+        rationale: Wrong. `-c` replaces the lines with a count.
+      - id: d
+        text: "`-H`"
+        rationale: Correct. `-H` (`--with-filename`) prefixes each line with its file name even when only one file is searched.
+    answer: [d]
+    explanation: >
+      grep shows file names automatically only when it is given more than one file. Each loop pass
+      gives it a single file, so `-H` is needed to force the prefix.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 2, section: "The Pattern Finder: grep" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [grep-H]
+
+  - id: 101-103.7-0042
+    type: multi_choice
+    difficulty: 5
+    pool: practice
+    stem: >
+      Which **TWO** patterns, used with GNU grep, match one hexadecimal digit (0–9, a–f, upper or
+      lower case)?
+    select_count: 2
+    options:
+      - id: a
+        text: "`[:xdigit:]`"
+        rationale: Wrong. A class must sit inside a bracket expression; GNU grep refuses this with "character class syntax is [[:space:]], not [:space:]".
+      - id: b
+        text: "`[[:xdigit:]]`"
+        rationale: Correct. The `xdigit` class inside a bracket expression matches 0–9, a–f and A–F.
+      - id: c
+        text: "`[[:digit:][:alpha:]]`"
+        rationale: Wrong. This accepts every letter, including `g` to `z`.
+      - id: d
+        text: "`[0-9a-fA-F]`"
+        rationale: Correct. The three ranges list exactly the hexadecimal digits.
+    answer: [b, d]
+    explanation: >
+      Character classes are written `[:name:]` and only work inside brackets, so a single class looks
+      like `[[:xdigit:]]`. Several classes and ranges can share one bracket expression.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 1, section: Bracket Expression }
+    verify:
+      command: printf 'F\ng\n7\n' | grep -c '[[:xdigit:]]'
+      expect: { exit_code: 0, stdout_regex: "^2\\s*$" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [character-classes, bracket-expression]
+
+  - id: 101-103.7-0043
+    type: single_choice
+    difficulty: 4
+    pool: practice
+    stem: Given `app.log` below, which command prints each `ERROR` line exactly once and nothing else?
+    exhibit: |
+      INFO start
+      ERROR disk
+      WARN low
+      ERROR net
+    options:
+      - id: a
+        text: "`sed -n '/ERROR/p' app.log`"
+        rationale: Correct. `-n` stops automatic printing, and `p` prints only the lines matching the address.
+      - id: b
+        text: "`sed '/ERROR/p' app.log`"
+        rationale: Wrong. Without `-n`, every line is printed once and the ERROR lines a second time.
+      - id: c
+        text: "`sed '/ERROR/d' app.log`"
+        rationale: Wrong. This deletes the ERROR lines and prints the others.
+      - id: d
+        text: "`sed -n '/ERROR/d' app.log`"
+        rationale: Wrong. With `-n` and no `p`, nothing is printed at all.
+    answer: [a]
+    explanation: >
+      `sed -n '/regex/p'` behaves like grep: automatic output is off and only addressed lines are
+      printed. Forgetting `-n` is the classic cause of duplicated lines.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 2, section: "The Stream Editor: sed" }
+    verify:
+      command: printf 'INFO start\nERROR disk\nWARN low\nERROR net\n' | sed -n '/ERROR/p' | tr '\n' ' '
+      expect: { exit_code: 0, stdout_regex: "^ERROR disk ERROR net\\s*$" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [sed, sed-n, addresses]
+
+  - id: 101-103.7-0044
+    type: fill_in
+    difficulty: 4
+    pool: practice
+    stem: >
+      `grep cat pets.txt` also prints lines containing `category` and `bobcat`. Type the `grep` option
+      that only accepts `cat` when it stands as a whole word.
+    fill_in:
+      accepted: ['((sudo\s+)?((/usr)?/bin/)?grep\s+)?(-w|--word-regexp)(\s+(?!-)\S+)*']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      `-w` (`--word-regexp`) requires the match to be bordered by non-word characters or the line
+      edges. Word characters are letters, digits and the underscore.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 2, section: "The Pattern Finder: grep" }
+    verify:
+      command: printf 'category\nbobcat\nmy cat\n' | grep -w cat
+      expect: { exit_code: 0, stdout_regex: "^my cat\\s*$" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [grep-w]
+
+  - id: 101-103.7-0045
+    type: single_choice
+    difficulty: 5
+    pool: practice
+    stem: Which lines of `pal.txt` does `grep -E '^(.).*\1$' pal.txt` print?
+    exhibit: |
+      level
+      abc
+      x
+      noon
+      moon
+    options:
+      - id: a
+        text: All five lines
+        rationale: Wrong. The back-reference must repeat the first character at the end of the line.
+      - id: b
+        text: "`level`, `x` and `noon`"
+        rationale: Wrong. `x` has one character; the group and the back-reference each need one, so at least two characters are required.
+      - id: c
+        text: "`level`, `noon` and `moon`"
+        rationale: Wrong. `moon` starts with `m` and ends with `n`, so `\1` (which must repeat `m`) fails at the end.
+      - id: d
+        text: "`level` and `noon` only"
+        rationale: Correct. Each of these lines ends with the same character it starts with.
+    answer: [d]
+    explanation: >
+      `(.)` captures the first character and `\1$` requires the same character at the end of the line.
+      `.*` in between may be empty, so two-character lines like `aa` would match, but a one-character
+      line cannot.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.7", lesson: 1, section: Branches and Back References }
+    verify:
+      command: printf 'level\nabc\nx\nnoon\nmoon\n' | grep -E '^(.).*\1$' | tr '\n' ' '
+      expect: { exit_code: 0, stdout_regex: "^level noon\\s*$" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Rationale of the correct option rewritten (it was a draft note); options reordered to spread positions." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [back-references, anchors, ERE]

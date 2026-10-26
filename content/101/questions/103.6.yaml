@@ -1,0 +1,963 @@
+# 103.6 Modify process execution priorities — weight 2 → 20 holdout + 10 practice.
+# Original questions written from LPI Learning Materials 101-500, objective 103.6, lesson 1.
+schema_version: 1
+exam: "101"
+objective: "103.6"
+questions:
+  # ---------------------------------------------------------------- holdout (mock exams only)
+
+  - id: 101-103.6-0001
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: >
+      A user logs in and starts `make` from a shell whose priority nobody has changed. What nice
+      value does `make` run with?
+    options:
+      - id: a
+        text: "10"
+        rationale: Wrong. 10 is the amount the nice command adds when it is used without -n, not the default.
+      - id: b
+        text: "0"
+        rationale: Correct. Normal processes start with nice value 0 unless something changes it.
+      - id: c
+        text: "20"
+        rationale: Wrong. 20 is what top shows in its PR column for a process at nice value 0.
+      - id: d
+        text: "120"
+        rationale: Wrong. 120 is the kernel's static priority for a process at nice value 0, not a nice value.
+    answer: [b]
+    explanation: >
+      Every normal process starts at nice value 0 and children inherit their parent's value. In the
+      kernel that corresponds to static priority 120, which top shows as PR 20 and ps -l as PRI 80.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.6", lesson: 1, section: Process Niceness }
+    verify:
+      command: nice
+      expect: { exit_code: 0, stdout_regex: "^0\\s*$" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
+    tags: [nice, default]
+
+  - id: 101-103.6-0002
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: Which range of nice values does Linux accept for a process?
+    options:
+      - id: a
+        text: 0 to 39
+        rationale: Wrong. That is the range top shows in its PR column for normal processes.
+      - id: b
+        text: -19 to 20
+        rationale: Wrong. The range is shifted by one; 20 is not a valid nice value and -20 is.
+      - id: c
+        text: 100 to 139
+        rationale: Wrong. That is the kernel's static priority range for normal processes.
+      - id: d
+        text: -20 to 19
+        rationale: Correct. -20 is the most favourable nice value and 19 the least.
+    answer: [d]
+    explanation: >
+      Nice values run from -20 (most favourable, highest priority) to 19 (least favourable). Values
+      outside the range are clamped: nice -n 30 gives 19.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.6", lesson: 1, section: Process Niceness }
+    verify:
+      command: nice -n 30 nice
+      expect: { exit_code: 0, stdout_regex: "^19\\s*$" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
+    tags: [nice, range]
+
+  - id: 101-103.6-0003
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: >
+      A video encoding job is already running and slowing the machine down. Which command changes
+      its nice value without restarting it?
+    options:
+      - id: a
+        text: "`renice`"
+        rationale: Correct. renice changes the nice value of running processes, selected by PID, process group or user.
+      - id: b
+        text: "`nice`"
+        rationale: Wrong. nice starts a new command with an adjusted nice value; it cannot touch a running process.
+      - id: c
+        text: "`nohup`"
+        rationale: Wrong. nohup starts a command that ignores the hangup signal; it does not change priority.
+      - id: d
+        text: "`taskset`"
+        rationale: Wrong. taskset sets or shows which CPUs a process may run on; it does not change the nice value.
+    answer: [a]
+    explanation: >
+      nice sets the nice value of a program as it starts; renice adjusts processes that are already
+      running. top can also renice a running process interactively.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.6", lesson: 1, section: Process Niceness }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Distractor nproc replaced by taskset so the correct option is not the longest." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
+    tags: [renice]
+
+  - id: 101-103.6-0004
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      You are about to start an archive job and want it to get the least favourable CPU treatment
+      that a nice value can give. Which command does that?
+    options:
+      - id: a
+        text: "`nice -n -20 tar czf /tmp/etc.tgz /etc`"
+        rationale: Wrong. -20 is the most favourable nice value, the opposite of what is wanted.
+      - id: b
+        text: "`renice -n 19 tar czf /tmp/etc.tgz /etc`"
+        rationale: Wrong. renice expects IDs of running processes; it rejects "tar" and the other words as bad process IDs.
+      - id: c
+        text: "`nice -n 19 tar czf /tmp/etc.tgz /etc`"
+        rationale: Correct. nice starts tar with nice value 19 (from a shell at 0), the least favourable value.
+      - id: d
+        text: "`nice -p 19 tar czf /tmp/etc.tgz /etc`"
+        rationale: Wrong. nice has no -p option; it fails with "invalid option" and does not start tar.
+    answer: [c]
+    explanation: >
+      nice -n N command starts the command with its nice value raised by N. 19 is the highest (least
+      favourable) nice value, so the job only gets CPU time that other work leaves free.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.6", lesson: 1, section: Process Niceness }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
+    tags: [nice]
+
+  - id: 101-103.6-0005
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      On a system with default resource limits, who can start a program with a nice value of -5?
+    options:
+      - id: a
+        text: Any user, as long as they own the program file
+        rationale: Wrong. Owning the file does not grant the right to set a negative nice value.
+      - id: b
+        text: The root user
+        rationale: Correct. Lowering a nice value below 0 needs root (strictly, the CAP_SYS_NICE capability).
+      - id: c
+        text: Any member of the `users` group
+        rationale: Wrong. Group membership gives no scheduling privileges.
+      - id: d
+        text: Any user, because it only affects their own processes
+        rationale: Wrong. An unprivileged user's attempt is refused with "Permission denied".
+    answer: [b]
+    explanation: >
+      Ordinary users can make their own processes nicer (raise the nice value). Making a process less
+      nice, and in particular going below 0, needs root or the CAP_SYS_NICE capability.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.6", lesson: 1, section: Process Niceness }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
+    tags: [nice, permissions]
+
+  - id: 101-103.6-0006
+    type: multi_choice
+    difficulty: 2
+    pool: holdout
+    stem: Which TWO commands show the nice value (an NI column) for every process on the system?
+    options:
+      - id: a
+        text: "`ps -el`"
+        rationale: Correct. -e selects every process and -l adds the long format, which includes PRI and NI.
+      - id: b
+        text: "`ps -ef`"
+        rationale: Wrong. The full format shows UID, PID, PPID, C, STIME, TTY, TIME and CMD, but no NI.
+      - id: c
+        text: "`ps -e`"
+        rationale: Wrong. The default format only shows PID, TTY, TIME and CMD.
+      - id: d
+        text: "`ps -Al`"
+        rationale: Correct. -A is the same as -e, so this is the same long listing of every process.
+      - id: e
+        text: "`ps aux`"
+        rationale: Wrong. The BSD user format has no NI column; niced processes only show an N or < flag in STAT.
+    answer: [a, d]
+    select_count: 2
+    explanation: >
+      The long format (-l) adds the PRI and NI columns. Combined with -e or -A it covers every
+      process, so ps -el and ps -Al give the same listing.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.6", lesson: 1, section: Reading Priorities }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
+    tags: [ps, NI]
+
+  - id: 101-103.6-0007
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      While `top` is running interactively, which key makes it ask for a PID and then a new nice
+      value for that process?
+    options:
+      - id: a
+        text: "`k`"
+        rationale: Wrong. k asks for a PID and a signal to send to it.
+      - id: b
+        text: "`n`"
+        rationale: Wrong. n sets the maximum number of tasks to display.
+      - id: c
+        text: "`R`"
+        rationale: Wrong. R reverses the sort order of the task list.
+      - id: d
+        text: "`r`"
+        rationale: Correct. r prompts "PID to renice", then "Renice PID … to value".
+    answer: [d]
+    explanation: >
+      The r key in top renices a process: top first asks for the PID (offering the top task as the
+      default) and then for the new nice value. The same permission rules as renice apply.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.6", lesson: 1, section: Process Niceness }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
+    tags: [top, renice]
+
+  - id: 101-103.6-0008
+    type: fill_in
+    difficulty: 2
+    pool: holdout
+    stem: >
+      A shell is running at nice value 0. A user types `nice updatedb` with no options. What nice
+      value does `updatedb` run with? Type the number only.
+    fill_in:
+      accepted: ["10", "+10"]
+      match: normalized
+      case_sensitive: true
+    explanation: >
+      Without -n, nice adds 10 to the current nice value. From a shell at 0 the command therefore
+      runs at 10.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.6", lesson: 1, section: Process Niceness }
+    verify:
+      command: nice nice
+      expect: { exit_code: 0, stdout_regex: "^10\\s*$" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
+    tags: [nice, default]
+
+  - id: 101-103.6-0009
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      A `ps -l` listing shows a normal (not real-time) process with PRI 90 and NI 10. On current
+      procps-ng, what does `top` show in its PR column for the same process?
+    options:
+      - id: a
+        text: "30"
+        rationale: Correct. top's PR is 20 plus the nice value for normal processes, so 20 + 10 = 30.
+      - id: b
+        text: "10"
+        rationale: Wrong. 10 is the nice value, which top shows in the NI column.
+      - id: c
+        text: "90"
+        rationale: Wrong. 90 is the ps -l scale, which is 80 plus the nice value.
+      - id: d
+        text: "130"
+        rationale: Wrong. 130 is the kernel static priority, as shown in /proc/<PID>/sched.
+    answer: [a]
+    explanation: >
+      The kernel gives a normal process static priority 120 plus its nice value. ps -l shows that
+      minus 40 (80 + NI) and top shows it minus 100 (20 + NI), so one process at nice 10 shows as
+      130, PRI 90 and PR 30.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.6", lesson: 1, section: Reading Priorities }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
+    tags: [top, ps, PR, PRI]
+
+  - id: 101-103.6-0010
+    type: fill_in
+    difficulty: 3
+    pool: holdout
+    stem: >
+      Process 4182 is running at nice value 2. Write the complete `renice` command that sets its nice
+      value to 7, whatever its current value is.
+    fill_in:
+      accepted: ['(sudo\s+)?((/usr)?/bin/)?renice\s+((-n|--priority)\s+)?\+?7\s+((-p|--pid)\s+)?4182']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      renice takes the new nice value first and then the targets, which are PIDs by default:
+      renice -n 7 -p 4182, or simply renice 7 4182. The -n value is absolute in util-linux renice
+      (unless POSIXLY_CORRECT is set), so the result is 7 regardless of the current value.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.6", lesson: 1, section: Process Niceness }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Stem now asks for 7 whatever the current value is, so renice --relative 5 is no longer a defensible answer." }
+    tags: [renice]
+
+  - id: 101-103.6-0011
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      A user opened a shell with `nice -n 5 bash`. From that shell they run `nice -n 3 ./report.sh`.
+      What nice value does `report.sh` get?
+    options:
+      - id: a
+        text: "3"
+        rationale: Wrong. nice -n does not set an absolute value; it adds to the current one.
+      - id: b
+        text: "5"
+        rationale: Wrong. The second nice changes the value further instead of leaving the inherited 5.
+      - id: c
+        text: "8"
+        rationale: Correct. The shell runs at 5 and nice adds 3 to that, giving 8.
+      - id: d
+        text: "10"
+        rationale: Wrong. 10 is only used when no -n adjustment is given.
+    answer: [c]
+    explanation: >
+      nice's -n value is an adjustment added to the niceness the command would otherwise inherit.
+      The shell inherited 5, so nice -n 3 starts report.sh at 8.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.6", lesson: 1, section: Process Niceness }
+    verify:
+      command: nice -n 5 nice -n 3 nice
+      expect: { exit_code: 0, stdout_regex: "^8\\s*$" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
+    tags: [nice]
+
+  - id: 101-103.6-0012
+    type: multi_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      As root, which TWO commands set a nice value of 5 on every process owned by the user `alice`?
+    options:
+      - id: a
+        text: "`renice -n 5 -g alice`"
+        rationale: Wrong. -g selects process group IDs, not Unix groups or users; "alice" is rejected as a bad process group ID.
+      - id: b
+        text: "`renice -n 5 -u alice`"
+        rationale: Correct. -u makes renice treat its arguments as user names or UIDs.
+      - id: c
+        text: "`nice -n 5 -u alice`"
+        rationale: Wrong. nice has no -u option and only starts new commands.
+      - id: d
+        text: "`renice -n 5 alice`"
+        rationale: Wrong. Without a selector, the arguments are PIDs, so "alice" is rejected as a bad process ID.
+      - id: e
+        text: "`renice 5 -u alice`"
+        rationale: Correct. The -n is optional; the value comes first, then -u and the user.
+    answer: [b, e]
+    select_count: 2
+    explanation: >
+      renice selects its targets with -p (process IDs, the default), -g (process group IDs) or -u
+      (users). The new value goes first, with or without -n.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.6", lesson: 1, section: Process Niceness }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
+    tags: [renice, user]
+
+  - id: 101-103.6-0013
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      A normal process runs with nice value -5. What does the `prio` line in its
+      `/proc/<PID>/sched` file show?
+    options:
+      - id: a
+        text: "75"
+        rationale: Wrong. 75 is what ps -l shows in its PRI column (80 + nice value).
+      - id: b
+        text: "15"
+        rationale: Wrong. 15 is what top shows in its PR column (20 + nice value).
+      - id: c
+        text: "125"
+        rationale: Wrong. That would be the value for nice +5; a negative nice value lowers the number.
+      - id: d
+        text: "115"
+        rationale: Correct. Normal processes have static priority 120 plus their nice value, so 120 - 5 = 115.
+    answer: [d]
+    explanation: >
+      The kernel uses static priorities 0–99 for real-time processes and 100–139 for normal ones,
+      where lower means more favoured. Nice value 0 maps to 120, so -5 maps to 115.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.6", lesson: 1, section: Reading Priorities }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
+    tags: [proc, priority]
+
+  - id: 101-103.6-0014
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      An unprivileged user (default resource limits, no special capabilities) runs the commands in
+      the exhibit against one of their own `sleep` processes. Why does the second command fail?
+    exhibit: |
+      $ renice -n 12 -p 5253
+      5253 (process ID) old priority 0, new priority 12
+      $ renice -n 4 -p 5253
+      renice: failed to set priority for 5253 (process ID): Permission denied
+    options:
+      - id: a
+        text: A process whose nice value exceeds 10 cannot be reniced again until it restarts
+        rationale: Wrong. There is no such rule; root can renice it to any value at any time.
+      - id: b
+        text: Unprivileged users cannot lower a nice value, even back toward where it was
+        rationale: Correct. Without root or CAP_SYS_NICE, a user can only raise the nice value of their processes.
+      - id: c
+        text: renice needs -p before -n once a process has already been reniced
+        rationale: Wrong. renice takes the value first; renice -p 5253 -n 4 is rejected as an invalid priority.
+      - id: d
+        text: The process belongs to another user, so renice needs -u instead of -p
+        rationale: Wrong. The first command succeeded on the same PID, so the user does own it.
+    answer: [b]
+    explanation: >
+      With the default RLIMIT_NICE of 0, an ordinary user may only make a process nicer. Going from
+      12 to 4 lowers the nice value, so it is refused with "Permission denied" even though the
+      process started at 0. Only root (CAP_SYS_NICE) can lower it.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.6", lesson: 1, section: Process Niceness }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
+    tags: [renice, permissions]
+
+  - id: 101-103.6-0015
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      On a system with default limits, an unprivileged user whose shell runs at nice value 0 types
+      `nice -n -5 ./build.sh`. What happens?
+    options:
+      - id: a
+        text: nice prints a permission warning and build.sh runs at nice value 0
+        rationale: 'Correct. GNU nice warns "cannot set niceness: Permission denied" but still runs the command at the inherited value.'
+      - id: b
+        text: nice refuses with an error, build.sh is never started, and the exit status is 125
+        rationale: Wrong. Exit status 125 is for a failure of nice itself, such as a bad option; a refused adjustment only produces a warning.
+      - id: c
+        text: build.sh runs at nice value -5
+        rationale: Wrong. Lowering the nice value below 0 needs root or CAP_SYS_NICE.
+      - id: d
+        text: build.sh runs at nice value 5 because the sign is ignored
+        rationale: Wrong. nice does not flip the sign of the adjustment.
+    answer: [a]
+    explanation: >
+      GNU nice treats a refused adjustment as a warning: it prints "nice: cannot set niceness:
+      Permission denied" and then runs the command at the inherited nice value. The script's exit
+      status is returned as usual.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.6", lesson: 1, section: Process Niceness }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Lengthened option b so the correct option is not the longest; rationale a quoted for YAML and made precise." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
+    tags: [nice, permissions]
+
+  - id: 101-103.6-0016
+    type: multi_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      On current procps-ng, which TWO statements about a normal (not real-time) process are true?
+    options:
+      - id: a
+        text: The PRI column of `ps -l` equals the `prio` value in `/proc/<PID>/sched`
+        rationale: Wrong. ps -l shows the kernel value minus 40 (80 for a prio of 120).
+      - id: b
+        text: "`rt` in top's PR column means the process has nice value -20"
+        rationale: Wrong. rt marks a real-time process at the top real-time priority; a nice value of -20 shows as PR 0.
+      - id: c
+        text: The PRI value in `ps -l` equals 80 plus the nice value
+        rationale: Correct. Nice 0 shows as 80, nice 19 as 99 and nice -20 as 60.
+      - id: d
+        text: The PR value in `top` equals 20 plus the nice value
+        rationale: Correct. Nice 0 shows as 20, so normal processes range from 0 to 39.
+      - id: e
+        text: A higher PRI value in `ps -l` means the scheduler favours the process more
+        rationale: Wrong. Lower values mean higher priority on every one of these scales.
+    answer: [c, d]
+    select_count: 2
+    explanation: >
+      The kernel's static priority for a normal process is 120 plus its nice value. ps -l shows it
+      minus 40 and top shows it minus 100. On all three scales a lower number means more favoured.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.6", lesson: 1, section: Reading Priorities }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
+    tags: [ps, top, PRI, PR]
+
+  - id: 101-103.6-0017
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      In a bash shell (PID 3001, nice value 0) a user has started `sort` in the background. Root
+      then runs `renice -n 10 -p 3001`. Afterwards the user starts `gzip` from the same shell. While
+      both still run, what are their nice values?
+    options:
+      - id: a
+        text: sort 10, gzip 10
+        rationale: Wrong. renice -p only changes the named process; sort was already running and keeps 0.
+      - id: b
+        text: sort 10, gzip 0
+        rationale: Wrong. This is the reverse of what happens.
+      - id: c
+        text: sort 0, gzip 10
+        rationale: Correct. sort keeps the value it inherited at start; gzip inherits the shell's new value of 10.
+      - id: d
+        text: sort 0, gzip 0
+        rationale: Wrong. gzip is started after the shell was reniced, so it inherits 10.
+    answer: [c]
+    explanation: >
+      A new process inherits its parent's nice value when it is created. Renicing a parent later
+      does not change children that are already running, but every child started after that
+      inherits the new value.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.6", lesson: 1, section: Process Niceness }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
+    tags: [renice, inheritance]
+
+  - id: 101-103.6-0018
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      On a system with default limits, an unprivileged user whose shell runs at nice value 0 types
+      `nice -n 10 nice -n -15 ./job`. What nice value does `./job` run with?
+    options:
+      - id: a
+        text: "-5"
+        rationale: Wrong. That is what root would get (0 + 10 - 15); the user cannot lower the value.
+      - id: b
+        text: "10"
+        rationale: Correct. The outer nice raises the value to 10; the inner one is refused with a warning and still runs ./job at 10.
+      - id: c
+        text: "0"
+        rationale: Wrong. The outer nice succeeds, because raising a nice value needs no privilege.
+      - id: d
+        text: "-15"
+        rationale: Wrong. nice adjustments are relative, and the user cannot go below 0 anyway.
+    answer: [b]
+    explanation: >
+      Each nice adds its adjustment to the value it inherits. The first nice raises 0 to 10, which
+      is allowed. The second tries to lower it to -5, which is refused for a normal user; GNU nice
+      prints a warning and runs ./job at the inherited 10.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.6", lesson: 1, section: Process Niceness }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
+    tags: [nice, permissions]
+
+  - id: 101-103.6-0019
+    type: fill_in
+    difficulty: 5
+    pool: holdout
+    stem: >
+      As root, write a single `renice` command that sets nice value -5 on every process in process
+      group 2200.
+    fill_in:
+      accepted: ['(sudo\s+)?((/usr)?/bin/)?renice\s+((-n|--priority)\s+)?-5\s+(-g|--pgrp)\s+2200']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      renice -g (long form --pgrp) treats its arguments as process group IDs, so renice -n -5 -g
+      2200 changes every process in group 2200. Lowering the value below 0 needs root.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.6", lesson: 1, section: Process Niceness }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
+    tags: [renice, process-group]
+
+  - id: 101-103.6-0020
+    type: multi_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      Process 5150 runs at nice value 0. Which TWO commands, run as root, leave it at nice value 10?
+    options:
+      - id: a
+        text: "`renice +10 5150`"
+        rationale: Correct. The value comes first and the argument is a PID by default; +10 is read as 10.
+      - id: b
+        text: "`nice -n 10 -p 5150`"
+        rationale: Wrong. nice has no -p option; it only starts new commands.
+      - id: c
+        text: "`renice -n -10 -p 5150`"
+        rationale: Wrong. This sets the nice value to -10, giving the process more priority.
+      - id: d
+        text: "`renice --relative -10 5150`"
+        rationale: Wrong. This adds -10 to the current value, which also gives -10.
+      - id: e
+        text: "`renice --priority 10 --pid 5150`"
+        rationale: Correct. These are the long forms of -n (absolute value) and -p.
+    answer: [a, e]
+    select_count: 2
+    explanation: >
+      util-linux renice accepts the value with or without -n (long form --priority), and a PID with
+      or without -p (--pid). --relative adds to the current value instead of replacing it.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.6", lesson: 1, section: Process Niceness }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
+    tags: [renice]
+
+  # ---------------------------------------------------------------- practice (study mode)
+
+  - id: 101-103.6-0021
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: >
+      Two CPU-bound processes compete for the same CPU. One has nice value 15, the other -3. Which
+      statement is true?
+    options:
+      - id: a
+        text: The process at 15 gets more CPU time
+        rationale: Wrong. A higher nice value means the process yields more to others.
+      - id: b
+        text: Nice values only affect real-time processes
+        rationale: Wrong. It is the other way round; nice values only matter for normal scheduling policies.
+      - id: c
+        text: The process at -3 gets more CPU time
+        rationale: Correct. A lower nice value means a higher priority.
+      - id: d
+        text: Both get equal CPU time, since nice values only affect disk I/O
+        rationale: Wrong. Nice values affect CPU scheduling.
+    answer: [c]
+    explanation: >
+      A "nicer" process (higher nice value) lets others run first. The process at -3 is less nice
+      and therefore favoured over the one at 15.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.6", lesson: 1, section: Process Niceness }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
+    tags: [nice]
+
+  - id: 101-103.6-0022
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: In the default `top` task list, which column shows each process's nice value?
+    options:
+      - id: a
+        text: NI
+        rationale: Correct. NI is the nice value, from -20 to 19.
+      - id: b
+        text: PR
+        rationale: Wrong. PR is the scheduling priority (20 plus the nice value for normal processes).
+      - id: c
+        text: S
+        rationale: Wrong. S is the process state, such as R for running or S for sleeping.
+      - id: d
+        text: "%CPU"
+        rationale: Wrong. %CPU is the share of CPU time used since the last update.
+    answer: [a]
+    explanation: >
+      top shows both PR and NI. NI is the nice value; PR is derived from it for normal processes.
+      ps -l uses the same NI heading.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.6", lesson: 1, section: Reading Priorities }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
+    tags: [top, NI]
+
+  - id: 101-103.6-0023
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: Which `renice` option makes it treat its arguments as user names or UIDs?
+    options:
+      - id: a
+        text: "`-g`"
+        rationale: Wrong. -g makes the arguments process group IDs.
+      - id: b
+        text: "`-p`"
+        rationale: Wrong. -p makes them process IDs, which is also the default.
+      - id: c
+        text: "`-n`"
+        rationale: Wrong. -n introduces the nice value, not the targets.
+      - id: d
+        text: "`-u`"
+        rationale: Correct. -u (--user) selects every process owned by the named users or UIDs.
+    answer: [d]
+    explanation: >
+      renice selects targets by PID (-p, the default), process group (-g) or user (-u), for example
+      renice -n 5 -u alice.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.6", lesson: 1, section: Process Niceness }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
+    tags: [renice]
+
+  - id: 101-103.6-0024
+    type: single_choice
+    difficulty: 3
+    pool: practice
+    stem: In the output shown in the exhibit, what do "old priority" and "new priority" refer to?
+    exhibit: |
+      # renice -n 10 -p 5640
+      5640 (process ID) old priority 3, new priority 10
+    options:
+      - id: a
+        text: The kernel static priority, from 100 to 139
+        rationale: Wrong. Those values would be 123 and 130 for this process.
+      - id: b
+        text: The nice value before and after the change
+        rationale: Correct. renice reports the old and new nice values despite the word "priority".
+      - id: c
+        text: The PR value as top shows it
+        rationale: Wrong. top would show 23 and 30 for these nice values.
+      - id: d
+        text: The real-time priority, from 1 to 99
+        rationale: Wrong. renice does not change real-time priorities.
+    answer: [b]
+    explanation: >
+      renice prints the nice value before and after the change. The process went from nice value 3
+      to 10, so it is now less favoured.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.6", lesson: 1, section: Process Niceness }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
+    tags: [renice]
+
+  - id: 101-103.6-0025
+    type: single_choice
+    difficulty: 3
+    pool: practice
+    stem: A process shows `rt` in the PR column of `top`. What does that tell you?
+    options:
+      - id: a
+        text: Its nice value is -20
+        rationale: Wrong. A normal process at nice -20 shows PR 0 and NI -20.
+      - id: b
+        text: It is waiting in uninterruptible sleep on I/O
+        rationale: Wrong. Process state is shown in the S column (D for uninterruptible sleep).
+      - id: c
+        text: It runs under a real-time scheduling policy
+        rationale: Correct. top shows real-time priorities as negative numbers, and the highest one as rt.
+      - id: d
+        text: Root has reniced it to a value below zero
+        rationale: Wrong. Renicing changes the nice value; it never makes PR show rt.
+    answer: [c]
+    explanation: >
+      top subtracts 100 from the kernel priority, so real-time processes (0–99) show negative PR
+      values, and the highest real-time priority shows as rt. Nice values do not affect how
+      real-time processes are scheduled.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.6", lesson: 1, section: Reading Priorities }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Lengthened distractors b and d so the correct option is not the longest." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
+    tags: [top, real-time]
+
+  - id: 101-103.6-0026
+    type: single_choice
+    difficulty: 4
+    pool: practice
+    stem: >
+      The exhibit shows `ps -l` output for four normal processes. Which of them would `top` list
+      with the value 25 in its PR column?
+    exhibit: |
+      F S   UID   PID  PPID  C PRI  NI ADDR SZ WCHAN  TTY          TIME CMD
+      0 S     0  5281  5275  0  80   0 -   683 hrtime ?        00:00:00 httpd
+      0 S     0  5282  5275  0  95  15 -   683 hrtime ?        00:00:00 updatedb
+      4 S     0  5283  5275  0  72  -8 -   683 hrtime ?        00:00:00 rsync
+      0 S     0  5284  5275  0  85   5 -   683 hrtime ?        00:00:00 gzip
+    options:
+      - id: a
+        text: gzip (PID 5284)
+        rationale: Correct. Its nice value is 5, and top's PR for a normal process is 20 + 5 = 25.
+      - id: b
+        text: updatedb (PID 5282)
+        rationale: Wrong. At nice value 15, top would show PR 35.
+      - id: c
+        text: httpd (PID 5281)
+        rationale: Wrong. At the default nice value 0, top would show PR 20.
+      - id: d
+        text: rsync (PID 5283)
+        rationale: Wrong. At nice value -8, top would show PR 12.
+    answer: [a]
+    explanation: >
+      ps -l shows PRI as 80 plus the nice value and top shows PR as 20 plus the nice value, so the
+      two always differ by 60 for normal processes. gzip, with NI 5 and PRI 85, appears in top as
+      PR 25.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.6", lesson: 1, section: Reading Priorities }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Reworked from which-process-is-favoured to a PRI/NI-to-PR mapping, to stay clear of the lesson exercise on reading a ps -el listing." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
+    tags: [ps, PRI, NI]
+
+  - id: 101-103.6-0027
+    type: multi_choice
+    difficulty: 2
+    pool: practice
+    stem: Which TWO statements about nice values are true?
+    options:
+      - id: a
+        text: "`nice` without -n sets the nice value to exactly 10, whatever it was before"
+        rationale: Wrong. nice adds 10 to the current value; from a shell at 5 the command runs at 15.
+      - id: b
+        text: A new process inherits the nice value of its parent
+        rationale: Correct. A command started from a shell at nice 5 also runs at 5.
+      - id: c
+        text: An ordinary user may raise the nice value of their own processes
+        rationale: Correct. Making a process nicer needs no privilege.
+      - id: d
+        text: Only root may raise a nice value
+        rationale: Wrong. Root is needed to lower a nice value, not to raise it.
+      - id: e
+        text: Nice values decide the order in which real-time processes run
+        rationale: Wrong. Real-time processes are scheduled by their real-time priority; nice values apply to normal policies.
+    answer: [b, c]
+    select_count: 2
+    explanation: >
+      Children inherit their parent's nice value, and any user can raise the value of their own
+      processes. Lowering it needs root (CAP_SYS_NICE).
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.6", lesson: 1, section: Process Niceness }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
+    tags: [nice, inheritance, permissions]
+
+  - id: 101-103.6-0028
+    type: multi_choice
+    difficulty: 3
+    pool: practice
+    stem: >
+      From a shell at nice value 0, which TWO commands start `./backup.sh` with nice value 19?
+    options:
+      - id: a
+        text: "`nice -n 19 ./backup.sh`"
+        rationale: Correct. -n 19 adds 19 to the shell's 0.
+      - id: b
+        text: "`nice --19 ./backup.sh`"
+        rationale: Wrong. In the old one-dash syntax a second dash makes the number negative, so this asks for -19.
+      - id: c
+        text: "`renice -n 19 ./backup.sh`"
+        rationale: Wrong. renice works on running processes; ./backup.sh is rejected as a bad process ID.
+      - id: d
+        text: "`nice -19 ./backup.sh`"
+        rationale: Correct. The traditional -N form means an adjustment of N, so this is the same as -n 19.
+      - id: e
+        text: "`nice -n 9 ./backup.sh`"
+        rationale: Wrong. This gives nice value 9.
+    answer: [a, d]
+    select_count: 2
+    explanation: >
+      GNU nice accepts both -n N and the traditional -N form. Watch the sign: nice -19 means +19,
+      while nice --19 means -19.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.6", lesson: 1, section: Process Niceness }
+    verify:
+      command: nice -19 nice
+      expect: { exit_code: 0, stdout_regex: "^19\\s*$" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
+    tags: [nice]
+
+  - id: 101-103.6-0029
+    type: fill_in
+    difficulty: 3
+    pool: practice
+    stem: >
+      `top` shows a normal (not real-time) process with PR 35. What is its nice value? Type the
+      number only.
+    fill_in:
+      accepted: ["15", "+15"]
+      match: normalized
+      case_sensitive: true
+    explanation: >
+      For normal processes top's PR is 20 plus the nice value, so PR 35 means nice value 15. ps -l
+      would show PRI 95 for the same process.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.6", lesson: 1, section: Reading Priorities }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked live (nice, renice, ps, top via a pty)." }
+    tags: [top, PR, NI]
+
+  - id: 101-103.6-0030
+    type: fill_in
+    difficulty: 2
+    pool: practice
+    stem: >
+      You want a one-shot listing of every process on the system that includes the PRI and NI columns,
+      without choosing columns with `-o`. Type the `ps` command, using UNIX-style (single-dash)
+      options only.
+    fill_in:
+      accepted: ['(sudo\s+)?((/usr)?/bin/)?ps\s+(-(el|le|Al|lA)|-[eA]\s+-l|-l\s+-[eA])']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      -e (or -A) selects every process and -l adds the long format with the PRI and NI columns:
+      ps -el.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.6", lesson: 1, section: Reading Priorities }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Stem narrowed to UNIX-style options: BSD ps axl also lists every process with PRI and NI, and the old wording echoed Explorational Exercise 1." }
+    tags: [ps]
