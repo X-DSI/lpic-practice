@@ -16,7 +16,7 @@ questions:
     options:
       - id: a
         text: "`/etc`"
-        rationale: Correct. /etc is the place for host-specific configuration; programs may add their own subdirectories, such as /etc/ssh.
+        rationale: Correct. /etc is the place for host-specific configuration, usually one subdirectory per program, such as /etc/ssh.
       - id: b
         text: "`/usr`"
         rationale: Wrong. /usr holds shareable, read-only programs, libraries and data, not this host's configuration.
@@ -33,9 +33,10 @@ questions:
       keep separate from the programs in /usr.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.7", lesson: 1, section: The Filesystem Hierarchy Standard }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Rationale a reworded away from lesson phrasing." }
     tags: [fhs, etc]
 
   - id: 101-104.7-0002
@@ -65,9 +66,10 @@ questions:
       command: test -d /proc/self && grep -q '^proc /proc proc' /proc/mounts && echo ok
       expect: { exit_code: 0, stdout_contains: "ok" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [fhs, proc]
 
   - id: 101-104.7-0003
@@ -99,9 +101,10 @@ questions:
       command: which ls
       expect: { exit_code: 0, stdout_regex: "^/(usr/)?bin/ls" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [which]
 
   - id: 101-104.7-0004
@@ -131,9 +134,10 @@ questions:
       symbolic link to /run.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.7", lesson: 1, section: Location of Temporary Files }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [fhs, run, pid-file]
 
   - id: 101-104.7-0005
@@ -162,9 +166,10 @@ questions:
       back up) everything a web, FTP or rsync service publishes in one place.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.7", lesson: 1, section: The Filesystem Hierarchy Standard }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [fhs, srv]
 
   - id: 101-104.7-0006
@@ -193,9 +198,10 @@ questions:
       operation that must be kept, such as logs, spools, caches and state, goes under /var.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.7", lesson: 1, section: The Filesystem Hierarchy Standard }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Correct-option rationale reworded (YAML colon); fact unchanged." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [fhs, var]
 
   - id: 101-104.7-0007
@@ -224,9 +230,10 @@ questions:
       reboot. Its files are usually only removed by age-based cleanup.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.7", lesson: 1, section: Location of Temporary Files }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [fhs, var-tmp, tmp]
 
   - id: 101-104.7-0008
@@ -245,9 +252,10 @@ questions:
       the locate database. Changes take effect the next time updatedb runs.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.7", lesson: 1, section: Controlling the Behavior of updatedb }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [updatedb, updatedb.conf]
 
   - id: 101-104.7-0009
@@ -272,9 +280,10 @@ questions:
       command: find /tmp/v -iname '*.pdf' | wc -l
       expect: { exit_code: 0, stdout_contains: "3" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [find, iname]
 
   - id: 101-104.7-0010
@@ -302,9 +311,10 @@ questions:
       more than, and no sign means exactly that many (rounded down) periods.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.7", lesson: 1, section: Searching by Time }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Rationale for option a made precise (+7 is not exactly 'more than 7 days')." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [find, mtime]
 
   - id: 101-104.7-0011
@@ -312,22 +322,24 @@ questions:
     difficulty: 3
     pool: holdout
     stem: >
-      `updatedb` keeps indexing files on network shares, which is slow. Type the name of the
-      variable in `/etc/updatedb.conf` that lists file system **types** (such as `nfs` or `cifs`) to
-      leave out of the database.
+      `updatedb` wastes time indexing `.git` directories inside every project tree. Type the name of
+      the variable in `/etc/updatedb.conf` that lists directory **names** to skip wherever they
+      appear.
     fill_in:
-      accepted: [PRUNEFS, PRUNEFS=]
+      accepted: [PRUNENAMES, PRUNENAMES=]
       match: normalized
       case_sensitive: true
     explanation: >
-      PRUNEFS lists file system types to skip, separated by spaces. PRUNEPATHS lists directory paths,
-      PRUNENAMES lists directory names, and PRUNE_BIND_MOUNTS decides whether bind mounts are skipped.
+      PRUNENAMES lists directory names (not paths) to skip wherever they occur, such as .git or .svn.
+      PRUNEPATHS lists full paths, PRUNEFS lists file system types, and PRUNE_BIND_MOUNTS decides
+      whether bind mounts are skipped.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.7", lesson: 1, section: Controlling the Behavior of updatedb }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
-    tags: [updatedb.conf, PRUNEFS]
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Now asks for PRUNENAMES (.git directories); the PRUNEFS version restated Guided Exercise 6. Text supplied by the reviewer; verified by the reviewer." }
+    tags: [updatedb.conf, PRUNENAMES]
 
   - id: 101-104.7-0012
     type: multi_choice
@@ -359,9 +371,10 @@ questions:
       command: bash -c 'type -t cd; type cd'
       expect: { exit_code: 0, stdout_contains: "cd is a shell builtin" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [type, which, whereis, builtin]
 
   - id: 101-104.7-0013
@@ -395,9 +408,10 @@ questions:
       command: find /tmp/v -perm -4000; echo "exact:"; find /tmp/v -perm 4000
       expect: { exit_code: 0, stdout_regex: "^/tmp/v/a\nexact:\n?$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [find, perm, suid]
 
   - id: 101-104.7-0014
@@ -437,9 +451,10 @@ questions:
       command: cd /tmp/v && find . -type f -perm -664 | sort | tr '\n' ' '
       expect: { exit_code: 0, stdout_contains: "./deploy.sh ./draft.txt " }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [find, perm]
 
   - id: 101-104.7-0015
@@ -475,9 +490,10 @@ questions:
       classic FHS paths still work, but they lead to the files in /usr.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.7", lesson: 1, section: "Finding Binaries, Manual Pages and Source Code" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [which, usrmerge, fhs]
 
   - id: 101-104.7-0016
@@ -512,9 +528,10 @@ questions:
       PRUNEPATHS and running updatedb again while the stick is mounted.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.7", lesson: 1, section: Controlling the Behavior of updatedb }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Rationale for option d reworded for clarity." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [updatedb.conf, PRUNEPATHS, locate]
 
   - id: 101-104.7-0017
@@ -550,9 +567,10 @@ questions:
       command: find /tmp/v -user root -name '*.bak' -exec rm {} + && ls /tmp/v
       expect: { exit_code: 0, stdout_regex: "^keep.txt\n?$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [find, exec, user]
 
   - id: 101-104.7-0018
@@ -593,9 +611,10 @@ questions:
       command: cd /tmp/v && find . -type f -size -1M
       expect: { exit_code: 0, stdout_regex: "^\\./a\\.dat\n?$" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [find, size]
 
   - id: 101-104.7-0019
@@ -637,9 +656,10 @@ questions:
       command: cd /tmp/v && find . -type f -mtime 1 | sort | tr '\n' ' '
       expect: { exit_code: 0, stdout_contains: "./b.csv ./c.csv " }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [find, mtime]
 
   - id: 101-104.7-0020
@@ -671,9 +691,10 @@ questions:
       that file instead of the default one.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.7", lesson: 1, section: Using locate and updatedb }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [updatedb, locate]
 
   # --------------------------------------------------------------------------- practice (CLI)
@@ -703,9 +724,10 @@ questions:
       /boot/grub.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.7", lesson: 1, section: The Filesystem Hierarchy Standard }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Correct-option rationale reworded (YAML colon); fact unchanged." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [fhs, boot]
 
   - id: 101-104.7-0022
@@ -734,9 +756,10 @@ questions:
       devices the kernel provides (/dev/null, /dev/zero). Today udev manages them on a devtmpfs.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.7", lesson: 1, section: The Filesystem Hierarchy Standard }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [fhs, dev]
 
   - id: 101-104.7-0023
@@ -766,9 +789,10 @@ questions:
       /etc/opt.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.7", lesson: 1, section: The Filesystem Hierarchy Standard }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [fhs, opt]
 
   - id: 101-104.7-0024
@@ -776,8 +800,9 @@ questions:
     difficulty: 2
     pool: practice
     stem: >
-      An administrator needs to mount a partition by hand for a short maintenance task. Which
-      directory does the FHS provide for such temporary mounts?
+      A USB stick is mounted automatically at `/media/carol/STICK`. Separately, the administrator
+      wants to mount a backup file system by hand for an hour. Which directory does the FHS provide
+      for that second, temporary mount?
     options:
       - id: a
         text: "`/media`"
@@ -797,9 +822,10 @@ questions:
       removable media. On many desktops these are created per user, as in /media/<user>/<label>.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.7", lesson: 1, section: The Filesystem Hierarchy Standard }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Stem reworded to contrast /media with /mnt; it was close to Guided Exercise 7. Text supplied by the reviewer; verified by the reviewer." }
     tags: [fhs, mnt, media]
 
   - id: 101-104.7-0025
@@ -828,9 +854,10 @@ questions:
       separate /home file system is missing or damaged.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.7", lesson: 1, section: The Filesystem Hierarchy Standard }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [fhs, root, home]
 
   - id: 101-104.7-0026
@@ -838,10 +865,10 @@ questions:
     difficulty: 3
     pool: practice
     stem: >
-      Type the `whereis` option that limits the output to manual page files, as when you want to
-      know only where the manual page for `rsync` is installed.
+      Type the `whereis` option that limits the output to binary files, as when you want to know only
+      where the `sshd` program is installed and not its manual pages.
     fill_in:
-      accepted: ['((sudo\s+)?((/usr)?/bin/)?whereis\s+)?-m(\s+rsync)?']
+      accepted: ['((sudo\s+)?((/usr)?/bin/)?whereis\s+)?-b(\s+sshd)?']
       match: regex
       case_sensitive: true
     explanation: >
@@ -849,9 +876,10 @@ questions:
       restricts the output to binaries, -m to manual pages and -s to sources.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.7", lesson: 1, section: "Finding Binaries, Manual Pages and Source Code" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Now asks for -b (binaries); the manual-page version restated Guided Exercise 5. Text supplied by the reviewer; verified by the reviewer." }
     tags: [whereis]
 
   - id: 101-104.7-0027
@@ -859,31 +887,32 @@ questions:
     difficulty: 3
     pool: practice
     stem: >
-      The locate database was built last night, and several files have been deleted since. Which
-      `locate` option leaves out results for files that no longer exist?
+      `locate app.conf.old` prints `/etc/app/app.conf.old`, but `ls /etc/app/app.conf.old` reports
+      `No such file or directory`. What is the most likely reason?
     options:
       - id: a
-        text: "`-e`"
-        rationale: Correct. -e (--existing) checks each result and prints only files that still exist.
+        text: The file was deleted after `updatedb` last built the database
+        rationale: Correct. locate reads the database, not the disk, so the entry stays until updatedb runs again or locate -e is used.
       - id: b
-        text: "`-i`"
-        rationale: Wrong. -i makes the match case-insensitive.
+        text: "`locate` matched the name case-insensitively and found a different file"
+        rationale: Wrong. locate is case-sensitive unless -i is given, and the path it printed is exact.
       - id: c
-        text: "`-c`"
-        rationale: Wrong. -c prints the number of matches instead of the matches.
+        text: "`/etc/app` is listed in `PRUNEPATHS`"
+        rationale: Wrong. A pruned path is left out of the database, so locate would print nothing for it.
       - id: d
-        text: "`-b`"
-        rationale: Wrong. -b matches the pattern only against the last component of each path.
+        text: "`locate` only searches the directories in `PATH`"
+        rationale: Wrong. That describes which; locate searches its database of the whole tree.
     answer: [a]
     explanation: >
       locate searches a database, not the disk, so it can show deleted files until updatedb runs
-      again. -e removes results that no longer exist; files created since the last update still only
+      again. `locate -e` removes results that no longer exist; files created since the last update still only
       show up after updatedb.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.7", lesson: 1, section: Using locate and updatedb }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Rewritten as a stale-database diagnosis; the -e version restated Explorational Exercise 1. Text supplied by the reviewer; verified by the reviewer." }
     tags: [locate]
 
   - id: 101-104.7-0028
@@ -917,9 +946,10 @@ questions:
       command: test -L /bin && test -L /lib && readlink /bin
       expect: { exit_code: 0, stdout_contains: "usr/bin" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [usrmerge, fhs]
 
   - id: 101-104.7-0029
@@ -956,9 +986,10 @@ questions:
       miss what really runs.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.7", lesson: 1, section: "Finding Binaries, Manual Pages and Source Code" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [type, which, alias]
 
   - id: 101-104.7-0030
@@ -1000,7 +1031,8 @@ questions:
       command: cd /tmp/v && find . -maxdepth 2 -name '*.log' | sort | tr '\n' ' '
       expect: { exit_code: 0, stdout_contains: "./logs/app.log ./top.log " }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [find, maxdepth]
