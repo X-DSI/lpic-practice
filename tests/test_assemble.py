@@ -196,7 +196,12 @@ def test_real_content_today_is_too_small(tmp_path: Path, capsys) -> None:
     assert main(["101", "--content-dir", str(content)]) == 1
     assert sorted(p.relative_to(content) for p in content.rglob("*")) == before
     out = capsys.readouterr().out
-    assert "nothing written" in out and "objective 101.1:" in out and "needs 20" in out
+    assert "nothing written" in out
+    # Which objectives are short changes as the bank grows, so check the shape of the report
+    # rather than naming one. Remove this test once the 101 bank can fill all 10 mocks.
+    shortfalls = re.findall(r"objective (\d{3}\.\d+): (\d+) eligible holdout question\(s\) .*?; needs (\d+)", out)
+    assert shortfalls, out
+    assert all(int(have) < int(need) for _, have, need in shortfalls), out
 
 
 def test_invalid_content_writes_nothing(holdout_content: Path, capsys) -> None:
