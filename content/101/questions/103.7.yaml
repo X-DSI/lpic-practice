@@ -925,8 +925,8 @@ questions:
         text: printf cannot write `\0`, so grep received an empty or broken stream
         rationale: Wrong. printf does write NUL bytes (od -c shows them), and the message itself says grep found a match.
       - id: d
-        text: grep hides binary output unless `-a` is given; `-a` would list `prod web.conf`
-        rationale: Wrong. -a would print the matching "line", which is the whole stream, both names and their NULs together, not one record per name.
+        text: "grep hides binary output unless `-a` is given; `-a` would print only `prod web.conf`"
+        rationale: 'Wrong. -a prints the whole matching "line", which is the entire stream: `a b.conf`, a NUL, `prod web.conf` and another NUL. The name that does not match is printed too.'
     answer: [a]
     explanation: >
       grep normally splits its input at newlines. NUL-separated data, as produced by `find -print0`
@@ -941,7 +941,7 @@ questions:
       status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
-        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Rewritten as single choice on the binary-file-matches symptom; the fill-in restated a lesson 2 Guided Exercise. Needs re-check." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Rewritten as single choice on the binary-file-matches symptom; the fill-in restated a lesson 2 Guided Exercise. Re-check: option d reworded so it is clearly false (-a prints both names); otherwise matches key." }
     tags: [grep-z, binary, find]
 
   - id: 101-103.7-0029
