@@ -8,7 +8,7 @@ later, LPIC-2 (201, 202) exams.
   graded from easiest (mock 1) to hardest (mock 10), with per-objective results.
 
 > Status: **early**. The shared engine (`engine/`) loads, grades and scores the question bank,
-> and `lpic practice` drills it in the terminal. Browser mock exams are not built yet.
+> `lpic practice` drills it in the terminal, and `lpic serve` runs the timed mock exams in a browser.
 
 ## Repository layout
 
@@ -32,7 +32,7 @@ lpic-practice/
 ├── engine/              # Python core: loading, matching, scoring, selection, build, mock assembly
 ├── tests/               # pytest suite with synthetic fixture banks
 ├── cli/                 # Textual terminal practice (the `lpic` command)
-└── web/                 # (planned) FastAPI + Jinja + htmx mock exams
+└── web/                 # FastAPI + Jinja + htmx mock exams (`lpic serve`)
 ```
 
 ## Decisions so far
@@ -67,6 +67,20 @@ lpic flags export > flags.yaml      # questions you flagged while studying, for 
 Results and flags are kept in `~/.local/share/lpic-practice/results.sqlite` (or under
 `$XDG_DATA_HOME`); set `LPIC_DB` to use another file. Practice uses only practice questions, never
 the holdout pool reserved for mock exams.
+
+## Mock exams
+
+```bash
+lpic serve                          # open http://127.0.0.1:8000/ and pick a mock
+lpic reviews export > reviews.yaml  # holdout questions you signed off as "looks right", for the planner
+```
+
+Each mock is 60 questions in 90 minutes, as in the real exam, with no feedback until you submit.
+Answers save as you go, so a refresh or a restart resumes with the same deadline; at the deadline
+the mock is submitted for you. The results page shows an estimated 200–800 score, the raw
+percentage and your weak areas. Afterwards, review each question: **Looks right** signs it off,
+**Flag** sends it back like a flag from `lpic practice`. The server listens on 127.0.0.1 only and
+has no login.
 
 The build output is one JSON file per exam; its layout is documented in `engine/build.py`.
 

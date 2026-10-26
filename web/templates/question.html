@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}{{ state.mock.title or state.mock.id }} · question {{ number }}{% endblock %}
+{% block header %}<span>{{ state.mock.id }}</span> {% include "_countdown.html" %}{% endblock %}
+{% block main %}
+<div class="exam">
+  <form id="question-form" method="post" action="/sessions/{{ session_id }}/questions/{{ number }}"
+        hx-post="/sessions/{{ session_id }}/questions/{{ number }}/save" hx-trigger="change, input changed delay:600ms"
+        hx-target="#navigator" hx-swap="outerHTML">
+    <h1>Question {{ number }} of {{ total }}</h1>
+    <div class="stem">{{ question.stem|md }}</div>
+    {% if question.exhibit %}<pre class="exhibit">{{ question.exhibit }}</pre>{% endif %}
+
+    {% if question.type == "single_choice" %}
+      <p class="hint">Choose one.</p>
+      {% for id, text in question.options %}
+      <label class="option"><input type="radio" name="response" value="{{ id }}" data-key="{{ id }}" {{ "checked" if response == id }}> <b>{{ id }}.</b> {{ text|md }}</label>
+      {% endfor %}
+    {% elif question.type == "multi_choice" %}
+      <p class="hint">Choose {{ question.select_count }}.</p>
+      {% for id, text in question.options %}
+      <label class="option"><input type="checkbox" name="response" value="{{ id }}" data-key="{{ id }}" {{ "checked" if response and id in response }}> <b>{{ id }}.</b> {{ text|md }}</label>
+      {% endfor %}
+    {% else %}
+      <p class="hint">Type your answer.</p>
+      <input type="text" name="response" value="{{ response or '' }}" autocomplete="off" spellcheck="false" class="fill-in" aria-label="Your answer">
+    {% endif %}
+
+    <label class="mark"><input type="checkbox" name="marked" value="1" {{ "checked" if marked }} data-key="m"> Mark for review <span class="hint">(m)</span></label>
+
+    <div class="buttons">
+      <button type="submit" name="go" value="prev" {{ "disabled" if number == 1 }} data-key="p">← Previous <span class="hint">(p)</span></button>
+      <button type="submit" name="go" value="next" {{ "disabled" if number == total }} data-key="n">Next → <span class="hint">(n)</span></button>
+      <button type="submit" name="go" value="submit" class="secondary">Submit the mock…</button>
+    </div>
+  </form>
+  {% include "_navigator.html" %}
+</div>
+{% endblock %}

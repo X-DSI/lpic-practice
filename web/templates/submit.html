@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Submit {{ state.mock.id }}{% endblock %}
+{% block header %}<span>{{ state.mock.id }}</span> {% include "_countdown.html" %}{% endblock %}
+{% block main %}
+<h1>Submit {{ state.mock.title or state.mock.id }}?</h1>
+<p>{{ state.unanswered }} question(s) unanswered and {{ state.marked_count }} marked for review.
+Unanswered questions count as wrong. You can't change answers after submitting.</p>
+<form method="post" action="/sessions/{{ session_id }}/submit">
+  <button type="submit">Submit now</button>
+  <a href="/sessions/{{ session_id }}/questions/1">Back to the questions</a>
+</form>
+{% endblock %}

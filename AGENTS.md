@@ -8,8 +8,8 @@ lpic-practice is a practice suite for the Linux Professional Institute LPIC-1 ex
 102-500) and, later, LPIC-2 (201, 202): terminal drills by objective with weak-area targeting, plus
 10 timed browser mock exams per exam, graded from easiest to hardest, with per-objective results.
 Everything is driven by a question bank in `content/`, validated against the JSON Schemas in
-`schemas/`. Status: the shared engine (`engine/`) and the terminal practice app (`cli/`, the `lpic`
-command) exist; mock exams in the web UI are not built yet.
+`schemas/`. Status: the shared engine (`engine/`), the terminal practice app (`cli/`, the `lpic`
+command) and the web mock exam (`web/`, `lpic serve`) exist.
 
 ## Before you do anything
 
@@ -60,4 +60,6 @@ command) exist; mock exams in the web UI are not built yet.
 | Lint and format check | `ruff check . && ruff format --check .` |
 | Practise in the terminal | `lpic practice` |
 | Export question flags as YAML | `lpic flags export` |
+| Take the mock exams in a browser (http://127.0.0.1:8000) | `lpic serve [--host 127.0.0.1] [--port 8000]` |
+| Export holdout sign-offs ("looks right") as YAML | `lpic reviews export` |
 | Check commit identity locally | `git clone --depth 1 -b v0.0.1-alpha https://github.com/X-DSI/agent-workflow /tmp/aw && bash /tmp/aw/.github/scripts/check-commit-identity.sh origin/main HEAD` |

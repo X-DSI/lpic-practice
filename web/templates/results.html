@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Results · {{ result.mock.id }}{% endblock %}
+{% block main %}
+{% set s = result.score %}
+<h1>{{ result.mock.title or result.mock.id }} — results</h1>
+<section class="score">
+  <p class="scaled"><span class="big">{{ s.scaled }}</span> <span class="hint">estimated, on LPI's 200–800 scale</span></p>
+  <p>Raw score {{ s.correct }} / {{ s.total }} ({{ "%.1f"|format(s.percent) }} %).
+     {% if s.likely_pass %}<strong class="pass">Likely pass</strong>{% else %}<strong class="fail">Below the pass mark</strong>{% endif %}
+     (500; the estimate assumes {{ "%.0f"|format(pass_percent) }} % correct is needed to pass).</p>
+  <p>Time used: {{ (result.time_used.total_seconds())|mmss }} of {{ result.mock.duration_minutes }}:00.</p>
+</section>
+
+<section>
+  <h2>Weak areas</h2>
+  {% if result.weak_areas %}
+  <ol>
+    {% for w in result.weak_areas %}<li>{{ w.objective }} {{ titles.get(w.objective, "") }} — {{ w.correct }} / {{ w.total }}</li>{% endfor %}
+  </ol>
+  <p class="hint">Drill them with <code>lpic practice</code> → weak areas.</p>
+  {% else %}<p>No objective below the pass point.</p>{% endif %}
+</section>
+
+<section>
+  <h2>By topic</h2>
+  <table><thead><tr><th>Topic</th><th>Correct</th></tr></thead><tbody>
+  {% for topic, t in s.by_topic.items() %}<tr><td>{{ topic }} {{ titles.get(topic, "") }}</td><td>{{ t.correct }} / {{ t.total }}</td></tr>{% endfor %}
+  </tbody></table>
+  <h2>By objective</h2>
+  <table><thead><tr><th>Objective</th><th>Correct</th></tr></thead><tbody>
+  {% for objective, t in s.by_objective.items() %}<tr><td>{{ objective }} {{ titles.get(objective, "") }}</td><td>{{ t.correct }} / {{ t.total }}</td></tr>{% endfor %}
+  </tbody></table>
+</section>
+
+<p><a href="/sessions/{{ session_id }}/review">Review every question</a> · <a href="/">Mock list</a></p>
+{% endblock %}

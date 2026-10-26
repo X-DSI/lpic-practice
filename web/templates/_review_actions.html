@@ -1,0 +1,17 @@
+<div class="review-actions" id="actions-{{ q.id }}">
+  {% if approved %}<p class="pass">Signed off: looks right.</p>{% else %}
+  <form method="post" action="/sessions/{{ session_id }}/review/{{ q.id }}/approve"
+        hx-post="/sessions/{{ session_id }}/review/{{ q.id }}/approve" hx-target="closest .review-actions" hx-swap="outerHTML">
+    <button type="submit">Looks right</button>
+  </form>{% endif %}
+  {% for f in flags %}<p class="fail">Flagged: {{ f.reason }}{% if f.note %} — {{ f.note }}{% endif %}</p>{% endfor %}
+  <form method="post" action="/sessions/{{ session_id }}/review/{{ q.id }}/flag" class="flag"
+        hx-post="/sessions/{{ session_id }}/review/{{ q.id }}/flag" hx-target="closest .review-actions" hx-swap="outerHTML">
+    <select name="reason" aria-label="Reason">
+      {% for r in flag_reasons %}<option value="{{ r }}" {{ "selected" if form and form.reason == r }}>{{ r }}</option>{% endfor %}
+    </select>
+    <input type="text" name="note" value="{{ form.note if form else '' }}" placeholder="Note (optional, at most {{ flag_note_max }} characters, no links)" aria-label="Note">
+    <button type="submit">Flag</button>
+    {% if error %}<p class="error">Flag refused: {{ error }}</p>{% endif %}
+  </form>
+</div>

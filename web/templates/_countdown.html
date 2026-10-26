@@ -1,0 +1,2 @@
+<span id="countdown" class="countdown" data-remaining="{{ remaining }}" data-deadline="{{ deadline }}" aria-live="off">{{ remaining|mmss }}</span>
+<form id="expire-form" method="post" action="/sessions/{{ session_id }}/submit" hidden></form>

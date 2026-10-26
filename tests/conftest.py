@@ -28,3 +28,12 @@ def content_copy(tmp_path: Path) -> Path:
 @pytest.fixture
 def holdout_content(tmp_path: Path) -> Path:
     return write_holdout_bank(tmp_path / "content")
+
+
+@pytest.fixture(scope="session")
+def mock_bank(tmp_path_factory: pytest.TempPathFactory) -> tuple[Path, list[dict]]:
+    """A read-only content tree with one strict-valid mock, and the mock's questions in order."""
+    from mock_bank import write_mock_bank
+
+    content = tmp_path_factory.mktemp("mock-bank") / "content"
+    return content, write_mock_bank(content)
