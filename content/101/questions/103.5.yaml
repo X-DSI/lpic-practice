@@ -1,0 +1,1806 @@
+# 103.5 Create, monitor and kill processes — weight 4 → 40 holdout + 20 practice.
+# Original questions written from LPI Learning Materials 101-500, objective 103.5, lessons 1 and 2.
+schema_version: 1
+exam: "101"
+objective: "103.5"
+questions:
+  # ---------------------------------------------------------------- holdout (mock exams only)
+
+  - id: 101-103.5-0001
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: >
+      A long `tar` command is running in the foreground of your shell. You want your prompt back
+      without ending the command, so that you can decide later what to do with it. Which key
+      combination do you press?
+    options:
+      - id: a
+        text: Ctrl+C
+        rationale: Wrong. Ctrl+C sends SIGINT, which normally ends the program.
+      - id: b
+        text: Ctrl+Z
+        rationale: Correct. Ctrl+Z sends SIGTSTP; the shell reports the job as Stopped and gives back the prompt.
+      - id: c
+        text: Ctrl+D
+        rationale: Wrong. Ctrl+D signals end of input to a program reading the terminal; it does not suspend anything.
+      - id: d
+        text: Ctrl+\
+        rationale: Wrong. Ctrl+\ sends SIGQUIT, which ends the program (and may dump core).
+    answer: [b]
+    explanation: >
+      Ctrl+Z suspends the foreground job. It stays in the shell's job table as Stopped, and you can
+      later resume it with fg (foreground) or bg (background), or end it with kill.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: Job Control }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [job-control, ctrl-z]
+
+  - id: 101-103.5-0002
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: >
+      Which shell builtin lists the jobs started from the current shell, each with its job number
+      and state (for example Running or Stopped)?
+    options:
+      - id: a
+        text: "`ps`"
+        rationale: Wrong. ps lists processes by PID; it knows nothing about the shell's job numbers.
+      - id: b
+        text: "`bg`"
+        rationale: Wrong. bg resumes a stopped job in the background; it does not list jobs.
+      - id: c
+        text: "`top`"
+        rationale: Wrong. top shows a live view of all processes, not the current shell's jobs.
+      - id: d
+        text: "`jobs`"
+        rationale: Correct. jobs prints each job as [n], a +/- marker, its state and its command line.
+    answer: [d]
+    explanation: >
+      Job numbers belong to the shell that started the jobs, so only shell builtins such as jobs, fg,
+      bg and kill understand them. Tools like ps and top work with process IDs instead.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: Job Control }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [jobs]
+
+  - id: 101-103.5-0003
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: You run `kill 2345` without naming a signal. Which signal does process 2345 receive?
+    options:
+      - id: a
+        text: SIGHUP (1)
+        rationale: Wrong. SIGHUP must be requested explicitly, for example with kill -HUP.
+      - id: b
+        text: SIGKILL (9)
+        rationale: Wrong. SIGKILL must be requested explicitly, for example with kill -9.
+      - id: c
+        text: SIGTERM (15)
+        rationale: Correct. SIGTERM is the default signal of kill, pkill and killall.
+      - id: d
+        text: SIGSTOP (19)
+        rationale: Wrong. SIGSTOP pauses a process and is only sent when you ask for it.
+    answer: [c]
+    explanation: >
+      kill, pkill and killall all send SIGTERM (15) unless told otherwise. SIGTERM asks the process to
+      terminate and lets it clean up first; a process may catch or ignore it.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: "Sending Signals to Processes: kill" }
+    verify:
+      command: bash -c 'sleep 30 & p=$!; kill $p; wait $p; echo "status=$?"'
+      expect: { exit_code: 0, stdout_contains: "status=143" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [kill, signals, sigterm]
+
+  - id: 101-103.5-0004
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: What information does the `free` command display?
+    options:
+      - id: a
+        text: How much RAM and swap space is used and available
+        rationale: Correct. free shows total, used, free, shared, buff/cache and available memory, plus swap.
+      - id: b
+        text: How much space is left on each mounted filesystem
+        rationale: Wrong. That is df.
+      - id: c
+        text: Which processes are using the least CPU time
+        rationale: Wrong. Per-process CPU usage is shown by top or ps.
+      - id: d
+        text: How many inodes are still unused on each filesystem
+        rationale: Wrong. That is df -i.
+    answer: [a]
+    explanation: >
+      free gives a snapshot of memory use: a Mem line for physical RAM and a Swap line. The available
+      column estimates how much memory new programs can get without swapping.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: Process Monitoring }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [free, memory]
+
+  - id: 101-103.5-0005
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: >
+      With GNU Screen's default settings, which key combination do you press before a command key
+      such as `c` or `d`?
+    options:
+      - id: a
+        text: Ctrl+a
+        rationale: Correct. Screen's default command prefix (escape key) is Ctrl+a.
+      - id: b
+        text: Ctrl+b
+        rationale: Wrong. Ctrl+b is tmux's default prefix.
+      - id: c
+        text: Ctrl+x
+        rationale: Wrong. Ctrl+x is not screen's prefix; it is better known as an Emacs prefix key.
+      - id: d
+        text: Ctrl+Space
+        rationale: Wrong. Ctrl+Space is not a multiplexer prefix by default.
+    answer: [a]
+    explanation: >
+      Every screen command starts with the prefix Ctrl+a followed by another key, for example Ctrl+a c
+      for a new window or Ctrl+a d to detach. The prefix can be changed with the escape directive in
+      ~/.screenrc.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 2, section: GNU Screen }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [screen, prefix]
+
+  - id: 101-103.5-0006
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: >
+      Which character, added at the end of a command line, starts the command as a background job
+      so that the prompt comes back immediately?
+    options:
+      - id: a
+        text: "`|`"
+        rationale: Wrong. The pipe sends one command's output into another command.
+      - id: b
+        text: "`;`"
+        rationale: Wrong. The semicolon separates commands that run one after the other in the foreground.
+      - id: c
+        text: "`&`"
+        rationale: Correct. A trailing & runs the command in the background; the shell prints its job number and PID.
+      - id: d
+        text: "`>`"
+        rationale: Wrong. > redirects standard output to a file.
+    answer: [c]
+    explanation: >
+      `command &` starts the command as a background job. The shell prints something like `[1] 4252`
+      (job number and PID) and is ready for the next command at once.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: "Job Status: Suspension, Foreground and Background" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [background, ampersand]
+
+  - id: 101-103.5-0007
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: What is the default prefix key of tmux?
+    options:
+      - id: a
+        text: Ctrl+a
+        rationale: Wrong. Ctrl+a is GNU Screen's default prefix.
+      - id: b
+        text: Ctrl+t
+        rationale: Wrong. Ctrl+t is not bound as a prefix in tmux.
+      - id: c
+        text: Alt+b
+        rationale: Wrong. tmux uses a Ctrl combination, not Alt, as its default prefix.
+      - id: d
+        text: Ctrl+b
+        rationale: Correct. tmux commands are typed as Ctrl+b followed by a key.
+    answer: [d]
+    explanation: >
+      tmux's prefix is Ctrl+b, so for example Ctrl+b c opens a new window and Ctrl+b d detaches. It
+      can be changed in the tmux configuration file with `set -g prefix`.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 2, section: tmux }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [tmux, prefix]
+
+  - id: 101-103.5-0008
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      While a large copy runs, you want the output of `df -h` redrawn on the screen every couple of
+      seconds until you press Ctrl+C. Which command does this?
+    options:
+      - id: a
+        text: "`watch df -h`"
+        rationale: Correct. watch runs the command repeatedly (every 2 seconds by default) and shows its latest output full-screen.
+      - id: b
+        text: "`top df -h`"
+        rationale: Wrong. top displays processes; it does not run another command repeatedly.
+      - id: c
+        text: "`nohup df -h`"
+        rationale: Wrong. nohup runs the command once, immune to hangups; it does not repeat it.
+      - id: d
+        text: "`tail -f df -h`"
+        rationale: Wrong. tail -f follows files; here it would look for files named df and -h.
+    answer: [a]
+    explanation: >
+      watch re-runs a command at a fixed interval and redraws its output, with a header line showing
+      the interval and command. The default interval is 2 seconds; -n changes it.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: Process Monitoring }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [watch]
+
+  - id: 101-103.5-0009
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      Over SSH you need to start `./import.sh`, which runs for hours. It must ignore the hangup
+      signal sent when you log out, and you want your prompt back straight away. Which command line
+      does this?
+    options:
+      - id: a
+        text: "`./import.sh &`"
+        rationale: Wrong. The job runs in the background but still belongs to the session and can be ended by SIGHUP when the session closes.
+      - id: b
+        text: "`bg ./import.sh`"
+        rationale: Wrong. bg takes a job specification of an existing stopped job, not a command to start.
+      - id: c
+        text: "`nohup ./import.sh &`"
+        rationale: Correct. nohup makes the command ignore SIGHUP, and & puts it in the background.
+      - id: d
+        text: "`nohup fg ./import.sh`"
+        rationale: Wrong. fg is a shell builtin, which nohup cannot run, and fg does not start commands anyway.
+    answer: [c]
+    explanation: >
+      nohup starts a command with SIGHUP ignored, so it survives the end of the login session. Adding
+      & frees the terminal. If standard output is a terminal, nohup appends the output to nohup.out.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: "Detached Jobs: nohup" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [nohup, sighup]
+
+  - id: 101-103.5-0010
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      Which command prints the process IDs of the running processes whose name matches `nginx`,
+      without sending them any signal?
+    options:
+      - id: a
+        text: "`pkill nginx`"
+        rationale: Wrong. pkill sends SIGTERM to the matching processes instead of printing their PIDs.
+      - id: b
+        text: "`pgrep nginx`"
+        rationale: Correct. pgrep prints one PID per line for each process whose name matches the pattern.
+      - id: c
+        text: "`killall nginx`"
+        rationale: Wrong. killall sends SIGTERM to every process named nginx.
+      - id: d
+        text: "`jobs -p nginx`"
+        rationale: Wrong. jobs only knows the current shell's jobs; it would report that no such job exists.
+    answer: [b]
+    explanation: >
+      pgrep looks up processes by name (or by user, terminal and so on) and prints their PIDs. pkill
+      takes the same selection options but signals the processes instead.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: "Sending Signals to Processes: kill" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [pgrep]
+
+  - id: 101-103.5-0011
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: In the output below, what does the last number, `0.27`, show?
+    exhibit: |
+      $ uptime
+       13:15:30 up 19 min,  0 user,  load average: 0.26, 0.34, 0.27
+    options:
+      - id: a
+        text: The average system load over the last minute
+        rationale: Wrong. The 1-minute average is the first of the three numbers (0.26).
+      - id: b
+        text: The average system load over the last 5 minutes
+        rationale: Wrong. The 5-minute average is the middle number (0.34).
+      - id: c
+        text: The share of CPU time in use, as a fraction (27%)
+        rationale: Wrong. Load average counts runnable and waiting processes; it is not a CPU percentage.
+      - id: d
+        text: The average system load over the last 15 minutes
+        rationale: Correct. The three load averages cover the last 1, 5 and 15 minutes, in that order.
+    answer: [d]
+    explanation: >
+      uptime shows the current time, how long the system has been up, the number of logged-in users
+      and the load averages for the last 1, 5 and 15 minutes. The same line heads top's output.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: Process Monitoring }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [uptime, load-average]
+
+  - id: 101-103.5-0012
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      You are inside a GNU Screen session. You want to leave it running with all its windows and
+      return to the shell you started screen from. Which key sequence do you use?
+    options:
+      - id: a
+        text: Ctrl+a k
+        rationale: Wrong. Ctrl+a k kills the current window, after a confirmation.
+      - id: b
+        text: Ctrl+a c
+        rationale: Wrong. Ctrl+a c creates a new window inside the session.
+      - id: c
+        text: Ctrl+a d
+        rationale: Correct. Ctrl+a d detaches the session; screen prints "[detached from ...]".
+      - id: d
+        text: Ctrl+a w
+        rationale: Wrong. Ctrl+a w only shows the list of windows at the bottom of the display.
+    answer: [c]
+    explanation: >
+      Detaching leaves the session and everything running in it alive. You get back to it later with
+      screen -r, from the same or another terminal.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 2, section: "GNU Screen: Session Detachment" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [screen, detach]
+
+  - id: 101-103.5-0013
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: From an ordinary shell prompt, which command lists the existing tmux sessions?
+    options:
+      - id: a
+        text: "`screen -ls`"
+        rationale: Wrong. This lists GNU Screen sessions, not tmux sessions.
+      - id: b
+        text: "`tmux ls`"
+        rationale: Correct. tmux ls (short for list-sessions) prints each session with its window count and state.
+      - id: c
+        text: "`tmux -ls`"
+        rationale: Wrong. tmux has no -s option; this fails with "unknown option".
+      - id: d
+        text: "`tmux list-panes`"
+        rationale: Wrong. list-panes lists the panes of a window, not the sessions.
+    answer: [b]
+    explanation: >
+      `tmux ls` (or `tmux list-sessions`) shows lines such as
+      `LPI: 2 windows (created ...)`, with `(attached)` for sessions that have a client attached.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 2, section: "tmux: Sessions" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [tmux, sessions]
+
+  - id: 101-103.5-0014
+    type: multi_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      Several `rsync` processes are running. Which **TWO** commands send all of them SIGTERM by
+      name, without you looking up any PIDs?
+    select_count: 2
+    options:
+      - id: a
+        text: "`kill rsync`"
+        rationale: Wrong. kill needs PIDs or job specifications; a process name is rejected as an invalid argument.
+      - id: b
+        text: "`pkill rsync`"
+        rationale: Correct. pkill signals every process whose name matches, with SIGTERM by default.
+      - id: c
+        text: "`pgrep rsync`"
+        rationale: Wrong. pgrep only prints the matching PIDs; it sends no signal.
+      - id: d
+        text: "`killall rsync`"
+        rationale: Correct. killall signals every process with that name, with SIGTERM by default.
+    answer: [b, d]
+    explanation: >
+      pkill and killall select processes by name and send SIGTERM unless another signal is given.
+      With plain kill you would first need the PIDs, for example `kill $(pgrep rsync)`.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: "Sending Signals to Processes: kill" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [pkill, killall]
+
+  - id: 101-103.5-0015
+    type: fill_in
+    difficulty: 2
+    pool: holdout
+    stem: >
+      Based on the output below, type the command that brings `sleep 400` back to the foreground
+      of this shell.
+    exhibit: |
+      $ jobs
+      [1]   Running                 sleep 300 &
+      [2]-  Running                 sleep 400 &
+      [3]+  Stopped                 sleep 500
+    fill_in:
+      accepted: ['fg\s+%?2', 'fg\s+%(-|\?(4|40|400))', '%(2|-|\?(4|40|400))']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      fg takes a job specification: %2 (or just 2 in bash) for job number 2. %- (the previous job)
+      and %?400 (the job whose command contains "400") also point to it here, and in bash typing the
+      job specification alone, such as %2, also resumes it in the foreground. Plain fg would pick the
+      current job, [3].
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: "Job Status: Suspension, Foreground and Background" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [fg, jobspec]
+
+  - id: 101-103.5-0016
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      A hung process ignores `kill 4100`. Which signal can a process neither catch nor ignore, so
+      that sending it ends the process?
+    options:
+      - id: a
+        text: SIGINT
+        rationale: Wrong. SIGINT (what Ctrl+C sends) can be caught or ignored by the program.
+      - id: b
+        text: SIGKILL
+        rationale: Correct. SIGKILL (9) cannot be caught, blocked or ignored; the kernel ends the process.
+      - id: c
+        text: SIGTERM
+        rationale: Wrong. SIGTERM is what kill sent already; a process can catch or ignore it.
+      - id: d
+        text: SIGHUP
+        rationale: Wrong. SIGHUP can be caught or ignored; many daemons treat it as "reload configuration".
+    answer: [b]
+    explanation: >
+      Try SIGTERM first so the program can clean up. If it does not react, `kill -9 PID`
+      (or -KILL, -SIGKILL, -s KILL) ends it unconditionally.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: "Sending Signals to Processes: kill" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [kill, signals, sigkill]
+
+  - id: 101-103.5-0017
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: In the BSD-style command `ps aux`, what does the `x` contribute?
+    options:
+      - id: a
+        text: It adds processes that have no controlling terminal, such as daemons
+        rationale: Correct. x lifts the restriction to processes attached to a terminal.
+      - id: b
+        text: It adds processes belonging to all users, not only your own
+        rationale: Wrong. That is what a does (all processes with a terminal, from every user).
+      - id: c
+        text: It adds user-oriented columns such as USER, %CPU and %MEM
+        rationale: Wrong. That is the u option.
+      - id: d
+        text: It shows the process tree as ASCII art
+        rationale: Wrong. That is f (BSD) or --forest.
+    answer: [a]
+    explanation: >
+      In ps aux, a lists processes with a terminal from every user, x adds processes without a
+      terminal, and u selects the user-oriented output format. Together they show every process.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: "An Explanation of ps Option Syntax and Output" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [ps]
+
+  - id: 101-103.5-0018
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: "`top` is running. Which key re-sorts the task list by memory usage?"
+    options:
+      - id: a
+        text: "`P`"
+        rationale: Wrong. P sorts by CPU usage, which is also the default.
+      - id: b
+        text: "`T`"
+        rationale: Wrong. T sorts by accumulated CPU time (TIME+).
+      - id: c
+        text: "`N`"
+        rationale: Wrong. N sorts by process ID.
+      - id: d
+        text: "`M`"
+        rationale: Correct. M sorts by %MEM.
+    answer: [d]
+    explanation: >
+      top's sort keys are upper case: M (memory), P (CPU), T (time) and N (PID). R reverses the
+      order. To start top already sorted by memory, use `top -o %MEM`.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: Interacting with top }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [top, sorting]
+
+  - id: 101-103.5-0019
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      Which `jobs` option keeps the usual job number, state and command for each job and adds the
+      process ID?
+    options:
+      - id: a
+        text: "`-p`"
+        rationale: Wrong. -p prints only the process IDs, without job numbers, states or commands.
+      - id: b
+        text: "`-l`"
+        rationale: Correct. jobs -l prints the PID between the job marker and the state.
+      - id: c
+        text: "`-r`"
+        rationale: Wrong. -r restricts the list to running jobs; it adds no PIDs.
+      - id: d
+        text: "`-n`"
+        rationale: Wrong. -n shows only jobs whose status changed since the last notification.
+    answer: [b]
+    explanation: >
+      A job has both a job number (for fg, bg, kill %n) and a PID (for tools such as ps and top).
+      jobs -l shows both; jobs -p is handy in scripts because it prints only the PIDs.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: Job Control }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Rationale no longer quotes a hand-spaced output line." }
+    tags: [jobs]
+
+  - id: 101-103.5-0020
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: In tmux, which key sequence prompts you for a new name for the current window?
+    options:
+      - id: a
+        text: Ctrl+b ,
+        rationale: Correct. Ctrl+b , opens the (rename-window) prompt.
+      - id: b
+        text: Ctrl+b $
+        rationale: Wrong. Ctrl+b $ renames the current session, not the window.
+      - id: c
+        text: Ctrl+b w
+        rationale: Wrong. Ctrl+b w shows a list of windows to choose from.
+      - id: d
+        text: Ctrl+b A
+        rationale: Wrong. Ctrl+b A is not bound in tmux; Ctrl+a A is GNU Screen's rename-window key.
+    answer: [a]
+    explanation: >
+      By default tmux names a window after the program running in it and updates the name
+      automatically. Ctrl+b , sets a name of your own. Sessions are renamed with Ctrl+b $.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 2, section: "tmux: Windows" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [tmux, windows]
+
+  - id: 101-103.5-0021
+    type: multi_choice
+    difficulty: 3
+    pool: holdout
+    stem: Which **TWO** commands send SIGHUP to the process with PID 4321?
+    select_count: 2
+    options:
+      - id: a
+        text: "`kill -HUP 4321`"
+        rationale: Correct. The signal can be given by name, with or without the SIG prefix.
+      - id: b
+        text: "`kill -9 4321`"
+        rationale: Wrong. Signal 9 is SIGKILL; SIGHUP is signal 1.
+      - id: c
+        text: "`kill -s 1 4321`"
+        rationale: Correct. -s takes a signal name or number, and SIGHUP is number 1.
+      - id: d
+        text: "`kill -l 1 4321`"
+        rationale: Wrong. -l lists signal names; it sends nothing.
+    answer: [a, c]
+    explanation: >
+      kill accepts a signal as a name (-HUP, -SIGHUP), as a number (-1) or through -s (-s HUP,
+      -s 1). `kill -l` prints the table of signal names and numbers, and `kill -l 1` prints HUP.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: "Sending Signals to Processes: kill" }
+    verify:
+      command: bash -c 'kill -l 1'
+      expect: { exit_code: 0, stdout_contains: "HUP" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [kill, signals, sighup]
+
+  - id: 101-103.5-0022
+    type: multi_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      Which **TWO** statements about GNU Screen regions and tmux panes are true?
+    select_count: 2
+    options:
+      - id: a
+        text: Removing a GNU Screen region also ends the program in the window it displayed.
+        rationale: Wrong. A region is only a view; the window and its program keep running.
+      - id: b
+        text: A tmux pane is a pseudo-terminal of its own, so killing it ends the programs in it.
+        rationale: Correct. Ctrl+b x kills the pane together with what runs in it.
+      - id: c
+        text: Removing a GNU Screen region leaves the window shown in it running.
+        rationale: Correct. Windows outlive the regions that displayed them.
+      - id: d
+        text: A tmux pane keeps its size once created; only new panes can have a different size.
+        rationale: Wrong. Ctrl+b followed by Ctrl+arrow or Alt+arrow resizes the current pane.
+    answer: [b, c]
+    explanation: >
+      Both multiplexers split the display, but differently. Screen regions are views onto windows;
+      closing a region (Ctrl+a X, or Ctrl+a Q for all others) does not close a window. tmux panes are
+      separate terminals, and killing a pane kills its programs.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 2, section: "tmux: Panes" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [screen, tmux, regions, panes]
+
+  - id: 101-103.5-0023
+    type: multi_choice
+    difficulty: 3
+    pool: holdout
+    stem: With tmux's default key bindings, which **TWO** key sequences split the current window into two panes?
+    select_count: 2
+    options:
+      - id: a
+        text: 'Ctrl+b "'
+        rationale: Correct. Ctrl+b " runs split-window and puts the new pane below the current one.
+      - id: b
+        text: Ctrl+b S
+        rationale: Wrong. Ctrl+a S splits a region in GNU Screen; Ctrl+b S is not bound in tmux.
+      - id: c
+        text: Ctrl+b |
+        rationale: Wrong. Ctrl+a | is GNU Screen's vertical split; Ctrl+b | is not bound in tmux.
+      - id: d
+        text: Ctrl+b %
+        rationale: Correct. Ctrl+b % runs split-window -h and puts the new pane beside the current one.
+    answer: [a, d]
+    explanation: >
+      tmux splits with Ctrl+b " (one pane above the other) and Ctrl+b % (side by side). Ctrl+b
+      arrow moves between panes, Ctrl+b z zooms one, and Ctrl+b x kills it.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 2, section: "tmux: Panes" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [tmux, panes]
+
+  - id: 101-103.5-0024
+    type: fill_in
+    difficulty: 3
+    pool: holdout
+    stem: Type a `ps` command that lists only the processes owned by the user `www-data`.
+    fill_in:
+      accepted: ['(sudo\s+)?((/usr)?/bin/)?ps\s+(-u\s*|-U\s*|U\s*|--user(\s+|=)|--User(\s+|=))www-data']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      ps selects processes by user in all three option styles: `ps -u www-data` (UNIX),
+      `ps U www-data` (BSD) and `ps --user www-data` (GNU). -U and --User select by real user ID
+      instead of effective user ID, which gives the same list for ordinary daemon processes.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: "An Explanation of ps Option Syntax and Output" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [ps, user]
+
+  - id: 101-103.5-0025
+    type: fill_in
+    difficulty: 3
+    pool: holdout
+    stem: Type a `watch` command that runs `df -h` every 10 seconds.
+    fill_in:
+      accepted: ['watch\s+(-n\s*10(\.0)?|--interval(\s+|=)10(\.0)?)\s+(df\s+-h|''df\s+-h''|"df\s+-h")']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      watch -n (long form --interval) sets the delay between runs in seconds; without it watch uses
+      2 seconds. Options for watch go before the command it should run.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: Process Monitoring }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [watch]
+
+  - id: 101-103.5-0026
+    type: fill_in
+    difficulty: 3
+    pool: holdout
+    stem: >
+      A tmux session named `deploy` is no longer needed. Type the tmux command that ends this
+      session (and every window in it) from a shell prompt.
+    fill_in:
+      accepted: ['tmux\s+kill-session\s+-t\s*(deploy|''deploy''|"deploy")']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      `tmux kill-session -t deploy` destroys the session and the programs in its windows. If you run
+      it inside that session, you drop back to the terminal you started tmux from.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 2, section: "tmux: Sessions" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [tmux, sessions]
+
+  - id: 101-103.5-0027
+    type: multi_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      Based on the output below, which **TWO** commands let `sleep 200` continue running in the
+      background?
+    exhibit: |
+      $ jobs
+      [1]+  Stopped                 sleep 200
+      [2]-  Stopped                 sleep 201
+    select_count: 2
+    options:
+      - id: a
+        text: "`bg %-`"
+        rationale: Wrong. %- is the previous job, which is [2] (sleep 201).
+      - id: b
+        text: "`bg`"
+        rationale: Correct. Without an argument bg acts on the current job, marked + (job 1).
+      - id: c
+        text: "`fg %1`"
+        rationale: Wrong. This resumes job 1 in the foreground, not the background.
+      - id: d
+        text: "`bg %1`"
+        rationale: Correct. %1 names job number 1 explicitly.
+    answer: [b, d]
+    explanation: >
+      The + marks the current job, which fg and bg use when no job is named; - marks the previous
+      one. %n, %+ (or %%), %-, %string and %?string are all valid job specifications.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: Job Specification }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [bg, jobspec]
+
+  - id: 101-103.5-0028
+    type: multi_choice
+    difficulty: 4
+    pool: holdout
+    stem: Based on the `ps` output below, which **TWO** statements are true?
+    exhibit: |
+      $ ps -o pid,ppid,stat,ni,cmd --ppid 2240,2243
+        PID  PPID STAT  NI CMD
+       2241  2240 T      0 sleep 300
+       2242  2240 SN    15 sleep 301
+       2243  2240 S      0 sleep 302
+       2245  2243 Z      0 [sleep] <defunct>
+       2247  2240 R      0 ps -o pid,ppid,stat,ni,cmd --ppid 2240,2243
+    select_count: 2
+    options:
+      - id: a
+        text: Process 2241 is stopped and runs again when it receives SIGCONT.
+        rationale: Correct. T means stopped by a job-control signal; SIGCONT (or bg/fg) resumes it.
+      - id: b
+        text: Process 2241 is in uninterruptible sleep, waiting for disk I/O.
+        rationale: Wrong. Uninterruptible sleep is shown as D, not T.
+      - id: c
+        text: Running `kill -9 2245` removes process 2245 from the list.
+        rationale: Wrong. 2245 is a zombie; it has already exited, and only its parent (2243) reaping it, or the parent's exit, removes the entry.
+      - id: d
+        text: Process 2242 runs with a lower scheduling priority than normal.
+        rationale: Correct. The N flag and the nice value 15 mean a low-priority ("nice") process.
+    answer: [a, d]
+    explanation: >
+      Common STAT codes: R running or runnable, S interruptible sleep, D uninterruptible sleep
+      (usually I/O), T stopped, Z zombie. Extra flags include N (low priority), < (high priority)
+      and + (foreground process group).
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: "An Explanation of ps Option Syntax and Output" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [ps, stat, zombie]
+
+  - id: 101-103.5-0029
+    type: fill_in
+    difficulty: 4
+    pool: holdout
+    stem: >
+      Several processes named `backupd` ignore SIGTERM. Type one `kill` command line that sends all
+      of them SIGKILL, using `pgrep` in a command substitution to supply their PIDs.
+    fill_in:
+      accepted: ['(sudo\s+)?((/usr)?/bin/)?kill\s+(-9|-KILL|-SIGKILL|-s\s+(9|KILL|SIGKILL)|-s(KILL|SIGKILL))\s+(\$\(\s*pgrep\s+(-x\s+)?backupd\s*\)|`\s*pgrep\s+(-x\s+)?backupd\s*`)']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      `kill -9 $(pgrep backupd)` runs pgrep first and passes its PIDs to kill. Backquotes do the same
+      as $( ). The signal can also be written -KILL, -SIGKILL or -s KILL. `pkill -9 backupd` or
+      `killall -9 backupd` would do the job in one command.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: "Sending Signals to Processes: kill" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [kill, pgrep, command-substitution]
+
+  - id: 101-103.5-0030
+    type: fill_in
+    difficulty: 4
+    pool: holdout
+    stem: >
+      Type a `screen` command that creates a new session named `build` in detached mode, so that you
+      stay at your current prompt.
+    fill_in:
+      accepted: ['screen\s+(-dmS\s*|-mdS\s*|(-dm|-md|-d\s+-m|-m\s+-d)\s+-S\s*)(build|"build"|''build'')(\s+(?!-)\S+)*', 'screen\s+-S\s*(build|"build"|''build'')\s+(-dm|-md|-d\s+-m|-m\s+-d)(\s+(?!-)\S+)*']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      -d -m starts screen in detached mode and -S gives the session a name, so
+      `screen -dmS build` (or `screen -d -m -S build`) creates the session and returns at once. It
+      is handy in scripts. Attach to it later with `screen -r build`.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 2, section: "GNU Screen: Session Detachment" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [screen, sessions]
+
+  - id: 101-103.5-0031
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      Based on the `top` summary below, about how much memory can newly started programs get
+      without the system starting to swap?
+    exhibit: |
+      top - 13:14:59 up 19 min,  0 user,  load average: 0.31, 0.36, 0.28
+      Tasks:  74 total,   1 running,  72 sleeping,   0 stopped,   1 zombie
+      %Cpu(s):  0.0 us,  0.0 sy,  0.0 ni,100.0 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+      MiB Mem :   8027.6 total,   6681.6 free,    716.4 used,    867.1 buff/cache
+      MiB Swap:      0.0 total,      0.0 free,      0.0 used.   7311.2 avail Mem
+    options:
+      - id: a
+        text: 6681.6 MiB
+        rationale: Wrong. free counts only completely unused memory; reclaimable cache is left out.
+      - id: b
+        text: 867.1 MiB
+        rationale: Wrong. This is the memory used for buffers and page cache.
+      - id: c
+        text: 7311.2 MiB
+        rationale: Correct. avail Mem estimates the memory available to new programs without swapping, including reclaimable cache.
+      - id: d
+        text: 8027.6 MiB
+        rationale: Wrong. This is total RAM, part of which is already in use.
+    answer: [c]
+    explanation: >
+      The fifth line of top's summary ends with avail Mem, the same estimate as the available column
+      of free. It is larger than free because most buffer and cache memory can be reclaimed.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: An Explanation of the output of top }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [top, memory]
+
+  - id: 101-103.5-0032
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: Based on the session below, where do the error messages of `export.sh` go?
+    exhibit: |
+      $ nohup ./export.sh > /tmp/export.log &
+      [1] 4245
+      $ nohup: ignoring input and redirecting stderr to stdout
+    options:
+      - id: a
+        text: To `nohup.out` in the current directory
+        rationale: Wrong. nohup only creates nohup.out when standard output is a terminal; here it was redirected.
+      - id: b
+        text: To the terminal the command was started from
+        rationale: Wrong. nohup says it redirects stderr to stdout, and stdout is the file.
+      - id: c
+        text: Nowhere; nohup discards them
+        rationale: Wrong. nohup redirects error output; it does not throw it away.
+      - id: d
+        text: To `/tmp/export.log`
+        rationale: Correct. Standard error follows standard output, which the shell sent to /tmp/export.log.
+    answer: [d]
+    explanation: >
+      nohup checks where output goes. If standard output is a terminal, it appends output to
+      nohup.out (or $HOME/nohup.out). If only standard error is a terminal, as here, it sends
+      standard error to wherever standard output goes.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: "Detached Jobs: nohup" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Correct option shortened; it was the longest option." }
+    tags: [nohup, redirection]
+
+  - id: 101-103.5-0033
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      Two `sleep` processes are running as your user. Based on the session below, why did the two
+      commands behave differently?
+    exhibit: |
+      $ killall sle
+      sle: no process found
+      $ pkill sle
+      [1]-  Terminated              sleep 801
+      [2]+  Terminated              sleep 802
+    options:
+      - id: a
+        text: killall compares whole process names, while pkill treats its argument as a pattern
+        rationale: Correct. "sle" is not the name of any process, but it matches part of "sleep", which is enough for pkill.
+      - id: b
+        text: killall needs root to signal processes, while pkill does not
+        rationale: Wrong. Both can signal your own processes without root; killall reported no match, not a permission error.
+      - id: c
+        text: pkill sends SIGKILL by default, while killall sends SIGTERM
+        rationale: Wrong. Both send SIGTERM by default, and the signal does not affect which processes match.
+      - id: d
+        text: killall only looks at jobs of the current shell
+        rationale: Wrong. killall looks at all processes on the system; the jobs were reported only because they belonged to this shell.
+    answer: [a]
+    explanation: >
+      pkill (like pgrep) matches an extended regular expression against process names, so a
+      fragment matches. killall needs the exact name (unless -r is used). pgrep -x and pkill -x
+      demand an exact name too.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: "Sending Signals to Processes: kill" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [pkill, killall]
+
+  - id: 101-103.5-0034
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      Your tmux session `ops` is still attached on a terminal in the office. From home you want to
+      attach to it and at the same time detach it from that office terminal. Which command does
+      this?
+    options:
+      - id: a
+        text: "`tmux attach -t ops`"
+        rationale: Wrong. This attaches a second client; the office terminal stays attached too.
+      - id: b
+        text: "`tmux attach -d -t ops`"
+        rationale: Correct. -d detaches any other clients from the session as you attach.
+      - id: c
+        text: "`tmux new -s ops`"
+        rationale: 'Wrong. tmux refuses with "duplicate session: ops"; it does not attach.'
+      - id: d
+        text: "`tmux kill-session -t ops`"
+        rationale: Wrong. This destroys the session and everything running in it.
+    answer: [b]
+    explanation: >
+      A tmux session can have several clients at once. `tmux attach -t NAME` adds one;
+      `tmux attach -d -t NAME` also detaches the others. attach can be shortened to at or a.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 2, section: "tmux: Sessions Detachment" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [tmux, attach]
+
+  - id: 101-103.5-0035
+    type: multi_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      User `carol` is in a directory she cannot write to and runs `nohup ./job.sh &` from her
+      terminal. Which **TWO** statements are true?
+    select_count: 2
+    options:
+      - id: a
+        text: nohup refuses to start the job because it cannot create nohup.out there.
+        rationale: Wrong. nohup falls back to $HOME/nohup.out when the current directory is not writable.
+      - id: b
+        text: The job's output is appended to nohup.out in carol's home directory.
+        rationale: Correct. nohup reports "appending output to '/home/carol/nohup.out'".
+      - id: c
+        text: The job ignores SIGHUP, so closing the terminal does not end it.
+        rationale: Correct. Ignoring the hangup signal is nohup's purpose.
+      - id: d
+        text: The job also ignores SIGTERM, so a plain `kill PID` cannot stop it.
+        rationale: Wrong. nohup only sets SIGHUP to be ignored; SIGTERM still ends the job.
+    answer: [b, c]
+    explanation: >
+      nohup ignores SIGHUP for the command and, when output would go to the terminal, appends it to
+      nohup.out in the current directory, or in $HOME if that is not writable. Other signals are
+      untouched, so kill PID still works.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: "Detached Jobs: nohup" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [nohup]
+
+  - id: 101-103.5-0036
+    type: multi_choice
+    difficulty: 5
+    pool: holdout
+    stem: Based on the output below, which **TWO** commands reattach the session called `work`?
+    exhibit: |
+      $ screen -r
+      There are several suitable screens on:
+              267.backup      (10/25/26 20:05:42)     (Detached)
+              272.work        (10/25/26 20:05:42)     (Detached)
+      Type "screen [-d] -r [pid.]tty.host" to resume one of them.
+    select_count: 2
+    options:
+      - id: a
+        text: "`screen -S work`"
+        rationale: Wrong. -S names a new session; this starts a second session called work.
+      - id: b
+        text: "`screen -ls`"
+        rationale: Wrong. This only lists the sessions again.
+      - id: c
+        text: "`screen -r 272`"
+        rationale: Correct. A session can be named by the PID part of its identifier.
+      - id: d
+        text: "`screen -r work`"
+        rationale: Correct. A session can also be named by its name.
+    answer: [c, d]
+    explanation: >
+      With only one detached session, `screen -r` alone reattaches it. With several, screen lists them
+      and you must say which one: by PID (272), by name (work) or by the full identifier
+      (272.work).
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 2, section: "GNU Screen: Session Detachment" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [screen, attach]
+
+  - id: 101-103.5-0037
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      A host runs both `cron` and `anacron`. Which command prints the PID of the `cron` process
+      only?
+    options:
+      - id: a
+        text: "`pgrep cron`"
+        rationale: Wrong. The pattern also matches inside "anacron", so both PIDs are printed.
+      - id: b
+        text: "`pgrep -l cron`"
+        rationale: Wrong. -l adds the process name to each line but still matches both processes.
+      - id: c
+        text: "`pgrep -x cron`"
+        rationale: Correct. -x requires the whole process name to match the pattern.
+      - id: d
+        text: "`pgrep -n cron`"
+        rationale: Wrong. -n picks the most recently started match, which could be anacron.
+    answer: [c]
+    explanation: >
+      pgrep and pkill treat their argument as a regular expression matched anywhere in the process
+      name. Use -x (or anchors such as '^cron$') for an exact name, so that pkill does not hit a
+      process you did not mean.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: "Sending Signals to Processes: kill" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [pgrep]
+
+  - id: 101-103.5-0038
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: Based on the output below, which command terminates `sleep 400` and nothing else?
+    exhibit: |
+      $ jobs
+      [1]   Running                 sleep 300 &
+      [2]-  Running                 sleep 400 &
+      [3]+  Running                 sleep 500 &
+    options:
+      - id: a
+        text: "`kill %sl`"
+        rationale: 'Wrong. All three jobs start with "sl", so bash refuses with "sl: ambiguous job spec".'
+      - id: b
+        text: "`kill %+`"
+        rationale: Wrong. %+ is the current job, [3] (sleep 500).
+      - id: c
+        text: "`kill 2`"
+        rationale: Wrong. Without % the number is a PID, not a job number; PID 2 is not this job.
+      - id: d
+        text: "`kill %?400`"
+        rationale: Correct. %?400 selects the one job whose command line contains "400", job [2].
+    answer: [d]
+    explanation: >
+      Job specifications start with %: %n (number), %str (command starts with str), %?str (command
+      contains str), %+ or %% (current) and %- (previous). %str and %?str must match exactly one
+      job. A bare number given to kill is a PID.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: Job Specification }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [kill, jobspec]
+
+  - id: 101-103.5-0039
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      Which command lists every process on the system with its PID, user, %MEM and command name,
+      highest memory use first?
+    options:
+      - id: a
+        text: "`ps -eo pid,user,%mem,comm --sort=%mem`"
+        rationale: Wrong. Without a leading - the sort is ascending, so the lowest memory users come first.
+      - id: b
+        text: "`ps -eo pid,user,%mem,comm --sort=-%mem`"
+        rationale: Correct. -e selects all processes, -o picks the columns and --sort=-%mem sorts by memory, descending.
+      - id: c
+        text: "`ps -o pid,user,%mem,comm --sort=-%mem`"
+        rationale: Wrong. Without -e (or ax), ps shows only processes of your user on the current terminal.
+      - id: d
+        text: "`ps -e --sort=-%mem`"
+        rationale: Wrong. The order is right, but the default columns (PID TTY TIME CMD) show neither user nor %MEM.
+    answer: [b]
+    explanation: >
+      ps -o (BSD style: o) chooses output columns, and --sort orders the rows by one or more keys; a
+      leading - means descending. For a live view sorted by memory, use top and press M, or start
+      it with `top -o %MEM`.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: "An Explanation of ps Option Syntax and Output" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [ps, sorting]
+
+  - id: 101-103.5-0040
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      Your screen session `work` is still attached to a terminal at the office. Over SSH from home
+      you want it on your terminal, and it should be detached from the office terminal first.
+      Which command do you run?
+    options:
+      - id: a
+        text: "`screen -d -r work`"
+        rationale: Correct. -d detaches the session where it is attached, then -r reattaches it here.
+      - id: b
+        text: "`screen -r work`"
+        rationale: Wrong. -r only resumes detached sessions; screen answers "There is no screen to be resumed matching work."
+      - id: c
+        text: "`screen -x work`"
+        rationale: Wrong. -x attaches as an additional display; the office terminal stays attached.
+      - id: d
+        text: "`screen -d -m work`"
+        rationale: Wrong. -d -m starts a new detached session that runs a command called work.
+    answer: [a]
+    explanation: >
+      screen -d -r first detaches the session from wherever it is attached and then attaches it to
+      the current terminal. -D -r goes further and also logs out the other side. -d -m is for
+      starting new sessions in the background.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 2, section: "GNU Screen: Session Detachment" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [screen, attach]
+
+  # --------------------------------------------------------------------------- practice (CLI)
+
+  - id: 101-103.5-0041
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: Which command shows a continuously updated, interactive list of running processes?
+    options:
+      - id: a
+        text: "`ps`"
+        rationale: Wrong. ps prints a one-time snapshot and exits.
+      - id: b
+        text: "`top`"
+        rationale: Correct. top refreshes its display every few seconds and accepts interactive keys.
+      - id: c
+        text: "`pgrep`"
+        rationale: Wrong. pgrep prints the PIDs of matching processes once.
+      - id: d
+        text: "`uptime`"
+        rationale: Wrong. uptime prints one line with uptime, users and load averages.
+    answer: [b]
+    explanation: >
+      top is dynamic: it keeps refreshing and lets you sort, filter, renice and signal processes with
+      single keys. ps is static: it reports the state at the moment you run it.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: top and ps }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [top, ps]
+
+  - id: 101-103.5-0042
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: What does `bg` do with a job that you have just suspended with Ctrl+Z?
+    options:
+      - id: a
+        text: It resumes the job in the background
+        rationale: Correct. bg continues the stopped job without giving it the terminal.
+      - id: b
+        text: It resumes the job in the foreground
+        rationale: Wrong. That is fg.
+      - id: c
+        text: It terminates the job
+        rationale: Wrong. Ending a job is done with kill.
+      - id: d
+        text: It lists all background jobs
+        rationale: Wrong. That is jobs.
+    answer: [a]
+    explanation: >
+      After Ctrl+Z the job is stopped. bg lets it continue in the background (the shell shows it
+      with a trailing &), and fg brings it back to the foreground.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: "Job Status: Suspension, Foreground and Background" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [bg]
+
+  - id: 101-103.5-0043
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: Which command starts a new tmux session with one window?
+    options:
+      - id: a
+        text: "`tmux ls`"
+        rationale: Wrong. This lists existing sessions.
+      - id: b
+        text: "`screen`"
+        rationale: Wrong. This starts a GNU Screen session, not tmux.
+      - id: c
+        text: "`tmux`"
+        rationale: Correct. tmux with no command runs new-session, which creates a session with one window.
+      - id: d
+        text: "`tmux attach`"
+        rationale: Wrong. attach joins an existing session; with none, it fails.
+    answer: [c]
+    explanation: >
+      `tmux` alone creates and attaches a new session. `tmux new -s NAME -n WINDOW` does the same with
+      a session name and a first window name of your choice.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 2, section: "tmux: Windows" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [tmux]
+
+  - id: 101-103.5-0044
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: Which command prints the names and numbers of the signals you can send?
+    options:
+      - id: a
+        text: "`jobs -l`"
+        rationale: Wrong. This lists jobs with their PIDs.
+      - id: b
+        text: "`ps -l`"
+        rationale: Wrong. This shows processes in long format.
+      - id: c
+        text: "`top -s`"
+        rationale: Wrong. This starts top in secure mode.
+      - id: d
+        text: "`kill -l`"
+        rationale: Correct. kill -l lists the signals, for example 1) SIGHUP ... 9) SIGKILL ... 15) SIGTERM.
+    answer: [d]
+    explanation: >
+      kill -l prints the signal table. Given a number or a name it translates: `kill -l 9` prints
+      KILL and `kill -l KILL` prints 9.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: "Sending Signals to Processes: kill" }
+    verify:
+      command: bash -c 'kill -l 9'
+      expect: { exit_code: 0, stdout_contains: "KILL" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [kill, signals]
+
+  - id: 101-103.5-0045
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: Inside `top`, which key sends a signal to a process you choose?
+    options:
+      - id: a
+        text: "`k`"
+        rationale: Correct. k asks for a PID and then a signal, with SIGTERM (15) as the default.
+      - id: b
+        text: "`r`"
+        rationale: Wrong. r renices a process (changes its nice value).
+      - id: c
+        text: "`u`"
+        rationale: Wrong. u filters the list to one user's processes.
+      - id: d
+        text: "`c`"
+        rationale: Wrong. c toggles between command names and full command lines.
+    answer: [a]
+    explanation: >
+      top prompts "PID to signal/kill" and then "Send pid N signal [15/sigterm]". Press Enter to
+      send SIGTERM or type another signal, such as 9.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: Interacting with top }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [top]
+
+  - id: 101-103.5-0046
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: In GNU Screen, which key sequence opens a new window with a shell?
+    options:
+      - id: a
+        text: Ctrl+a n
+        rationale: Wrong. Ctrl+a n switches to the next window.
+      - id: b
+        text: Ctrl+a c
+        rationale: Correct. Ctrl+a c creates a new window running a shell.
+      - id: c
+        text: Ctrl+a k
+        rationale: Wrong. Ctrl+a k kills the current window.
+      - id: d
+        text: Ctrl+a d
+        rationale: Wrong. Ctrl+a d detaches the session.
+    answer: [b]
+    explanation: >
+      Screen numbers windows from 0. Ctrl+a c adds one, Ctrl+a n and Ctrl+a p move between them, and
+      Ctrl+a followed by a digit jumps to that window.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 2, section: "GNU Screen: Windows" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [screen, windows]
+
+  - id: 101-103.5-0047
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: Besides `pgrep`, which command prints the PIDs of a running program when given its name?
+    options:
+      - id: a
+        text: "`killall`"
+        rationale: Wrong. killall signals the processes; it does not print their PIDs.
+      - id: b
+        text: "`watch`"
+        rationale: Wrong. watch re-runs a command at intervals.
+      - id: c
+        text: "`pidof`"
+        rationale: Correct. pidof prints the PIDs of processes running the named program, e.g. pidof sshd.
+      - id: d
+        text: "`pkill`"
+        rationale: Wrong. pkill signals the matching processes instead of listing them.
+    answer: [c]
+    explanation: >
+      pidof and pgrep both turn a name into PIDs. pidof expects the exact program name and prints the
+      PIDs on one line; pgrep matches a pattern and prints one PID per line.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: "Sending Signals to Processes: kill" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [pidof]
+
+  - id: 101-103.5-0048
+    type: multi_choice
+    difficulty: 2
+    pool: practice
+    stem: Which **TWO** commands list every process on the system?
+    select_count: 2
+    options:
+      - id: a
+        text: "`ps a`"
+        rationale: Wrong. a lists only processes that have a terminal.
+      - id: b
+        text: "`ps aux`"
+        rationale: Correct. a and x together select all processes, and u formats them per user.
+      - id: c
+        text: "`ps -ef`"
+        rationale: Correct. -e selects every process and -f gives the full format.
+      - id: d
+        text: "`ps -u root`"
+        rationale: Wrong. This lists only root's processes.
+    answer: [b, c]
+    explanation: >
+      ps aux (BSD style) and ps -ef (UNIX style) are the two classic ways to see every process. The
+      columns differ: aux shows %CPU, %MEM, VSZ, RSS and STAT; -ef shows UID, PPID and STIME.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: "An Explanation of ps Option Syntax and Output" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [ps]
+
+  - id: 101-103.5-0049
+    type: single_choice
+    difficulty: 3
+    pool: practice
+    stem: Inside `top`, which key switches the current sort between descending and ascending order?
+    options:
+      - id: a
+        text: "`W`"
+        rationale: Wrong. W saves the current settings to top's configuration file.
+      - id: b
+        text: "`V`"
+        rationale: Wrong. V toggles the forest (tree) view.
+      - id: c
+        text: "`c`"
+        rationale: Wrong. c toggles full command lines.
+      - id: d
+        text: "`R`"
+        rationale: Correct. R reverses the sort order of the current sort field.
+    answer: [d]
+    explanation: >
+      top sorts by %CPU, highest first, by default. M, P, T and N choose the sort field, and R flips
+      between highest-first and lowest-first.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: Interacting with top }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [top, sorting]
+
+  - id: 101-103.5-0050
+    type: single_choice
+    difficulty: 3
+    pool: practice
+    stem: Which `jobs` option lists only the stopped (suspended) jobs?
+    options:
+      - id: a
+        text: "`-s`"
+        rationale: Correct. jobs -s restricts the output to stopped jobs.
+      - id: b
+        text: "`-r`"
+        rationale: Wrong. -r lists only running jobs.
+      - id: c
+        text: "`-l`"
+        rationale: Wrong. -l adds PIDs to every job.
+      - id: d
+        text: "`-p`"
+        rationale: Wrong. -p prints only the PIDs.
+    answer: [a]
+    explanation: >
+      jobs -s shows stopped jobs and jobs -r running ones; -l and -p add or show PIDs; -n shows jobs
+      whose status changed since you were last told.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: Job Control }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [jobs]
+
+  - id: 101-103.5-0051
+    type: single_choice
+    difficulty: 3
+    pool: practice
+    stem: In tmux, which key sequence shows an interactive list of windows to pick from?
+    options:
+      - id: a
+        text: 'Ctrl+b "'
+        rationale: Wrong. This splits the current pane.
+      - id: b
+        text: Ctrl+b w
+        rationale: Correct. Ctrl+b w opens a chooser listing the windows; arrow keys and Enter select one.
+      - id: c
+        text: Ctrl+b n
+        rationale: Wrong. This goes straight to the next window without a list.
+      - id: d
+        text: Ctrl+b &
+        rationale: Wrong. This kills the current window after a confirmation.
+    answer: [b]
+    explanation: >
+      Ctrl+b w lists windows, Ctrl+b s lists sessions. Ctrl+b n, p and a digit move between windows
+      directly.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 2, section: "tmux: Windows" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [tmux, windows]
+
+  - id: 101-103.5-0052
+    type: fill_in
+    difficulty: 3
+    pool: practice
+    stem: Type a `top` command that starts top with the task list already sorted by the `%MEM` field.
+    fill_in:
+      accepted: ['top\s+(-o\s*%MEM|--sort-override(\s+|=)%MEM)']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      top -o (long form --sort-override) takes a field name, here %MEM. Field names are case
+      sensitive; `top -O` lists them. Inside top, M sorts by memory too.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: Interacting with top }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [top, sorting]
+
+  - id: 101-103.5-0053
+    type: multi_choice
+    difficulty: 3
+    pool: practice
+    stem: Which **TWO** statements about GNU Screen windows are true?
+    select_count: 2
+    options:
+      - id: a
+        text: The first window is number 0.
+        rationale: Correct. Screen numbers windows from 0, so Ctrl+a 0 goes to the first one.
+      - id: b
+        text: A program pauses while its window is not being displayed.
+        rationale: Wrong. Programs keep running in hidden windows and in detached sessions.
+      - id: c
+        text: 'Ctrl+a " shows a list of windows to choose from.'
+        rationale: Correct. Arrow keys and Enter select a window from the list.
+      - id: d
+        text: Ctrl+a k ends the whole session at once.
+        rationale: Wrong. Ctrl+a k kills only the current window; screen exits when the last window is gone.
+    answer: [a, c]
+    explanation: >
+      Windows in a screen session run independently and keep running when hidden. Ctrl+a w prints
+      the window list in the message line, Ctrl+a " opens an interactive list, and Ctrl+a A renames
+      the current window.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 2, section: "GNU Screen: Windows" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [screen, windows]
+
+  - id: 101-103.5-0054
+    type: fill_in
+    difficulty: 3
+    pool: practice
+    stem: Type a `free` command that shows memory and swap amounts in mebibytes.
+    fill_in:
+      accepted: ['free\s+(-m|--mebi)']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      free shows kibibytes by default. -m (--mebi) switches to mebibytes, -g to gibibytes, and -h
+      picks a readable unit for each value. Combine with watch, as in `watch free -m`, to follow it.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: Process Monitoring }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [free]
+
+  - id: 101-103.5-0055
+    type: single_choice
+    difficulty: 4
+    pool: practice
+    stem: Based on the output below, which job does `fg` resume when you type it without arguments?
+    exhibit: |
+      $ jobs
+      [1]   Running                 sleep 300 &
+      [2]-  Running                 sleep 400 &
+      [3]+  Stopped                 sleep 500
+    options:
+      - id: a
+        text: "`sleep 300`, because it is job number 1"
+        rationale: Wrong. fg does not pick the lowest job number; it picks the current job.
+      - id: b
+        text: "`sleep 400`, because it is marked -"
+        rationale: Wrong. - marks the previous job, which becomes current only when the + job ends.
+      - id: c
+        text: "`sleep 500`, because it is marked +"
+        rationale: Correct. + marks the current job, the default for fg and bg.
+      - id: d
+        text: None; fg prints an error without a job specification
+        rationale: Wrong. fg and bg default to the current job; it is kill that needs an explicit job or PID.
+    answer: [c]
+    explanation: >
+      The current job (+) is the one most recently stopped or started in the background. fg and bg
+      act on it when no job is named; %+ and %% name it explicitly.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: Job Specification }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [fg, jobspec]
+
+  - id: 101-103.5-0056
+    type: multi_choice
+    difficulty: 4
+    pool: practice
+    stem: >
+      You must start a three-hour job over an SSH connection that may drop. Which **TWO** approaches
+      keep the job running if the connection is lost?
+    select_count: 2
+    options:
+      - id: a
+        text: Run `./job.sh &`, then check it with `jobs -l`
+        rationale: Wrong. The job is still tied to the session and can be ended by SIGHUP when the connection drops.
+      - id: b
+        text: Run `nohup ./job.sh &`
+        rationale: Correct. The job ignores SIGHUP, and its output goes to nohup.out.
+      - id: c
+        text: Run `./job.sh`, then press Ctrl+Z
+        rationale: Wrong. Ctrl+Z stops the job; it would not even be running.
+      - id: d
+        text: Start it inside a tmux or screen session and detach
+        rationale: Correct. The multiplexer server keeps the session and its programs alive without the SSH connection.
+    answer: [b, d]
+    explanation: >
+      nohup protects a single command from the hangup signal. A terminal multiplexer goes further:
+      you can reattach later (tmux attach, screen -r) and work with the program interactively again.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 2, section: Features of Terminal Multiplexers }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [nohup, screen, tmux]
+
+  - id: 101-103.5-0057
+    type: fill_in
+    difficulty: 3
+    pool: practice
+    stem: Type the tmux command that attaches your terminal to the existing session named `build`.
+    fill_in:
+      accepted: ['tmux\s+(a|at|attach|attach-session)\s+(-d\s+)?-t\s*(build|"build"|''build'')']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      `tmux attach -t build` (attach can be shortened to at or a) connects to the session. Adding -d
+      detaches any other clients first. With only one session, `tmux a` is enough.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 2, section: "tmux: Sessions Detachment" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [tmux, attach]
+
+  - id: 101-103.5-0058
+    type: single_choice
+    difficulty: 4
+    pool: practice
+    stem: The summary area of `top` reports `1 zombie`. What is a zombie process?
+    options:
+      - id: a
+        text: A process stopped with Ctrl+Z or SIGSTOP
+        rationale: Wrong. Stopped processes are counted under "stopped" and shown with state T.
+      - id: b
+        text: A process waiting for disk I/O that cannot be interrupted
+        rationale: Wrong. That is uninterruptible sleep, state D.
+      - id: c
+        text: A process that keeps running after its terminal was closed
+        rationale: Wrong. That describes a process started with nohup or in a detached multiplexer session.
+      - id: d
+        text: A process that has exited but has not been reaped by its parent
+        rationale: Correct. Its entry stays in the process table, with state Z, until the parent reaps it.
+    answer: [d]
+    explanation: >
+      A zombie has exited and uses no CPU or memory beyond its process table entry. It disappears
+      when its parent waits for it or when the parent itself exits. Sending it signals does nothing.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: An Explanation of the output of top }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Correct option shortened; it was the longest option." }
+    tags: [top, zombie]
+
+  - id: 101-103.5-0059
+    type: single_choice
+    difficulty: 4
+    pool: practice
+    stem: >
+      You run `watch free` and want each refresh to highlight the values that changed since the
+      previous one. Which `watch` option adds this?
+    options:
+      - id: a
+        text: "`-n`"
+        rationale: Wrong. -n sets the interval between runs.
+      - id: b
+        text: "`-t`"
+        rationale: Wrong. -t hides the header line.
+      - id: c
+        text: "`-d`"
+        rationale: Correct. -d (--differences) highlights what changed between updates.
+      - id: d
+        text: "`-g`"
+        rationale: Wrong. -g makes watch exit when the output changes.
+    answer: [c]
+    explanation: >
+      watch -d highlights changes between two refreshes; `-d=permanent` keeps highlighting everything
+      that has changed since watch started.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: Process Monitoring }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [watch]
+
+  - id: 101-103.5-0060
+    type: multi_choice
+    difficulty: 5
+    pool: practice
+    stem: >
+      Which **TWO** commands send SIGTERM to every `httpd` process run by the user `apache`, and to
+      no other processes?
+    select_count: 2
+    options:
+      - id: a
+        text: "`pkill -u apache httpd`"
+        rationale: Correct. pkill combines the user filter with the name pattern.
+      - id: b
+        text: "`pgrep -u apache httpd`"
+        rationale: Wrong. This selects the right processes but only prints their PIDs.
+      - id: c
+        text: "`killall -u apache httpd`"
+        rationale: Correct. killall -u limits the named processes to those run by that user.
+      - id: d
+        text: "`kill -u apache httpd`"
+        rationale: Wrong. kill has no user option; it needs PIDs or job specifications.
+    answer: [a, c]
+    explanation: >
+      pkill and killall both send SIGTERM by default and can restrict matches to one user with -u.
+      pgrep with the same options shows you first which processes would be hit.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: "Sending Signals to Processes: kill" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [pkill, killall]
