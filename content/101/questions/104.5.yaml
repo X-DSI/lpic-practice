@@ -1,0 +1,1392 @@
+# 104.5 Manage file permissions and ownership — weight 3 → 30 holdout + 15 practice.
+# Original questions written from LPI Learning Materials 101-500, objective 104.5, lesson 1.
+schema_version: 1
+exam: "101"
+objective: "104.5"
+questions:
+  # ---------------------------------------------------------------- holdout (mock exams only)
+
+  - id: 101-104.5-0001
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: "A long listing of `/dev/ttyS1` starts with `crw-rw----`. What does the leading `c` tell you?"
+    options:
+      - id: a
+        text: The file is a symbolic link to a console
+        rationale: Wrong. A symbolic link is shown with a leading l.
+      - id: b
+        text: The file has the sticky bit set
+        rationale: Wrong. The sticky bit appears as t or T in the last position of the permission string, never in the first.
+      - id: c
+        text: The file is a character device
+        rationale: Correct. A leading c marks a character device, such as a terminal or serial port.
+      - id: d
+        text: The file is a configuration file
+        rationale: Wrong. The first character shows the file type as the kernel sees it; configuration files are ordinary files (-).
+    answer: [c]
+    explanation: >
+      The first character of a long listing is the file type: - regular file, d directory, l symbolic
+      link, c character device, b block device, s socket and p named pipe. Serial ports and terminals
+      are character devices.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Understanding Filetypes }
+    verify:
+      command: ls -l /dev/null | cut -c1
+      expect: { exit_code: 0, stdout_contains: "c" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [ls, file-types]
+
+  - id: 101-104.5-0002
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: In octal permission notation, which value stands for the write permission?
+    options:
+      - id: a
+        text: "2"
+        rationale: Correct. Read is 4, write is 2 and execute is 1.
+      - id: b
+        text: "1"
+        rationale: Wrong. 1 is execute.
+      - id: c
+        text: "4"
+        rationale: Wrong. 4 is read.
+      - id: d
+        text: "3"
+        rationale: Wrong. 3 is not a single permission; it is write plus execute (2 + 1).
+    answer: [a]
+    explanation: >
+      Each octal digit is the sum of read (4), write (2) and execute (1) for one class of users. So
+      rw- is 6, r-x is 5 and rwx is 7.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Octal Mode }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [chmod, octal]
+
+  - id: 101-104.5-0003
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: Which command is used only to change the group that owns a file?
+    options:
+      - id: a
+        text: "`chmod`"
+        rationale: Wrong. chmod changes permission bits, not ownership.
+      - id: b
+        text: "`umask`"
+        rationale: Wrong. umask sets which permission bits are withheld from newly created files.
+      - id: c
+        text: "`groups`"
+        rationale: Wrong. groups prints the groups a user belongs to; it changes nothing.
+      - id: d
+        text: "`chgrp`"
+        rationale: Correct. chgrp sets the group owner of files and leaves the user owner alone.
+    answer: [d]
+    explanation: >
+      chgrp GROUP FILE changes only the group owner. chown can change the user owner, the group owner
+      or both.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Modifying File Ownership }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [chgrp]
+
+  - id: 101-104.5-0004
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: >
+      In `chmod` symbolic mode, which letter selects users who are neither the file's owner nor
+      members of its group?
+    options:
+      - id: a
+        text: "`a`"
+        rationale: Wrong. a means all three classes at once (user, group and others).
+      - id: b
+        text: "`o`"
+        rationale: Correct. o (others) is the class for everyone who is not the owner and not in the owning group.
+      - id: c
+        text: "`u`"
+        rationale: Wrong. u is the owning user.
+      - id: d
+        text: "`g`"
+        rationale: Wrong. g is the owning group's members.
+    answer: [b]
+    explanation: >
+      Symbolic mode names the classes u (owning user), g (owning group), o (others) and a (all). The
+      third triplet in a long listing shows the permissions for o.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Symbolic Mode }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [chmod, symbolic-mode]
+
+  - id: 101-104.5-0005
+    type: fill_in
+    difficulty: 1
+    pool: holdout
+    stem: Type the shell command that displays the current file creation mask.
+    fill_in:
+      accepted: ['umask(\s+(-S|-p))?']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      umask with no argument prints the mask in octal (for example 0022); umask -S prints the
+      permissions it allows in symbolic form, and umask -p prints it as a reusable umask command.
+      umask is a shell builtin, because the mask belongs to the shell process.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Default Permissions }
+    verify:
+      command: sh -c 'umask 027; umask'
+      expect: { exit_code: 0, stdout_contains: "027" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "Matching tested: umask, umask -S, umask -p accepted; umask 022, mask, umask -s, Umask, sudo umask rejected." }
+    tags: [umask]
+
+  - id: 101-104.5-0006
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      `budget.ods` is currently `rw-r--r--`. Members of its group must also be able to edit it, and
+      nothing else may change. Which command does this?
+    options:
+      - id: a
+        text: "`chmod 020 budget.ods`"
+        rationale: Wrong. An octal mode replaces all bits, so this leaves only group write (----w----) and removes everyone's read.
+      - id: b
+        text: "`chmod g=w budget.ods`"
+        rationale: Wrong. = sets the group's bits exactly, so the group loses read and ends up with -w-.
+      - id: c
+        text: "`chmod g+w budget.ods`"
+        rationale: Correct. + adds write for the group and leaves every other bit as it was, giving rw-rw-r--.
+      - id: d
+        text: "`chown g+w budget.ods`"
+        rationale: Wrong. chown changes ownership; it would try to treat g+w as a user name and fail.
+    answer: [c]
+    explanation: >
+      Symbolic mode with + or - adds or removes only the named bits. = and octal modes set the bits
+      outright, so anything not listed is cleared.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Symbolic Mode }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [chmod, symbolic-mode]
+
+  - id: 101-104.5-0007
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: Which octal mode gives the permissions `rwxr-x---`?
+    options:
+      - id: a
+        text: "`750`"
+        rationale: Correct. rwx = 4+2+1 = 7, r-x = 4+1 = 5, --- = 0.
+      - id: b
+        text: "`760`"
+        rationale: Wrong. 6 would be rw- for the group, not r-x.
+      - id: c
+        text: "`740`"
+        rationale: Wrong. 4 would be r-- for the group, without execute.
+      - id: d
+        text: "`570`"
+        rationale: Wrong. The digits are in the order user, group, others; this gives the owner r-x and the group rwx.
+    answer: [a]
+    explanation: >
+      Add 4 for r, 2 for w and 1 for x in each triplet: owner 7, group 5, others 0.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Octal Mode }
+    verify:
+      command: f=$(mktemp) && chmod 750 "$f" && stat -c %A "$f"
+      expect: { exit_code: 0, stdout_contains: "-rwxr-x---" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [chmod, octal]
+
+  - id: 101-104.5-0008
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      Files created inside `/srv/design` should automatically belong to the directory's group
+      instead of the creator's primary group. Which permission bit on the directory does this?
+    options:
+      - id: a
+        text: The sticky bit
+        rationale: Wrong. The sticky bit limits who may delete or rename entries; it does not affect group ownership.
+      - id: b
+        text: The set-user-ID bit
+        rationale: Wrong. Linux ignores SUID on directories.
+      - id: c
+        text: The group execute bit
+        rationale: Wrong. Group x lets group members enter the directory; it does not change the group of new files.
+      - id: d
+        text: The set-group-ID bit
+        rationale: Correct. With SGID on a directory, new files and subdirectories inherit the directory's group.
+    answer: [d]
+    explanation: >
+      SGID on a directory (chmod g+s, or a leading 2 in octal) makes new entries take the directory's
+      group. New subdirectories also inherit the SGID bit, so the behaviour carries down the tree.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Set GID }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "Tested as non-root users: a file and a subdirectory created in a 2775 directory took its group; the subdirectory also got SGID." }
+    tags: [sgid, directories]
+
+  - id: 101-104.5-0009
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      A user already has execute permission on a directory. Which further permission on that
+      directory lets the user create new files in it and remove existing ones?
+    options:
+      - id: a
+        text: Read
+        rationale: Wrong. Read on a directory allows listing the names of its entries, not changing them.
+      - id: b
+        text: Write
+        rationale: Correct. Write plus execute on a directory allows creating, deleting and renaming entries.
+      - id: c
+        text: The sticky bit
+        rationale: Wrong. The sticky bit restricts deletion; it never grants the right to create files.
+      - id: d
+        text: Set-group-ID
+        rationale: Wrong. SGID on a directory only controls the group of new entries.
+    answer: [b]
+    explanation: >
+      A directory is a list of names. Changing that list (creating, deleting or renaming entries)
+      needs write and execute on the directory; the permissions of the files themselves do not matter
+      for this.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Permissions on Directories }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "Tested as non-root: with write but no execute (776) creating a file failed; with 733 creating worked." }
+    tags: [directories, permissions]
+
+  - id: 101-104.5-0010
+    type: multi_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      Which **TWO** commands make `staff` the group owner of `data.csv` without changing its user
+      owner? (Assume you are allowed to make the change.)
+    select_count: 2
+    options:
+      - id: a
+        text: "`chgrp staff data.csv`"
+        rationale: Correct. chgrp changes only the group owner.
+      - id: b
+        text: "`chown staff data.csv`"
+        rationale: Wrong. A name without a colon is a user name, so this changes the user owner to staff (and fails if no such user exists).
+      - id: c
+        text: "`chown :staff data.csv`"
+        rationale: Correct. With nothing before the colon, chown leaves the user alone and sets the group.
+      - id: d
+        text: "`chmod g=staff data.csv`"
+        rationale: Wrong. chmod expects permission letters after =, not a group name; it stops with an invalid mode error.
+    answer: [a, c]
+    explanation: >
+      chown USER:GROUP changes both, chown USER changes only the user, and chown :GROUP changes only
+      the group, exactly like chgrp GROUP.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Modifying File Ownership }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Rationale for option d corrected: chmod rejects g=staff as an invalid mode (tested)." }
+    tags: [chown, chgrp]
+
+  - id: 101-104.5-0011
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: What is the effect of the set-user-ID (SUID) bit on an executable program?
+    options:
+      - id: a
+        text: The program runs with the privileges of the file's owner
+        rationale: Correct. The process takes the file owner's user ID as its effective UID, whoever started it.
+      - id: b
+        text: The program can be run only by the file's owner
+        rationale: Wrong. Who may run it is still decided by the x bits; SUID changes the identity it runs as.
+      - id: c
+        text: The program runs with the privileges of the file's group
+        rationale: Wrong. That is the set-group-ID bit.
+      - id: d
+        text: The program stays cached in memory after it exits
+        rationale: Wrong. That was the historical meaning of the sticky bit on files, which Linux ignores.
+    answer: [a]
+    explanation: >
+      SUID (octal 4000, shown as s in the owner's execute position) makes a program run as its owner.
+      passwd is the classic example: it is owned by root and SUID so ordinary users can update the
+      shadow file.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Set UID }
+    verify:
+      command: ls -l /usr/bin/passwd | cut -c1-4
+      expect: { exit_code: 0, stdout_contains: "-rws" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [suid]
+
+  - id: 101-104.5-0012
+    type: fill_in
+    difficulty: 2
+    pool: holdout
+    stem: Type the three-digit octal mode that corresponds to `rwx--x---`.
+    fill_in:
+      accepted: ['0?710']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      Owner rwx = 7, group --x = 1, others --- = 0, so the mode is 710 (0710 with the special-bits
+      digit written out).
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Octal Mode }
+    verify:
+      command: f=$(mktemp) && chmod 710 "$f" && stat -c %A "$f"
+      expect: { exit_code: 0, stdout_contains: "-rwx--x---" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "Matching tested: 710, 0710 accepted; 701, 0701, 7100, 711, rwx--x--- rejected." }
+    tags: [chmod, octal]
+
+  - id: 101-104.5-0013
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      A user wants every file and directory they create from now on to be accessible to nobody but
+      themselves, while they keep full use of them. Which `umask` setting does this?
+    options:
+      - id: a
+        text: "`umask 700`"
+        rationale: Wrong. The mask lists bits to remove; this strips the owner's bits and gives group and others full access to new directories.
+      - id: b
+        text: "`umask 066`"
+        rationale: Wrong. Files come out rw-------, but new directories get rwx--x--x, so others can still enter them.
+      - id: c
+        text: "`umask 077`"
+        rationale: Correct. All group and others bits are removed, so files get rw------- and directories rwx------.
+      - id: d
+        text: "`umask 600`"
+        rationale: Wrong. This removes the owner's read and write and leaves group and others untouched.
+    answer: [c]
+    explanation: >
+      The umask names the bits to take away from the starting mode (666 for files, 777 for
+      directories). Masking 7 for both group and others leaves access to the owner only.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Default Permissions }
+    verify:
+      command: sh -c 'umask 077; d=$(mktemp -d); touch "$d/f"; mkdir "$d/x"; stat -c %A "$d/f" "$d/x" | tr "\n" " "'
+      expect: { exit_code: 0, stdout_contains: "-rw------- drwx------" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Was \"umask 077, what mode does a new file get\", too close to a guided exercise. Reworked to choose the umask; 077, 066, 700 and 600 tested for files and directories." }
+    tags: [umask]
+
+  - id: 101-104.5-0014
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: "After `chmod 2755 reports`, where `reports` is a directory, how does `ls -ld reports` show its permissions?"
+    options:
+      - id: a
+        text: "`drwsr-xr-x`"
+        rationale: Wrong. An s in the owner triplet is SUID (4000), not 2000.
+      - id: b
+        text: "`drwxr-sr-x`"
+        rationale: Correct. 2 is SGID, shown as s in the group execute position because group execute is also set.
+      - id: c
+        text: "`drwxr-xr-t`"
+        rationale: Wrong. A t in the others triplet is the sticky bit (1000).
+      - id: d
+        text: "`drwxr-Sr-x`"
+        rationale: Wrong. A capital S means SGID without group execute, but 5 includes execute for the group.
+    answer: [b]
+    explanation: >
+      The leading digit holds the special bits: 4 SUID, 2 SGID, 1 sticky. They replace the x of the
+      owner, group and others triplets respectively, in lower case if that x is set and upper case if
+      it is not.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Set GID }
+    verify:
+      command: d=$(mktemp -d) && chmod 2755 "$d" && stat -c %A "$d"
+      expect: { exit_code: 0, stdout_contains: "drwxr-sr-x" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [sgid, chmod, octal]
+
+  - id: 101-104.5-0015
+    type: fill_in
+    difficulty: 3
+    pool: holdout
+    stem: >
+      As root, type one command that makes the user `bob` the owner and the group `devs` the group
+      owner of `app.log` in the current directory.
+    fill_in:
+      accepted: ['(sudo\s+)?((/usr)?/bin/)?chown\s+bob[:.]devs\s+(\./)?app\.log']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      chown takes USER:GROUP, so chown bob:devs app.log sets both at once. Older systems also accept a
+      dot as the separator (bob.devs); current coreutils still does, with a warning.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Modifying File Ownership }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "Matching tested: chown bob:devs app.log, sudo chown bob:devs app.log, /bin/chown bob:devs ./app.log, chown bob.devs app.log accepted; chown devs:bob app.log, chown bob app.log, chgrp devs app.log, chown bob: app.log, chown -R bob:devs app.log rejected. bob.devs separator checked: works with a warning on coreutils 9.4." }
+    tags: [chown]
+
+  - id: 101-104.5-0016
+    type: multi_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      `deploy.sh` currently has mode `644`. Which **TWO** commands leave it with exactly
+      `rwxr-x---`?
+    select_count: 2
+    options:
+      - id: a
+        text: "`chmod ug+x deploy.sh`"
+        rationale: Wrong. Others keep their read permission, so the result is rwxr-xr-- (754).
+      - id: b
+        text: "`chmod 750 deploy.sh`"
+        rationale: Correct. 7 = rwx, 5 = r-x, 0 = ---.
+      - id: c
+        text: "`chmod u+x,g=x,o= deploy.sh`"
+        rationale: Wrong. g=x sets the group to --x and drops its read, giving rwx--x--- (710).
+      - id: d
+        text: "`chmod u=rwx,g=rx,o= deploy.sh`"
+        rationale: Correct. Each class is set exactly, and o= with nothing after it clears all bits for others.
+    answer: [b, d]
+    explanation: >
+      An octal mode and a fully specified symbolic mode (=) give the same result regardless of the
+      starting permissions. + and - only adjust the named bits, so the outcome depends on what was
+      there before.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Modifying File Permissions }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "All four commands run on a 644 file: 754, 750, 710, 750." }
+    tags: [chmod, symbolic-mode, octal]
+
+  - id: 101-104.5-0017
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      Which `chmod` mode argument removes every permission from the group and from others while
+      leaving the owner's permissions as they are?
+    options:
+      - id: a
+        text: "`go-`"
+        rationale: Wrong. With no permission letters after -, nothing is removed; chmod accepts it and changes nothing.
+      - id: b
+        text: "`o=g`"
+        rationale: Wrong. This copies the group's bits to others; it removes nothing from the group.
+      - id: c
+        text: "`ug-rwx`"
+        rationale: Wrong. This clears the owner's bits too and leaves others untouched.
+      - id: d
+        text: "`go=`"
+        rationale: Correct. = with an empty permission list sets the group and others to no permissions.
+    answer: [d]
+    explanation: >
+      = sets the listed classes to exactly the permissions given, so an empty list clears them. The
+      owner is not named and keeps its bits.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Symbolic Mode }
+    verify:
+      command: f=$(mktemp) && chmod 777 "$f" && chmod go= "$f" && stat -c %A "$f"
+      expect: { exit_code: 0, stdout_contains: "-rwx------" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "Checked: chmod go- exits 0 and leaves 754 unchanged." }
+    tags: [chmod, symbolic-mode]
+
+  - id: 101-104.5-0018
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: "What does the leading `4` in `chmod 4750 /usr/local/bin/backup` set?"
+    options:
+      - id: a
+        text: The sticky bit
+        rationale: Wrong. The sticky bit is 1 in the leading digit.
+      - id: b
+        text: Read permission for the owner
+        rationale: Wrong. The owner's read permission is part of the 7 that follows; the first of four digits holds only special bits.
+      - id: c
+        text: The set-user-ID bit
+        rationale: Correct. In the special-bits digit, 4 is SUID, 2 is SGID and 1 is sticky.
+      - id: d
+        text: The set-group-ID bit
+        rationale: Wrong. SGID is 2 in the leading digit.
+    answer: [c]
+    explanation: >
+      With four digits, the first is the special bits (SUID 4, SGID 2, sticky 1, added together if
+      several are wanted) and the other three are owner, group and others as usual. 4750 gives
+      rwsr-x---.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Set UID }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [suid, octal]
+
+  - id: 101-104.5-0019
+    type: fill_in
+    difficulty: 3
+    pool: holdout
+    stem: >
+      Complete the command with a **symbolic** mode that adds the sticky bit to `/srv/inbox` and
+      changes nothing else: `chmod ____ /srv/inbox`
+    fill_in:
+      accepted:
+        - '([ug]*[oa][ugoa]*)?\+t'
+        - '(sudo\s+)?((/usr)?/bin/)?chmod\s+([ug]*[oa][ugoa]*)?\+t\s+/srv/inbox/?'
+      match: regex
+      case_sensitive: true
+    explanation: >
+      The sticky bit belongs to the others triplet, so o+t (or +t, a+t) adds it. u+t and g+t do
+      nothing, because t is only meaningful for others. Once set, ls shows t (or T if others lack
+      execute) in the last position.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Sticky Bit }
+    verify:
+      command: d=$(mktemp -d) && chmod 755 "$d" && chmod o+t "$d" && stat -c %A "$d"
+      expect: { exit_code: 0, stdout_contains: "drwxr-xr-t" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "Checked: o+t, +t, a+t set the bit; u+t does not. Matching tested: o+t, +t, a+t, ugo+t, chmod o+t /srv/inbox, sudo chmod +t /srv/inbox accepted; u+t, g+t, o-t, 1755, o+s, chmod -R o+t /srv/inbox rejected." }
+    tags: [sticky-bit, chmod, symbolic-mode]
+
+  - id: 101-104.5-0020
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: "Based on the output below, what happens when `bob` runs `cat notes.txt`?"
+    exhibit: |
+      $ ls -l notes.txt
+      -rw----r-- 1 alice team 5 Oct 26 11:05 notes.txt
+      $ id bob
+      uid=1002(bob) gid=1002(bob) groups=1002(bob),1005(team)
+    options:
+      - id: a
+        text: The file is displayed, because the others triplet grants read
+        rationale: Wrong. The others triplet applies only to users who are neither the owner nor in the owning group, and bob is in team.
+      - id: b
+        text: "`Permission denied`, because only the group triplet applies to bob"
+        rationale: Correct. bob is in the file's group, so the group permissions (---) are used and the others bits are never checked.
+      - id: c
+        text: The file is displayed, because any one triplet that grants read is enough
+        rationale: Wrong. Linux picks exactly one triplet (owner, else group, else others); permissions are not combined.
+      - id: d
+        text: "`Permission denied`, because only alice can read a file she owns"
+        rationale: Wrong. Others could read this file; it is bob's group membership that locks him out.
+    answer: [b]
+    explanation: >
+      The kernel checks owner first, then group, then others, and uses only the first class that
+      matches. A user in the owning group gets the group permissions even when others are more
+      generous, which lets you exclude a group explicitly.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Understanding Permissions }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Section corrected to Understanding Permissions. Reproduced with throwaway users: group member denied, non-member could read. Names and IDs in the exhibit renamed from the test users." }
+    tags: [permissions, groups, ls]
+
+  - id: 101-104.5-0021
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      `bob` is neither the owner nor a member of the group `alice`. Given the output below, which
+      statement describes what bob can do?
+    exhibit: |
+      $ ls -ld notes
+      drwxr--r-- 2 alice alice 4096 Oct 26 11:07 notes
+      $ ls -l notes
+      total 4
+      -rw-rw-r-- 1 alice alice 2 Oct 26 11:07 todo.txt
+    options:
+      - id: a
+        text: He can read `notes/todo.txt` but cannot list the names in `notes`
+        rationale: Wrong. That would need x without r; here it is the other way round.
+      - id: b
+        text: He can list the directory and read `notes/todo.txt`
+        rationale: Wrong. Reading the file needs access through the directory, which requires x on notes.
+      - id: c
+        text: He can list the names in `notes` but cannot read `notes/todo.txt`
+        rationale: Correct. r on the directory lets him read the names; without x he cannot reach any entry, whatever its own permissions.
+      - id: d
+        text: He can `cd` into `notes` but cannot list or read anything there
+        rationale: Wrong. cd needs x on the directory, which others do not have.
+    answer: [c]
+    explanation: >
+      On a directory, r allows reading the list of names and x allows using those names to reach the
+      files (and to cd into it). With r but no x, ls prints the names (ls -l shows question marks for
+      the details), but opening a file inside fails with Permission denied.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Permissions on Directories }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Stem reworded to say clearly that bob is neither owner nor group member; option a lengthened to avoid a length giveaway. Reproduced as a non-root user: ls printed todo.txt, cat and cd were denied." }
+    tags: [directories, permissions]
+
+  - id: 101-104.5-0022
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: "Which statement about the directory below is true?"
+    exhibit: |
+      $ ls -ld drop
+      drwxrwS--T 2 alice team 4096 Oct 26 11:07 drop
+    options:
+      - id: a
+        text: SGID and the sticky bit are set; the group lacks execute and others have no access
+        rationale: Correct. Capital S means SGID without group x, and capital T means sticky without others x.
+      - id: b
+        text: SUID and the sticky bit are set; others can enter the directory
+        rationale: Wrong. The S is in the group triplet, so it is SGID, and T means others lack execute.
+      - id: c
+        text: Only the sticky bit is set; the S shows that group members may write
+        rationale: Wrong. Group write is the w; S in the execute position marks SGID.
+      - id: d
+        text: SGID and the sticky bit are set; group members can enter the directory and create files
+        rationale: Wrong. Capital S means group execute is missing, so group members cannot enter or create files there.
+    answer: [a]
+    explanation: >
+      The special bits share the execute positions: s/S for SUID (owner) and SGID (group), t/T for
+      sticky (others). Lower case means the execute bit is also set, upper case means it is not. This
+      directory is mode 3760, which is probably a mistake: without group x the SGID and the group
+      write permission are of no use.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Special Permissions }
+    verify:
+      command: d=$(mktemp -d) && chmod 3760 "$d" && stat -c %A "$d"
+      expect: { exit_code: 0, stdout_contains: "drwxrwS--T" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Exhibit was drwxrws--T, which made option d true as well (group x present). Changed to drwxrwS--T (3760, produced with chmod) so only a holds. Correct option shortened (length giveaway)." }
+    tags: [sgid, sticky-bit, ls]
+
+  - id: 101-104.5-0023
+    type: multi_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      `alice` and `bob` are both members of `proj` and both use umask `022`. alice creates
+      `/srv/share/plan.txt`. Which **TWO** statements are true?
+    exhibit: |
+      $ ls -ld /srv/share
+      drwxrws--- 2 root proj 4096 Oct 26 11:07 /srv/share
+    select_count: 2
+    options:
+      - id: a
+        text: "`plan.txt` belongs to the group `proj`"
+        rationale: Correct. The directory has SGID, so new files take its group.
+      - id: b
+        text: bob can append text to `plan.txt`
+        rationale: Wrong. With umask 022 the file is rw-r--r--, so the group, and bob through it, can only read.
+      - id: c
+        text: "`plan.txt` belongs to alice's primary group"
+        rationale: Wrong. That would be true without SGID on the directory.
+      - id: d
+        text: bob can delete `plan.txt`
+        rationale: Correct. Deleting needs write and execute on the directory, which the group has, and the sticky bit is not set.
+    answer: [a, d]
+    explanation: >
+      SGID makes group ownership consistent, but the umask still decides the file's mode: 022 removes
+      group write. Deletion is a directory operation, so any group member may remove any file here.
+      Adding the sticky bit (or a umask of 002 for group-editable files) would change those outcomes.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Set GID }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "Reproduced with throwaway users in a 2770 directory: file got the directory's group, the other member's append failed, renaming the file succeeded (rename and unlink need the same directory permissions)." }
+    tags: [sgid, umask, directories, groups]
+
+  - id: 101-104.5-0024
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: With the umask set to `0026`, what permissions does a directory created with `mkdir` get?
+    options:
+      - id: a
+        text: "`rwxr-x---`"
+        rationale: Wrong. That is the result of umask 027; 6 removes only read and write from others, not execute.
+      - id: b
+        text: "`rw-r-----`"
+        rationale: Wrong. That is what a regular file gets with this mask; directories start from 777, not 666.
+      - id: c
+        text: "`rwxr-xr-x`"
+        rationale: Wrong. That is the result of umask 022.
+      - id: d
+        text: "`rwxr-x--x`"
+        rationale: Correct. 777 minus group w (2) and others r and w (6) leaves rwx, r-x, --x.
+    answer: [d]
+    explanation: >
+      mkdir starts from 777 and clears the bits set in the mask: 0 for the owner, 2 (write) for the
+      group, 6 (read and write) for others. Others keep execute, so they can enter the directory but
+      not list it.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Default Permissions }
+    verify:
+      command: sh -c 'umask 0026; d=$(mktemp -d); mkdir "$d/x"; stat -c %A "$d/x"'
+      expect: { exit_code: 0, stdout_contains: "drwxr-x--x" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [umask, directories]
+
+  - id: 101-104.5-0025
+    type: fill_in
+    difficulty: 4
+    pool: holdout
+    stem: >
+      Using octal mode, type the full `chmod` command that adds the SUID bit to `backup.sh` (shown
+      below) while keeping its other permissions exactly as they are.
+    exhibit: |
+      $ ls -l backup.sh
+      -rwxr-x--- 1 root root 812 Oct 26 11:20 backup.sh
+    fill_in:
+      accepted: ['(sudo\s+)?((/usr)?/bin/)?chmod\s+0?4750\s+(\./)?backup\.sh']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      The current mode is 750. SUID is 4 in the special-bits digit, so the new mode is 4750, shown
+      as -rwsr-x---. (Note that Linux ignores SUID on interpreted scripts; on a real system you
+      would set it on a compiled program.)
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Set UID }
+    verify:
+      command: f=$(mktemp) && chmod 750 "$f" && chmod 4750 "$f" && stat -c %A "$f"
+      expect: { exit_code: 0, stdout_contains: "-rwsr-x---" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "Matching tested: chmod 4750 backup.sh, sudo chmod 4750 backup.sh, /bin/chmod 04750 ./backup.sh accepted; chmod 4755 backup.sh, chmod 2750 backup.sh, chmod u+s backup.sh, chmod 750 backup.sh, chmod -R 4750 backup.sh rejected." }
+    tags: [suid, chmod, octal]
+
+  - id: 101-104.5-0026
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      root runs `chown alice:devs prog` on the file below. What does `ls -l prog` show afterwards?
+    exhibit: |
+      $ ls -l prog
+      -rwsr-sr-x 1 root root 26936 Oct 26 11:07 prog
+    options:
+      - id: a
+        text: "`-rwsr-sr-x 1 alice devs 26936 Oct 26 11:07 prog`"
+        rationale: Wrong. Changing the owner of an executable clears SUID and SGID, so the s bits do not survive.
+      - id: b
+        text: "`-rwxr-xr-x 1 alice devs 26936 Oct 26 11:07 prog`"
+        rationale: Correct. chown changes both owners and the kernel clears SUID and SGID on the executable.
+      - id: c
+        text: "`-rwSr-Sr-x 1 alice devs 26936 Oct 26 11:07 prog`"
+        rationale: Wrong. Capital S would mean the special bits stayed and execute was removed; chown does the opposite.
+      - id: d
+        text: "`-rwsr-sr-x 1 alice root 26936 Oct 26 11:07 prog`"
+        rationale: Wrong. alice:devs sets the group too, and the special bits are cleared anyway.
+    answer: [b]
+    explanation: >
+      Handing a SUID or SGID program to another owner would silently give away that owner's
+      privileges, so Linux clears both bits when the owner or group of an executable changes, even
+      when root does it. Set them again with chmod if they are really wanted.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Set UID }
+    verify:
+      command: f=$(mktemp) && chmod 6755 "$f" && chown nobody:nogroup "$f" && stat -c %A "$f"
+      expect: { exit_code: 0, stdout_contains: "-rwxr-xr-x" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "Reproduced as root on a copy of /bin/true with 6755: after chown to a user and group both bits were gone." }
+    tags: [chown, suid, sgid]
+
+  - id: 101-104.5-0027
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      The directory `shared` has mode `2775` (`drwxrwsr-x`). Which command clears its SGID bit
+      with GNU `chmod`?
+    options:
+      - id: a
+        text: "`chmod 0775 shared`"
+        rationale: Wrong. For directories, GNU chmod keeps SUID and SGID unless they are cleared explicitly; a single leading 0 does not count.
+      - id: b
+        text: "`chmod 775 shared`"
+        rationale: Wrong. A three-digit mode does not touch the existing SGID bit on a directory.
+      - id: c
+        text: "`chmod g-s shared`"
+        rationale: Correct. Removing s from the group explicitly clears SGID, leaving drwxrwxr-x.
+      - id: d
+        text: "`chmod 1775 shared`"
+        rationale: Wrong. This adds the sticky bit and keeps SGID, giving drwxrwsr-t (3775).
+    answer: [c]
+    explanation: >
+      GNU chmod preserves a directory's SUID and SGID bits when given a numeric mode, so shared
+      directories do not lose their group inheritance by accident. To clear them, use symbolic mode
+      (g-s), an extra leading zero (00775) or =775. On regular files a numeric mode does clear them.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Set GID }
+    verify:
+      command: d=$(mktemp -d) && chmod 2775 "$d" && chmod 0775 "$d" && a=$(stat -c %a "$d") && chmod g-s "$d" && echo "$a $(stat -c %a "$d")"
+      expect: { exit_code: 0, stdout_contains: "2775 775" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "Tested as a non-root owner (coreutils 9.4): 0775 and 775 kept SGID, 1775 gave 3775, g-s, 00775 and =775 cleared it." }
+    tags: [sgid, chmod, directories]
+
+  - id: 101-104.5-0028
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      alice's umask is `027`. She runs `chmod +x tool` on a file whose mode is `640`. What is the
+      new mode?
+    options:
+      - id: a
+        text: "`rwxr-x---`"
+        rationale: Correct. Without a class letter, chmod applies the change as if for a but skips bits set in the umask, so others get no x.
+      - id: b
+        text: "`rwxr-x--x`"
+        rationale: Wrong. That is the result of a+x, which ignores the umask.
+      - id: c
+        text: "`rwxr-----`"
+        rationale: Wrong. +x without a class is not limited to the owner; the group also gets x.
+      - id: d
+        text: "`rw-r-----`"
+        rationale: Wrong. Only bits in the umask are held back; the owner and group still receive x.
+    answer: [a]
+    explanation: >
+      When no class (u, g, o, a) is given, chmod acts on all classes except for the bits masked by
+      the umask. With 027, others are fully masked, so +x adds execute for owner and group only.
+      Writing a+x (or ugo+x) changes all three regardless of the umask.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Symbolic Mode }
+    verify:
+      command: sh -c 'umask 027; f=$(mktemp); chmod 640 "$f"; chmod +x "$f"; stat -c %A "$f"'
+      expect: { exit_code: 0, stdout_contains: "-rwxr-x---" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "Tested as a non-root user: +x gave rwxr-x---, a+x and ugo+x gave rwxr-x--x." }
+    tags: [chmod, umask, symbolic-mode]
+
+  - id: 101-104.5-0029
+    type: multi_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      `alice` is not root. She owns `report` (group `alice`) and is a member of `team`, but not of
+      `ops`. `bob` is another user. Which **TWO** commands succeed when alice runs them?
+    select_count: 2
+    options:
+      - id: a
+        text: "`chown bob report`"
+        rationale: Wrong. Only root can give a file to another user; alice gets Operation not permitted.
+      - id: b
+        text: "`chgrp team report`"
+        rationale: Correct. An owner may change the file's group to any group she belongs to.
+      - id: c
+        text: "`chown alice:team report`"
+        rationale: Correct. Keeping herself as owner and choosing one of her own groups is allowed.
+      - id: d
+        text: "`chgrp ops report`"
+        rationale: Wrong. alice is not a member of ops, so the change is refused.
+    answer: [b, c]
+    explanation: >
+      Ordinary users cannot change a file's user owner at all. As the owner, they may set the group
+      to any group they are a member of, with either chgrp or chown (including chown to themselves).
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Modifying File Ownership }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "Reproduced with throwaway users: chgrp to own group and chown self:group succeeded; chown to another user and chgrp to a non-member group gave Operation not permitted." }
+    tags: [chown, chgrp, groups]
+
+  - id: 101-104.5-0030
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      `bob` is not root and not in the group `alice`. He runs `rm -f /srv/pub/alice.txt`. Based on
+      the output below, what happens?
+    exhibit: |
+      $ ls -ld /srv/pub
+      drwxrwxrwx 2 alice alice 4096 Oct 26 11:07 /srv/pub
+      $ ls -l /srv/pub
+      total 4
+      -r--r--r-- 1 alice alice 2 Oct 26 11:07 alice.txt
+    options:
+      - id: a
+        text: It fails with `Permission denied`, because nobody has write permission on the file
+        rationale: Wrong. Removing a file changes the directory, not the file, so the file's own write bit is not checked.
+      - id: b
+        text: It fails with `Operation not permitted`, because bob does not own the file
+        rationale: Wrong. Ownership matters only when the directory has the sticky bit, and this one does not.
+      - id: c
+        text: The file's contents are erased but the empty file remains
+        rationale: Wrong. rm unlinks the directory entry; it never truncates a file.
+      - id: d
+        text: The file is removed
+        rationale: Correct. bob has write and execute on /srv/pub, which is all that deleting an entry requires; -f skips the write-protection prompt.
+    answer: [d]
+    explanation: >
+      A file's write bit controls changing its contents. Creating, renaming and deleting names are
+      changes to the directory, so they need w and x on the directory. To stop users deleting each
+      other's files in a shared writable directory, set the sticky bit on it.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Permissions on Directories }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "Reproduced as a non-root user by renaming the file (same directory permission check as unlink); the rm itself could not be run inside su in this session. With sticky bit added, the rename failed with Operation not permitted." }
+    tags: [directories, permissions, sticky-bit]
+
+  # --------------------------------------------------------------------------- practice (CLI)
+
+  - id: 101-104.5-0031
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: Which command changes the permission bits of a file?
+    options:
+      - id: a
+        text: "`chown`"
+        rationale: Wrong. chown changes the user and group owners.
+      - id: b
+        text: "`chmod`"
+        rationale: Correct. chmod changes a file's mode (its permission bits).
+      - id: c
+        text: "`chgrp`"
+        rationale: Wrong. chgrp changes only the group owner.
+      - id: d
+        text: "`getent`"
+        rationale: Wrong. getent looks up entries in databases such as group or passwd.
+    answer: [b]
+    explanation: chmod ("change mode") sets read, write, execute and the special bits, in symbolic or octal form.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Modifying File Permissions }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [chmod]
+
+  - id: 101-104.5-0032
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: Which first character in `ls -l` output marks a symbolic link?
+    options:
+      - id: a
+        text: "`s`"
+        rationale: Wrong. s marks a socket.
+      - id: b
+        text: "`-`"
+        rationale: Wrong. - marks a regular file.
+      - id: c
+        text: "`p`"
+        rationale: Wrong. p marks a named pipe (FIFO).
+      - id: d
+        text: "`l`"
+        rationale: Correct. Symbolic links are shown with l, and ls -l adds -> and the target.
+    answer: [d]
+    explanation: >
+      The type characters are - (regular), d (directory), l (symbolic link), b and c (block and
+      character devices), s (socket) and p (named pipe).
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Understanding Filetypes }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [ls, file-types]
+
+  - id: 101-104.5-0033
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: Which octal value represents the read permission?
+    options:
+      - id: a
+        text: "4"
+        rationale: Correct. r = 4, w = 2, x = 1.
+      - id: b
+        text: "2"
+        rationale: Wrong. 2 is write.
+      - id: c
+        text: "1"
+        rationale: Wrong. 1 is execute.
+      - id: d
+        text: "7"
+        rationale: Wrong. 7 is read, write and execute together.
+    answer: [a]
+    explanation: Each octal digit adds up r (4), w (2) and x (1) for one class of users.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Octal Mode }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [octal]
+
+  - id: 101-104.5-0034
+    type: fill_in
+    difficulty: 1
+    pool: practice
+    stem: Type the name of the command that changes the user owner of a file.
+    fill_in:
+      accepted: ['((/usr)?/bin/)?chown']
+      match: regex
+      case_sensitive: true
+    explanation: chown changes the user owner, and optionally the group owner with USER:GROUP.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Modifying File Ownership }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "Matching tested: chown, /bin/chown, /usr/bin/chown accepted; chgrp, chmod, Chown, chown -R, own rejected." }
+    tags: [chown]
+
+  - id: 101-104.5-0035
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: What is `rwxr-xr-x` in octal?
+    options:
+      - id: a
+        text: "`775`"
+        rationale: Wrong. 775 gives the group write as well (rwxrwxr-x).
+      - id: b
+        text: "`644`"
+        rationale: Wrong. 644 is rw-r--r--, with no execute at all.
+      - id: c
+        text: "`755`"
+        rationale: Correct. 7 = rwx, 5 = r-x, 5 = r-x.
+      - id: d
+        text: "`557`"
+        rationale: Wrong. The digits go user, group, others; this would be r-xr-xrwx.
+    answer: [c]
+    explanation: rwx is 4+2+1 = 7 and r-x is 4+1 = 5, so the mode is 755.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Octal Mode }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [octal]
+
+  - id: 101-104.5-0036
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: What does the sticky bit do when set on a world-writable directory?
+    options:
+      - id: a
+        text: New files in the directory inherit its group
+        rationale: Wrong. That is the SGID bit on a directory.
+      - id: b
+        text: Users can delete or rename only their own files in it
+        rationale: Correct. The sticky bit (restricted deletion flag) protects each user's files from the others; only the directory's owner and root are exempt.
+      - id: c
+        text: Files in the directory cannot be modified by anyone except root
+        rationale: Wrong. Writing to files still follows each file's own permissions.
+      - id: d
+        text: Programs in the directory run with the directory owner's privileges
+        rationale: Wrong. Nothing like that exists; SUID applies to executable files, not directories.
+    answer: [b]
+    explanation: >
+      /tmp is the usual example (mode 1777). Everyone may create files there, but the sticky bit stops
+      users removing or renaming each other's files.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Sticky Bit }
+    verify:
+      command: stat -c %a /tmp
+      expect: { exit_code: 0, stdout_contains: "1777" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Correct option shortened (length giveaway); exemptions moved to the rationale. Reproduced as a non-root user: rename of another user's file in a 1777 directory gave Operation not permitted." }
+    tags: [sticky-bit]
+
+  - id: 101-104.5-0037
+    type: multi_choice
+    difficulty: 2
+    pool: practice
+    stem: Which **TWO** characters at the start of an `ls -l` line indicate a device file?
+    select_count: 2
+    options:
+      - id: a
+        text: "`b`"
+        rationale: Correct. b is a block device, such as a disk or loop device.
+      - id: b
+        text: "`d`"
+        rationale: Wrong. d is a directory.
+      - id: c
+        text: "`s`"
+        rationale: Wrong. s is a socket, a communication endpoint between programs, not a device.
+      - id: d
+        text: "`c`"
+        rationale: Correct. c is a character device, such as a terminal or /dev/null.
+    answer: [a, d]
+    explanation: Device files are either block (b) or character (c) devices; they live mostly under /dev.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Understanding Filetypes }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [file-types, ls]
+
+  - id: 101-104.5-0038
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: Which command shows the groups that the user `carol` belongs to?
+    options:
+      - id: a
+        text: "`chgrp carol`"
+        rationale: Wrong. chgrp changes a file's group; with only one argument it fails.
+      - id: b
+        text: "`umask carol`"
+        rationale: Wrong. umask sets or shows the file creation mask; carol is not a valid mask.
+      - id: c
+        text: "`getent passwd carol`"
+        rationale: Wrong. This prints carol's account line, which holds only the numeric ID of her primary group, not her other groups.
+      - id: d
+        text: "`groups carol`"
+        rationale: Correct. groups prints a user's group memberships (id carol shows them too).
+    answer: [d]
+    explanation: >
+      Before choosing a group owner it helps to check memberships: groups USER (or id USER) lists a
+      user's groups, and getent group lists all groups and their members.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Querying Groups }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Distractor ls -l carol replaced with getent passwd carol so the correct option is not the longest." }
+    tags: [groups]
+
+  - id: 101-104.5-0039
+    type: single_choice
+    difficulty: 3
+    pool: practice
+    stem: With umask `002`, what permissions does a new directory created with `mkdir` get?
+    options:
+      - id: a
+        text: "`rwxrwxr-x`"
+        rationale: Correct. 777 minus write for others leaves rwxrwxr-x (775).
+      - id: b
+        text: "`rw-rw-r--`"
+        rationale: Wrong. That is what a new regular file gets; directories start from 777.
+      - id: c
+        text: "`rwxr-xr-x`"
+        rationale: Wrong. That needs umask 022.
+      - id: d
+        text: "`-------w-`"
+        rationale: Wrong. The umask lists bits to take away, not the resulting permissions.
+    answer: [a]
+    explanation: >
+      Directories start at 777 and files at 666; the umask bits are removed. 002 removes only write
+      for others, a common setting where every user has a private group.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Default Permissions }
+    verify:
+      command: sh -c 'umask 002; d=$(mktemp -d); mkdir "$d/x"; stat -c %A "$d/x"'
+      expect: { exit_code: 0, stdout_contains: "drwxrwxr-x" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [umask]
+
+  - id: 101-104.5-0040
+    type: fill_in
+    difficulty: 3
+    pool: practice
+    stem: >
+      Type the `chmod` option that applies a permission change to a directory and everything below
+      it.
+    fill_in:
+      accepted: ['((sudo\s+)?((/usr)?/bin/)?chmod\s+)?(-R|--recursive)']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      chmod -R (--recursive) walks the whole tree. Take care with it: an octal mode such as 644 would
+      also strip execute from every subdirectory, so symbolic modes (or X) are often safer.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Symbolic Mode }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "Matching tested: -R, --recursive, chmod -R, sudo chmod --recursive accepted; -r, --recurse, -R 755, chown -R, -Rv rejected." }
+    tags: [chmod]
+
+  - id: 101-104.5-0041
+    type: single_choice
+    difficulty: 3
+    pool: practice
+    stem: "A file has mode `644`. What is its mode after `chmod o=u file`?"
+    options:
+      - id: a
+        text: "`rw-r--r--`"
+        rationale: Wrong. o=u copies the owner's rw- to others, so others change.
+      - id: b
+        text: "`rw-rw-rw-`"
+        rationale: Wrong. Only others are named; the group keeps r--.
+      - id: c
+        text: "`rw-r--rw-`"
+        rationale: Correct. Others get a copy of the owner's bits (rw-); owner and group stay the same.
+      - id: d
+        text: "`rw-r--r-x`"
+        rationale: Wrong. The owner has no execute bit to copy.
+    answer: [c]
+    explanation: >
+      In symbolic mode the right-hand side can be another class (u, g or o) instead of letters, which
+      copies that class's current bits.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Symbolic Mode }
+    verify:
+      command: f=$(mktemp) && chmod 644 "$f" && chmod o=u "$f" && stat -c %A "$f"
+      expect: { exit_code: 0, stdout_contains: "-rw-r--rw-" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [chmod, symbolic-mode]
+
+  - id: 101-104.5-0042
+    type: single_choice
+    difficulty: 3
+    pool: practice
+    stem: The umask is `0027`. What does `umask -S` print?
+    options:
+      - id: a
+        text: "`u=,g=w,o=rwx`"
+        rationale: Wrong. -S shows the permissions the mask allows, not the bits it removes.
+      - id: b
+        text: "`u=rw,g=r,o=`"
+        rationale: Wrong. umask -S reports in terms of directory-style permissions, including x.
+      - id: c
+        text: "`u=rwx,g=rwx,o=rx`"
+        rationale: Wrong. That corresponds to umask 0002.
+      - id: d
+        text: "`u=rwx,g=rx,o=`"
+        rationale: Correct. 0 removes nothing from the owner, 2 removes group write, 7 removes everything from others.
+    answer: [d]
+    explanation: >
+      umask -S shows the complement of the mask: the permissions a new directory would get. Regular
+      files additionally never get x by default.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Default Permissions }
+    verify:
+      command: bash -c 'umask 0027; umask -S'
+      expect: { exit_code: 0, stdout_contains: "u=rwx,g=rx,o=" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [umask]
+
+  - id: 101-104.5-0043
+    type: single_choice
+    difficulty: 4
+    pool: practice
+    stem: >
+      `carl` is not a member of `team`. What may carl do with `report`, based on the output below?
+    exhibit: |
+      $ ls -l report
+      -rw-rw-r-- 1 alice team 2 Oct 26 11:07 report
+    options:
+      - id: a
+        text: Read and modify it
+        rationale: Wrong. rw- for the group applies only to members of team.
+      - id: b
+        text: Read it, but not modify it
+        rationale: Correct. carl is neither the owner nor in team, so the others triplet (r--) applies.
+      - id: c
+        text: Nothing at all
+        rationale: Wrong. Others have read permission.
+      - id: d
+        text: Change its permissions with chmod
+        rationale: Wrong. Only the owner (alice) or root can change a file's mode.
+    answer: [b]
+    explanation: >
+      carl matches neither the owner nor the owning group, so only the last triplet counts. Whether he
+      could delete it depends on the directory's permissions, not on this file.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Understanding Permissions }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [permissions, ls]
+
+  - id: 101-104.5-0044
+    type: single_choice
+    difficulty: 4
+    pool: practice
+    stem: >
+      A directory `upload` has mode `733` (`drwx-wx-wx`) and is owned by alice. What can another
+      ordinary user do there?
+    options:
+      - id: a
+        text: Create files in it, but not list its contents
+        rationale: Correct. w plus x allows adding entries; without r the names cannot be listed.
+      - id: b
+        text: List its contents, but not create files
+        rationale: Wrong. Listing needs r, which others do not have.
+      - id: c
+        text: Nothing, because without read permission the directory cannot be used
+        rationale: Wrong. x lets users reach entries by name, and w plus x lets them create entries.
+      - id: d
+        text: List and create files, but not enter it with cd
+        rationale: Wrong. Others have x, so cd works; it is listing that fails.
+    answer: [a]
+    explanation: >
+      A directory with -wx for others works as a drop box: users can put files in it (and open files
+      whose names they know) but cannot see what is there.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Permissions on Directories }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok, notes: "Reproduced as a non-root user: touch succeeded, ls gave Permission denied." }
+    tags: [directories, permissions]
+
+  - id: 101-104.5-0045
+    type: multi_choice
+    difficulty: 4
+    pool: practice
+    stem: Which **TWO** statements about the program below are true when `bob` runs it?
+    exhibit: |
+      $ ls -l prog
+      -rwsr-sr-x 1 root staff 26936 Oct 26 11:07 prog
+    select_count: 2
+    options:
+      - id: a
+        text: Only root and members of staff can run it
+        rationale: Wrong. Others have x, so any user can run it.
+      - id: b
+        text: The process runs with root as its effective user
+        rationale: Correct. The s in the owner triplet is SUID, and the owner is root.
+      - id: c
+        text: The process runs with staff as its effective group
+        rationale: Correct. The s in the group triplet is SGID, and the group is staff.
+      - id: d
+        text: The sticky bit is set, so the program stays in memory
+        rationale: Wrong. There is no t; and Linux ignores the sticky bit on files.
+    answer: [b, c]
+    explanation: >
+      This file has mode 6755. SUID makes the effective UID that of the owner and SGID makes the
+      effective GID that of the group, regardless of who starts the program.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.5", lesson: 1, section: Set UID }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [suid, sgid]
