@@ -1,0 +1,1026 @@
+# 104.2 Maintain the integrity of filesystems — weight 2 → 20 holdout + 10 practice.
+# Original questions written from LPI Learning Materials 101-500, objective 104.2, lesson 1.
+schema_version: 1
+exam: "101"
+objective: "104.2"
+questions:
+  # ---------------------------------------------------------------- holdout (mock exams only)
+
+  - id: 101-104.2-0001
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: >
+      Which command reports, for every mounted filesystem, its total size, the space used and the
+      space still available?
+    options:
+      - id: a
+        text: "`du`"
+        rationale: Wrong. du adds up the space used by files and directories; it does not report free space per filesystem.
+      - id: b
+        text: "`df`"
+        rationale: Correct. df lists each mounted filesystem with its size, used and available space, use percentage and mount point.
+      - id: c
+        text: "`fsck -N`"
+        rationale: Wrong. fsck -N only prints which checker fsck would run, without running it.
+      - id: d
+        text: "`dumpe2fs`"
+        rationale: Wrong. dumpe2fs prints the superblock and block group details of one ext2/3/4 device, not a table of all mounted filesystems.
+    answer: [b]
+    explanation: >
+      df works at the filesystem level: one line per mounted filesystem with size, used, available,
+      use percentage and mount point. du works at the file level and adds up what files and
+      directories occupy.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.2", lesson: 1, section: Checking for Free Space }
+    verify:
+      command: df /
+      expect: { exit_code: 0, stdout_contains: "Mounted on" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [df]
+
+  - id: 101-104.2-0002
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: >
+      An XFS filesystem on `/dev/sdc1` may be damaged. Which utility is meant to check and repair it?
+    options:
+      - id: a
+        text: "`e2fsck`"
+        rationale: Wrong. e2fsck only handles ext2, ext3 and ext4 filesystems.
+      - id: b
+        text: "`xfs_fsr`"
+        rationale: Wrong. xfs_fsr reorganizes (defragments) files on mounted XFS filesystems; it does not repair damage.
+      - id: c
+        text: "`xfs_repair`"
+        rationale: Correct. xfs_repair is the XFS checking and repair tool; with -n it only reports problems.
+      - id: d
+        text: "`xfs_db`"
+        rationale: Wrong. xfs_db is a debugger for examining XFS on-disk structures, not a check-and-repair tool.
+    answer: [c]
+    explanation: >
+      For XFS the role of fsck is played by xfs_repair. The fsck.xfs program that fsck would call
+      normally just exits successfully, because XFS replays its log at mount time; only a forced
+      boot-time check makes it run xfs_repair.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.2", lesson: 1, section: Maintaining XFS Filesystems }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Explanation corrected: fsck.xfs normally exits 0 without checking, but runs xfs_repair on a forced non-interactive boot check." }
+    tags: [xfs_repair, xfs]
+
+  - id: 101-104.2-0003
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: What is `xfs_fsr` used for?
+    options:
+      - id: a
+        text: Checking an unmounted XFS filesystem for corruption
+        rationale: Wrong. That is xfs_repair (with -n to only report).
+      - id: b
+        text: Showing free space and free inodes of each XFS filesystem
+        rationale: Wrong. df (and df -i) report space and inode usage.
+      - id: c
+        text: Changing the label or UUID of an XFS filesystem
+        rationale: Wrong. That is done with xfs_admin.
+      - id: d
+        text: Reorganizing fragmented files on mounted XFS filesystems
+        rationale: Correct. xfs_fsr is the XFS filesystem reorganizer, a defragmenter that works on mounted filesystems.
+    answer: [d]
+    explanation: >
+      xfs_fsr ("filesystem reorganizer") defragments files on mounted XFS filesystems. Run without
+      arguments it works through the XFS filesystems listed in /etc/mtab for up to two hours,
+      remembering where it stopped for the next run.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.2", lesson: 1, section: Maintaining XFS Filesystems }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [xfs_fsr, xfs]
+
+  - id: 101-104.2-0004
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      Users cannot create new files under `/home`, and you suspect the filesystem has run out of
+      inodes rather than space. Which command shows inode usage for each mounted filesystem?
+    options:
+      - id: a
+        text: "`df -i`"
+        rationale: Correct. -i makes df report total, used and free inodes and IUse% instead of blocks.
+      - id: b
+        text: "`df -T`"
+        rationale: Wrong. -T adds a filesystem type column; the figures are still blocks.
+      - id: c
+        text: "`du -a /home`"
+        rationale: Wrong. du -a lists the space used by every file under /home, not inode counts per filesystem.
+      - id: d
+        text: "`df -h`"
+        rationale: Wrong. -h only prints block usage in human-readable units.
+    answer: [a]
+    explanation: >
+      Every file needs an inode, so a filesystem can refuse new files while it still has free
+      blocks. df -i shows the Inodes, IUsed, IFree and IUse% columns for each filesystem.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.2", lesson: 1, section: Checking for Free Space }
+    verify:
+      command: df -i / | head -n 1
+      expect: { exit_code: 0, stdout_contains: "IUse%" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [df, inodes]
+
+  - id: 101-104.2-0005
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      You need to check and repair the ext4 filesystem on `/dev/sdb1`, which is currently mounted
+      on `/srv/data`. What must you do before running `e2fsck` on it?
+    options:
+      - id: a
+        text: Remount it read-write with `mount -o remount,rw`
+        rationale: Wrong. A read-write mount is exactly what makes a repair unsafe; e2fsck refuses to repair a mounted filesystem.
+      - id: b
+        text: Run `sync` to flush pending writes
+        rationale: Wrong. sync flushes buffers, but the filesystem stays mounted and in use, so repairing it is still unsafe.
+      - id: c
+        text: Unmount it
+        rationale: Correct. Checkers must work on an unmounted filesystem; running a repair on a mounted one can destroy data.
+      - id: d
+        text: Set a check interval with `tune2fs -i`
+        rationale: Wrong. That only schedules periodic checks; it does not make a check of a mounted filesystem safe.
+    answer: [c]
+    explanation: >
+      Never run fsck, e2fsck or xfs_repair in repair mode on a mounted filesystem: the kernel and the
+      checker would both change the same metadata. e2fsck aborts with "is mounted. Cannot
+      continue" when asked to repair a mounted filesystem.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.2", lesson: 1, section: "Maintaining ext2, ext3 and ext4 Filesystems" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [e2fsck, fsck, umount]
+
+  - id: 101-104.2-0006
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      `/var` is filling up. Which command shows how much space each directory directly under `/var`
+      takes up, including everything inside it?
+    options:
+      - id: a
+        text: "`df -h /var`"
+        rationale: Wrong. df reports the whole filesystem that holds /var, not individual directories.
+      - id: b
+        text: "`ls -lh /var`"
+        rationale: Wrong. For a directory, ls shows the size of the directory entry itself (often 4.0K), not of its contents.
+      - id: c
+        text: "`df -i /var`"
+        rationale: Wrong. This shows inode usage of the filesystem holding /var.
+      - id: d
+        text: "`du -h -d 1 /var`"
+        rationale: Correct. du adds up each directory's contents; -d 1 limits the listing to one level below /var.
+    answer: [d]
+    explanation: >
+      du sums the space used by files recursively. -d N (--max-depth=N) controls how many levels of
+      directories are printed, while deeper levels are still counted in their parents' totals.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.2", lesson: 1, section: Checking Disk Usage }
+    verify:
+      command: du -h -d 1 /var | tail -n 1
+      expect: { exit_code: 0, stdout_regex: "/var$" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [du]
+
+  - id: 101-104.2-0007
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      Which utility opens an XFS filesystem at an interactive prompt so you can examine its
+      superblock and other on-disk structures?
+    options:
+      - id: a
+        text: "`xfs_repair`"
+        rationale: Wrong. xfs_repair runs its check and repair phases and exits; it has no interactive prompt.
+      - id: b
+        text: "`xfs_db`"
+        rationale: Correct. xfs_db is the XFS debugger, with its own prompt and commands (help lists them).
+      - id: c
+        text: "`xfs_fsr`"
+        rationale: Wrong. xfs_fsr defragments files; it does not inspect metadata.
+      - id: d
+        text: "`debugfs`"
+        rationale: Wrong. debugfs is the interactive debugger for ext2/3/4, not XFS.
+    answer: [b]
+    explanation: >
+      xfs_db is mostly used to inspect XFS structures, for example `xfs_db -r -c frag /dev/sdc1`
+      for a fragmentation report. -r opens the device read-only, which is required when the
+      filesystem is mounted.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.2", lesson: 1, section: Maintaining XFS Filesystems }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [xfs_db, xfs]
+
+  - id: 101-104.2-0008
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      Which tool lets you list directories and display an inode's details on an unmounted ext4
+      filesystem, working directly on the device?
+    options:
+      - id: a
+        text: "`debugfs`"
+        rationale: Correct. debugfs is the ext2/3/4 debugger, with commands such as ls and stat; it opens the filesystem read-only unless given -w.
+      - id: b
+        text: "`dumpe2fs`"
+        rationale: Wrong. dumpe2fs prints superblock and block group information only; it cannot list directories or show a file's inode.
+      - id: c
+        text: "`tune2fs`"
+        rationale: Wrong. tune2fs shows (-l) and changes superblock parameters; it does not browse files.
+      - id: d
+        text: "`xfs_db`"
+        rationale: Wrong. xfs_db works on XFS filesystems only.
+    answer: [a]
+    explanation: >
+      debugfs works on the raw device, so the filesystem does not need to be mounted. For example,
+      `debugfs -R 'ls -l /' /dev/sdb1` lists the root directory with inode numbers, and `stat` shows
+      an inode. It opens the filesystem read-only unless -w is given.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.2", lesson: 1, section: Fine Tuning an ext Filesystem }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [debugfs, ext4]
+
+  - id: 101-104.2-0009
+    type: multi_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      Which **TWO** commands display superblock information, such as the mount count, block count
+      and feature list, of the ext4 filesystem on `/dev/sdb1` without changing anything?
+    select_count: 2
+    options:
+      - id: a
+        text: "`tune2fs -C 0 /dev/sdb1`"
+        rationale: Wrong. -C sets the current mount count (here to 0), so it changes the superblock.
+      - id: b
+        text: "`tune2fs -l /dev/sdb1`"
+        rationale: Correct. -l lists the superblock contents, such as mount count, block count and features.
+      - id: c
+        text: "`e2fsck -n /dev/sdb1`"
+        rationale: Wrong. This runs a read-only check; it prints a summary of files and blocks, not the superblock fields.
+      - id: d
+        text: "`dumpe2fs -h /dev/sdb1`"
+        rationale: Correct. -h limits dumpe2fs to the superblock information, without the per-group details.
+    answer: [b, d]
+    explanation: >
+      tune2fs -l and dumpe2fs -h print the same superblock fields. Without -h, dumpe2fs also lists
+      every block group, including where the backup superblocks are.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.2", lesson: 1, section: Fine Tuning an ext Filesystem }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [tune2fs, dumpe2fs, superblock]
+
+  - id: 101-104.2-0010
+    type: fill_in
+    difficulty: 3
+    pool: holdout
+    stem: >
+      `e2fsck /dev/sdb1` prints `/dev/sdb1: clean, ...` and exits without checking anything. Type
+      the `e2fsck` option that makes it check the filesystem even though it is marked clean.
+    fill_in:
+      accepted: ['((sudo\s+)?((/usr)?/s?bin/)?(e2fsck|fsck(\.ext[234])?)\s+)?-(f[npy]?|[npy]f)(\s+/dev/sdb1)?']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      A filesystem that was unmounted cleanly is flagged "clean", and e2fsck skips it unless -f
+      (force) is given. -f is often combined with -n (report only) or -y (fix everything).
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.2", lesson: 1, section: "Maintaining ext2, ext3 and ext4 Filesystems" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Also accept -f combined with -n, -p or -y (e.g. -fy), which also force the check." }
+    tags: [e2fsck]
+
+  - id: 101-104.2-0011
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      A busy database server must repair the unmounted XFS filesystem on `/dev/sdc1` without
+      letting `xfs_repair` take most of the RAM. Which command caps its memory use at about
+      2048 MB?
+    options:
+      - id: a
+        text: "`xfs_repair -l 2048 /dev/sdc1`"
+        rationale: Wrong. -l names the device that holds an external log; 2048 is not a device.
+      - id: b
+        text: "`xfs_repair -r 2048 /dev/sdc1`"
+        rationale: Wrong. -r names the device of the filesystem's realtime section.
+      - id: c
+        text: "`xfs_repair -t 2048 /dev/sdc1`"
+        rationale: Wrong. -t sets the interval, in seconds, between progress reports.
+      - id: d
+        text: "`xfs_repair -m 2048 /dev/sdc1`"
+        rationale: Correct. -m sets the approximate maximum memory, in megabytes, that xfs_repair uses.
+    answer: [d]
+    explanation: >
+      Left alone, xfs_repair lets its internal cache grow to about 75% of physical RAM (or the
+      process's address-space limit). -m maxmem overrides that limit, which is useful on servers
+      still running other services.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.2", lesson: 1, section: Maintaining XFS Filesystems }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Rewritten: the original (xfs_repair -n to check without changes) restated a lesson Guided Exercise; now tests -m against -l, -r, -t." }
+    tags: [xfs_repair, xfs]
+
+  - id: 101-104.2-0012
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      Which command lists space usage for the mounted filesystems but leaves out every filesystem of
+      type `tmpfs`?
+    options:
+      - id: a
+        text: "`df -t tmpfs`"
+        rationale: Wrong. -t keeps only filesystems of the given type, so this shows nothing but tmpfs.
+      - id: b
+        text: "`df -x tmpfs`"
+        rationale: Correct. -x (--exclude-type) removes filesystems of the given type from the listing.
+      - id: c
+        text: "`df -T tmpfs`"
+        rationale: Wrong. -T only adds a type column; "tmpfs" is then read as a file name and df reports that it does not exist.
+      - id: d
+        text: "`du -x tmpfs`"
+        rationale: Wrong. du -x stays on one filesystem while summing a directory; here it would look for a file named tmpfs.
+    answer: [b]
+    explanation: >
+      df -t TYPE shows only filesystems of that type, df -x TYPE hides them, and df -T prints the
+      type of each filesystem as an extra column.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.2", lesson: 1, section: Checking for Free Space }
+    verify:
+      command: df -x tmpfs -x devtmpfs | head -n 1
+      expect: { exit_code: 0, stdout_contains: "Filesystem" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [df]
+
+  - id: 101-104.2-0013
+    type: fill_in
+    difficulty: 3
+    pool: holdout
+    stem: >
+      Complete the command so that the ext4 filesystem on `/dev/sdb1` is checked after every 30
+      mounts: `tune2fs ___ 30 /dev/sdb1`. Type the missing option.
+    fill_in:
+      accepted:
+        - '-c'
+        - '((sudo\s+)?((/usr)?/s?bin/)?tune2fs\s+)?-c\s*30(\s+/dev/sdb1)?'
+      match: regex
+      case_sensitive: true
+    explanation: >
+      tune2fs -c sets the maximum mount count; when the mount count reaches it, the filesystem is
+      checked the next time e2fsck runs in preen mode at boot. -C (capital) sets the current mount
+      count instead, and -c 0 or -c -1 turns the mount-count check off.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.2", lesson: 1, section: Fine Tuning an ext Filesystem }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [tune2fs, mount-count]
+
+  - id: 101-104.2-0014
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      A mail spool on `/dev/sdd1` refuses new files, as shown below. What is the cause?
+    exhibit: |
+      $ touch /srv/spool/msg.0054
+      touch: cannot touch '/srv/spool/msg.0054': No space left on device
+      $ df -h /srv/spool
+      Filesystem      Size  Used Avail Use% Mounted on
+      /dev/sdd1        28M   24K   26M   1% /srv/spool
+      $ df -i /srv/spool
+      Filesystem     Inodes IUsed IFree IUse% Mounted on
+      /dev/sdd1          64    64     0  100% /srv/spool
+    options:
+      - id: a
+        text: The blocks reserved for root are used up
+        rationale: Wrong. 26M is still available to ordinary users, so the reserved blocks are not the limit.
+      - id: b
+        text: The filesystem was remounted read-only after an error
+        rationale: Wrong. A read-only filesystem fails with "Read-only file system", not "No space left on device".
+      - id: c
+        text: The filesystem has no free inodes left
+        rationale: Correct. IFree is 0 and IUse% is 100%, and every new file needs an inode, so creation fails despite free blocks.
+      - id: d
+        text: The journal is full and must be replayed by e2fsck
+        rationale: Wrong. A busy journal does not cause this error, and df shows nothing about the journal.
+    answer: [c]
+    explanation: >
+      The kernel reports a lack of inodes with the same "No space left on device" error as a lack of
+      blocks. Always check df -i as well as df -h. Freeing space means deleting files; on ext4 the
+      number of inodes is fixed when the filesystem is created.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.2", lesson: 1, section: Checking for Free Space }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [df, inodes, troubleshooting]
+
+  - id: 101-104.2-0015
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      A forced check of the unmounted ext4 filesystem on `/dev/sdb1` stops with the output below.
+      Which command should you run next to repair the filesystem?
+    exhibit: |
+      # e2fsck -f -p /dev/sdb1
+      /dev/sdb1: Entry 'docs' in / (2) has deleted/unused inode 13.  CLEARED.
+      /dev/sdb1: Inode 2 ref count is 4, should be 3.  FIXED.
+      /dev/sdb1: Unattached inode 14
+
+
+      /dev/sdb1: UNEXPECTED INCONSISTENCY; RUN fsck MANUALLY.
+              (i.e., without -a or -p options)
+      # echo $?
+      4
+    options:
+      - id: a
+        text: "`e2fsck -f -y /dev/sdb1`"
+        rationale: Correct. -y answers yes to every question, so e2fsck also fixes the problems that preen mode refuses to handle alone.
+      - id: b
+        text: "`e2fsck -f -n /dev/sdb1`"
+        rationale: Wrong. -n opens the filesystem read-only and answers no to everything, so nothing gets repaired.
+      - id: c
+        text: "`tune2fs -C 0 /dev/sdb1`"
+        rationale: Wrong. This only resets the mount count; the inconsistency stays.
+      - id: d
+        text: "`e2fsck -f -p /dev/sdb1`"
+        rationale: Wrong. Preen mode stops at the same problem again, because it needs a decision that -p will not make.
+    answer: [a]
+    explanation: >
+      -p ("preen") fixes only problems that are safe to fix without asking. When it meets one that
+      needs a decision, it stops with exit status 4. Running e2fsck without -p, interactively or
+      with -y, finishes the job: here it reconnects the unattached inode into lost+found.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.2", lesson: 1, section: "Maintaining ext2, ext3 and ext4 Filesystems" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [e2fsck, troubleshooting]
+
+  - id: 101-104.2-0016
+    type: multi_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      A system has the `/etc/fstab` shown below. For which **TWO** filesystems does `fsck -A -R`
+      run a checker?
+    exhibit: |
+      # device    mount point  type  options   dump  pass
+      /dev/sda2   /            ext4  defaults  0     1
+      /dev/sda3   /srv         ext4  defaults  0     2
+      /dev/sda4   /var/cache   ext4  defaults  0     0
+      /dev/sdb1   /data        ext4  defaults  0     2
+    select_count: 2
+    options:
+      - id: a
+        text: "`/srv`"
+        rationale: Correct. Its pass number is 2, so fsck -A checks it, and -R only skips the root filesystem.
+      - id: b
+        text: "`/`"
+        rationale: Wrong. -R tells fsck -A to skip the root filesystem.
+      - id: c
+        text: "`/data`"
+        rationale: Correct. Pass number 2 and not the root filesystem, so it is checked.
+      - id: d
+        text: "`/var/cache`"
+        rationale: Wrong. A pass number of 0 (the sixth field) means fsck -A never checks it.
+    answer: [a, c]
+    explanation: >
+      fsck -A walks /etc/fstab and checks every entry whose sixth field (pass number) is not 0,
+      lower numbers first. -R, used with -A, leaves out the root filesystem, which is typically
+      already mounted read-write. `fsck -A -R -N` shows the plan without running anything.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.2", lesson: 1, section: "Maintaining ext2, ext3 and ext4 Filesystems" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [fsck, fstab]
+
+  - id: 101-104.2-0017
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      After a crash, `xfs_repair` refuses to repair the XFS filesystem on `/dev/sdc1`, as shown
+      below. What should you try first?
+    exhibit: |
+      # xfs_repair /dev/sdc1
+      Phase 1 - find and verify superblock...
+      Phase 2 - using internal log
+              - zero log...
+      ERROR: The filesystem has valuable metadata changes in a log which needs to
+      be replayed.  Mount the filesystem to replay the log, and unmount it before
+      re-running xfs_repair.  If you are unable to mount the filesystem, then use
+      the -L option to destroy the log and attempt a repair.
+      Note that destroying the log may cause corruption -- please attempt a mount
+      of the filesystem before doing this.
+    options:
+      - id: a
+        text: Run `xfs_repair -L /dev/sdc1`
+        rationale: Wrong. Zeroing the log throws away the pending metadata changes; it is the last resort if mounting fails.
+      - id: b
+        text: Mount the filesystem, unmount it, then run `xfs_repair` again
+        rationale: Correct. Mounting replays the log; after a clean unmount xfs_repair can do its work.
+      - id: c
+        text: Run `xfs_repair -n /dev/sdc1`
+        rationale: Wrong. -n ignores the dirty log and repairs nothing, so it may also report spurious errors.
+      - id: d
+        text: Run `xfs_fsr /dev/sdc1`
+        rationale: Wrong. xfs_fsr defragments files; it neither replays logs nor repairs.
+    answer: [b]
+    explanation: >
+      xfs_repair cannot work on a filesystem whose log still holds changes. The kernel replays the
+      log when the filesystem is mounted, so mount and unmount it first. Only if it cannot be mounted
+      do you fall back to xfs_repair -L, accepting possible data loss.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.2", lesson: 1, section: Maintaining XFS Filesystems }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [xfs_repair, xfs, log, troubleshooting]
+
+  - id: 101-104.2-0018
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      An hour ago an administrator deleted a 30 MB log file in `/var/log`, which is its own
+      filesystem, while the logging service kept running. What explains the output below?
+    exhibit: |
+      # df -h /var/log
+      Filesystem      Size  Used Avail Use% Mounted on
+      /dev/sdb2        56M   31M   25M  56% /var/log
+      # du -sh /var/log
+      20K     /var/log
+    options:
+      - id: a
+        text: du does not count the blocks reserved for root, but df does
+        rationale: Wrong. df does not count reserved blocks as used either; they are only missing from Avail.
+      - id: b
+        text: du skips hidden files whose names start with a dot
+        rationale: Wrong. du counts every file it can reach, including dot files.
+      - id: c
+        text: The service still holds the deleted file open, so its blocks are not freed yet
+        rationale: Correct. A deleted file's blocks are released only when the last process closes it; du cannot see it because it has no name.
+      - id: d
+        text: df reads usage from the journal, which is updated only at the next fsck
+        rationale: Wrong. df gets the counts from the kernel (statfs), and they are current; no fsck is involved.
+    answer: [c]
+    explanation: >
+      du adds up the files it finds through directories; df asks the kernel how many blocks the
+      filesystem has in use. A file that was deleted but is still open has no directory entry, yet
+      its blocks remain allocated until the process closes it or exits. Restarting the service (or
+      finding it with `lsof +L1`) releases the space.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.2", lesson: 1, section: Checking for Free Space }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [df, du, troubleshooting]
+
+  - id: 101-104.2-0019
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      The primary superblock of the unmounted ext4 filesystem on `/dev/sdb1` is damaged. The
+      filesystem was created with default settings. Given the output below, which command repairs
+      the filesystem using a backup superblock?
+    exhibit: |
+      # dumpe2fs -h /dev/sdb1
+      dumpe2fs 1.47.0 (5-Feb-2023)
+      dumpe2fs: Bad magic number in super-block while trying to open /dev/sdb1
+      Couldn't find valid filesystem superblock.
+      # mke2fs -n /dev/sdb1
+      mke2fs 1.47.0 (5-Feb-2023)
+      Creating filesystem with 262144 4k blocks and 65536 inodes
+      Filesystem UUID: 422b3f14-de19-405d-9dd7-b52022b80c9b
+      Superblock backups stored on blocks:
+              32768, 98304, 163840, 229376
+    options:
+      - id: a
+        text: "`mke2fs -b 32768 /dev/sdb1`"
+        rationale: Wrong. Without -n, mke2fs creates a new, empty filesystem (-b sets a block size), destroying the data.
+      - id: b
+        text: "`e2fsck -B 32768 /dev/sdb1`"
+        rationale: Wrong. -B gives the block size to use when searching for a superblock; it does not select a superblock.
+      - id: c
+        text: "`dumpe2fs -o superblock=32768 /dev/sdb1`"
+        rationale: Wrong. This only displays the filesystem using the backup; dumpe2fs never repairs anything.
+      - id: d
+        text: "`e2fsck -b 32768 /dev/sdb1`"
+        rationale: Correct. -b makes e2fsck read the backup superblock at block 32768 and write a corrected primary when it finishes.
+    answer: [d]
+    explanation: >
+      mke2fs -n only prints what it would do, including where the backup superblocks would be,
+      which matches an existing filesystem made with the same settings. e2fsck -b uses one of
+      them and, after the check, updates the primary superblock.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.2", lesson: 1, section: "Maintaining ext2, ext3 and ext4 Filesystems" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [e2fsck, mke2fs, dumpe2fs, superblock]
+
+  - id: 101-104.2-0020
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      The ext4 filesystem on `/dev/sdd1` holds millions of tiny files and keeps running out of
+      inodes while most blocks are free. The partition cannot be enlarged. Which plan gives it
+      more inodes?
+    options:
+      - id: a
+        text: Back up the data, run `mke2fs -t ext4 -i 4096 /dev/sdd1`, then restore
+        rationale: Correct. The inode count of ext4 is fixed at creation; -i 4096 creates one inode per 4 KiB of space, many more than the default.
+      - id: b
+        text: Unmount it, run `tune2fs -I 512 /dev/sdd1`, then mount it again
+        rationale: Wrong. -I changes the size of each inode, not how many there are.
+      - id: c
+        text: Run `tune2fs -m 0 /dev/sdd1` and remount the filesystem
+        rationale: Wrong. -m sets the percentage of blocks reserved for root; it frees blocks, not inodes.
+      - id: d
+        text: Unmount it, run `e2fsck -f -y /dev/sdd1`, then mount it again
+        rationale: Wrong. e2fsck repairs inconsistencies; it never adds inodes.
+    answer: [a]
+    explanation: >
+      ext2/3/4 allocate all inode tables when the filesystem is made, so the count can only be
+      changed by recreating it (mke2fs -i bytes-per-inode or -N number-of-inodes) or by growing it.
+      Plan the inode density with mke2fs for filesystems that will hold many small files.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.2", lesson: 1, section: Fine Tuning an ext Filesystem }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [mke2fs, tune2fs, inodes]
+
+  # --------------------------------------------------------------------------- practice (CLI)
+
+  - id: 101-104.2-0021
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: On a typical Linux system, what is `/sbin/fsck.ext4`?
+    options:
+      - id: a
+        text: A separate checker that only understands ext4
+        rationale: Wrong. ext2, ext3 and ext4 share one checker.
+      - id: b
+        text: A link to `e2fsck`
+        rationale: Correct. fsck.ext2, fsck.ext3 and fsck.ext4 are links to e2fsck.
+      - id: c
+        text: A script that runs `tune2fs` before checking
+        rationale: Wrong. It is not a script, and tune2fs is not involved in checking.
+      - id: d
+        text: A link to `xfs_repair`
+        rationale: Wrong. xfs_repair handles XFS, and fsck.xfs is a separate small program, not a link to it.
+    answer: [b]
+    explanation: >
+      e2fsck is the checker for the ext family. The fsck.ext2/3/4 names exist so the generic fsck
+      front end can find it by filesystem type.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.2", lesson: 1, section: "Maintaining ext2, ext3 and ext4 Filesystems" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Rationale for d corrected (fsck.xfs is not purely do-nothing); verify block removed, e2fsprogs may be missing from debian:stable-slim." }
+    tags: [fsck, e2fsck]
+
+  - id: 101-104.2-0022
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: What does the `fsck` command do when you run `fsck /dev/sdb1`?
+    options:
+      - id: a
+        text: It checks the filesystem with code built into fsck itself
+        rationale: Wrong. fsck contains no checking code of its own for any filesystem.
+      - id: b
+        text: It mounts the filesystem read-only and scans every file
+        rationale: Wrong. Filesystem checkers work on the unmounted device, not through a mount.
+      - id: c
+        text: It works out the filesystem type and runs the matching checker
+        rationale: Correct. fsck is a front end that runs fsck.<type>, such as fsck.ext4 (e2fsck).
+      - id: d
+        text: It checks the device only if it is listed in `/etc/fstab`
+        rationale: Wrong. A device named on the command line is checked whether or not fstab lists it.
+    answer: [c]
+    explanation: >
+      fsck determines the type (from -t, /etc/fstab or by probing the device) and runs the
+      type-specific program, e.g. fsck.ext4, which is e2fsck. You can also run that program
+      directly.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.2", lesson: 1, section: "Maintaining ext2, ext3 and ext4 Filesystems" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [fsck]
+
+  - id: 101-104.2-0023
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: >
+      Which command changes how many times an ext4 filesystem can be mounted before it is checked
+      automatically?
+    options:
+      - id: a
+        text: "`mke2fs`"
+        rationale: Wrong. mke2fs creates a new filesystem; it is not used to change an existing one.
+      - id: b
+        text: "`dumpe2fs`"
+        rationale: Wrong. dumpe2fs only displays superblock and block group information.
+      - id: c
+        text: "`e2fsck`"
+        rationale: Wrong. e2fsck performs the check; it does not set the schedule.
+      - id: d
+        text: "`tune2fs`"
+        rationale: Correct. tune2fs -c sets the maximum mount count (and -i a time interval).
+    answer: [d]
+    explanation: >
+      tune2fs adjusts ext2/3/4 parameters stored in the superblock: maximum mount count (-c),
+      current mount count (-C), check interval (-i), label (-L), UUID (-U), error behaviour (-e)
+      and more.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.2", lesson: 1, section: Fine Tuning an ext Filesystem }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [tune2fs]
+
+  - id: 101-104.2-0024
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: Which command creates a new ext4 filesystem on `/dev/sdc1`?
+    options:
+      - id: a
+        text: "`mke2fs -t ext4 /dev/sdc1`"
+        rationale: Correct. mke2fs makes ext2/3/4 filesystems, and -t selects the type (mkfs.ext4 does the same).
+      - id: b
+        text: "`tune2fs -O ext4 /dev/sdc1`"
+        rationale: Wrong. -O switches individual features of an existing filesystem; "ext4" is not a feature name and is rejected.
+      - id: c
+        text: "`e2fsck -c /dev/sdc1`"
+        rationale: Wrong. This checks an existing filesystem and scans for bad blocks; it creates nothing.
+      - id: d
+        text: "`fsck -t ext4 /dev/sdc1`"
+        rationale: Wrong. This checks an existing ext4 filesystem.
+    answer: [a]
+    explanation: >
+      mke2fs (also called as mkfs.ext2, mkfs.ext3 and mkfs.ext4) builds a new ext filesystem. It
+      erases whatever was there, so make sure the device is the right one.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.2", lesson: 1, section: "Maintaining ext2, ext3 and ext4 Filesystems" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [mke2fs]
+
+  - id: 101-104.2-0025
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: >
+      `/dev/sdc1` holds an unmounted XFS filesystem. Running `fsck` on it gives the output below.
+      Which command actually checks it?
+    exhibit: |
+      # fsck /dev/sdc1
+      fsck from util-linux 2.39.3
+      If you wish to check the consistency of an XFS filesystem or
+      repair a damaged filesystem, see xfs_repair(8).
+      # echo $?
+      0
+    options:
+      - id: a
+        text: "`e2fsck -f /dev/sdc1`"
+        rationale: Wrong. e2fsck only understands ext2/3/4 and fails to find an ext superblock.
+      - id: b
+        text: "`fsck -N /dev/sdc1`"
+        rationale: Wrong. -N only prints which checker fsck would run (fsck.xfs) and runs nothing.
+      - id: c
+        text: "`xfs_repair -n /dev/sdc1`"
+        rationale: Correct. xfs_repair checks XFS; -n reports problems without changing anything.
+      - id: d
+        text: "`xfs_fsr /dev/sdc1`"
+        rationale: Wrong. xfs_fsr defragments mounted XFS filesystems; it does not check consistency.
+    answer: [c]
+    explanation: >
+      fsck runs fsck.xfs for XFS, and fsck.xfs normally exits successfully without checking,
+      because XFS replays its log when mounted. Consistency checks and repairs are done with
+      xfs_repair.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.2", lesson: 1, section: Maintaining XFS Filesystems }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Option b changed from fsck -f to fsck -N: fsck.xfs -f runs xfs_repair when stdin is not a terminal, so it was arguably right." }
+    tags: [fsck, xfs_repair, xfs]
+
+  - id: 101-104.2-0026
+    type: fill_in
+    difficulty: 3
+    pool: practice
+    stem: >
+      `du /srv` prints a line for every subdirectory. Type the `du` option that prints only one total
+      line for each argument.
+    fill_in:
+      accepted: ['((sudo\s+)?((/usr)?/bin/)?du\s+)?((-h|--human-readable)\s+)?(-s|-sh|-hs|--summarize|-d\s*0|--max-depth(=|\s+)0)(\s+(-h|--human-readable))?(\s+(?!-)\S+)*']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      -s (--summarize) prints just the total for each file or directory named, e.g. `du -sh /srv`;
+      -d 0 (--max-depth=0) has the same effect.
+      Do not confuse it with -S (--separate-dirs), which excludes subdirectories from each
+      directory's own figure.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.2", lesson: 1, section: Checking Disk Usage }
+    verify:
+      command: du -s /etc | wc -l
+      expect: { exit_code: 0, stdout_regex: "^1\\s*$" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Also accept -d 0 / --max-depth=0 (same single-line result) and forms with -h." }
+    tags: [du]
+
+  - id: 101-104.2-0027
+    type: single_choice
+    difficulty: 3
+    pool: practice
+    stem: >
+      You want the kernel to remount the ext4 filesystem on `/dev/sdb1` read-only as soon as it
+      detects an error on it. Which command sets this up?
+    options:
+      - id: a
+        text: "`tune2fs -e continue /dev/sdb1`"
+        rationale: Wrong. continue (the usual default) tells the kernel to carry on normally after an error.
+      - id: b
+        text: "`tune2fs -o remount-ro /dev/sdb1`"
+        rationale: Wrong. -o sets default mount options, and remount-ro is not one of them; tune2fs rejects it.
+      - id: c
+        text: "`e2fsck -p /dev/sdb1`"
+        rationale: Wrong. This checks and preens the filesystem; it sets no error behaviour.
+      - id: d
+        text: "`tune2fs -e remount-ro /dev/sdb1`"
+        rationale: Correct. -e sets the error behaviour stored in the superblock to continue, remount-ro or panic.
+    answer: [d]
+    explanation: >
+      The error behaviour is stored in the superblock (tune2fs -l shows it as "Errors behavior").
+      remount-ro stops further writes as soon as an error is detected; panic halts the system.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.2", lesson: 1, section: Fine Tuning an ext Filesystem }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [tune2fs]
+
+  - id: 101-104.2-0028
+    type: single_choice
+    difficulty: 3
+    pool: practice
+    stem: >
+      `debugfs` refuses to change the unmounted ext4 filesystem on `/dev/sdb1`, as shown below.
+      Which option must you add so that it opens the filesystem read-write?
+    exhibit: |
+      # debugfs -R 'rm /a.txt' /dev/sdb1
+      debugfs 1.47.0 (5-Feb-2023)
+      rm: Filesystem opened read/only
+    options:
+      - id: a
+        text: "`-c`"
+        rationale: Wrong. -c opens the filesystem in catastrophic mode, which is always read-only.
+      - id: b
+        text: "`-w`"
+        rationale: Correct. -w opens the filesystem read-write; without it debugfs is read-only.
+      - id: c
+        text: "`-R`"
+        rationale: Wrong. -R runs a single debugfs command and exits; it is already in use here.
+      - id: d
+        text: "`-f`"
+        rationale: Wrong. -f reads debugfs commands from a file; it does not change the open mode.
+    answer: [b]
+    explanation: >
+      debugfs is read-only by default so that inspecting a filesystem cannot damage it. Writing
+      needs -w, and e2fsck should be run after any change made with debugfs.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.2", lesson: 1, section: Fine Tuning an ext Filesystem }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [debugfs]
+
+  - id: 101-104.2-0029
+    type: single_choice
+    difficulty: 4
+    pool: practice
+    stem: What does the exit status in the output below mean?
+    exhibit: |
+      # e2fsck -f -y /dev/sdb1
+      e2fsck 1.47.0 (5-Feb-2023)
+      Pass 1: Checking inodes, blocks, and sizes
+      Pass 2: Checking directory structure
+      Pass 3: Checking directory connectivity
+      Pass 4: Checking reference counts
+      Pass 5: Checking group summary information
+      Inode bitmap differences: Group 1 inode bitmap does not match checksum.
+      FIXED.
+
+      /dev/sdb1: ***** FILE SYSTEM WAS MODIFIED *****
+      /dev/sdb1: 11/65536 files (0.0% non-contiguous), 8268/65536 blocks
+      # echo $?
+      1
+    options:
+      - id: a
+        text: Errors were found and corrected
+        rationale: Correct. Exit status 1 means e2fsck corrected filesystem errors.
+      - id: b
+        text: Errors were found and left uncorrected
+        rationale: Wrong. That is exit status 4.
+      - id: c
+        text: e2fsck hit an operational error, such as a mounted device
+        rationale: Wrong. That is exit status 8.
+      - id: d
+        text: Errors were corrected and the system should be rebooted
+        rationale: Wrong. That is exit status 2, used mainly when the root filesystem was repaired.
+    answer: [a]
+    explanation: >
+      e2fsck's exit status is a sum of flags: 0 no errors, 1 errors corrected, 2 corrected and a
+      reboot is needed, 4 errors left uncorrected, 8 operational error, 16 usage error, 32 cancelled
+      by the user. Boot scripts use it to decide what to do next.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.2", lesson: 1, section: "Maintaining ext2, ext3 and ext4 Filesystems" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [e2fsck, exit-status]
+
+  - id: 101-104.2-0030
+    type: single_choice
+    difficulty: 4
+    pool: practice
+    stem: Which command produced the output below?
+    exhibit: |
+      Mounted on     Type IUse%
+      /srv/spool     ext4  100%
+    options:
+      - id: a
+        text: "`df -iT /srv/spool`"
+        rationale: Wrong. This prints the device name, type, inode counts, IUse% and mount point, not just these three columns.
+      - id: b
+        text: "`df --output=target,fstype,ipcent /srv/spool`"
+        rationale: Correct. --output prints exactly the requested fields in order (mount point, type and inode use percentage).
+      - id: c
+        text: "`df --output=target,fstype,pcent /srv/spool`"
+        rationale: Wrong. pcent is the block usage percentage, shown under the header Use%.
+      - id: d
+        text: "`df --output=source,fstype,ipcent /srv/spool`"
+        rationale: Wrong. source is the device, shown under the header Filesystem, not Mounted on.
+    answer: [b]
+    explanation: >
+      df --output=FIELD,... selects and orders the columns. Fields include source, fstype, size,
+      used, avail, pcent and target for space, and itotal, iused, iavail and ipcent for inodes.
+      --output cannot be combined with -i or -T.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.2", lesson: 1, section: Checking for Free Space }
+    verify:
+      command: df --output=target,fstype,ipcent / | head -n 1
+      expect: { exit_code: 0, stdout_regex: "^Mounted on +Type +IUse%" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [df]
