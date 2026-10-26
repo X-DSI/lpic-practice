@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Review · {{ state.mock.id }}{% endblock %}
+{% block main %}
+<h1>{{ state.mock.title or state.mock.id }} — review</h1>
+<p class="hint">For each question: <b>Looks right</b> signs it off; <b>Flag</b> sends it back to the planner.
+<a href="/sessions/{{ session_id }}/results">Results</a> · <a href="/">Mock list</a></p>
+{% for item in items %}
+{% set q = item.q %}{% set a = item.answer %}
+<article class="review {{ 'right' if a.correct else 'wrong' }}" id="{{ q.id }}">
+  <h2>{{ item.number }}. <span class="{{ 'pass' if a.correct else 'fail' }}">{{ "Correct" if a.correct else ("Unanswered" if a.response is none else "Wrong") }}</span> <span class="hint">{{ q.id }}</span></h2>
+  <div class="stem">{{ q.stem|md }}</div>
+  {% if q.exhibit %}<pre class="exhibit">{{ q.exhibit }}</pre>{% endif %}
+  {% if q.type == "fill_in" %}
+    <p>Your answer: <code>{{ a.response if a.response is not none else "—" }}</code></p>
+    <p>Accepted ({{ q.fill_in.match }}{{ ", any case" if not q.fill_in.case_sensitive }}): {% for acc in q.fill_in.accepted %}<code>{{ acc }}</code>{% if not loop.last %}, {% endif %}{% endfor %}</p>
+  {% else %}
+    <ul class="options">
+    {% for o in q.options %}
+      {% set chosen = (a.response == o.id) if q.type == "single_choice" else (a.response and o.id in a.response) %}
+      <li class="{{ 'key' if o.id in q.answer }} {{ 'chosen' if chosen }}">
+        <b>{{ o.id }}.</b> {{ o.text|md }}
+        {% if o.id in q.answer %}<span class="pass">✓ correct</span>{% endif %}{% if chosen %}<span class="hint">(your answer)</span>{% endif %}
+        {% if o.rationale %}<div class="rationale">{{ o.rationale|md }}</div>{% endif %}
+      </li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+  <div class="explanation">{{ q.explanation|md }}</div>
+  {% with session_id=item.session_id, approved=item.approved, flags=item.flags, error=none, form=none %}{% include "_review_actions.html" %}{% endwith %}
+</article>
+{% endfor %}
+{% endblock %}

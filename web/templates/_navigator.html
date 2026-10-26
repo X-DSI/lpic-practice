@@ -1,0 +1,4 @@
+<nav id="navigator" class="navigator" aria-label="Questions">
+  {% for i, answered, marked in navigator %}<a href="/sessions/{{ session_id }}/questions/{{ i }}" class="{{ 'answered' if answered }} {{ 'marked' if marked }} {{ 'current' if i == number }}" title="Question {{ i }}{{ ', answered' if answered }}{{ ', marked for review' if marked }}">{{ i }}</a>{% endfor %}
+  <p class="hint">{{ state.mock.questions|length - state.unanswered }} answered · {{ state.marked_count }} marked{% if saved %} · <span class="saved">saved</span>{% endif %}</p>
+</nav>

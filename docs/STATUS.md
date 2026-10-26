@@ -19,12 +19,12 @@
 
 ## Open handoffs
 
-- [Web mock exam](handoff/2026-10-26-web-mock-exam.md) — timed mocks, LPI-style results, weak
-  areas and holdout review (`lpic serve`).
+None.
 
 Done: [Content build and engine core](handoff/2026-10-23-build-and-engine-core.md) (PR #5),
 [Engine fixes, pass2-ready mocks, and the mock assembler](handoff/2026-10-25-engine-fixes-and-mock-assembler.md) (PR #8),
-[Terminal practice app](handoff/2026-10-25-practice-cli.md) (PR #9; its Outcome has questions for the planner).
+[Terminal practice app](handoff/2026-10-25-practice-cli.md) (PR #9; its Outcome has questions for the planner),
+[Web mock exam](handoff/2026-10-26-web-mock-exam.md) (PR #17; its Outcome has questions for the planner and one manual check for the maintainer).
 
 ## Proposed ADRs awaiting acceptance
 

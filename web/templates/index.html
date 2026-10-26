@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block main %}
+<h1>Mock exams</h1>
+{% if not listing %}<p>No mock exams found. Assemble them with <code>python -m engine.assemble &lt;exam&gt;</code>.</p>{% endif %}
+{% for bank, rows in listing %}
+<section>
+  <h2>Exam {{ bank.exam_code or bank.exam }}</h2>
+  <p class="hint">Mock 1 is the easiest and mock 10 the hardest. Every mock has 60 questions, weighted like the real exam.</p>
+  <table class="mocks">
+    <thead><tr><th>Mock</th><th>Difficulty</th><th>Attempts</th><th>Best</th><th>Last</th><th></th></tr></thead>
+    <tbody>
+    {% for history, finished in rows %}
+      {% set mock = history.mock %}
+      <tr>
+        <td>{{ mock.number }}</td>
+        <td><span class="ramp" aria-label="difficulty {{ mock.number }} of 10">{% for i in range(1, 11) %}<i class="{{ 'on' if i <= mock.number }}"></i>{% endfor %}</span></td>
+        <td>{{ history.attempts }}</td>
+        <td>{{ history.best if history.best is not none else "—" }}</td>
+        <td>{% if history.last is not none %}{{ history.last }} <span class="hint">({{ history.last_date }})</span>{% else %}—{% endif %}</td>
+        <td>
+          <form method="post" action="/mocks/{{ mock.id }}/start">
+            <button type="submit">{{ "Resume" if history.resumable else "Start" }}</button>
+          </form>
+          {% for s in finished %}<a href="/sessions/{{ s.id }}/results">results {{ loop.index }}</a>{% if not loop.last %} · {% endif %}{% endfor %}
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endfor %}
+{% endblock %}
