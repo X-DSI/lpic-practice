@@ -1,0 +1,1455 @@
+# 102.5 Use RPM and YUM package management — weight 3 → 30 holdout + 15 practice.
+# Original questions written from LPI Learning Materials 101-500, objective 102.5, lesson 1.
+schema_version: 1
+exam: "101"
+objective: "102.5"
+questions:
+  # ---------------------------------------------------------------- holdout (mock exams only)
+
+  - id: 101-102.5-0001
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: Which `rpm` option uninstalls a package that is currently installed?
+    options:
+      - id: a
+        text: "`-U`"
+        rationale: Wrong. -U upgrades a package from a package file (or installs it if no version is present).
+      - id: b
+        text: "`-e`"
+        rationale: Correct. -e (--erase) removes an installed package by name.
+      - id: c
+        text: "`-F`"
+        rationale: Wrong. -F freshens, which upgrades a package only if an older version is already installed.
+      - id: d
+        text: "`-V`"
+        rationale: Wrong. -V verifies an installed package's files against the RPM database.
+    answer: [b]
+    explanation: >
+      rpm uses -e ("erase") to remove packages, for example `rpm -e telnet`. It takes the package
+      name, not a file name, and refuses if other installed packages still depend on it.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: "Installing, Upgrading and Removing Packages" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [rpm, rpm-e]
+
+  - id: 101-102.5-0002
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: >
+      On a CentOS server you find a file named `/etc/yum.repos.d/internal.repo`. What is this file
+      for?
+    options:
+      - id: a
+        text: It records which packages were installed from internal sources
+        rationale: Wrong. Installed packages are recorded in the RPM database, not in .repo files.
+      - id: b
+        text: It holds the GPG public key that signs internal packages
+        rationale: Wrong. A .repo file can point to a key with gpgkey=, but keys are kept in separate files (often under /etc/pki/rpm-gpg/).
+      - id: c
+        text: It defines software repositories that yum and dnf can use
+        rationale: Correct. Each .repo file in /etc/yum.repos.d/ defines one or more repositories.
+      - id: d
+        text: It stores global yum settings such as the cache directory
+        rationale: Wrong. Global settings live in the [main] section of /etc/yum.conf (dnf.conf on dnf systems).
+    answer: [c]
+    explanation: >
+      yum and dnf read every *.repo file in /etc/yum.repos.d/. Each file contains one or more
+      sections such as [internal], each defining a repository with a name, a URL and options like
+      enabled= and gpgcheck=.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Managing Software Repositories }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [yum, yum.repos.d]
+
+  - id: 101-102.5-0003
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: >
+      Which tool is the standard command-line package manager, with automatic dependency
+      resolution, on openSUSE and SUSE Linux Enterprise?
+    options:
+      - id: a
+        text: "`dnf`"
+        rationale: Wrong. dnf is the package manager of Fedora and current Red Hat Enterprise Linux.
+      - id: b
+        text: "`yum`"
+        rationale: Wrong. yum comes from the Red Hat family (RHEL 7, CentOS 7 and older).
+      - id: c
+        text: "`rpm`"
+        rationale: Wrong. SUSE uses the RPM format and the rpm tool exists there, but rpm does not resolve dependencies.
+      - id: d
+        text: "`zypper`"
+        rationale: Correct. zypper is the SUSE/openSUSE package manager and resolves dependencies from its repositories.
+    answer: [d]
+    explanation: >
+      openSUSE and SLES use RPM packages, managed day to day with zypper. zypper fetches packages and
+      their dependencies from configured repositories, much like yum/dnf on Red Hat systems.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Zypper }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked. Checked against dnf4/dnf5/zypper docs and source." }
+    tags: [zypper]
+
+  - id: 101-102.5-0004
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: What does the command `rpm -qa` print?
+    options:
+      - id: a
+        text: The full name of every package installed on the system
+        rationale: Correct. -q -a queries all packages in the RPM database and prints name-version-release.arch for each.
+      - id: b
+        text: Every package available in the configured repositories
+        rationale: Wrong. rpm only knows the local database; repositories are handled by yum, dnf or zypper.
+      - id: c
+        text: Every file owned by every installed package
+        rationale: Wrong. That needs the list option as well (rpm -qal).
+      - id: d
+        text: Only the installed packages that have updates available
+        rationale: Wrong. rpm has no notion of available updates; use yum check-update or zypper list-updates.
+    answer: [a]
+    explanation: >
+      -q is query mode and -a means all installed packages. The output is one
+      name-version-release.arch string per package, often piped to grep to look for one package.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Listing Installed Packages }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Removed a verify block that needed the rpm package, which stock debian:stable-slim lacks." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [rpm, rpm-qa]
+
+  - id: 101-102.5-0005
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: Which description fits `dnf`?
+    options:
+      - id: a
+        text: A converter that turns .rpm packages into .deb packages
+        rationale: Wrong. That describes alien, not dnf.
+      - id: b
+        text: The successor of yum, using the same .repo files and similar subcommands
+        rationale: Correct. dnf began as a fork of yum, reads /etc/yum.repos.d/ and keeps most yum subcommands.
+      - id: c
+        text: The low-level tool that installs .rpm files without resolving dependencies
+        rationale: Wrong. That is rpm itself.
+      - id: d
+        text: The openSUSE repository manager that replaced zypper
+        rationale: Wrong. openSUSE still uses zypper; dnf comes from the Fedora/Red Hat side.
+    answer: [b]
+    explanation: >
+      dnf ("Dandified YUM") replaced yum on Fedora and on RHEL 8 and later, where the yum command
+      is kept as a link to dnf. Commands such as install, remove, search, info and repolist work the
+      same way, and repositories are still defined in /etc/yum.repos.d/.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: DNF }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked. Checked against dnf4/dnf5/zypper docs and source." }
+    tags: [dnf, yum]
+
+  - id: 101-102.5-0006
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      On a Rocky Linux host, `/usr/bin/dig` behaves strangely and you suspect the binary was
+      replaced. You want to know which installed package it came from so you can reinstall that
+      package. Which command tells you?
+    options:
+      - id: a
+        text: "`rpm -ql /usr/bin/dig`"
+        rationale: Wrong. -ql expects a package name; given a path it reports that no such package is installed.
+      - id: b
+        text: "`rpm -qi dig`"
+        rationale: Wrong. This queries a package named dig; the program's name is not necessarily its package's name.
+      - id: c
+        text: "`rpm -qf /usr/bin/dig`"
+        rationale: Correct. -qf prints the installed package that owns the given file.
+      - id: d
+        text: "`rpm -qa dig`"
+        rationale: Wrong. This only matches an installed package whose name is dig, so it prints nothing if the package is named differently.
+    answer: [c]
+    explanation: >
+      `rpm -qf FILE` looks the path up in the RPM database and prints the owning package (dig, for
+      example, belongs to bind-utils). If no package owns the file, rpm says so.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Finding Out Which Package Owns a Specific File }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked. Tested with rpm 4.18 in a private --root." }
+    tags: [rpm, rpm-qf]
+
+  - id: 101-102.5-0007
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      On a CentOS 7 server you want to install `htop` from the configured repositories, with any
+      packages it depends on downloaded and installed automatically. Which command does that?
+    options:
+      - id: a
+        text: "`rpm -i htop`"
+        rationale: Wrong. rpm -i needs a package file and never downloads dependencies.
+      - id: b
+        text: "`rpm2cpio htop`"
+        rationale: Wrong. rpm2cpio converts a package file into a cpio archive; it installs nothing.
+      - id: c
+        text: "`zypper in htop`"
+        rationale: Wrong. This is the right idea on openSUSE, but zypper is not CentOS's package manager.
+      - id: d
+        text: "`yum install htop`"
+        rationale: Correct. yum finds htop in the enabled repositories and installs it together with its dependencies.
+    answer: [d]
+    explanation: >
+      yum (dnf on newer releases) works with repositories: it resolves dependencies, downloads every
+      package needed and installs them in one transaction, asking for confirmation first.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: YellowDog Updater Modified (YUM) }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [yum, install]
+
+  - id: 101-102.5-0008
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      Which command makes zypper download fresh repository metadata now, so newly published
+      packages become visible?
+    options:
+      - id: a
+        text: "`zypper refresh`"
+        rationale: Correct. refresh (ref) updates the local copy of the repositories' metadata.
+      - id: b
+        text: "`zypper update`"
+        rationale: Wrong. update installs available package updates; it is not the command for refreshing metadata.
+      - id: c
+        text: "`zypper list-updates`"
+        rationale: Wrong. list-updates shows which updates are available; it does not refresh every repository.
+      - id: d
+        text: "`zypper repos`"
+        rationale: Wrong. repos only lists the configured repositories and their settings.
+    answer: [a]
+    explanation: >
+      zypper keeps a local cache of repository metadata. `zypper refresh` (short form `ref`)
+      refreshes it for all enabled repositories, or only for the ones named on the command line.
+      Repositories with auto-refresh turned on are also refreshed automatically before use.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Updating the Package Index }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Stem reworded away from the lesson's wording." }
+    tags: [zypper, refresh]
+
+  - id: 101-102.5-0009
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      A CentOS user needs a program to convert HEIC photos but does not know which package provides
+      one. Which command searches the repositories for `heic` in package names and summaries?
+    options:
+      - id: a
+        text: "`yum info heic`"
+        rationale: Wrong. info shows details for packages whose name matches heic; it does not search summaries.
+      - id: b
+        text: "`yum search heic`"
+        rationale: Correct. search matches the keyword against package names and summaries.
+      - id: c
+        text: "`yum check-update heic`"
+        rationale: Wrong. check-update reports whether updates are available for installed packages.
+      - id: d
+        text: "`yum list installed heic`"
+        rationale: Wrong. This only shows an installed package named heic.
+    answer: [b]
+    explanation: >
+      `yum search KEYWORD` (and `dnf search`, `zypper search`) is the way to find a package when you
+      know what it does but not what it is called. yum also offers `search all` to look in
+      descriptions and URLs.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Searching for Packages }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Stem reworded away from the lesson's wording." }
+    tags: [yum, search]
+
+  - id: 101-102.5-0010
+    type: multi_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      `curl` is installed. Which **TWO** commands upgrade it to the newest version available in the
+      configured repositories, each on its own type of distribution?
+    select_count: 2
+    options:
+      - id: a
+        text: "`yum update curl`"
+        rationale: Correct. On yum-based systems, update with a package name upgrades just that package.
+      - id: b
+        text: "`rpm -U curl`"
+        rationale: Wrong. rpm -U needs a package file (or URL); it cannot fetch a package by name from a repository.
+      - id: c
+        text: "`yum check-update curl`"
+        rationale: Wrong. check-update only reports whether an update exists; it installs nothing.
+      - id: d
+        text: "`zypper update curl`"
+        rationale: Correct. On SUSE systems, zypper update with a package name upgrades that package.
+      - id: e
+        text: "`zypper list-updates`"
+        rationale: Wrong. list-updates shows the available updates without installing them.
+    answer: [a, d]
+    explanation: >
+      The high-level tools fetch the new version from a repository: `yum update NAME`,
+      `dnf upgrade NAME` or `zypper update NAME`. Without a name, they upgrade every package that has
+      an update. rpm alone only works with package files you already have.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: "Installing, Upgrading and Removing Packages" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked. Tested with rpm 4.18 in a private --root." }
+    tags: [yum, zypper, update]
+
+  - id: 101-102.5-0011
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      For an audit you need the install date, license and packager of the installed package
+      `chrony`. Which command shows them?
+    options:
+      - id: a
+        text: "`rpm -ql chrony`"
+        rationale: Wrong. -ql lists the files in the package.
+      - id: b
+        text: "`rpm -qR chrony`"
+        rationale: Wrong. -qR lists the capabilities the package requires.
+      - id: c
+        text: "`rpm -qi chrony`"
+        rationale: Correct. -qi prints the package header information, including Install Date, License and Packager.
+      - id: d
+        text: "`rpm -qc chrony`"
+        rationale: Wrong. -qc lists only the package's configuration files.
+    answer: [c]
+    explanation: >
+      `rpm -qi NAME` shows name, version, release, architecture, install date, size, license,
+      signature, packager, URL, summary and description. Add -p to read the same data from a
+      package file that is not installed.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Getting Package Information }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [rpm, rpm-qi]
+
+  - id: 101-102.5-0012
+    type: multi_choice
+    difficulty: 2
+    pool: holdout
+    stem: Which **TWO** commands uninstall the package `httpd`, each on its own type of distribution?
+    select_count: 2
+    options:
+      - id: a
+        text: "`yum clean packages httpd`"
+        rationale: Wrong. yum clean deletes cached data; it never uninstalls packages.
+      - id: b
+        text: "`yum remove httpd`"
+        rationale: Correct. remove uninstalls the package on yum-based systems.
+      - id: c
+        text: "`zypper rm httpd`"
+        rationale: Correct. rm is the short form of zypper's remove command.
+      - id: d
+        text: "`zypper rr httpd`"
+        rationale: Wrong. rr (removerepo) deletes a repository definition with that alias, not a package.
+      - id: e
+        text: "`rpm -F httpd`"
+        rationale: Wrong. -F freshens (upgrades) from a package file; it does not remove anything.
+    answer: [b, c]
+    explanation: >
+      `yum remove`, `dnf remove`, `zypper remove` (rm) and `rpm -e` all uninstall packages. Take care
+      not to confuse zypper's package commands with its repository commands (ar, rr, mr, lr).
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: "Installing, Upgrading and Removing Packages" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked. Checked against dnf4/dnf5/zypper docs and source." }
+    tags: [yum, zypper, remove]
+
+  - id: 101-102.5-0013
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      `/var/cache/yum` on a CentOS 7 server has grown to several gigabytes of downloaded `.rpm`
+      files. Which command deletes the cached package files but keeps the repository metadata?
+    options:
+      - id: a
+        text: "`yum clean packages`"
+        rationale: Correct. clean packages removes only the cached package files.
+      - id: b
+        text: "`yum clean metadata`"
+        rationale: Wrong. This removes the cached repository metadata, the part you wanted to keep.
+      - id: c
+        text: "`yum check-update`"
+        rationale: Wrong. check-update lists available updates and may download fresh metadata; it deletes nothing.
+      - id: d
+        text: "`yum-config-manager --disable base`"
+        rationale: Wrong. This disables a repository; files already in the cache stay where they are.
+    answer: [a]
+    explanation: >
+      yum clean takes what to clean as an argument: packages (downloaded .rpm files), metadata
+      (repository metadata), all (everything) and a few more. dnf has the same subcommand; its
+      cache lives under /var/cache/dnf instead.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Managing Software Repositories }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [yum, clean]
+
+  - id: 101-102.5-0014
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      A script copies `agent-5.2-1.x86_64.rpm` to many hosts and runs one `rpm` command. Hosts with an
+      older agent must be upgraded; hosts without agent must **not** get it installed. Which command
+      should the script run?
+    options:
+      - id: a
+        text: "`rpm -Uvh agent-5.2-1.x86_64.rpm`"
+        rationale: Wrong. -U upgrades, but it also installs the package on hosts that do not have it.
+      - id: b
+        text: "`rpm -Fvh agent-5.2-1.x86_64.rpm`"
+        rationale: Correct. -F (freshen) upgrades only when an older version is installed and otherwise does nothing.
+      - id: c
+        text: "`rpm -ivh agent-5.2-1.x86_64.rpm`"
+        rationale: Wrong. -i installs the package where it is absent, and does not replace an existing older version.
+      - id: d
+        text: "`rpm -qip agent-5.2-1.x86_64.rpm`"
+        rationale: Wrong. This only displays information about the package file.
+    answer: [b]
+    explanation: >
+      -U means "install or upgrade"; -F means "upgrade only if already installed". -v and -h add
+      verbose output and hash-mark progress bars to either one.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: "Installing, Upgrading and Removing Packages" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked. Tested with rpm 4.18 in a private --root." }
+    tags: [rpm, rpm-F, rpm-U]
+
+  - id: 101-102.5-0015
+    type: multi_choice
+    difficulty: 3
+    pool: holdout
+    stem: Which **TWO** statements about removing packages are true?
+    select_count: 2
+    options:
+      - id: a
+        text: "`rpm -e` refuses to remove a package that other installed packages depend on."
+        rationale: Correct. rpm stops with "Failed dependencies" and names the packages that need it.
+      - id: b
+        text: "`rpm -e` accepts only one package name per command."
+        rationale: Wrong. Several package names can be given and are removed together.
+      - id: c
+        text: "`zypper rm` also removes the installed packages that depend on the one being removed."
+        rationale: Correct. zypper lists the dependent packages it will remove too and asks for confirmation.
+      - id: d
+        text: "`yum remove` leaves the dependent packages installed with unmet dependencies."
+        rationale: Wrong. yum resolves the transaction and removes the packages that depend on the removed one as well.
+    answer: [a, c]
+    explanation: >
+      rpm checks dependencies but never acts on them: removing a needed package fails unless you
+      remove the dependents in the same command. The high-level tools (yum, dnf, zypper) instead
+      add the dependent packages to the removal and show you the list before going ahead.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: "Installing, Upgrading and Removing Packages" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked. Checked against dnf4/dnf5/zypper docs and source." }
+    tags: [rpm, zypper, yum, remove]
+
+  - id: 101-102.5-0016
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      On Fedora, the package `ripgrep` is available in an enabled repository but not installed.
+      Which command lists the files it would install, without installing it?
+    options:
+      - id: a
+        text: "`rpm -ql ripgrep`"
+        rationale: Wrong. rpm -ql reads the local RPM database, so it only works for installed packages.
+      - id: b
+        text: "`dnf info ripgrep`"
+        rationale: Wrong. info shows version, size, repository and description, but no file list.
+      - id: c
+        text: "`dnf provides ripgrep`"
+        rationale: Wrong. provides finds packages that provide a file or capability; it does not list a package's files.
+      - id: d
+        text: "`dnf repoquery -l ripgrep`"
+        rationale: Correct. repoquery -l (--list) prints the file list from the repository metadata.
+    answer: [d]
+    explanation: >
+      dnf repoquery queries repository metadata, so it works for packages that are not installed.
+      `-l` lists their files. For an installed package `rpm -ql` does the same from the local
+      database.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: DNF }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked. Checked against dnf4/dnf5/zypper docs and source." }
+    tags: [dnf, repoquery]
+
+  - id: 101-102.5-0017
+    type: multi_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      A vendor publishes `https://repo.example.com/vendor.repo`. Which **TWO** actions make the
+      vendor's repository known to yum on a CentOS 7 host?
+    select_count: 2
+    options:
+      - id: a
+        text: "Run `rpm --import https://repo.example.com/vendor.repo`"
+        rationale: Wrong. rpm --import imports GPG public keys into the RPM database; it defines no repository.
+      - id: b
+        text: Save the file as `/etc/yum.repos.d/vendor.repo`
+        rationale: Correct. yum reads every .repo file in /etc/yum.repos.d/.
+      - id: c
+        text: "Run `yum install https://repo.example.com/vendor.repo`"
+        rationale: Wrong. yum install expects package names or .rpm files; a .repo file is not a package.
+      - id: d
+        text: "Run `yum-config-manager --add-repo https://repo.example.com/vendor.repo`"
+        rationale: Correct. --add-repo downloads the .repo file and saves it in /etc/yum.repos.d/.
+      - id: e
+        text: "Run `yum makecache`"
+        rationale: Wrong. makecache downloads metadata for repositories that are already configured.
+    answer: [b, d]
+    explanation: >
+      A yum repository exists for the system once its definition is in /etc/yum.repos.d/ (or in
+      /etc/yum.conf). You can copy the .repo file there yourself, or let yum-config-manager
+      --add-repo fetch and save it.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Managing Software Repositories }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [yum, yum.repos.d, yum-config-manager]
+
+  - id: 101-102.5-0018
+    type: fill_in
+    difficulty: 3
+    pool: holdout
+    stem: >
+      On openSUSE, type the `zypper` command that reports pending package updates but changes
+      nothing.
+    fill_in:
+      accepted: ['(sudo\s+)?((/usr)?/bin/)?zypper\s+(list-updates|lu)(\s+(-a|--all))?']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      `zypper list-updates` (short form `lu`) prints the updates that `zypper update` would install.
+      `-a` also lists newer versions that cannot be installed right now.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: "Installing, Upgrading and Removing Packages" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Bare-subcommand form no longer accepted (full zypper command required); stem reworded." }
+    tags: [zypper, list-updates]
+
+  - id: 101-102.5-0019
+    type: fill_in
+    difficulty: 3
+    pool: holdout
+    stem: >
+      `tmux-3.3a-3.el9.x86_64.rpm` has been downloaded to the current directory but not installed.
+      Type the complete `rpm` command that lists the files this package file contains.
+    fill_in:
+      accepted:
+        - '(sudo\s+)?((/usr)?/bin/)?rpm\s+(?=(?:(?:-[qlpv]+|--query|--list|--package)\s+)*(?:-[lp]*q[qlpv]*|--query)\s)(?=(?:(?:-[qlpv]+|--query|--list|--package)\s+)*(?:-[qp]*l[qlpv]*|--list)\s)(?=(?:(?:-[qlpv]+|--query|--list|--package)\s+)*(?:-[ql]*p[qlpv]*|--package)\s)(?:(?:-[qlpv]+|--query|--list|--package)\s+){1,3}(\./)?tmux-3\.3a-3\.el9\.x86_64\.rpm'
+      match: regex
+      case_sensitive: true
+    explanation: >
+      -q -l lists a package's files, and -p makes rpm read a package file instead of the database:
+      `rpm -qlp tmux-3.3a-3.el9.x86_64.rpm`. The letters can be given in any order or separately.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Getting Package Information }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Regex rewritten: the first version rejected clustered forms such as -qlp and -qpl." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Regex now also accepts v in the option cluster (e.g. rpm -qlpv FILE)." }
+    tags: [rpm, rpm-qlp]
+
+  - id: 101-102.5-0020
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: An administrator runs the command in the exhibit. Which statement is correct?
+    exhibit: |
+      # rpm -V rsyslog
+      S.5....T.  c /etc/rsyslog.conf
+      .M.......    /usr/sbin/rsyslogd
+    options:
+      - id: a
+        text: The rsyslogd binary's content differs from the packaged file
+        rationale: Wrong. Its line only shows M (mode); a content change would show 5 (digest) and usually S (size).
+      - id: b
+        text: "`/etc/rsyslog.conf` is missing from the disk"
+        rationale: Wrong. A missing file is reported with the word "missing", not with attribute letters.
+      - id: c
+        text: rsyslog.conf was edited and rsyslogd's permissions changed
+        rationale: Correct. S, 5 and T mean size, digest and mtime differ for the config file (c); M means the binary's mode differs.
+      - id: d
+        text: The installed package's GPG signature failed to verify
+        rationale: Wrong. rpm -V compares installed files with the database; package signatures are checked with rpm -K.
+    answer: [c]
+    explanation: >
+      rpm -V prints one line per file that differs, with a dot for each attribute that matches:
+      S size, M mode, 5 digest, D device, L link, U user, G group, T mtime, P capabilities. The c
+      marks a configuration file, where local edits are normal.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: The RPM Package Manager (rpm) }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked. Tested with rpm 4.18 in a private --root." }
+    tags: [rpm, rpm-V, integrity]
+
+  - id: 101-102.5-0021
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      A CentOS 7 host has the file `/etc/yum.repos.d/acme.repo` shown in the exhibit. Which command
+      disables this repository permanently?
+    exhibit: |
+      [acme-stable]
+      name=ACME Monitoring Agents
+      baseurl=https://pkgs.acme.example/el7/stable/
+      enabled=1
+      gpgcheck=1
+      gpgkey=https://pkgs.acme.example/RPM-GPG-KEY-acme
+    options:
+      - id: a
+        text: "`yum-config-manager --disable acme-stable`"
+        rationale: Correct. The repo id is the [section] name, and yum-config-manager writes enabled=0 for that id into the .repo file.
+      - id: b
+        text: "`yum-config-manager --save --setopt=acme-stable.gpgcheck=0`"
+        rationale: Wrong. This permanently writes gpgcheck=0 for acme-stable, turning off its signature checks; the repository stays enabled.
+      - id: c
+        text: "`yum-config-manager --disable acme`"
+        rationale: Wrong. acme is only part of the file name and of the repo id; without wildcards yum-config-manager needs a whole repo id (or name= value), so nothing matches.
+      - id: d
+        text: "`yum --disablerepo=acme-stable update`"
+        rationale: Wrong. --disablerepo affects only that one yum run; the repository stays enabled in its .repo file.
+    answer: [a]
+    explanation: >
+      In a .repo file the text in square brackets is the repository id; the file name does not matter,
+      and one file can hold several repositories. yum-config-manager --enable/--disable selects
+      repositories by id (it also accepts the exact name= value), and --disable saves enabled=0 in the
+      .repo file, so the change survives future runs. --enablerepo/--disablerepo take ids too, but last
+      for a single yum run only.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Managing Software Repositories }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Re-checked cold by the reviewer: matches key, but the original option b (disable by the name= value) was also correct, since yum-config-manager matches name= values (findRepos with name_match=True); replaced with a gpgcheck distractor and the explanation corrected. Exhibit changed to a .repo file whose [section] id differs from its name= line and file name; same tested fact (yum-config-manager takes repo ids)." }
+    tags: [yum, yum-config-manager, repolist]
+
+  - id: 101-102.5-0022
+    type: multi_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      Installing a downloaded package fails as shown in the exhibit. The host's enabled repositories
+      contain the missing pieces. Which **TWO** approaches install `reportgen` so that it works?
+    exhibit: |
+      # rpm -i reportgen-3.4-1.el9.x86_64.rpm
+      error: Failed dependencies:
+              libxlsxwriter.so.6()(64bit) is needed by reportgen-3.4-1.el9.x86_64
+              python3-jinja2 is needed by reportgen-3.4-1.el9.x86_64
+    select_count: 2
+    options:
+      - id: a
+        text: "Run `rpm -i --nodeps reportgen-3.4-1.el9.x86_64.rpm`"
+        rationale: Wrong. The package gets installed, but its dependencies are still missing, so it will not work.
+      - id: b
+        text: "Run `rpm -Uvh reportgen-3.4-1.el9.x86_64.rpm`"
+        rationale: Wrong. -U performs the same dependency check and fails the same way.
+      - id: c
+        text: "Run `yum install ./reportgen-3.4-1.el9.x86_64.rpm`"
+        rationale: Correct. yum installs the local file and pulls the missing dependencies from the repositories.
+      - id: d
+        text: "Install the providers found with `yum provides`, then rerun `rpm -i`"
+        rationale: Correct. Once the providing packages are installed, rpm's dependency check passes.
+      - id: e
+        text: "Run `rpm -qpR reportgen-3.4-1.el9.x86_64.rpm`"
+        rationale: Wrong. This lists what the package requires; it does not install anything.
+    answer: [c, d]
+    explanation: >
+      rpm only checks dependencies; it never fetches them. Either let a high-level tool handle the
+      local file (yum/dnf install ./file.rpm, zypper in ./file.rpm), or find the providers yourself
+      with yum provides (whatprovides) and install them before retrying rpm.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Dealing with Dependencies }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Option d shortened; it was the longest option and a giveaway." }
+    tags: [rpm, yum, dependencies]
+
+  - id: 101-102.5-0023
+    type: fill_in
+    difficulty: 4
+    pool: holdout
+    stem: >
+      Type the complete `rpm` command that lists only the configuration files of the installed
+      package `chrony`.
+    fill_in:
+      accepted:
+        - '(sudo\s+)?((/usr)?/bin/)?rpm\s+(-qcv?|-cqv?|-q\s+-c|-c\s+-q|(-q|--query)\s+--configfiles|--configfiles\s+(-q|--query)|--query\s+-c|-c\s+--query)\s+chrony'
+      match: regex
+      case_sensitive: true
+    explanation: >
+      `rpm -qc NAME` (long form `--configfiles`) lists the files the package marks as configuration
+      files, the ones rpm treats specially on upgrade so local edits are not lost. `-qd` does the
+      same for documentation files.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Getting Package Information }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Regex also accepts -qcv/-cqv and -c --query." }
+    tags: [rpm, rpm-qc]
+
+  - id: 101-102.5-0024
+    type: fill_in
+    difficulty: 4
+    pool: holdout
+    stem: >
+      On openSUSE, the repository with the alias `backports` is enabled but must be refreshed by
+      hand. Type the complete `zypper` command that turns on auto-refresh for it.
+    fill_in:
+      accepted:
+        - '(sudo\s+)?((/usr)?/bin/)?zypper\s+(modifyrepo|mr)\s+(-f|--refresh|-r)\s+backports'
+      match: regex
+      case_sensitive: true
+    explanation: >
+      modifyrepo (mr) changes a repository's settings: -f/--refresh turns auto-refresh on, -F
+      turns it off, -e and -d enable and disable the repository. With auto-refresh on, zypper
+      refreshes that repository's metadata before using it.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Managing Software Repositories }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Dropped the accepted form with the option after the alias; zypper argument order could not be tested here." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked. Checked against dnf4/dnf5/zypper docs and source." }
+    tags: [zypper, modifyrepo]
+
+  - id: 101-102.5-0025
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      You want to uninstall both `libmaxminddb` and `geoipupdate` cleanly with `rpm`. Your first
+      attempt fails as shown. Which command removes both packages?
+    exhibit: |
+      # rpm -e libmaxminddb
+      error: Failed dependencies:
+              libmaxminddb.so.0()(64bit) is needed by (installed) geoipupdate-4.6.0-1.el9.x86_64
+    options:
+      - id: a
+        text: "`rpm -e --nodeps libmaxminddb`"
+        rationale: Wrong. This removes only the library and leaves geoipupdate installed with a broken dependency.
+      - id: b
+        text: "`rpm -e libmaxminddb geoipupdate`"
+        rationale: Correct. Removing both in one transaction leaves nothing installed that needs the library.
+      - id: c
+        text: "`rpm -e libmaxminddb && rpm -e geoipupdate`"
+        rationale: Wrong. The first command fails again, so && never runs the second one.
+      - id: d
+        text: "`rpm -e --test libmaxminddb geoipupdate`"
+        rationale: Wrong. --test only checks whether the removal would succeed; nothing is removed.
+    answer: [b]
+    explanation: >
+      rpm checks dependencies against the state after the whole transaction. Naming the dependent
+      package in the same rpm -e command satisfies the check. --nodeps skips the check and leaves a
+      broken system.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: "Installing, Upgrading and Removing Packages" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked. Tested with rpm 4.18 in a private --root." }
+    tags: [rpm, rpm-e, dependencies]
+
+  - id: 101-102.5-0026
+    type: fill_in
+    difficulty: 5
+    pool: holdout
+    stem: >
+      You need one file from `tree-2.1.0-1.x86_64.rpm` (in the current directory) without installing
+      the package. Type a pipeline that extracts all files of the package into the current
+      directory, creating subdirectories as needed.
+    fill_in:
+      accepted:
+        - '(sudo\s+)?((/usr)?/bin/)?rpm2cpio\s+(<\s*)?(\./)?tree-2\.1\.0-1\.x86_64\.rpm\s*\|\s*(sudo\s+)?((/usr)?/bin/)?cpio(?=(?:\s+(?:-[idmvu]+|--extract|--make-directories|--preserve-modification-time|--verbose|--unconditional|--quiet|--no-absolute-filenames))+\s*$)(?=.*(?:\s-[dmvu]*i|\s--extract))(?=.*(?:\s-[imvu]*d|\s--make-directories))(?:\s+(?:-[idmvu]+|--extract|--make-directories|--preserve-modification-time|--verbose|--unconditional|--quiet|--no-absolute-filenames))+'
+      match: regex
+      case_sensitive: true
+    explanation: >
+      rpm2cpio writes the package's payload to standard output as a cpio archive. `cpio -i` extracts
+      it and `-d` creates the directories: `rpm2cpio tree-2.1.0-1.x86_64.rpm | cpio -idmv`
+      (-m keeps modification times, -v lists the files). The files land under ./usr/... in the
+      current directory.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: The RPM Package Manager (rpm) }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "cpio alternations also accept --quiet and --no-absolute-filenames." }
+    tags: [rpm2cpio, cpio]
+
+  - id: 101-102.5-0027
+    type: multi_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      Before removing a library package you want to see which **installed** packages require the
+      capability `libpcre2-8.so.0()(64bit)`. Which **TWO** commands list them?
+    select_count: 2
+    options:
+      - id: a
+        text: "`rpm -q --whatrequires 'libpcre2-8.so.0()(64bit)'`"
+        rationale: Correct. --whatrequires queries the RPM database for installed packages that require the capability.
+      - id: b
+        text: "`dnf repoquery --installed --whatrequires 'libpcre2-8.so.0()(64bit)'`"
+        rationale: Correct. repoquery limited to installed packages with --whatrequires gives the same answer.
+      - id: c
+        text: "`rpm -qR pcre2`"
+        rationale: Wrong. This lists what pcre2 itself requires, which is the opposite direction.
+      - id: d
+        text: "`rpm -q --whatprovides 'libpcre2-8.so.0()(64bit)'`"
+        rationale: Wrong. This shows the package that provides the capability, not the ones that need it.
+      - id: e
+        text: "`yum provides 'libpcre2-8.so.0()(64bit)'`"
+        rationale: Wrong. provides searches for packages that provide the capability, including ones in repositories.
+    answer: [a, b]
+    explanation: >
+      Dependencies point both ways: -qR lists what a package requires, --whatrequires lists who
+      requires a capability, and --whatprovides (or yum/dnf provides) lists who provides it.
+      Checking --whatrequires before a removal shows what would break.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Dealing with Dependencies }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked. Checked against dnf4/dnf5/zypper docs and source." }
+    tags: [rpm, dnf, dependencies, whatrequires]
+
+  - id: 101-102.5-0028
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      `rsync-3.2.7` is installed and you need to go back to the file
+      `rsync-3.2.3-19.el9.x86_64.rpm`. `rpm -U` on that file prints
+      `package rsync-3.2.7-... (which is newer than rsync-3.2.3-...) is already installed`.
+      Which command performs the downgrade?
+    options:
+      - id: a
+        text: "`rpm -F rsync-3.2.3-19.el9.x86_64.rpm`"
+        rationale: Wrong. Freshen only replaces older installed versions; with a newer one installed it does nothing.
+      - id: b
+        text: "`rpm -i rsync-3.2.3-19.el9.x86_64.rpm`"
+        rationale: Wrong. rpm -i refuses with the same "newer ... is already installed" message.
+      - id: c
+        text: "`rpm -U --nodeps rsync-3.2.3-19.el9.x86_64.rpm`"
+        rationale: Wrong. Dependencies are not the problem; the version check still refuses the older package.
+      - id: d
+        text: "`rpm -U --oldpackage rsync-3.2.3-19.el9.x86_64.rpm`"
+        rationale: Correct. --oldpackage allows an upgrade to replace a newer package with an older one.
+    answer: [d]
+    explanation: >
+      rpm -U refuses to "upgrade" to a lower version unless told to with --oldpackage (also implied
+      by --force). The high-level tools offer the same through `yum downgrade` / `dnf downgrade`.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: "Installing, Upgrading and Removing Packages" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked. Tested with rpm 4.18 in a private --root." }
+    tags: [rpm, rpm-U, oldpackage]
+
+  - id: 101-102.5-0029
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      Before installing `vendor-agent-2.0-1.x86_64.rpm`, downloaded from a website, you want rpm to
+      check the file's digests and its GPG signature against the keys you imported. Which command
+      does that?
+    options:
+      - id: a
+        text: "`rpm -qip vendor-agent-2.0-1.x86_64.rpm`"
+        rationale: Wrong. This is a query; it shows the header and its Signature line, while checking the file is the job of rpm -K (--checksig).
+      - id: b
+        text: "`rpm --import vendor-agent-2.0-1.x86_64.rpm`"
+        rationale: Wrong. --import adds a GPG public key file to the keyring; a package is not a key.
+      - id: c
+        text: "`rpm -K vendor-agent-2.0-1.x86_64.rpm`"
+        rationale: Correct. -K (--checksig) checks the package file's digests and signature and reports OK or the failure.
+      - id: d
+        text: "`rpm -Va`"
+        rationale: Wrong. -Va verifies installed packages' files on disk; it does not check a downloaded package file.
+    answer: [c]
+    explanation: >
+      `rpm -K FILE` (`--checksig`) checks a package file before you install it. An unsigned
+      package shows only "digests OK"; a signed one is checked against the keys imported with
+      rpm --import. `rpm -V` is the opposite check: installed files against the database.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Getting Package Information }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Option a rationale reworded: rpm -qp does warn about bad/unknown signatures, so it no longer claims it reports nothing." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [rpm, rpm-K, signatures, integrity]
+
+  - id: 101-102.5-0030
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      You saved the file in the exhibit as `/etc/yum.repos.d/internal.repo` on a CentOS 7 host. The
+      repository is reachable and contains `deploytool`, yet `yum install deploytool` answers
+      `No package deploytool available.` What is the cause?
+    exhibit: |
+      [internal-tools]
+      name=Internal tools
+      baseurl=https://repo.example.com/el7/tools/
+      enabled=0
+      gpgcheck=1
+      gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-internal
+    options:
+      - id: a
+        text: The repository is defined but disabled, so yum ignores it
+        rationale: Correct. enabled=0 makes yum skip the repository unless it is enabled in the file or for one run.
+      - id: b
+        text: gpgcheck=1 stops yum from listing unsigned packages
+        rationale: Wrong. gpgcheck controls signature checks at install time; it does not hide packages from searches.
+      - id: c
+        text: The file only takes effect after `yum-config-manager --add-repo` reads it
+        rationale: Wrong. yum reads every .repo file in /etc/yum.repos.d/ directly; --add-repo is just one way to create it.
+      - id: d
+        text: The section name must match the file name, `internal`
+        rationale: Wrong. The section name is the repo id and can differ from the file name; one file can hold several repositories.
+    answer: [a]
+    explanation: >
+      Each [section] in a .repo file defines one repository; enabled=0 keeps it configured but
+      unused. Set enabled=1, run `yum-config-manager --enable internal-tools`, or use
+      `--enablerepo=internal-tools` for a single command.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Managing Software Repositories }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [yum, yum.repos.d, repo-file]
+
+  # --------------------------------------------------------------------------- practice (CLI)
+
+  - id: 101-102.5-0031
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: Which `rpm` option installs a package from a `.rpm` file?
+    options:
+      - id: a
+        text: "`-q`"
+        rationale: Wrong. -q selects query mode.
+      - id: b
+        text: "`-e`"
+        rationale: Wrong. -e erases (removes) an installed package.
+      - id: c
+        text: "`-i`"
+        rationale: Correct. -i installs the package file given on the command line.
+      - id: d
+        text: "`-V`"
+        rationale: Wrong. -V verifies an installed package's files.
+    answer: [c]
+    explanation: >
+      `rpm -i FILE.rpm` installs a package file, typically with -v and -h for verbose output and a
+      progress bar. -U and -F are the upgrade modes.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: "Installing, Upgrading and Removing Packages" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [rpm, rpm-i]
+
+  - id: 101-102.5-0032
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: What does `zypper in nano` do?
+    options:
+      - id: a
+        text: Installs nano and its dependencies from the repositories
+        rationale: Correct. in is the short form of zypper install.
+      - id: b
+        text: Shows information about the nano package
+        rationale: Wrong. That is zypper info (if).
+      - id: c
+        text: Searches the repositories for packages matching nano
+        rationale: Wrong. That is zypper search (se).
+      - id: d
+        text: Lists the files installed by the nano package
+        rationale: Wrong. Listing an installed package's files is done with rpm -ql nano.
+    answer: [a]
+    explanation: >
+      Most zypper commands have short aliases: in (install), rm (remove), se (search), up (update),
+      lu (list-updates), ref (refresh), lr (repos), ar/rr/mr for repository management.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Zypper }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Option d rationale no longer claims zypper lacks any file-listing feature." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked. Checked against dnf4/dnf5/zypper docs and source." }
+    tags: [zypper, install]
+
+  - id: 101-102.5-0033
+    type: multi_choice
+    difficulty: 2
+    pool: practice
+    stem: Which **TWO** locations can contain repository definitions read by yum?
+    select_count: 2
+    options:
+      - id: a
+        text: "`/etc/zypp/repos.d/`"
+        rationale: Wrong. This directory holds zypper's repository definitions on SUSE systems.
+      - id: b
+        text: "`/etc/yum.repos.d/`"
+        rationale: Correct. yum reads every .repo file in this directory.
+      - id: c
+        text: "`/var/cache/yum/`"
+        rationale: Wrong. This is yum's cache of downloaded packages and metadata.
+      - id: d
+        text: "`/etc/yum.conf`"
+        rationale: Correct. Besides its [main] section, yum.conf may contain repository sections too.
+      - id: e
+        text: "`/etc/yum/pluginconf.d/`"
+        rationale: Wrong. This directory configures yum plugins.
+    answer: [b, d]
+    explanation: >
+      The usual place is a .repo file in /etc/yum.repos.d/, but yum also reads repository sections
+      appended to /etc/yum.conf. dnf uses the same .repo directory.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Managing Software Repositories }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [yum, yum.conf, yum.repos.d]
+
+  - id: 101-102.5-0034
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: >
+      You want a package's size, origin repository and full description before installing it.
+      Which yum command shows them?
+    options:
+      - id: a
+        text: "`yum search`"
+        rationale: Wrong. search lists matching package names with their summaries only.
+      - id: b
+        text: "`yum list`"
+        rationale: Wrong. list shows name.arch, version and repository, but not size or description.
+      - id: c
+        text: "`yum check-update`"
+        rationale: Wrong. check-update lists packages that have updates available.
+      - id: d
+        text: "`yum info`"
+        rationale: Correct. info prints the detailed metadata of a package.
+    answer: [d]
+    explanation: >
+      `yum info NAME` (and `dnf info`, `zypper info`) prints the full metadata of a package, whether
+      installed or only available in a repository.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Getting Information About a Package }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Stem reworded away from the lesson's wording." }
+    tags: [yum, info]
+
+  - id: 101-102.5-0035
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: >
+      Which zypper command lists the configured repositories with columns such as Alias, Enabled,
+      GPG Check and Refresh?
+    options:
+      - id: a
+        text: "`zypper refresh`"
+        rationale: Wrong. refresh downloads repository metadata.
+      - id: b
+        text: "`zypper repos`"
+        rationale: Correct. repos (lr) lists the defined repositories and their settings.
+      - id: c
+        text: "`zypper search`"
+        rationale: Wrong. search looks for packages, not repositories.
+      - id: d
+        text: "`zypper info`"
+        rationale: Wrong. info shows details about a package.
+    answer: [b]
+    explanation: >
+      `zypper repos` (lr) prints one numbered line per repository. The number or alias can then be
+      used with mr (modifyrepo), rr (removerepo) and ref (refresh).
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Managing Software Repositories }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked. Checked against dnf4/dnf5/zypper docs and source." }
+    tags: [zypper, repos]
+
+  - id: 101-102.5-0036
+    type: multi_choice
+    difficulty: 2
+    pool: practice
+    stem: >
+      Which **TWO** commands install `htop` from the configured repositories, resolving its
+      dependencies automatically?
+    select_count: 2
+    options:
+      - id: a
+        text: "`rpm -ivh htop`"
+        rationale: Wrong. rpm needs a package file and does not fetch dependencies.
+      - id: b
+        text: "`dnf install htop`"
+        rationale: Correct. dnf downloads htop and whatever it needs from the enabled repositories.
+      - id: c
+        text: "`zypper in htop`"
+        rationale: Correct. zypper install resolves and installs dependencies from its repositories.
+      - id: d
+        text: "`yum search htop`"
+        rationale: Wrong. search only finds packages; it installs nothing.
+      - id: e
+        text: "`rpm -U htop`"
+        rationale: Wrong. rpm -U also needs a package file and does not resolve dependencies.
+    answer: [b, c]
+    explanation: >
+      Dependency resolution and downloading are the jobs of yum, dnf and zypper. rpm installs only
+      the package files you give it, after checking that their dependencies are already present.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Dealing with Dependencies }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked. Checked against dnf4/dnf5/zypper docs and source." }
+    tags: [dnf, zypper, install]
+
+  - id: 101-102.5-0037
+    type: fill_in
+    difficulty: 2
+    pool: practice
+    stem: Type the complete `rpm` command that removes the installed package `tftp`.
+    fill_in:
+      accepted: ['(sudo\s+)?((/usr)?/bin/)?rpm\s+((-e[vh]*|-[vh]+e[vh]*|--erase)(\s+-[vh]+)?|-[vh]+\s+(-e|--erase))\s+tftp']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      `rpm -e NAME` (long form `--erase`) removes a package by its name. Add -v for verbose output.
+      It fails if other installed packages depend on it.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: "Installing, Upgrading and Removing Packages" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Regex also accepts h with v in the option cluster (e.g. -evh, -vh -e)." }
+    tags: [rpm, rpm-e]
+
+  - id: 101-102.5-0038
+    type: single_choice
+    difficulty: 3
+    pool: practice
+    stem: On Fedora, which command lists only the repositories that are configured but disabled?
+    options:
+      - id: a
+        text: "`dnf repolist --disabled`"
+        rationale: Correct. --disabled limits repolist to disabled repositories.
+      - id: b
+        text: "`dnf repolist`"
+        rationale: Wrong. Without options, repolist shows the enabled repositories.
+      - id: c
+        text: "`dnf list --installed`"
+        rationale: Wrong. This lists installed packages, not repositories.
+      - id: d
+        text: "`dnf config-manager --set-disabled`"
+        rationale: Wrong. This dnf 4 command disables repositories; it does not list them.
+    answer: [a]
+    explanation: >
+      dnf repolist shows enabled repositories by default; --disabled shows only disabled ones and
+      --all shows both.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Managing Software Repositories }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked. Checked against dnf4/dnf5/zypper docs and source." }
+    tags: [dnf, repolist]
+
+  - id: 101-102.5-0039
+    type: single_choice
+    difficulty: 3
+    pool: practice
+    stem: >
+      On openSUSE you want to add the repository at `https://download.example.org/nightly/` with the
+      alias `nightly`, but keep it disabled until testing starts. Which command does that?
+    options:
+      - id: a
+        text: "`zypper ar -f https://download.example.org/nightly/ nightly`"
+        rationale: Wrong. -f turns on auto-refresh; the repository is still added enabled.
+      - id: b
+        text: "`zypper mr -d nightly`"
+        rationale: Wrong. modifyrepo changes an existing repository; nightly has not been added yet.
+      - id: c
+        text: "`zypper rr nightly`"
+        rationale: Wrong. rr removes a repository.
+      - id: d
+        text: "`zypper ar -d https://download.example.org/nightly/ nightly`"
+        rationale: Correct. addrepo -d adds the repository in the disabled state.
+    answer: [d]
+    explanation: >
+      `zypper addrepo URI ALIAS` adds an enabled repository with auto-refresh off. -d adds it
+      disabled and -f turns auto-refresh on. Later, `zypper mr -e nightly` enables it.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Adding and Removing Repositories }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked. Checked against dnf4/dnf5/zypper docs and source." }
+    tags: [zypper, addrepo]
+
+  - id: 101-102.5-0040
+    type: multi_choice
+    difficulty: 3
+    pool: practice
+    stem: Which **TWO** statements about `rpm -Uvh pkg.rpm` are true?
+    select_count: 2
+    options:
+      - id: a
+        text: It installs the package if no version of it is installed yet.
+        rationale: Correct. -U upgrades an installed package, or installs it fresh when absent.
+      - id: b
+        text: It downloads missing dependencies from the repositories.
+        rationale: Wrong. rpm never downloads dependencies.
+      - id: c
+        text: The -h option prints the package's header information.
+        rationale: Wrong. -h prints hash marks as a progress bar; header information comes from -qi.
+      - id: d
+        text: The -h option prints hash marks to show progress.
+        rationale: Correct. -h (--hash) prints hash characters as the package is unpacked.
+    answer: [a, d]
+    explanation: >
+      -U is install-or-upgrade, -v makes rpm verbose and -h shows progress with hash marks. Short
+      options can be grouped, so -Uvh is the same as -U -v -h.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: "Installing, Upgrading and Removing Packages" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Option d rationale no longer uses a literal hash sign, which YAML parsed as a comment." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [rpm, rpm-U]
+
+  - id: 101-102.5-0041
+    type: fill_in
+    difficulty: 3
+    pool: practice
+    stem: >
+      Type the complete `yum` command that lists all configured repositories, both enabled and
+      disabled.
+    fill_in:
+      accepted: ['(sudo\s+)?((/usr)?/bin/)?yum\s+repolist\s+(all|--all)']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      `yum repolist` alone shows only enabled repositories. `yum repolist all` includes disabled
+      ones on yum 3 and dnf 4; dnf 4 and dnf 5 also accept `--all`, and dnf 5 accepts only that
+      form.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Managing Software Repositories }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Explanation corrected: dnf 5 takes only --all, not a positional all." }
+    tags: [yum, repolist]
+
+  - id: 101-102.5-0042
+    type: single_choice
+    difficulty: 4
+    pool: practice
+    stem: The exhibit shows the output of `zypper se gimp`. Which statement is correct?
+    exhibit: |
+      S  | Name      | Summary                              | Type
+      ---+-----------+--------------------------------------+--------
+      i+ | gimp      | The GNU Image Manipulation Program   | package
+      i  | gimp-lang | Translations for package gimp        | package
+         | gimp-help | Help files for the GIMP              | package
+    options:
+      - id: a
+        text: gimp-help is installed, but an older version
+        rationale: Wrong. An empty status means no version of gimp-help is installed; in this summary view any installed version would show i or i+.
+      - id: b
+        text: gimp was requested by a user; gimp-lang came in automatically
+        rationale: Correct. i+ marks a package installed on request, i one installed automatically by the resolver.
+      - id: c
+        text: All three packages are installed
+        rationale: Wrong. gimp-help has an empty status column, so it is not installed.
+      - id: d
+        text: gimp-lang is locked against changes
+        rationale: Wrong. A lock is shown as l in the second status column, which is not present here.
+    answer: [b]
+    explanation: >
+      The S column of zypper search shows i+ (installed by user request), i (installed
+      automatically as a dependency) or nothing (not installed); the detailed view (`zypper se -s`)
+      can also show v when a different version is installed. `zypper se -i` limits the output to
+      installed packages and `-u` to packages not installed.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Searching for Packages }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Option a rationale and explanation corrected: v appears only in the detailed view (se -s)." }
+    tags: [zypper, search]
+
+  - id: 101-102.5-0043
+    type: single_choice
+    difficulty: 4
+    pool: practice
+    stem: >
+      Before removing `openssl-libs` with rpm, you want to see which installed packages would be
+      left with broken dependencies, without changing anything. Which command shows that?
+    options:
+      - id: a
+        text: "`rpm -qR openssl-libs`"
+        rationale: Wrong. This lists what openssl-libs itself requires, not what depends on it.
+      - id: b
+        text: "`rpm -e --nodeps openssl-libs`"
+        rationale: Wrong. This actually removes the package and skips the dependency check.
+      - id: c
+        text: "`rpm -e --test openssl-libs`"
+        rationale: Correct. --test runs the checks of the removal, prints any failed dependencies and removes nothing.
+      - id: d
+        text: "`rpm -ql openssl-libs`"
+        rationale: Wrong. This lists the files in the package.
+    answer: [c]
+    explanation: >
+      --test performs a dry run of an install, upgrade or erase: rpm reports what would fail,
+      including "is needed by (installed) ..." lines, without touching the system.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: "Installing, Upgrading and Removing Packages" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked. Tested with rpm 4.18 in a private --root." }
+    tags: [rpm, rpm-e, dependencies]
+
+  - id: 101-102.5-0044
+    type: single_choice
+    difficulty: 5
+    pool: practice
+    stem: >
+      `foo` is only in the repository `extras-testing`, defined with `enabled=0` in
+      `/etc/yum.repos.d/`. You want to install `foo` from it once, without changing any
+      configuration file. Which command does that?
+    options:
+      - id: a
+        text: "`yum --enablerepo=extras-testing install foo`"
+        rationale: Correct. --enablerepo enables the repository for this one command only.
+      - id: b
+        text: "`yum-config-manager --enable extras-testing`"
+        rationale: Wrong. This rewrites the .repo file to enable the repository permanently, and installs nothing.
+      - id: c
+        text: "`yum repolist enabled extras-testing`"
+        rationale: Wrong. repolist only displays repositories.
+      - id: d
+        text: "`yum clean metadata`"
+        rationale: Wrong. Clearing cached metadata does not enable a disabled repository.
+    answer: [a]
+    explanation: >
+      --enablerepo and --disablerepo are temporary overrides for a single yum (or dnf) run.
+      yum-config-manager --enable/--disable, or editing enabled= in the .repo file, changes the
+      setting for good.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Managing Software Repositories }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [yum, enablerepo]
+
+  - id: 101-102.5-0045
+    type: single_choice
+    difficulty: 5
+    pool: practice
+    stem: >
+      A service broke after packages were installed yesterday. Which command lists the installed
+      packages with their install time, most recent first?
+    options:
+      - id: a
+        text: "`rpm -qa | sort -r`"
+        rationale: Wrong. This sorts package names in reverse alphabetical order and shows no times.
+      - id: b
+        text: "`rpm -qa --last`"
+        rationale: Correct. --last adds the install time to each package and sorts newest first.
+      - id: c
+        text: "`rpm -qai | grep 'Install Date'`"
+        rationale: Wrong. This prints install dates without package names and in no particular order.
+      - id: d
+        text: "`rpm -Va`"
+        rationale: Wrong. -Va reports files that differ from the RPM database; it shows no install times.
+    answer: [b]
+    explanation: >
+      `rpm -qa --last` prints each installed package with its installation time, newest first, so
+      the head of the output shows what changed most recently.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.5", lesson: 1, section: Listing Installed Packages }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [rpm, rpm-qa]

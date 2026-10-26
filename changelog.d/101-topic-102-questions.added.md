@@ -1,0 +1,1 @@
+- Topic 102 (Linux Installation and Package Management) question batch: 165 original questions for 102.1, 102.2, 102.4, 102.5 and 102.6 (110 holdout, 55 practice), each checked by its writer and by an independent reviewing agent. Topic 102 is now complete with the earlier 102.3 batch.

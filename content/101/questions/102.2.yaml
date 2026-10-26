@@ -1,0 +1,981 @@
+# 102.2 Install a boot manager — weight 2 → 20 holdout + 10 practice.
+# Original questions written from LPI Learning Materials 101-500, objective 102.2, lesson 1.
+# GRUB menu editing at boot, /etc/default/grub kernel parameters and grub-mkconfig are tested in 101.2.
+schema_version: 1
+exam: "101"
+objective: "102.2"
+questions:
+  # ---------------------------------------------------------------- holdout (mock exams only)
+
+  - id: 101-102.2-0001
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: >
+      On a Debian system with GRUB 2, you want to read the menu entries exactly as GRUB will show
+      them at the next boot, without changing anything. Which file do you open?
+    options:
+      - id: a
+        text: "`/etc/default/grub`"
+        rationale: Wrong. This holds settings such as the timeout and default entry, not the generated menu entries.
+      - id: b
+        text: "`/boot/grub/menu.lst`"
+        rationale: Wrong. menu.lst is the configuration file of GRUB Legacy; GRUB 2 does not read it.
+      - id: c
+        text: "`/boot/grub/grub.cfg`"
+        rationale: Correct. This is the file GRUB 2 reads at boot; it contains every generated menuentry.
+      - id: d
+        text: "`/etc/grub.d/10_linux`"
+        rationale: Wrong. This is a script that generates the Linux entries; it does not contain the finished entries.
+    answer: [c]
+    explanation: >
+      GRUB 2 reads /boot/grub/grub.cfg (on Fedora and Red Hat family systems /boot/grub2/grub.cfg)
+      at boot. The file is generated from /etc/default/grub and the scripts in /etc/grub.d, so it is
+      the right place to look but not the right place to edit.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: Configuring GRUB 2 }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [grub2, grub.cfg]
+
+  - id: 101-102.2-0002
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: Which statement about GRUB Legacy is true?
+    options:
+      - id: a
+        text: It is no longer developed; its last release was version 0.97.
+        rationale: Correct. GRUB Legacy stopped at 0.97 (2005); development moved to the rewritten GRUB 2.
+      - id: b
+        text: It is the default boot loader of most current Linux distributions.
+        rationale: Wrong. Current distributions install GRUB 2 by default; GRUB Legacy is found only on older systems.
+      - id: c
+        text: It was written to replace GRUB 2, which was too hard to configure.
+        rationale: Wrong. The order is the other way round; GRUB 2 is the complete rewrite that replaced GRUB Legacy.
+      - id: d
+        text: It reads its menu from `/boot/grub/grub.cfg`.
+        rationale: Wrong. GRUB Legacy reads /boot/grub/menu.lst (grub.conf on Red Hat systems); grub.cfg belongs to GRUB 2.
+    answer: [a]
+    explanation: >
+      GRUB Legacy (0.9x) is frozen. GRUB 2 is a rewrite with a scripting-style configuration file,
+      loadable modules, UUID support and more, and it is what distributions install today. You may
+      still meet GRUB Legacy on old machines, which is why the exam covers both.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: GRUB Legacy vs. GRUB 2 }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [grub-legacy, grub2]
+
+  - id: 101-102.2-0003
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: >
+      A BIOS-based PC boots from a disk with a DOS (MBR) partition table. Where does GRUB put the
+      small piece of boot code that the BIOS runs first?
+    options:
+      - id: a
+        text: In the `/boot/grub` directory of the root filesystem
+        rationale: Wrong. The BIOS cannot read filesystems; /boot/grub holds files GRUB loads later.
+      - id: b
+        text: In the EFI System Partition
+        rationale: Wrong. The ESP is used by UEFI firmware, not by a BIOS booting an MBR disk.
+      - id: c
+        text: In the last sector of the disk
+        rationale: Wrong. The BIOS reads the first sector of the disk, not the last one.
+      - id: d
+        text: In the disk's first sector, the Master Boot Record
+        rationale: Correct. The BIOS loads and runs the first 512-byte sector, which holds GRUB's boot code and the partition table.
+    answer: [d]
+    explanation: >
+      The BIOS loads the disk's first sector (the MBR) and runs the code in it. That code is too
+      small to do much, so it loads GRUB's core image, which in turn reads its modules and
+      configuration from /boot/grub.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: "Where is the Bootloader?" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Correct option shortened so it is no longer the longest." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [mbr, bios]
+
+  - id: 101-102.2-0004
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      A server's `/boot` holds the four files below for one kernel version. Which one is the
+      compressed Linux kernel that GRUB loads?
+    options:
+      - id: a
+        text: "`System.map-6.8.0-45-generic`"
+        rationale: Wrong. System.map is a table of kernel symbol names and their addresses, used when debugging.
+      - id: b
+        text: "`vmlinuz-6.8.0-45-generic`"
+        rationale: Correct. vmlinuz is the kernel image; the z marks it as compressed.
+      - id: c
+        text: "`config-6.8.0-45-generic`"
+        rationale: Wrong. This lists the options the kernel was built with; it is not loaded at boot.
+      - id: d
+        text: "`initrd.img-6.8.0-45-generic`"
+        rationale: Wrong. This is the initial RAM disk GRUB loads next to the kernel, not the kernel itself.
+    answer: [b]
+    explanation: >
+      Each installed kernel version leaves a set of files in /boot: vmlinuz-VERSION (the kernel),
+      initrd.img-VERSION (initial RAM disk), System.map-VERSION (symbol table) and config-VERSION
+      (build configuration). A GRUB entry loads the first two.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: Contents of the Boot Partition }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [boot-partition, vmlinuz]
+
+  - id: 101-102.2-0005
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      You want a permanent GRUB 2 menu entry that starts a memory tester, and it must survive the
+      next time the distribution regenerates the GRUB configuration after a kernel update. Where do
+      you add the `menuentry` block?
+    options:
+      - id: a
+        text: "`/etc/grub.d/40_custom`, then regenerate grub.cfg"
+        rationale: Correct. Scripts in /etc/grub.d are run on every regeneration, and 40_custom exists to carry hand-written entries.
+      - id: b
+        text: Directly in `/boot/grub/grub.cfg`
+        rationale: Wrong. The entry works until grub.cfg is regenerated, which overwrites the whole file.
+      - id: c
+        text: "`/boot/grub/menu.lst`"
+        rationale: Wrong. GRUB 2 does not read menu.lst; that is the GRUB Legacy configuration file.
+      - id: d
+        text: "`/etc/default/grub`, then regenerate the configuration"
+        rationale: Wrong. This file only sets shell variables such as GRUB_TIMEOUT; a menuentry block placed there is not copied into grub.cfg.
+    answer: [a]
+    explanation: >
+      grub.cfg is rebuilt (by update-grub or grub-mkconfig) from the executable scripts in
+      /etc/grub.d, run in name order. 40_custom prints whatever follows its first lines, so entries
+      placed there end up in every regenerated grub.cfg.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: Managing Menu Entries }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Correct option shortened so it is no longer the longest." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [grub2, grub.d, 40_custom]
+
+  - id: 101-102.2-0006
+    type: fill_in
+    difficulty: 2
+    pool: holdout
+    stem: >
+      In a GRUB Legacy `menu.lst`, each menu entry starts with a command that sets the text shown
+      for the entry in the boot menu. Type that command.
+    fill_in:
+      accepted: ['title(\s+.+)?']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      A GRUB Legacy entry starts with `title <text>`, followed by commands such as root, kernel and
+      initrd. Everything up to the next title belongs to that entry. GRUB 2 uses a
+      `menuentry "<text>" { ... }` block instead.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: Configuring GRUB Legacy Menu Entries and Settings }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [grub-legacy, menu.lst]
+
+  - id: 101-102.2-0007
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: In a GRUB Legacy configuration, what does the device name `(hd0,0)` refer to?
+    options:
+      - id: a
+        text: The whole first disk, as used when installing to its MBR
+        rationale: Wrong. The whole first disk is written (hd0), with no partition number.
+      - id: b
+        text: The second partition of the first disk
+        rationale: Wrong. GRUB Legacy counts partitions from 0, so the second partition would be (hd0,1).
+      - id: c
+        text: The first partition of the first disk
+        rationale: Correct. GRUB Legacy numbers both disks and partitions from zero.
+      - id: d
+        text: Nothing; it is invalid because partitions are numbered from 1
+        rationale: Wrong. Numbering partitions from 1 is a GRUB 2 rule; in GRUB Legacy partition 0 is valid.
+    answer: [c]
+    explanation: >
+      GRUB Legacy counts disks and partitions from 0, so (hd0,0) is the first partition of the first
+      disk, usually /dev/sda1. GRUB 2 still counts disks from 0 but partitions from 1, so the same
+      partition is (hd0,1) there.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: Configuring GRUB Legacy Menu Entries and Settings }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [grub-legacy, device-naming]
+
+  - id: 101-102.2-0008
+    type: multi_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      You are asked to change the boot menu of an old server that still runs GRUB Legacy. Which
+      **TWO** file names may hold its menu configuration, depending on the distribution?
+    select_count: 2
+    options:
+      - id: a
+        text: "`/boot/grub/grub.cfg`"
+        rationale: Wrong. grub.cfg is the configuration file of GRUB 2.
+      - id: b
+        text: "`/boot/grub/menu.lst`"
+        rationale: Correct. menu.lst is the usual GRUB Legacy configuration file.
+      - id: c
+        text: "`/etc/default/grub`"
+        rationale: Wrong. This is the GRUB 2 settings file used when generating grub.cfg.
+      - id: d
+        text: "`/boot/grub/grub.conf`"
+        rationale: Correct. Red Hat family distributions named the GRUB Legacy file grub.conf (with menu.lst as a link to it).
+    answer: [b, d]
+    explanation: >
+      GRUB Legacy reads /boot/grub/menu.lst; Red Hat, CentOS and older Fedora kept it as
+      /boot/grub/grub.conf. Both are edited directly and take effect at the next boot, with no
+      generator step. GRUB 2 uses a generated grub.cfg instead.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: Configuring GRUB Legacy Menu Entries and Settings }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [grub-legacy, menu.lst, grub.conf]
+
+  - id: 101-102.2-0009
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      A BIOS-based server has a single disk, `/dev/sda`, with a DOS partition table; `/boot` is a
+      directory on `/dev/sda1`. Which command writes GRUB 2's boot code to the disk's MBR and copies
+      its images and modules into `/boot/grub`?
+    options:
+      - id: a
+        text: "`grub-install /dev/sda1`"
+        rationale: Wrong. This names a partition, not the disk; GRUB would target the partition's boot sector (and refuses unless forced), leaving the MBR untouched.
+      - id: b
+        text: "`update-grub /dev/sda`"
+        rationale: Wrong. update-grub only regenerates grub.cfg; it ignores the extra argument and writes nothing to the disk.
+      - id: c
+        text: "`grub-mkconfig -o /dev/sda`"
+        rationale: Wrong. This writes a generated configuration file over the start of the raw disk device, destroying the partition table.
+      - id: d
+        text: "`grub-install /dev/sda`"
+        rationale: Correct. grub-install takes the whole disk as its install device and places the boot code in its MBR.
+    answer: [d]
+    explanation: >
+      grub-install installs the boot loader: boot code in the MBR, core image after it, and modules
+      and fonts in /boot/grub. Give it the disk (/dev/sda), not a partition. grub-mkconfig and
+      update-grub only produce grub.cfg.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: Installing GRUB 2 }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. update-grub/grub-mkconfig behaviour checked in the scripts." }
+    tags: [grub-install, mbr]
+
+  - id: 101-102.2-0010
+    type: fill_in
+    difficulty: 3
+    pool: holdout
+    stem: >
+      You booted a broken BIOS machine from a live USB stick and mounted its separate boot
+      partition on `/mnt/target`. By default `grub-install` would copy GRUB's files into the live
+      system's own `/boot/grub`. Type the GRUB 2 `grub-install` long option that makes it use the mounted
+      boot partition instead (you may include its value).
+    fill_in:
+      accepted: ['((sudo\s+)?((/usr)?/s?bin/)?grub2?-install\s+(/dev/\S+\s+)?)?--boot-directory((=|\s+)/mnt/target/?(\s+/dev/\S+)?)?']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      `grub-install --boot-directory=/mnt/target /dev/sda` puts the images and modules into
+      /mnt/target/grub, which is /boot/grub on the repaired system, and writes the boot code to
+      /dev/sda. Without the option, files go to the running system's /boot/grub.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: Installing GRUB 2 }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Regex tightened: a device argument is only accepted after a directory value, so '--boot-directory /dev/sda' is rejected." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Regex now only accepts /mnt/target as the value and allows device-first order; stem says GRUB 2 grub-install." }
+    tags: [grub-install, rescue]
+
+  - id: 101-102.2-0011
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      A custom GRUB 2 entry must read its kernel from `/dev/sdb3`, the third partition of the second
+      disk (DOS partition table). Assuming GRUB sees the disks in the same order as Linux, which
+      device name do you use in `set root=`?
+    options:
+      - id: a
+        text: "`(hd2,3)`"
+        rationale: Wrong. GRUB 2 numbers disks from 0, so (hd2) is the third disk.
+      - id: b
+        text: "`(hd1,3)`"
+        rationale: Correct. Second disk is hd1 (disks count from 0); third partition is 3 (partitions count from 1).
+      - id: c
+        text: "`(hd1,2)`"
+        rationale: Wrong. That is the GRUB Legacy way of counting; in GRUB 2 it is the second partition.
+      - id: d
+        text: "`(sdb,3)`"
+        rationale: Wrong. GRUB does not use Linux device names; disks are hd0, hd1 and so on.
+    answer: [b]
+    explanation: >
+      In GRUB 2, disks start at hd0 and partitions start at 1, so /dev/sdb3 is (hd1,3), also written
+      (hd1,msdos3) for a DOS partition table. The mapping depends on the firmware's disk order, which
+      is why generated entries usually locate the filesystem by UUID instead.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: Managing Menu Entries }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [grub2, device-naming]
+
+  - id: 101-102.2-0012
+    type: multi_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      Inside a GRUB 2 `menuentry` block, which **TWO** lines tell GRUB which filesystem to read the
+      kernel and initrd from?
+    select_count: 2
+    options:
+      - id: a
+        text: "`set root=(hd0,2)`"
+        rationale: Correct. This sets GRUB's root device directly by disk and partition.
+      - id: b
+        text: "`root (hd0,1)`"
+        rationale: Wrong. This is GRUB Legacy syntax; GRUB 2 has no root command and sets the root variable instead.
+      - id: c
+        text: "`search --set=root --fs-uuid 0b7c4e2a-6d1f-4c39-9a51-3f2e8d7c1a40`"
+        rationale: Correct. search finds the filesystem with that UUID and stores its device in the root variable.
+      - id: d
+        text: "`linux /vmlinuz root=/dev/sda2`"
+        rationale: Wrong. root=/dev/sda2 here is a kernel parameter telling Linux where its root filesystem is; it does not change where GRUB reads files.
+    answer: [a, c]
+    explanation: >
+      GRUB 2 resolves paths such as /vmlinuz against its `root` variable. You set it directly with
+      `set root=(hdX,Y)` or let `search --set=root` find the filesystem by UUID (--fs-uuid), label
+      (--label) or a file it contains. The kernel's own `root=` parameter is a separate thing.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: Managing Menu Entries }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. Commands checked against GRUB 2 command.lst and the GRUB Legacy manual." }
+    tags: [grub2, search, uuid]
+
+  - id: 101-102.2-0013
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      You are at the `grub>` prompt of a GRUB Legacy boot disk and do not know which partition holds
+      the installed system's GRUB files. Which command finds it?
+    options:
+      - id: a
+        text: "`find /boot/grub/stage1`"
+        rationale: Correct. GRUB Legacy's find searches all partitions for the file and prints each one that has it, e.g. (hd0,0).
+      - id: b
+        text: "`search --file /boot/grub/stage1`"
+        rationale: Wrong. search is a GRUB 2 command; GRUB Legacy does not have it.
+      - id: c
+        text: "`ls /boot/grub`"
+        rationale: Wrong. GRUB Legacy has no ls command; listing devices and files with ls is a GRUB 2 feature.
+      - id: d
+        text: "`root /boot/grub`"
+        rationale: Wrong. root takes a device such as (hd0,0), not a path, and it sets the device rather than searching for one.
+    answer: [a]
+    explanation: >
+      GRUB Legacy keeps its stage files in /boot/grub. `find /boot/grub/stage1` lists the partitions
+      that contain that file; you then pass the result to `root` and install with `setup`.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: Installing GRUB Legacy from a GRUB Shell }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. Commands checked against GRUB 2 command.lst and the GRUB Legacy manual." }
+    tags: [grub-legacy, grub-shell]
+
+  - id: 101-102.2-0014
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      A machine is moved from GRUB Legacy to GRUB 2, and the entry below has to be added to
+      `/etc/grub.d/40_custom`. Which `menuentry` body boots the same kernel in the same way?
+    exhibit: |
+      title Debian (rescue kernel)
+      root (hd0,2)
+      kernel /vmlinuz-6.1.0-26-amd64 root=/dev/sda3 ro single
+      initrd /initrd.img-6.1.0-26-amd64
+    options:
+      - id: a
+        text: "`set root=(hd0,2)` / `linux /vmlinuz-6.1.0-26-amd64 root=/dev/sda3 ro single` / `initrd /initrd.img-6.1.0-26-amd64`"
+        rationale: Wrong. In GRUB 2, (hd0,2) is the second partition; the Legacy (hd0,2) is the third.
+      - id: b
+        text: "`set root=(hd0,3)` / `kernel /vmlinuz-6.1.0-26-amd64 root=/dev/sda3 ro single` / `initrd /initrd.img-6.1.0-26-amd64`"
+        rationale: Wrong. GRUB 2 loads a Linux kernel with the linux command; it has no kernel command.
+      - id: c
+        text: "`set root=(hd0,3)` / `linux /vmlinuz-6.1.0-26-amd64 root=/dev/sda3 ro single` / `initrd /initrd.img-6.1.0-26-amd64`"
+        rationale: Correct. The partition number goes up by one for GRUB 2, linux replaces kernel, and the kernel parameters stay as they were.
+      - id: d
+        text: "`set root=(hd0,3)` / `linux /vmlinuz-6.1.0-26-amd64 root=/dev/sda4 ro single` / `initrd /initrd.img-6.1.0-26-amd64`"
+        rationale: Wrong. root=/dev/sda3 is a Linux device name passed to the kernel; it does not change when GRUB's numbering does.
+    answer: [c]
+    explanation: >
+      Legacy (hd0,2) counts partitions from 0, so it is the third partition, /dev/sda3; in GRUB 2
+      that is (hd0,3). GRUB 2 uses `linux` instead of `kernel`. Kernel parameters such as
+      root=/dev/sda3 use Linux names and are copied unchanged.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: Configuring GRUB Legacy Menu Entries and Settings }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [grub-legacy, grub2, device-naming, menuentry]
+
+  - id: 101-102.2-0015
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      A dual-boot PC uses GRUB Legacy with the `menu.lst` entry below. What happens when a user
+      selects it?
+    exhibit: |
+      title Windows
+      root (hd0,1)
+      makeactive
+      chainloader +1
+    options:
+      - id: a
+        text: GRUB loads the Windows kernel file from the second partition and starts it directly.
+        rationale: Wrong. GRUB Legacy cannot load Windows itself; chainloading hands over to Windows' own boot loader.
+      - id: b
+        text: GRUB reads the first sector of the first partition on the first disk and runs it.
+        rationale: Wrong. GRUB Legacy counts partitions from 0, so (hd0,1) is the second partition, not the first.
+      - id: c
+        text: GRUB re-reads the MBR of the first disk and runs it.
+        rationale: Wrong. +1 is relative to the root device (hd0,1), a partition, so the sector read is that partition's first, not the disk's MBR.
+      - id: d
+        text: GRUB reads the first sector of the second partition on the first disk and runs it.
+        rationale: Correct. chainloader +1 loads the first sector of the root device (hd0,1) and boots it, after makeactive marks that partition active.
+    answer: [d]
+    explanation: >
+      Chainloading starts another operating system's boot loader. `root (hd0,1)` selects the second
+      partition of the first disk, `makeactive` sets its active flag (primary partitions only), and
+      `chainloader +1` loads that partition's first sector, which Windows' boot loader occupies.
+      GRUB 2 uses the same `chainloader +1` command.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: Chainloading other Operating Systems }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [grub-legacy, chainloading]
+
+  - id: 101-102.2-0016
+    type: multi_choice
+    difficulty: 4
+    pool: holdout
+    stem: Which **TWO** statements correctly describe where GRUB 2 places its code?
+    select_count: 2
+    options:
+      - id: a
+        text: On a BIOS machine with a DOS partition table, the core image goes in the gap between the MBR and the first partition.
+        rationale: Correct. The MBR code loads the core image from the unused sectors before the first partition.
+      - id: b
+        text: On a BIOS machine with a GPT disk, the core image goes in the gap after the protective MBR, exactly as on a DOS-labelled disk.
+        rationale: Wrong. The GPT header and partition entries occupy the start of the disk; GRUB needs a small BIOS boot partition to hold the core image.
+      - id: c
+        text: On a UEFI machine, the firmware runs GRUB's boot code from the MBR, which then loads grubx64.efi from /boot/grub.
+        rationale: Wrong. UEFI firmware does not run MBR code; it loads grubx64.efi directly from the EFI System Partition.
+      - id: d
+        text: On a BIOS machine with a GPT disk, the core image goes in a dedicated BIOS boot partition.
+        rationale: Correct. GPT leaves no reliable post-MBR gap, so grub-install embeds the core image in a BIOS boot partition.
+    answer: [a, d]
+    explanation: >
+      BIOS + DOS label: boot code in the MBR, core image in the gap before the first partition.
+      BIOS + GPT: boot code in the protective MBR, core image in a BIOS boot partition. UEFI: the
+      firmware loads grubx64.efi (grubia32.efi on 32-bit) from the EFI System Partition.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: "Where is the Bootloader?" }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. Embedding message confirmed in grub-install." }
+    tags: [grub2, mbr, gpt, uefi]
+
+  - id: 101-102.2-0017
+    type: fill_in
+    difficulty: 4
+    pool: holdout
+    stem: >
+      At the GRUB 2 `grub>` prompt, `ls` printed `(proc) (hd0) (hd0,gpt1) (hd0,gpt2)`. Type the
+      command that lists the files and directories at the top of the second partition.
+    fill_in:
+      accepted: ['ls(\s+(-[lha]+|--(long|human-readable|all)))*\s+\(hd0,(gpt)?2\)/']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      `ls (hd0,gpt2)/` lists the top directory of that partition (add -l for a long listing). The
+      trailing slash matters: `ls (hd0,gpt2)` without it only prints information about the
+      partition, such as its filesystem type and UUID. (hd0,2) without the gpt prefix also works.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: Booting from the GRUB 2 Shell }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Regex also accepts the long ls options --long, --human-readable and --all." }
+    tags: [grub2, grub-shell]
+
+  - id: 101-102.2-0018
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      A BIOS machine stops at the `grub rescue>` prompt because its embedded prefix points to a
+      partition that no longer exists. `ls` shows `(hd0) (hd0,msdos1)`; the root filesystem is
+      `/dev/sda1`, and the kernel and initrd are `/boot/vmlinuz` and
+      `/boot/initrd.img` on it. Which sequence of commands boots the system?
+    options:
+      - id: a
+        text: "`insmod normal`; `insmod linux`; `set prefix=(hd0,msdos1)/boot/grub`; `set root=(hd0,msdos1)`; `linux /boot/vmlinuz root=/dev/sda1`; `initrd /boot/initrd.img`; `boot`"
+        rationale: Wrong. Modules are loaded from the prefix directory; while the prefix is still wrong, insmod cannot find them.
+      - id: b
+        text: "`set prefix=(hd0,msdos1)/boot/grub`; `insmod normal`; `insmod linux`; `set root=(hd0,msdos1)`; `linux /boot/vmlinuz root=/dev/sda1`; `initrd /boot/initrd.img`; `boot`"
+        rationale: Correct. Fix the prefix, load the modules, set the root device, load kernel then initrd, and boot.
+      - id: c
+        text: "`set prefix=(hd0,msdos1)/boot/grub`; `insmod normal`; `insmod linux`; `set root=(hd0,msdos1)`; `initrd /boot/initrd.img`; `linux /boot/vmlinuz root=/dev/sda1`; `boot`"
+        rationale: Wrong. GRUB 2 refuses to load an initrd before a kernel ("you need to load the kernel first").
+      - id: d
+        text: "`set prefix=(hd0,msdos1)/boot/grub`; `insmod normal`; `insmod linux`; `set root=(hd0,msdos1)`; `linux /boot/vmlinuz root=(hd0,msdos1)`; `initrd /boot/initrd.img`; `boot`"
+        rationale: Wrong. The kernel's root= parameter needs a Linux name such as /dev/sda1 or a UUID; it does not understand GRUB device names.
+    answer: [b]
+    explanation: >
+      The rescue shell appears when GRUB cannot find its modules, so the prefix must be corrected
+      first. Then load normal and linux, point root at the partition with the kernel, and run linux
+      (with a Linux root= parameter), initrd and boot, in that order.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: Booting from the Rescue Shell }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Stem now states why the rescue prompt appears (prefix points to a partition that no longer exists)." }
+    tags: [grub2, grub-rescue]
+
+  - id: 101-102.2-0019
+    type: multi_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      An old server uses GRUB Legacy and no longer boots after another OS overwrote the MBR of its
+      only disk. You start a GRUB Legacy boot disk, get the session below, and want to reinstall
+      GRUB to the MBR. Which **TWO** commands do you run next?
+    exhibit: |
+      grub> find /boot/grub/stage1
+       (hd0,2)
+    select_count: 2
+    options:
+      - id: a
+        text: "`root (hd0,3)`"
+        rationale: Wrong. find already reported GRUB's device name, (hd0,2); adding one converts to GRUB 2 numbering, which GRUB Legacy does not use.
+      - id: b
+        text: "`root (hd0,2)`"
+        rationale: Correct. This sets the partition that holds /boot/grub, as reported by find.
+      - id: c
+        text: "`setup (hd0)`"
+        rationale: Correct. setup installs GRUB to the MBR of the first disk, using the files on the root partition.
+      - id: d
+        text: "`setup (hd0,2)`"
+        rationale: Wrong. Naming a partition installs GRUB to that partition's boot sector; the MBR stays broken.
+      - id: e
+        text: "`grub-install /dev/sda`"
+        rationale: Wrong. grub-install is a Linux command; it is not available inside the GRUB shell.
+    answer: [b, c]
+    explanation: >
+      In the GRUB Legacy shell, set the partition that holds the GRUB files with root (using the name
+      find printed), then run setup on the whole disk to write the MBR. setup on a partition would
+      write that partition's boot sector instead.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: Installing GRUB Legacy from a GRUB Shell }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. Judged original: tests reading find output, not the lesson's recipe." }
+    tags: [grub-legacy, grub-shell, setup]
+
+  - id: 101-102.2-0020
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      An administrator created `/etc/grub.d/45_backup` with the content shown and ran `update-grub`,
+      which finished without errors. The new entry is missing from `/boot/grub/grub.cfg`. What is
+      the cause?
+    exhibit: |
+      $ ls -l /etc/grub.d/40_custom /etc/grub.d/45_backup
+      -rwxr-xr-x 1 root root 214 Mar 17  2025 /etc/grub.d/40_custom
+      -rw-r--r-- 1 root root 197 Oct 25 09:12 /etc/grub.d/45_backup
+      $ cat /etc/grub.d/45_backup
+      #!/bin/sh
+      exec tail -n +3 $0
+      menuentry "Backup kernel" {
+        search --no-floppy --set=root --label BOOT
+        linux /vmlinuz.old root=LABEL=root ro
+        initrd /initrd.img.old
+      }
+    options:
+      - id: a
+        text: Only the files named `40_custom` and `41_custom` may contain hand-written entries.
+        rationale: Wrong. Every executable script in /etc/grub.d is run; 40_custom is a convention, not the only allowed name.
+      - id: b
+        text: Scripts numbered above 40 are processed after grub.cfg has already been written.
+        rationale: Wrong. All scripts are run in name order and their combined output becomes grub.cfg.
+      - id: c
+        text: The file is not executable, so the generator skips it.
+        rationale: Correct. grub-mkconfig (called by update-grub) only runs files in /etc/grub.d that have the execute bit set.
+      - id: d
+        text: GRUB 2 does not accept `search --label`, so the entry is dropped as invalid.
+        rationale: Wrong. search --label is a valid GRUB 2 command, and the generator does not drop entries for using it.
+    answer: [c]
+    explanation: >
+      update-grub runs grub-mkconfig, which runs each executable file in /etc/grub.d in name order
+      and joins their output into grub.cfg. A file without the execute bit is silently skipped;
+      `chmod +x /etc/grub.d/45_backup` and another update-grub fix it.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: Managing Menu Entries }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. test -x gate confirmed in grub-mkconfig." }
+    tags: [grub2, grub.d, update-grub]
+
+  # --------------------------------------------------------------------------- practice (CLI)
+
+  - id: 101-102.2-0021
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: What is the main job of a boot loader such as GRUB?
+    options:
+      - id: a
+        text: To test the hardware when the computer is switched on
+        rationale: Wrong. The power-on self test is done by the firmware (BIOS or UEFI) before any boot loader runs.
+      - id: b
+        text: To load the kernel and start it
+        rationale: Correct. A boot loader finds and loads the kernel (and initrd), passes it parameters and starts it.
+      - id: c
+        text: To start the system services once the kernel is running
+        rationale: Wrong. Services are started by the init system (for example systemd), after the boot loader has finished.
+      - id: d
+        text: To partition and format the disk during installation
+        rationale: Wrong. That is the job of partitioning and mkfs tools, not of the boot loader.
+    answer: [b]
+    explanation: >
+      Firmware runs first, then the boot loader, which loads the kernel and initial RAM disk and
+      starts the kernel. GRUB can also offer several kernels or operating systems in a menu.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: Introduction }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Correct option shortened so it is no longer the longest." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [boot-loader]
+
+  - id: 101-102.2-0022
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: >
+      A server's GRUB 2 menu is on screen. Before choosing an entry, you want to run `ls` to see
+      which disks and partitions GRUB can find. Which key do you press?
+    options:
+      - id: a
+        text: "`e`"
+        rationale: Wrong. e opens an editor for the selected menu entry, not a command prompt.
+      - id: b
+        text: "`Esc`"
+        rationale: Wrong. Esc leaves the editor or the shell and returns to the menu.
+      - id: c
+        text: "`Enter`"
+        rationale: Wrong. Enter boots the selected entry.
+      - id: d
+        text: "`c`"
+        rationale: Correct. c opens the GRUB command line with the grub> prompt.
+    answer: [d]
+    explanation: >
+      From the menu, c opens the GRUB shell (grub>), where help lists the available commands. The
+      same key works in GRUB Legacy. Esc returns to the menu.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: Interacting with GRUB 2 }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: fixed, notes: "Stem reworded away from the lesson exercise; options unchanged." }
+    tags: [grub2, grub-shell]
+
+  - id: 101-102.2-0023
+    type: fill_in
+    difficulty: 2
+    pool: practice
+    stem: >
+      At the GRUB 2 `grub>` prompt you have set `root`, loaded a kernel with `linux` and an initrd
+      with `initrd`. Type the command that starts the loaded kernel.
+    fill_in:
+      accepted: ['boot']
+      match: normalized
+      case_sensitive: true
+    explanation: >
+      `boot` starts whatever kernel or chainloaded boot loader has been loaded. Inside a menuentry it
+      is implied at the end of the block; at the prompt you type it yourself.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: Booting from the GRUB 2 Shell }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [grub2, grub-shell]
+
+  - id: 101-102.2-0024
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: >
+      After a kernel panic you want to match the addresses in the panic message to kernel function
+      names. Which file in `/boot` maps symbol names to addresses?
+    options:
+      - id: a
+        text: "`System.map-6.8.0-45-generic`"
+        rationale: Correct. System.map is the kernel's symbol table, listing each symbol with its address.
+      - id: b
+        text: "`config-6.8.0-45-generic`"
+        rationale: Wrong. This records the build options of the kernel, not symbol addresses.
+      - id: c
+        text: "`initrd.img-6.8.0-45-generic`"
+        rationale: Wrong. This is the initial RAM disk with drivers and tools needed to mount the root filesystem.
+      - id: d
+        text: "`grub/grubenv`"
+        rationale: Wrong. grubenv is GRUB's environment block, used for example to remember the saved default entry.
+    answer: [a]
+    explanation: >
+      System.map-VERSION is generated with each kernel build and lists symbols (functions and
+      variables) with their memory addresses, which helps make sense of a panic or oops.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: Contents of the Boot Partition }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [boot-partition, System.map]
+
+  - id: 101-102.2-0025
+    type: multi_choice
+    difficulty: 3
+    pool: practice
+    stem: >
+      Which **TWO** situations are good reasons to keep `/boot` on its own partition instead of as a
+      directory on the root filesystem?
+    select_count: 2
+    options:
+      - id: a
+        text: GRUB 2 can never load a kernel from the root filesystem.
+        rationale: Wrong. GRUB 2 can usually read the root filesystem and load the kernel from its /boot directory.
+      - id: b
+        text: The root filesystem is encrypted in a way GRUB cannot unlock.
+        rationale: Correct. GRUB must read the kernel and initrd before anything is decrypted, so they need an unencrypted partition.
+      - id: c
+        text: The root filesystem uses a filesystem type GRUB has no driver for.
+        rationale: Correct. A separate /boot on a filesystem GRUB supports keeps the kernel readable.
+      - id: d
+        text: UEFI firmware loads the Linux kernel straight from the `/boot` partition.
+        rationale: Wrong. UEFI firmware loads the boot loader from the EFI System Partition; /boot is read by GRUB.
+    answer: [b, c]
+    explanation: >
+      A separate /boot is not required, but it keeps boot files apart from the rest of the system
+      and is needed when GRUB cannot read the root filesystem, for example because of encryption
+      or an unsupported filesystem or compression.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: The /boot Partition }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [boot-partition]
+
+  - id: 101-102.2-0026
+    type: single_choice
+    difficulty: 3
+    pool: practice
+    stem: >
+      `/etc/default/grub` contains `GRUB_DEFAULT=saved` and `GRUB_SAVEDEFAULT=true`, and the GRUB
+      configuration has been regenerated. Which entry does GRUB select by default?
+    options:
+      - id: a
+        text: Always the first entry in the menu
+        rationale: Wrong. That is the behaviour of GRUB_DEFAULT=0.
+      - id: b
+        text: The entry named `saved`
+        rationale: Wrong. saved is a keyword here, not the title of a menu entry.
+      - id: c
+        text: The entry the user chose at the previous boot
+        rationale: Correct. GRUB_SAVEDEFAULT=true records each chosen entry, and GRUB_DEFAULT=saved boots it next time.
+      - id: d
+        text: The newest installed kernel, whatever its position in the menu
+        rationale: Wrong. GRUB has no setting that picks the newest kernel; generators simply list it first.
+    answer: [c]
+    explanation: >
+      GRUB_DEFAULT accepts a number (counting from 0), an entry title, or saved. With saved and
+      GRUB_SAVEDEFAULT=true, GRUB stores the selected entry in /boot/grub/grubenv and uses it as the
+      default for the next boot.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: Configuring GRUB 2 }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: fixed, notes: "Distractor d lengthened so the correct option is no longer the longest." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [grub2, GRUB_DEFAULT]
+
+  - id: 101-102.2-0027
+    type: single_choice
+    difficulty: 3
+    pool: practice
+    stem: At the GRUB 2 prompt, what does the device name `(hd0,gpt2)` refer to?
+    options:
+      - id: a
+        text: The third partition of the first disk, which uses a GPT partition table
+        rationale: Wrong. GRUB 2 numbers partitions from 1, so gpt2 is the second partition.
+      - id: b
+        text: The second partition of the second disk, which uses a GPT partition table
+        rationale: Wrong. GRUB numbers disks from 0, so hd0 is the first disk.
+      - id: c
+        text: The second partition of the first disk, which uses a DOS partition table
+        rationale: Wrong. Partitions on a DOS-labelled disk are shown as msdosN; gpt marks a GPT partition table.
+      - id: d
+        text: The second partition of the first disk, which uses a GPT partition table
+        rationale: Correct. hd0 is the first disk, gpt2 the second partition of its GPT table.
+    answer: [d]
+    explanation: >
+      GRUB 2 shows partitions with their table type: msdosN for a DOS (MBR) table, gptN for GPT.
+      Disks count from 0 and partitions from 1, so (hd0,gpt2) is usually /dev/sda2.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: Booting from the GRUB 2 Shell }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [grub2, device-naming, gpt]
+
+  - id: 101-102.2-0028
+    type: fill_in
+    difficulty: 4
+    pool: practice
+    stem: >
+      A boot menu entry must hand control to the boot loader stored in the first sector of the
+      partition that `root` points to. Type the line (command and argument) that loads that sector;
+      the same line works in GRUB Legacy and GRUB 2.
+    fill_in:
+      accepted: ['chainloader(\s+--force)?\s+\+1']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      `chainloader +1` loads one sector (the first, in blocklist notation) of the root device; boot
+      then runs it. This is how GRUB starts Windows and other systems it cannot boot itself. Some
+      documents spell the command `chainload`, but GRUB's command is `chainloader`.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: Chainloading other Operating Systems }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked. Commands checked against GRUB 2 command.lst and the GRUB Legacy manual." }
+    tags: [chainloading, grub-legacy, grub2]
+
+  - id: 101-102.2-0029
+    type: single_choice
+    difficulty: 4
+    pool: practice
+    stem: >
+      A menu entry is broken and you are at the GRUB 2 `grub>` prompt. The root filesystem is
+      `/dev/sda5`, and its top directory contains `vmlinuz` and `initrd.img`. Based on the output
+      below, which commands set the root device and load the kernel?
+    exhibit: |
+      grub> ls
+      (proc) (hd0) (hd0,msdos1) (hd0,msdos5)
+    options:
+      - id: a
+        text: "`set root=(hd0,msdos5)` then `linux /vmlinuz root=/dev/sda5`"
+        rationale: Correct. GRUB reads from msdos5 (which is /dev/sda5), and the kernel gets a Linux device name for its root.
+      - id: b
+        text: "`set root=(hd0,msdos5)` then `linux /vmlinuz root=(hd0,msdos5)`"
+        rationale: Wrong. The kernel does not understand GRUB device names in its root= parameter.
+      - id: c
+        text: "`set root=(hd0,msdos4)` then `linux /vmlinuz root=/dev/sda5`"
+        rationale: Wrong. msdos4 does not exist here; GRUB 2 partition numbers match the Linux ones, so sda5 is msdos5.
+      - id: d
+        text: "`root (hd0,4)` then `kernel /vmlinuz root=/dev/sda5`"
+        rationale: Wrong. root and kernel are GRUB Legacy commands; GRUB 2 uses set root= and linux.
+    answer: [a]
+    explanation: >
+      GRUB 2 partition numbers start at 1 like Linux, so /dev/sda5 (a logical partition) is
+      (hd0,msdos5). Set root to it, load the kernel with linux and a Linux-style root= parameter,
+      then load the initrd and run boot.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: Booting from the GRUB 2 Shell }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [grub2, grub-shell, device-naming]
+
+  - id: 101-102.2-0030
+    type: multi_choice
+    difficulty: 5
+    pool: practice
+    stem: Which **TWO** statements about `grub-install` on a BIOS (i386-pc) system are true?
+    select_count: 2
+    options:
+      - id: a
+        text: The install device should be a whole disk, such as `/dev/sdb`, not a partition.
+        rationale: Correct. The boot code goes into the disk's MBR; installing to a partition relies on unreliable blocklists and is refused unless forced.
+      - id: b
+        text: It also regenerates `/boot/grub/grub.cfg` from `/etc/default/grub`.
+        rationale: Wrong. grub-install installs images and boot code only; grub.cfg is produced by grub-mkconfig or update-grub.
+      - id: c
+        text: "`--boot-directory=/mnt/x` places GRUB's files in `/mnt/x/boot/grub`."
+        rationale: Wrong. The files go to DIR/grub, here /mnt/x/grub.
+      - id: d
+        text: Without `--boot-directory`, GRUB's images and modules are copied to `/boot/grub`.
+        rationale: Correct. /boot/grub is the default location for GRUB's images and modules.
+    answer: [a, d]
+    explanation: >
+      grub-install copies GRUB's images and modules into /boot/grub (or DIR/grub with
+      --boot-directory=DIR) and writes boot code to the disk given. Creating or updating grub.cfg
+      is a separate step done with grub-mkconfig or update-grub.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "102.2", lesson: 1, section: Installing GRUB 2 }
+    review:
+      status: pass2
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-25", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-25", result: ok, notes: "Answered cold, matches key; checked." }
+    tags: [grub-install]
