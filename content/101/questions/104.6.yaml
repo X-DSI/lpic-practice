@@ -1,0 +1,1055 @@
+# 104.6 Create and change hard and symbolic links — weight 2 → 20 holdout + 10 practice.
+# Original questions written from LPI Learning Materials 101-500, objective 104.6, lesson 1.
+schema_version: 1
+exam: "101"
+objective: "104.6"
+questions:
+  # ---------------------------------------------------------------- holdout (mock exams only)
+
+  - id: 101-104.6-0001
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: In the output of `ls -l`, what does the number right after the permission string count for a regular file?
+    options:
+      - id: a
+        text: The symbolic links that point to the file
+        rationale: Wrong. Symbolic links are separate files with their own inodes; creating one does not change this number.
+      - id: b
+        text: The directory entries (names) that refer to the file's inode
+        rationale: Correct. This is the hard link count; every extra hard link adds one, and removing a name subtracts one.
+      - id: c
+        text: The processes that currently have the file open
+        rationale: Wrong. ls does not report open file handles; tools such as lsof or fuser do that.
+      - id: d
+        text: The data blocks the file occupies on disk
+        rationale: Wrong. Block usage is shown by ls -s or du, not by this column.
+    answer: [b]
+    explanation: >
+      The second column of a long listing is the link count: how many names in the filesystem
+      point at the same inode. A new regular file starts at 1, and each hard link raises it by
+      one. The data is only freed when the count reaches zero and no process holds the file open.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.6", lesson: 1, section: Managing Hard Links }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [ls, link-count, hard-link]
+
+  - id: 101-104.6-0002
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: Which first character of the mode string in `ls -l` output marks an entry as a symbolic link?
+    options:
+      - id: a
+        text: "`s`"
+        rationale: Wrong. A leading s marks a socket; inside the permission bits, s marks setuid or setgid.
+      - id: b
+        text: "`-`"
+        rationale: Wrong. A leading dash marks a regular file, which is also what a hard link is.
+      - id: c
+        text: "`l`"
+        rationale: Correct. Symbolic links are listed with l as the file type, followed by the target after an arrow.
+      - id: d
+        text: "`h`"
+        rationale: Wrong. ls has no h file type; hard links appear as ordinary regular files.
+    answer: [c]
+    explanation: >
+      ls -l shows the file type as the first character: - for regular files, d for directories,
+      l for symbolic links. A symbolic link's line also shows "name -> target". Hard links have no
+      special marker because every hard link is just another regular-file name.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.6", lesson: 1, section: Managing Symbolic Links }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [ls, symbolic-link]
+
+  - id: 101-104.6-0003
+    type: single_choice
+    difficulty: 1
+    pool: holdout
+    stem: What does a symbolic link itself store?
+    options:
+      - id: a
+        text: A copy of the target file's data
+        rationale: Wrong. That would be a copy made with cp; a symbolic link holds no file data of its target.
+      - id: b
+        text: The inode number of the target file
+        rationale: Wrong. Referring to an inode directly is what a hard link (a directory entry) does.
+      - id: c
+        text: The device number and inode number of the target
+        rationale: Wrong. Symbolic links do not record device or inode numbers, which is why they can point to other filesystems and can dangle.
+      - id: d
+        text: The path name of the target, as text
+        rationale: Correct. The link holds a path string that is resolved each time the link is used.
+    answer: [d]
+    explanation: >
+      A symbolic link is a small file of its own (own inode, type l) whose content is a path.
+      The kernel follows that path every time the link is accessed. That is why it can point at
+      directories or other filesystems, and why it breaks when nothing exists at that path any more.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.6", lesson: 1, section: Understanding Links }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [symbolic-link, inode]
+
+  - id: 101-104.6-0004
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      A tool is installed as `/opt/tool/bin/tool`, and `/opt` is a separate filesystem from `/usr`.
+      Which command makes the tool also available as `/usr/local/bin/tool`?
+    options:
+      - id: a
+        text: "`ln -s /opt/tool/bin/tool /usr/local/bin/tool`"
+        rationale: Correct. A symbolic link may point to a file on another filesystem; the existing file comes first, the new name second.
+      - id: b
+        text: "`ln /opt/tool/bin/tool /usr/local/bin/tool`"
+        rationale: Wrong. Without -s, ln makes a hard link, which fails across filesystems with "Invalid cross-device link".
+      - id: c
+        text: "`ln -s /usr/local/bin/tool /opt/tool/bin/tool`"
+        rationale: Wrong. The arguments are reversed; ln reports "File exists" because /opt/tool/bin/tool is already there.
+      - id: d
+        text: "`cp -l /opt/tool/bin/tool /usr/local/bin/tool`"
+        rationale: Wrong. cp -l makes hard links instead of copies, so it fails across filesystems just like plain ln.
+    answer: [a]
+    explanation: >
+      ln takes the existing target first and the new link name second. Because the two paths are on
+      different filesystems, only a symbolic link (ln -s) can join them; hard links, whether made by
+      ln or cp -l, must stay inside one filesystem.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.6", lesson: 1, section: Creating Symbolic Links }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [ln, symbolic-link, cross-device]
+
+  - id: 101-104.6-0005
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      `~/bin/backup` is a symbolic link. Which command prints the path stored in the link, exactly as
+      it was given when the link was created?
+    options:
+      - id: a
+        text: "`realpath ~/bin/backup`"
+        rationale: Wrong. realpath resolves the whole chain and prints an absolute canonical path, which can differ from the stored text.
+      - id: b
+        text: "`ls -L ~/bin/backup`"
+        rationale: Wrong. -L makes ls describe the file the link points to; it does not print the stored path.
+      - id: c
+        text: "`stat -L ~/bin/backup`"
+        rationale: Wrong. -L makes stat report on the target's inode, not on the link's contents.
+      - id: d
+        text: "`readlink ~/bin/backup`"
+        rationale: Correct. Without options, readlink prints the link's stored value, relative or absolute, unchanged.
+    answer: [d]
+    explanation: >
+      readlink with no options prints the value of a symbolic link exactly as stored. realpath and
+      readlink -f instead follow every link and print a canonical absolute path. ls -L and stat -L
+      describe the target file.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.6", lesson: 1, section: Managing Symbolic Links }
+    verify:
+      setup:
+        - mkdir -p /tmp/rl && touch /tmp/rl/data && ln -s ../rl/data /tmp/rl/link
+      command: readlink /tmp/rl/link
+      expect: { exit_code: 0, stdout_regex: "^\\.\\./rl/data\\n?$" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [readlink, symbolic-link]
+
+  - id: 101-104.6-0006
+    type: multi_choice
+    difficulty: 2
+    pool: holdout
+    stem: Which **TWO** things can a symbolic link do that a hard link cannot?
+    select_count: 2
+    options:
+      - id: a
+        text: Refer to a directory
+        rationale: Correct. ln refuses to hard-link directories ("hard link not allowed for directory"), but ln -s accepts them.
+      - id: b
+        text: Keep giving access to the data after the original name is deleted
+        rationale: Wrong. That is a property of hard links; a symbolic link breaks when the name it points to disappears.
+      - id: c
+        text: Refer to a file on a different filesystem
+        rationale: Correct. A symbolic link stores only a path, so it can cross filesystems; a hard link cannot.
+      - id: d
+        text: Share the inode number of the file it refers to
+        rationale: Wrong. Sharing the inode is what makes a hard link; a symbolic link has an inode of its own.
+    answer: [a, c]
+    explanation: >
+      Hard links are extra directory entries for one inode, so they only work for non-directories on
+      the same filesystem. Symbolic links store a path, so they can point to directories and across
+      filesystems, at the cost of breaking when that path no longer exists.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.6", lesson: 1, section: Managing Symbolic Links }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [hard-link, symbolic-link]
+
+  - id: 101-104.6-0007
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: >
+      `notes.lnk` is a symbolic link to `/data/notes.txt`. A user runs `rm notes.lnk`. What is the
+      result?
+    options:
+      - id: a
+        text: "`/data/notes.txt` is deleted and `notes.lnk` is left dangling"
+        rationale: Wrong. rm acts on the name it is given; it does not follow a symbolic link to delete the target.
+      - id: b
+        text: "`notes.lnk` is removed and `/data/notes.txt` is unchanged"
+        rationale: Correct. Removing a symbolic link removes only the link file.
+      - id: c
+        text: Both `notes.lnk` and `/data/notes.txt` are removed
+        rationale: Wrong. rm never removes the target of a symbolic link it is asked to delete.
+      - id: d
+        text: rm refuses, and the link has to be removed with `unlink`
+        rationale: Wrong. rm removes symbolic links normally; unlink is just a simpler alternative for one name.
+    answer: [b]
+    explanation: >
+      rm deletes directory entries. For a symbolic link, the entry is the link itself, so the file it
+      points to is not touched. The reverse case is the risky one: deleting the target leaves every
+      symbolic link to it dangling.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.6", lesson: 1, section: Moving and Removing Symbolic Links }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [rm, symbolic-link]
+
+  - id: 101-104.6-0008
+    type: single_choice
+    difficulty: 2
+    pool: holdout
+    stem: Which command lists every symbolic link under `/etc`, and nothing else?
+    options:
+      - id: a
+        text: "`find /etc -type s`"
+        rationale: Wrong. Type s selects sockets, not symbolic links.
+      - id: b
+        text: "`find /etc -links +1`"
+        rationale: Wrong. This selects entries whose hard link count is above 1, such as directories with subdirectories and hard-linked files.
+      - id: c
+        text: "`find /etc -type l`"
+        rationale: Correct. Type l selects symbolic links, whether or not their targets exist.
+      - id: d
+        text: "`find /etc -xtype l`"
+        rationale: Wrong. -xtype tests the type after following each link, so only dangling links still count as type l; working links are left out.
+    answer: [c]
+    explanation: >
+      find -type l tests the file type of each entry without following links, so it returns symbolic
+      links only. -type f, d, s and so on select regular files, directories and sockets.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.6", lesson: 1, section: Managing Symbolic Links }
+    verify:
+      setup:
+        - mkdir -p /tmp/fl && touch /tmp/fl/f && ln -s f /tmp/fl/l
+      command: find /tmp/fl -type l
+      expect: { exit_code: 0, stdout_regex: "^/tmp/fl/l\\n?$" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Option d replaced (-perm 777 could list exactly the symlinks on a real /etc) with -xtype l." }
+    tags: [find, symbolic-link]
+
+  - id: 101-104.6-0009
+    type: fill_in
+    difficulty: 3
+    pool: holdout
+    stem: >
+      Working from `/root`, an admin runs `ln -s /srv/app/releases/2.1 /srv/app/current`. They want
+      `ln` to store the target as `releases/2.1`, computed relative to the link's own directory,
+      without typing that path by hand. Type the `ln` option to add.
+    fill_in:
+      accepted:
+        - '((sudo\s+)?((/usr)?/bin/)?ln\s+((-s|--symbolic)\s+)?)?(-r|--relative)(\s+(-s|--symbolic))?'
+        - '((sudo\s+)?((/usr)?/bin/)?ln\s+)?-(sr|rs)'
+      match: regex
+      case_sensitive: true
+    explanation: >
+      With -s, the -r (--relative) option makes ln work out a target path relative to the directory
+      that will hold the link, so `ln -sr /srv/app/releases/2.1 /srv/app/current` stores
+      releases/2.1. Relative links keep working when the whole tree is moved or mounted elsewhere.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.6", lesson: 1, section: Moving and Removing Symbolic Links }
+    verify:
+      setup:
+        - mkdir -p /tmp/app/releases/2.1
+      command: cd / && ln -sr /tmp/app/releases/2.1 /tmp/app/current && readlink /tmp/app/current
+      expect: { exit_code: 0, stdout_regex: "^releases/2\\.1\\n?$" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [ln, relative-link]
+
+  - id: 101-104.6-0010
+    type: multi_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      In the directory listed below, a user runs `echo 'power 70' >> budget.txt`. Which **TWO** of
+      the other names show the new line when read with `cat`?
+    exhibit: |
+      $ ls -li
+      total 12
+      1426107 -rw-r--r-- 2 root root  9 Oct 26 11:20 budget-2026.txt
+      1426108 -rw-r--r-- 1 root root  9 Oct 26 11:20 budget.bak
+      1426107 -rw-r--r-- 2 root root  9 Oct 26 11:20 budget.txt
+      1426109 lrwxrwxrwx 1 root root 10 Oct 26 11:20 current.txt -> budget.txt
+      1426110 lrwxrwxrwx 1 root root 10 Oct 26 11:20 previous.txt -> budget.bak
+    select_count: 2
+    options:
+      - id: a
+        text: "`budget.bak`"
+        rationale: Wrong. It has its own inode (1426108), so it is an independent copy that keeps the old content.
+      - id: b
+        text: "`budget-2026.txt`"
+        rationale: Correct. It shares inode 1426107 with budget.txt, so both names show the same data.
+      - id: c
+        text: "`previous.txt`"
+        rationale: Wrong. It is a symbolic link to budget.bak, the separate copy, which did not change.
+      - id: d
+        text: "`current.txt`"
+        rationale: Correct. It is a symbolic link to budget.txt, so reading it reads the changed file.
+    answer: [b, d]
+    explanation: >
+      Matching inode numbers in ls -li reveal hard links: budget.txt and budget-2026.txt are one file.
+      A symbolic link shows whatever its target name currently holds. A copy made with cp has its own
+      inode and data, so later changes to the original do not reach it.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.6", lesson: 1, section: Managing Hard Links }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [ls, inode, hard-link, symbolic-link, cp]
+
+  - id: 101-104.6-0011
+    type: fill_in
+    difficulty: 3
+    pool: holdout
+    stem: >
+      Type the `find` test that matches every name referring to the same inode as a file you give
+      by path (rather than by inode number), as in `find /srv ____ /srv/data/master.db`.
+    fill_in:
+      accepted: ['(((/usr)?/bin/)?find(\s+(?!-)\S+)+\s+)?-samefile(\s+(?!-)\S+)?']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      `find /srv -samefile /srv/data/master.db` lists every hard link to that file below /srv.
+      Unlike -inum, -samefile takes a file name, and it compares the device as well as the inode
+      number. Symbolic links pointing to the file are not listed unless find is run with -L.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.6", lesson: 1, section: Managing Hard Links }
+    verify:
+      setup:
+        - mkdir -p /tmp/sf/a && echo x > /tmp/sf/f && ln /tmp/sf/f /tmp/sf/a/g && ln -s ../f /tmp/sf/a/s
+      command: find /tmp/sf -samefile /tmp/sf/f | sort
+      expect: { exit_code: 0, stdout_regex: "^/tmp/sf/a/g\\n/tmp/sf/f\\n?$" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [find, hard-link, inode]
+
+  - id: 101-104.6-0012
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: In the listing below, what does the number `27` represent?
+    exhibit: |
+      $ ls -l /etc/localtime
+      lrwxrwxrwx 1 root root 27 Oct 20 14:25 /etc/localtime -> /usr/share/zoneinfo/Etc/UTC
+    options:
+      - id: a
+        text: The length, in bytes, of the target path stored in the link
+        rationale: Correct. A symbolic link's size is the length of the path it stores; /usr/share/zoneinfo/Etc/UTC has 27 characters.
+      - id: b
+        text: The size, in bytes, of the time zone file the link points to
+        rationale: Wrong. ls -l reports the link itself; ls -lL would show the target's size (114 bytes on this system).
+      - id: c
+        text: The number of 1 KiB blocks used by the target file
+        rationale: Wrong. This column is a size in bytes, and it belongs to the link, not to the target.
+      - id: d
+        text: The inode number of the target file
+        rationale: Wrong. Inode numbers are only shown with -i, and a symbolic link does not record its target's inode.
+    answer: [a]
+    explanation: >
+      ls -l describes the link, not the file it points to. A symbolic link's size is the number of
+      bytes in its stored path. Use ls -lL (or stat -L) to see the target's attributes.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.6", lesson: 1, section: Managing Symbolic Links }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [ls, symbolic-link]
+
+  - id: 101-104.6-0013
+    type: single_choice
+    difficulty: 3
+    pool: holdout
+    stem: >
+      Given the links below, which command prints `/usr/bin/mawk` when run against `/usr/bin/awk`?
+    exhibit: |
+      $ ls -l /usr/bin/awk /etc/alternatives/awk
+      lrwxrwxrwx 1 root root 13 Sep 30 14:11 /etc/alternatives/awk -> /usr/bin/mawk
+      lrwxrwxrwx 1 root root 21 Apr  8  2024 /usr/bin/awk -> /etc/alternatives/awk
+    options:
+      - id: a
+        text: "`readlink /usr/bin/awk`"
+        rationale: Wrong. Plain readlink prints only the first link's stored value, /etc/alternatives/awk.
+      - id: b
+        text: "`realpath /usr/bin/awk`"
+        rationale: Correct. realpath follows every symbolic link in the chain and prints the final canonical path.
+      - id: c
+        text: "`ls -l /usr/bin/awk`"
+        rationale: Wrong. ls -l shows one level only, /usr/bin/awk -> /etc/alternatives/awk.
+      - id: d
+        text: "`stat -c %N /usr/bin/awk`"
+        rationale: Wrong. %N prints the quoted name with the link's own stored target, again only one level deep.
+    answer: [b]
+    explanation: >
+      Links can point to other links, as in the Debian alternatives system. readlink and ls -l show one
+      hop at a time. realpath (or readlink -f) resolves the whole chain to an absolute path.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.6", lesson: 1, section: Managing Symbolic Links }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [realpath, readlink, symbolic-link]
+
+  - id: 101-104.6-0014
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      An admin creates a link from `/tmp/q104-6/srv`, but it does not work. Run from the same
+      directory, which command replaces it with a working link?
+    exhibit: |
+      $ pwd
+      /tmp/q104-6/srv
+      $ ls shared
+      db.conf
+      $ ln -s shared/db.conf www/site/db.conf
+      $ cat www/site/db.conf
+      cat: www/site/db.conf: No such file or directory
+      $ ls -l www/site/db.conf
+      lrwxrwxrwx 1 root root 14 Oct 26 11:18 www/site/db.conf -> shared/db.conf
+    options:
+      - id: a
+        text: "`ln -sf ./shared/db.conf www/site/db.conf`"
+        rationale: Wrong. ./shared/db.conf is still relative to the link's directory, so it means www/site/shared/db.conf, which does not exist.
+      - id: b
+        text: "`ln -sf www/site/db.conf shared/db.conf`"
+        rationale: Wrong. The arguments are reversed; this replaces the real shared/db.conf with a link to the broken link.
+      - id: c
+        text: "`ln -sr shared/db.conf www/site/db.conf`"
+        rationale: Wrong. -r would compute the right path, but without -f ln stops with "File exists" because the broken link is still there.
+      - id: d
+        text: "`ln -sf ../../shared/db.conf www/site/db.conf`"
+        rationale: Correct. A relative target is resolved from the link's directory, www/site, and ../../shared/db.conf leads back to the real file; -f replaces the broken link.
+    answer: [d]
+    explanation: >
+      A relative symbolic link target is resolved from the directory that contains the link, not from
+      the directory where ln was run. Write the target relative to the link's location, use an absolute
+      path, or let ln -sr work it out (adding -f when a link already exists).
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.6", lesson: 1, section: Moving and Removing Symbolic Links }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [ln, relative-link, dangling-link]
+
+  - id: 101-104.6-0015
+    type: multi_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      The current directory is `/tmp/q104-6`. `work/plan.txt` is a file and `work/old/` is a directory.
+      Based on the output below, which **TWO** commands succeed?
+    exhibit: |
+      $ df --output=source,fstype,target /tmp/q104-6/work /tmp/q104-6/archive
+      Filesystem     Type Mounted on
+      /dev/vda       ext4 /
+      /dev/loop0     ext4 /tmp/q104-6/archive
+    select_count: 2
+    options:
+      - id: a
+        text: "`ln work/plan.txt archive/plan.txt`"
+        rationale: Wrong. work is on /dev/vda and archive is on /dev/loop0; a hard link across them fails with "Invalid cross-device link".
+      - id: b
+        text: "`ln -s /tmp/q104-6/work/plan.txt archive/plan.lnk`"
+        rationale: Correct. A symbolic link stores only a path, so it can live on a different filesystem from its target.
+      - id: c
+        text: "`ln work/plan.txt work/old/plan.txt`"
+        rationale: Correct. Both names are on the same filesystem, so the hard link is allowed even though the directories differ.
+      - id: d
+        text: "`cp -l work/plan.txt archive/`"
+        rationale: Wrong. cp -l creates hard links instead of copying, so it fails across filesystems in the same way as ln.
+    answer: [b, c]
+    explanation: >
+      df shows that archive is a separate filesystem mounted inside /tmp/q104-6. Hard links (ln or
+      cp -l) can be made between any directories of one filesystem, but never across a mount point.
+      Symbolic links have no such limit.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.6", lesson: 1, section: Managing Hard Links }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [ln, cp, cross-device, hard-link]
+
+  - id: 101-104.6-0016
+    type: single_choice
+    difficulty: 4
+    pool: holdout
+    stem: >
+      An admin keeps a hard link as a cheap backup before editing a file. Based on the output below,
+      why does `app.conf.keep` still contain the old port?
+    exhibit: |
+      $ ln app.conf app.conf.keep
+      $ ls -li
+      total 8
+      1426164 -rw-r--r-- 2 root root 10 Oct 26 11:18 app.conf
+      1426164 -rw-r--r-- 2 root root 10 Oct 26 11:18 app.conf.keep
+      $ sed -i 's/8080/9090/' app.conf
+      $ ls -li
+      total 8
+      1426184 -rw-r--r-- 1 root root 10 Oct 26 11:18 app.conf
+      1426164 -rw-r--r-- 1 root root 10 Oct 26 11:18 app.conf.keep
+      $ cat app.conf.keep
+      port=8080
+    options:
+      - id: a
+        text: A hard link keeps its own copy of the data, taken when the link was created
+        rationale: Wrong. Hard links share one inode and one set of data blocks; there is no copy.
+      - id: b
+        text: The filesystem copies the shared data on write, so each name gets its own blocks
+        rationale: Wrong. ext4 does no copy-on-write for hard links; an in-place write through either name is seen by both.
+      - id: c
+        text: "`sed -i` wrote the result to a new file and renamed it to `app.conf`, so that name now has a new inode"
+        rationale: Correct. The listing shows app.conf moving to inode 1426184 while app.conf.keep keeps 1426164, now with a link count of 1.
+      - id: d
+        text: "`sed -i` refuses to change a file whose link count is above 1, so it silently edited a separate copy instead"
+        rationale: Wrong. sed has no such check; it always writes to a temporary file and renames it, whatever the link count.
+    answer: [c]
+    explanation: >
+      A hard link only shares data with names that still point at the same inode. Tools that save by
+      writing a new file and renaming it over the old name (sed -i, many editors, package managers)
+      give that name a new inode and leave the other links on the old data. Checking ls -li before and
+      after shows exactly what happened.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.6", lesson: 1, section: Managing Hard Links }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Option d lengthened so the key is not the longest option." }
+    tags: [hard-link, inode, ls]
+
+  - id: 101-104.6-0017
+    type: fill_in
+    difficulty: 4
+    pool: holdout
+    stem: >
+      `/tmp/q104-6/archive` is an ext4 filesystem. Besides subdirectories, the directory below
+      contains two regular files and one symbolic link. How many subdirectories does it contain
+      directly? Type a number.
+    exhibit: |
+      $ ls -ld /tmp/q104-6/archive/projects
+      drwxr-xr-x 5 root root 4096 Oct 26 11:19 /tmp/q104-6/archive/projects
+    fill_in:
+      accepted: ['3', 'three']
+      match: normalized
+      case_sensitive: false
+    explanation: >
+      On ext4 a directory's link count is 2 (its entry in the parent plus its own ".") plus one for
+      the ".." entry of each subdirectory. 5 - 2 = 3. Regular files and symbolic links inside it do
+      not change the directory's link count. (Some filesystems, such as btrfs, do not follow this rule.)
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.6", lesson: 1, section: Managing Hard Links }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [link-count, ls, directory]
+
+  - id: 101-104.6-0018
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      `latest` is a symbolic link to the directory `backups`, which held `index` and a subdirectory
+      `2026`. An admin wants to delete only the link and types the command shown. What is the state
+      afterwards?
+    exhibit: |
+      $ ls -l
+      total 4
+      drwxr-xr-x 3 root root 4096 Oct 26 11:20 backups
+      lrwxrwxrwx 1 root root    7 Oct 26 11:20 latest -> backups
+      $ rm -r latest/
+      rm: cannot remove 'latest/': Not a directory
+    options:
+      - id: a
+        text: "`latest` and the now-empty `backups` directory still exist; everything inside `backups` was deleted"
+        rationale: Correct. The trailing slash makes rm -r resolve the link to the directory and delete its contents; the final removal fails because latest itself is not a directory.
+      - id: b
+        text: Nothing was removed at all, because rm stopped at the error before it had deleted any file
+        rationale: Wrong. The error is reported last, after the recursive pass through the directory's contents has already deleted them.
+      - id: c
+        text: Only `latest` was removed; the message is just a harmless warning caused by the trailing slash on the name
+        rationale: Wrong. rm returned an error for latest/, and the link is still there; the slash is what made rm descend into the target.
+      - id: d
+        text: Both `latest` and `backups` were removed entirely
+        rationale: Wrong. rm cannot remove latest/ as a directory, and it never removes the target directory itself through the link.
+    answer: [a]
+    explanation: >
+      A trailing slash makes the path name the directory a symbolic link points to. rm -r then walks
+      that directory and deletes its contents before failing on the link itself. To remove only the
+      link, name it without the slash: rm latest (or unlink latest).
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.6", lesson: 1, section: Moving and Removing Symbolic Links }
+    verify:
+      setup:
+        - mkdir -p /tmp/rmt/backups/2026 && touch /tmp/rmt/backups/index && ln -s backups /tmp/rmt/latest
+      command: cd /tmp/rmt && { rm -r latest/ 2>/dev/null || true; ls -A backups | wc -l; test -L latest && echo link-kept; }
+      expect: { exit_code: 0, stdout_regex: "^0\\nlink-kept\\n?$" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Options b and c lengthened so the key is not the longest option; verify command made safe under set -e." }
+    tags: [rm, symbolic-link, directory]
+
+  - id: 101-104.6-0019
+    type: single_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      An admin tries to switch `current` to the new release, but the link did not change. Which
+      command would have switched it as intended?
+    exhibit: |
+      $ ls -l current
+      lrwxrwxrwx 1 root root 12 Oct 26 11:20 current -> releases/1.4
+      $ ln -sf releases/1.5 current
+      $ ls -l current
+      lrwxrwxrwx 1 root root 12 Oct 26 11:20 current -> releases/1.4
+      $ ls -l releases/1.4
+      total 0
+      lrwxrwxrwx 1 root root 12 Oct 26 11:20 1.5 -> releases/1.5
+    options:
+      - id: a
+        text: "`ln -sfr releases/1.5 current`"
+        rationale: Wrong. -r only changes how the target path is written; ln still follows current into releases/1.4 and creates the new link there.
+      - id: b
+        text: "`ln -sfn releases/1.5 current`"
+        rationale: Correct. -n treats current as a plain file even though it is a link to a directory, so -f replaces the link itself.
+      - id: c
+        text: "`ln -sf releases/1.5 current/`"
+        rationale: Wrong. The trailing slash explicitly names the directory behind the link, so the new link again lands inside releases/1.4.
+      - id: d
+        text: "`rm current/ && ln -s releases/1.5 current`"
+        rationale: Wrong. rm current/ fails with "Is a directory" because of the slash, so the && stops and nothing changes.
+    answer: [b]
+    explanation: >
+      When the last argument of ln is (a link to) a directory, ln creates the new link inside that
+      directory. -n (--no-dereference, like -T) makes ln treat a symbolic link to a directory as a
+      normal file, so ln -sfn swaps the link in one step. rm current (without a slash) followed by ln -s
+      would also work.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.6", lesson: 1, section: Creating Symbolic Links }
+    verify:
+      setup:
+        - mkdir -p /tmp/rel/releases/1.4 /tmp/rel/releases/1.5 && ln -s releases/1.4 /tmp/rel/current
+      command: cd /tmp/rel && ln -sfn releases/1.5 current && readlink current && ls -A releases/1.4 | wc -l
+      expect: { exit_code: 0, stdout_regex: "^releases/1\\.5\\n0\\n?$" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [ln, symbolic-link, directory]
+
+  - id: 101-104.6-0020
+    type: multi_choice
+    difficulty: 5
+    pool: holdout
+    stem: >
+      You need the names of all hard links to `/tmp/q104-6/archive/notes.txt` on this system.
+      Several symbolic links elsewhere also point to that file. Based on the output below, which
+      **TWO** commands list exactly the hard links and nothing else?
+    exhibit: |
+      $ ls -i /tmp/q104-6/archive/notes.txt
+      21 /tmp/q104-6/archive/notes.txt
+      $ findmnt -n -o SOURCE,FSTYPE,TARGET -T /tmp/q104-6/archive
+      /dev/loop0 ext4   /tmp/q104-6/archive
+    select_count: 2
+    options:
+      - id: a
+        text: "`find / -samefile /tmp/q104-6/archive/notes.txt`"
+        rationale: Correct. -samefile compares both the device and the inode number, so it matches only names of this very file.
+      - id: b
+        text: "`find / -inum 21`"
+        rationale: Wrong. Inode numbers are unique only within one filesystem; other filesystems have their own inode 21 (on the test system, /usr was one).
+      - id: c
+        text: "`find -L / -samefile /tmp/q104-6/archive/notes.txt`"
+        rationale: Wrong. -L makes find follow symbolic links, so links that resolve to the file are listed as well.
+      - id: d
+        text: "`find /tmp/q104-6/archive -xdev -inum 21`"
+        rationale: Correct. Hard links cannot leave the filesystem, and -xdev keeps the search on /dev/loop0, where inode 21 is this file.
+    answer: [a, d]
+    explanation: >
+      An inode number identifies a file only together with its filesystem. -samefile handles that by
+      comparing device and inode; -inum is safe only when the search is limited to the right
+      filesystem, for example by starting at its mount point with -xdev. Following symbolic links
+      (-L) adds names that are not hard links.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.6", lesson: 1, section: Managing Hard Links }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [find, inode, hard-link]
+
+  # --------------------------------------------------------------------------- practice (CLI)
+
+  - id: 101-104.6-0021
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: Which command creates a hard link named `report-final.odt` for the existing file `report.odt`?
+    options:
+      - id: a
+        text: "`ln -s report.odt report-final.odt`"
+        rationale: Wrong. -s creates a symbolic link, not a hard link.
+      - id: b
+        text: "`ln report-final.odt report.odt`"
+        rationale: Wrong. The existing file must come first; this fails because report-final.odt does not exist yet.
+      - id: c
+        text: "`cp -s report.odt report-final.odt`"
+        rationale: Wrong. cp -s makes symbolic links instead of copies.
+      - id: d
+        text: "`ln report.odt report-final.odt`"
+        rationale: Correct. ln without options makes a hard link; the existing file is named first, the new name second.
+    answer: [d]
+    explanation: >
+      The syntax is ln TARGET LINK_NAME. Without -s, the result is a hard link: a second name for the
+      same inode, with the link count of the file raised to 2.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.6", lesson: 1, section: Creating Hard Links }
+    verify:
+      setup:
+        - cd /tmp && touch report.odt
+      command: cd /tmp && ln report.odt report-final.odt && stat -c %h report.odt
+      expect: { exit_code: 0, stdout_contains: "2" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [ln, hard-link]
+
+  - id: 101-104.6-0022
+    type: single_choice
+    difficulty: 1
+    pool: practice
+    stem: >
+      `today.log` is a symbolic link to `/var/log/app/2026-10-26.log`. A cleanup script deletes
+      `/var/log/app/2026-10-26.log`. What happens to `today.log`?
+    options:
+      - id: a
+        text: It remains, but it no longer leads to any file
+        rationale: Correct. The link still stores the old path, which now leads nowhere; it is a dangling (broken) link.
+      - id: b
+        text: It is deleted automatically along with its target
+        rationale: Wrong. Nothing tracks symbolic links to a file, so deleting the target never touches them.
+      - id: c
+        text: It keeps the log's contents, because the data is freed only when the last link goes
+        rationale: Wrong. That holds for hard links; a symbolic link does not count as a link to the inode.
+      - id: d
+        text: It is turned into an empty regular file
+        rationale: Wrong. The link stays a symbolic link; nothing converts it to a regular file.
+    answer: [a]
+    explanation: >
+      A symbolic link depends on its target's path. Once that path is gone, the link dangles: ls -l
+      still shows it with its arrow, but opening it fails with "No such file or directory".
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.6", lesson: 1, section: Understanding Links }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [symbolic-link, dangling-link]
+
+  - id: 101-104.6-0023
+    type: fill_in
+    difficulty: 3
+    pool: practice
+    stem: >
+      `ln -s /etc/nginx/sites-available/shop /etc/nginx/sites-enabled/shop` fails with "File exists",
+      because an old regular file `shop` is in the way. Type the `ln` option that removes the existing
+      destination first.
+    fill_in:
+      accepted:
+        - '((sudo\s+)?((/usr)?/bin/)?ln\s+((-s|--symbolic)\s+)?)?(-f|--force)(\s+(-s|--symbolic))?'
+        - '((sudo\s+)?((/usr)?/bin/)?ln\s+)?-(sf|fs)'
+      match: regex
+      case_sensitive: true
+    explanation: >
+      -f (--force) makes ln remove an existing destination before creating the link, so
+      `ln -sf /etc/nginx/sites-available/shop /etc/nginx/sites-enabled/shop` succeeds. It does not
+      help when the destination is a directory or a link to one; ln then creates the link inside it
+      unless -n (or -T) is added.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.6", lesson: 1, section: Creating Symbolic Links }
+    verify:
+      setup:
+        - mkdir -p /tmp/ng/avail /tmp/ng/enabled && touch /tmp/ng/avail/shop && echo old > /tmp/ng/enabled/shop
+      command: ln -sf /tmp/ng/avail/shop /tmp/ng/enabled/shop && readlink /tmp/ng/enabled/shop
+      expect: { exit_code: 0, stdout_contains: "/tmp/ng/avail/shop" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [ln, symbolic-link]
+
+  - id: 101-104.6-0024
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: >
+      `data.csv` has three hard links in total (link count 3). A user deletes one of the names with
+      `rm`. What happens?
+    options:
+      - id: a
+        text: The data is freed, and the other two names become empty files
+        rationale: Wrong. Data is only freed when the link count reaches zero; here it drops from 3 to 2.
+      - id: b
+        text: The other two names become dangling links
+        rationale: Wrong. Hard links do not depend on each other; only symbolic links can dangle.
+      - id: c
+        text: The other two names still give the same content, and the link count drops to 2
+        rationale: Correct. rm removes one directory entry; the inode and its data remain while other names point to it.
+      - id: d
+        text: rm refuses, because the file still has other hard links
+        rationale: Wrong. rm removes a hard-linked name without complaint; it neither checks nor reports other links.
+    answer: [c]
+    explanation: >
+      Every hard link is an equal name for the inode. Removing a name only decrements the link count.
+      The file disappears for good only after its last name is removed and no process holds it open.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.6", lesson: 1, section: Moving and Removing Hard Links }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [rm, hard-link, link-count]
+
+  - id: 101-104.6-0025
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: Which command shows a file's inode number and its hard link count as labelled fields?
+    options:
+      - id: a
+        text: "`stat FILE`"
+        rationale: Correct. stat prints labelled fields, including Inode and Links.
+      - id: b
+        text: "`file FILE`"
+        rationale: Wrong. file guesses the type of content (text, ELF binary, image); it shows neither field.
+      - id: c
+        text: "`readlink FILE`"
+        rationale: Wrong. readlink prints the value of a symbolic link and prints nothing for a regular file.
+      - id: d
+        text: "`lsattr FILE`"
+        rationale: Wrong. lsattr shows extended filesystem attributes such as immutable or append-only.
+    answer: [a]
+    explanation: >
+      stat shows the metadata stored in the inode: size, blocks, device, Inode, Links, permissions,
+      owner and timestamps. stat -c '%i %h' prints just the inode number and the link count.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.6", lesson: 1, section: Managing Hard Links }
+    verify:
+      setup:
+        - touch /tmp/st && ln /tmp/st /tmp/st2
+      command: stat /tmp/st
+      expect: { exit_code: 0, stdout_regex: "(?s).*Inode: \\d+\\s+Links: 2.*" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [stat, inode, link-count]
+
+  - id: 101-104.6-0026
+    type: single_choice
+    difficulty: 2
+    pool: practice
+    stem: >
+      `data.csv` shows a link count of 1. A user then runs `ln -s data.csv data.lnk`. What link count
+      does `ls -l` now show for `data.csv`?
+    options:
+      - id: a
+        text: "2"
+        rationale: Wrong. Only hard links raise the count; a symbolic link is a separate file with its own inode.
+      - id: b
+        text: 2, and `data.lnk` shows 2 as well
+        rationale: Wrong. The two do not share an inode, so neither count changes because of the other.
+      - id: c
+        text: 1, while `data.lnk` shows 2
+        rationale: Wrong. data.lnk is a new file with a single name, so its own count is 1.
+      - id: d
+        text: "1"
+        rationale: Correct. Creating a symbolic link adds no directory entry for data.csv's inode.
+    answer: [d]
+    explanation: >
+      The link count counts hard links only. A symbolic link is a separate inode containing a path,
+      so data.csv stays at 1 and data.lnk has a count of 1 of its own.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.6", lesson: 1, section: Managing Hard Links }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [link-count, symbolic-link]
+
+  - id: 101-104.6-0027
+    type: fill_in
+    difficulty: 3
+    pool: practice
+    stem: >
+      Type the command (from GNU coreutils) that prints the absolute path of a file with every
+      symbolic link, `.` and `..` resolved, for example turning `~/bin/../lib/current` into
+      `/opt/lib/v3.2`.
+    fill_in:
+      accepted: ['(((/usr)?/bin/)?realpath(\s+(-e|-m|-P|--canonicalize-existing|--canonicalize-missing|--physical))?|((/usr)?/bin/)?readlink\s+(-f|-e|-m|--canonicalize|--canonicalize-existing|--canonicalize-missing))(\s+(?!-)\S+)*']
+      match: regex
+      case_sensitive: true
+    explanation: >
+      realpath resolves every symbolic link and every . or .. component and prints a canonical absolute
+      path. readlink -f does the same; plain readlink only prints the stored value of one link.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.6", lesson: 1, section: Managing Symbolic Links }
+    verify:
+      setup:
+        - mkdir -p /tmp/rp/lib/v3 /tmp/rp/bin && ln -s v3 /tmp/rp/lib/current
+      command: realpath /tmp/rp/bin/../lib/current
+      expect: { exit_code: 0, stdout_regex: "^/tmp/rp/lib/v3\\n?$" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Accepted forms extended to realpath -e/-m/-P and readlink -m." }
+    tags: [realpath, readlink]
+
+  - id: 101-104.6-0028
+    type: multi_choice
+    difficulty: 3
+    pool: practice
+    stem: >
+      Which **TWO** commands create `b.txt` as a new name that shares the inode of the existing
+      `a.txt`?
+    select_count: 2
+    options:
+      - id: a
+        text: "`cp a.txt b.txt`"
+        rationale: Wrong. A plain copy gets a new inode and its own copy of the data.
+      - id: b
+        text: "`cp -s a.txt b.txt`"
+        rationale: Wrong. cp -s creates a symbolic link, which has its own inode.
+      - id: c
+        text: "`ln a.txt b.txt`"
+        rationale: Correct. ln without options adds a hard link, a second directory entry for the same inode.
+      - id: d
+        text: "`cp -l a.txt b.txt`"
+        rationale: Correct. cp -l makes hard links instead of copying file data.
+    answer: [c, d]
+    explanation: >
+      Copying duplicates the data into a new inode, so later changes to one file do not affect the
+      other. Hard linking (ln, or cp -l) adds a name for the existing inode, so both names always show
+      the same data and the link count goes up.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.6", lesson: 1, section: Creating Hard Links }
+    verify:
+      setup:
+        - cd /tmp && echo a > a.txt
+      command: cd /tmp && cp -l a.txt b.txt && test "$(stat -c %i a.txt)" = "$(stat -c %i b.txt)" && echo same
+      expect: { exit_code: 0, stdout_contains: "same" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [cp, ln, hard-link]
+
+  - id: 101-104.6-0029
+    type: single_choice
+    difficulty: 4
+    pool: practice
+    stem: >
+      One of the two links below is broken. Which command lists only symbolic links whose target does
+      not exist?
+    exhibit: |
+      $ ls -l shared
+      total 0
+      lrwxrwxrwx 1 root root 11 Oct 26 11:22 old.pdf -> missing.pdf
+      lrwxrwxrwx 1 root root 18 Oct 26 11:22 policy-link.pdf -> ../2025/policy.pdf
+      $ find . -type l
+      ./shared/policy-link.pdf
+      ./shared/old.pdf
+    options:
+      - id: a
+        text: "`find . -lname '*.pdf'`"
+        rationale: Wrong. -lname matches the stored target text; both targets end in .pdf, so both links are listed.
+      - id: b
+        text: "`find . -type l -size 0`"
+        rationale: Wrong. A symbolic link's size is the length of its stored path, which is never 0, so nothing is listed.
+      - id: c
+        text: "`find . -xtype l`"
+        rationale: Correct. -xtype checks the type after following the link; only a link that cannot be followed is still of type l.
+      - id: d
+        text: "`find . -type l -links 0`"
+        rationale: Wrong. Every existing link has a link count of at least 1, broken or not, so nothing is listed.
+    answer: [c]
+    explanation: >
+      -type l matches all symbolic links. -xtype applies the type test to what the link points to;
+      for a dangling link there is nothing to follow, so its type stays l. find . -xtype l is a common
+      way to hunt for broken links.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.6", lesson: 1, section: Moving and Removing Symbolic Links }
+    verify:
+      setup:
+        - mkdir -p /tmp/xt/2025 /tmp/xt/shared && touch /tmp/xt/2025/policy.pdf && ln -s ../2025/policy.pdf /tmp/xt/shared/policy-link.pdf && ln -s missing.pdf /tmp/xt/shared/old.pdf
+      command: cd /tmp/xt && find . -xtype l
+      expect: { exit_code: 0, stdout_regex: "^\\./shared/old\\.pdf\\n?$" }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+    tags: [find, dangling-link]
+
+  - id: 101-104.6-0030
+    type: single_choice
+    difficulty: 4
+    pool: practice
+    stem: >
+      Based on the output below, why does `cat motd` print `v2` after the copy?
+    exhibit: |
+      $ ls -li
+      total 12
+      1426118 -rw-r--r-- 2 root root 3 Oct 26 11:20 motd
+      1426118 -rw-r--r-- 2 root root 3 Oct 26 11:20 motd.hard
+      1426119 -rw-r--r-- 1 root root 3 Oct 26 11:20 motd.new
+      $ cp motd.new motd.hard
+      $ cat motd
+      v2
+    options:
+      - id: a
+        text: cp noticed the hard link and then updated every other name that shares the inode of `motd.hard`
+        rationale: Wrong. cp knows nothing about other names; it simply wrote into the file it was given.
+      - id: b
+        text: cp wrote the new data into the existing file, and `motd` is another name for that same inode
+        rationale: Correct. When the destination exists, cp truncates and rewrites it in place, keeping the inode that both names share.
+      - id: c
+        text: "`motd.hard` is a symbolic link, so the write went through to `motd`"
+        rationale: Wrong. The listing shows a regular file (-) with the same inode as motd, which is a hard link, not a symbolic link.
+      - id: d
+        text: cp replaced both names with a new inode, 1426119, shared with `motd.new`
+        rationale: Wrong. cp copies data; it does not make names share an inode, and motd keeps inode 1426118.
+    answer: [b]
+    explanation: >
+      Overwriting an existing file with cp (or with shell redirection) keeps its inode, so every hard
+      link to it sees the new data. Tools that write a new file and rename it into place behave
+      differently: the name gets a new inode and other hard links keep the old data.
+    source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "104.6", lesson: 1, section: Managing Hard Links }
+    review:
+      status: pass1
+      history:
+        - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Option a lengthened so the key is not the longest option." }
+    tags: [cp, hard-link, inode]
