@@ -33,5 +33,5 @@ None. Scoring, question-generation workflow and results database were accepted o
 
 | Exam | Objectives done | Questions | Target |
 |---|---|---|---|
-| 101 | all topics complete (101–104); mocks not assembled yet | 900 (600 holdout, 300 practice) | 900 (600 holdout, 300 practice) |
+| 101 | all topics complete (101–104); 10 mocks assembled (seed 1) | 900 (600 holdout, 300 practice) | 900 (600 holdout, 300 practice) |
 | 102 | — | 0 | 900 |
