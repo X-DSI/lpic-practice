@@ -19,7 +19,7 @@
 
 ## Open handoffs
 
-- [Web mock exam](handoff/2026-10-26-web-mock-exam.md) — timed mocks, LPI-style results, weak
+- [Web mock exam](handoff/2026-10-26-web-mock-exam.md) (in progress, X-DSI-agent) — timed mocks, LPI-style results, weak
   areas and holdout review (`lpic serve`).
 
 Done: [Content build and engine core](handoff/2026-10-23-build-and-engine-core.md) (PR #5),

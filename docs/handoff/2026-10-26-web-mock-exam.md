@@ -1,6 +1,6 @@
 ---
 title: Web mock exam — timed 60-question mocks, LPI-style results, weak areas and holdout review
-status: open
+status: in-progress
 assignee: X-DSI-agent
 base_sha: 44313cf
 adrs:
