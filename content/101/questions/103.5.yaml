@@ -33,9 +33,10 @@ questions:
       later resume it with fg (foreground) or bg (background), or end it with kill.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: Job Control }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [job-control, ctrl-z]
 
   - id: 101-103.5-0002
@@ -64,9 +65,10 @@ questions:
       bg and kill understand them. Tools like ps and top work with process IDs instead.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: Job Control }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [jobs]
 
   - id: 101-103.5-0003
@@ -96,9 +98,10 @@ questions:
       command: bash -c 'sleep 30 & p=$!; kill $p; wait $p; echo "status=$?"'
       expect: { exit_code: 0, stdout_contains: "status=143" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [kill, signals, sigterm]
 
   - id: 101-103.5-0004
@@ -125,9 +128,10 @@ questions:
       column estimates how much memory new programs can get without swapping.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: Process Monitoring }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [free, memory]
 
   - id: 101-103.5-0005
@@ -157,9 +161,10 @@ questions:
       ~/.screenrc.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 2, section: GNU Screen }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [screen, prefix]
 
   - id: 101-103.5-0006
@@ -188,9 +193,10 @@ questions:
       (job number and PID) and is ready for the next command at once.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: "Job Status: Suspension, Foreground and Background" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [background, ampersand]
 
   - id: 101-103.5-0007
@@ -217,9 +223,10 @@ questions:
       can be changed in the tmux configuration file with `set -g prefix`.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 2, section: tmux }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [tmux, prefix]
 
   - id: 101-103.5-0008
@@ -248,9 +255,10 @@ questions:
       the interval and command. The default interval is 2 seconds; -n changes it.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: Process Monitoring }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [watch]
 
   - id: 101-103.5-0009
@@ -259,12 +267,12 @@ questions:
     pool: holdout
     stem: >
       Over SSH you need to start `./import.sh`, which runs for hours. It must ignore the hangup
-      signal sent when you log out, and you want your prompt back straight away. Which command line
-      does this?
+      signal (SIGHUP) it would get if the SSH connection drops, and you want your prompt back
+      straight away. Which command line does this?
     options:
       - id: a
         text: "`./import.sh &`"
-        rationale: Wrong. The job runs in the background but still belongs to the session and can be ended by SIGHUP when the session closes.
+        rationale: Wrong. The job runs in the background, but if the connection drops the shell passes SIGHUP on to its jobs and this one ends.
       - id: b
         text: "`bg ./import.sh`"
         rationale: Wrong. bg takes a job specification of an existing stopped job, not a command to start.
@@ -273,16 +281,17 @@ questions:
         rationale: Correct. nohup makes the command ignore SIGHUP, and & puts it in the background.
       - id: d
         text: "`nohup fg ./import.sh`"
-        rationale: Wrong. fg is a shell builtin, which nohup cannot run, and fg does not start commands anyway.
+        rationale: Wrong. fg resumes an existing job of the current shell; it does not start a command, so nohup has nothing useful to run.
     answer: [c]
     explanation: >
       nohup starts a command with SIGHUP ignored, so it survives the end of the login session. Adding
       & frees the terminal. If standard output is a terminal, nohup appends the output to nohup.out.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: "Detached Jobs: nohup" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Stem names SIGHUP from a dropped connection; rationales a and d reworded per reviewer." }
     tags: [nohup, sighup]
 
   - id: 101-103.5-0010
@@ -290,20 +299,20 @@ questions:
     difficulty: 2
     pool: holdout
     stem: >
-      Which command prints the process IDs of the running processes whose name matches `nginx`,
-      without sending them any signal?
+      Before restarting a database, you want a list of the PIDs of all running `postgres` processes,
+      one per line, without disturbing them. Which command gives it?
     options:
       - id: a
-        text: "`pkill nginx`"
+        text: "`pkill postgres`"
         rationale: Wrong. pkill sends SIGTERM to the matching processes instead of printing their PIDs.
       - id: b
-        text: "`pgrep nginx`"
+        text: "`pgrep postgres`"
         rationale: Correct. pgrep prints one PID per line for each process whose name matches the pattern.
       - id: c
-        text: "`killall nginx`"
-        rationale: Wrong. killall sends SIGTERM to every process named nginx.
+        text: "`killall postgres`"
+        rationale: Wrong. killall sends SIGTERM to every process named postgres.
       - id: d
-        text: "`jobs -p nginx`"
+        text: "`jobs -p postgres`"
         rationale: Wrong. jobs only knows the current shell's jobs; it would report that no such job exists.
     answer: [b]
     explanation: >
@@ -311,9 +320,10 @@ questions:
       takes the same selection options but signals the processes instead.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: "Sending Signals to Processes: kill" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Scenario reworded (postgres, pre-restart check) away from the lesson's Guided step; key unchanged." }
     tags: [pgrep]
 
   - id: 101-103.5-0011
@@ -343,9 +353,10 @@ questions:
       and the load averages for the last 1, 5 and 15 minutes. The same line heads top's output.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: Process Monitoring }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [uptime, load-average]
 
   - id: 101-103.5-0012
@@ -374,9 +385,10 @@ questions:
       screen -r, from the same or another terminal.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 2, section: "GNU Screen: Session Detachment" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [screen, detach]
 
   - id: 101-103.5-0013
@@ -403,9 +415,10 @@ questions:
       `LPI: 2 windows (created ...)`, with `(attached)` for sessions that have a client attached.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 2, section: "tmux: Sessions" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [tmux, sessions]
 
   - id: 101-103.5-0014
@@ -413,32 +426,34 @@ questions:
     difficulty: 2
     pool: holdout
     stem: >
-      Several `rsync` processes are running. Which **TWO** commands send all of them SIGTERM by
-      name, without you looking up any PIDs?
+      Several `ffmpeg` encodes are overloading the host. Which **TWO** commands pause all of them at
+      once (SIGSTOP), selecting them by name rather than by PID?
     select_count: 2
     options:
       - id: a
-        text: "`kill rsync`"
-        rationale: Wrong. kill needs PIDs or job specifications; a process name is rejected as an invalid argument.
+        text: "`kill -STOP ffmpeg`"
+        rationale: 'Wrong. kill needs PIDs or job specs ("arguments must be process or job IDs").'
       - id: b
-        text: "`pkill rsync`"
-        rationale: Correct. pkill signals every process whose name matches, with SIGTERM by default.
+        text: "`pkill -STOP ffmpeg`"
+        rationale: Correct. pkill sends the given signal to every process whose name matches.
       - id: c
-        text: "`pgrep rsync`"
-        rationale: Wrong. pgrep only prints the matching PIDs; it sends no signal.
+        text: "`pgrep -r T ffmpeg`"
+        rationale: Wrong. This only lists matching processes that are already stopped.
       - id: d
-        text: "`killall rsync`"
-        rationale: Correct. killall signals every process with that name, with SIGTERM by default.
+        text: "`killall -STOP ffmpeg`"
+        rationale: Correct. killall sends the given signal to every process with that name.
     answer: [b, d]
     explanation: >
-      pkill and killall select processes by name and send SIGTERM unless another signal is given.
-      With plain kill you would first need the PIDs, for example `kill $(pgrep rsync)`.
+      pkill and killall select processes by name and accept a signal option such as -STOP (resume
+      them later with -CONT). With plain kill you would first need the PIDs, for example
+      `kill -STOP $(pgrep ffmpeg)`.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: "Sending Signals to Processes: kill" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
-    tags: [pkill, killall]
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Replaced: restated Guided Ex. 3. New SIGSTOP-by-name question; text from the reviewer, tested live." }
+    tags: [pkill, killall, sigstop]
 
   - id: 101-103.5-0015
     type: fill_in
@@ -463,9 +478,10 @@ questions:
       current job, [3].
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: "Job Status: Suspension, Foreground and Background" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [fg, jobspec]
 
   - id: 101-103.5-0016
@@ -494,9 +510,10 @@ questions:
       (or -KILL, -SIGKILL, -s KILL) ends it unconditionally.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: "Sending Signals to Processes: kill" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [kill, signals, sigkill]
 
   - id: 101-103.5-0017
@@ -506,7 +523,7 @@ questions:
     stem: In the BSD-style command `ps aux`, what does the `x` contribute?
     options:
       - id: a
-        text: It adds processes that have no controlling terminal, such as daemons
+        text: It adds processes with no controlling terminal
         rationale: Correct. x lifts the restriction to processes attached to a terminal.
       - id: b
         text: It adds processes belonging to all users, not only your own
@@ -523,9 +540,10 @@ questions:
       terminal, and u selects the user-oriented output format. Together they show every process.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: "An Explanation of ps Option Syntax and Output" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Correct option shortened to avoid a length giveaway." }
     tags: [ps]
 
   - id: 101-103.5-0018
@@ -552,9 +570,10 @@ questions:
       order. To start top already sorted by memory, use `top -o %MEM`.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: Interacting with top }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [top, sorting]
 
   - id: 101-103.5-0019
@@ -583,9 +602,10 @@ questions:
       jobs -l shows both; jobs -p is handy in scripts because it prints only the PIDs.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: Job Control }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Rationale no longer quotes a hand-spaced output line." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [jobs]
 
   - id: 101-103.5-0020
@@ -612,9 +632,10 @@ questions:
       automatically. Ctrl+b , sets a name of your own. Sessions are renamed with Ctrl+b $.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 2, section: "tmux: Windows" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [tmux, windows]
 
   - id: 101-103.5-0021
@@ -645,41 +666,42 @@ questions:
       command: bash -c 'kill -l 1'
       expect: { exit_code: 0, stdout_contains: "HUP" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [kill, signals, sighup]
 
   - id: 101-103.5-0022
     type: multi_choice
     difficulty: 3
     pool: holdout
-    stem: >
-      Which **TWO** statements about GNU Screen regions and tmux panes are true?
+    stem: Which **TWO** statements about splitting the display in GNU Screen and tmux are true?
     select_count: 2
     options:
       - id: a
-        text: Removing a GNU Screen region also ends the program in the window it displayed.
-        rationale: Wrong. A region is only a view; the window and its program keep running.
+        text: In GNU Screen, Ctrl+a Q removes every region except the current one, and the windows they showed keep running.
+        rationale: Correct. Regions are only views; removing them does not end any window.
       - id: b
-        text: A tmux pane is a pseudo-terminal of its own, so killing it ends the programs in it.
-        rationale: Correct. Ctrl+b x kills the pane together with what runs in it.
+        text: In tmux, Ctrl+b x closes the current pane but leaves its program running in the background.
+        rationale: Wrong. kill-pane ends the pane's programs.
       - id: c
-        text: Removing a GNU Screen region leaves the window shown in it running.
-        rationale: Correct. Windows outlive the regions that displayed them.
+        text: In tmux, Ctrl+b z zooms the current pane to fill the window, and pressing it again restores the layout.
+        rationale: Correct. Ctrl+b z runs resize-pane -Z, which toggles zoom.
       - id: d
-        text: A tmux pane keeps its size once created; only new panes can have a different size.
-        rationale: Wrong. Ctrl+b followed by Ctrl+arrow or Alt+arrow resizes the current pane.
-    answer: [b, c]
+        text: A new GNU Screen region made with Ctrl+a S starts a new shell automatically.
+        rationale: Wrong. The new region is empty until you pick a window or press Ctrl+a c.
+    answer: [a, c]
     explanation: >
-      Both multiplexers split the display, but differently. Screen regions are views onto windows;
-      closing a region (Ctrl+a X, or Ctrl+a Q for all others) does not close a window. tmux panes are
-      separate terminals, and killing a pane kills its programs.
+      Screen regions are views onto windows: Ctrl+a S or Ctrl+a | adds an empty one, Ctrl+a X
+      removes the current one and Ctrl+a Q all others, without closing windows. tmux panes are
+      separate terminals: Ctrl+b x kills one with its programs, and Ctrl+b z zooms one.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 2, section: "tmux: Panes" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Replaced: restated lesson-2 Guided table rows. New region/pane statements (Ctrl+a Q, Ctrl+b z); text from the reviewer, tested live. Key now a,c." }
     tags: [screen, tmux, regions, panes]
 
   - id: 101-103.5-0023
@@ -707,30 +729,31 @@ questions:
       arrow moves between panes, Ctrl+b z zooms one, and Ctrl+b x kills it.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 2, section: "tmux: Panes" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [tmux, panes]
 
   - id: 101-103.5-0024
     type: fill_in
     difficulty: 3
     pool: holdout
-    stem: Type a `ps` command that lists only the processes owned by the user `www-data`.
+    stem: Type a `ps` command that shows only the processes with the PIDs 811 and 1247.
     fill_in:
-      accepted: ['(sudo\s+)?((/usr)?/bin/)?ps\s+(-u\s*|-U\s*|U\s*|--user(\s+|=)|--User(\s+|=))www-data']
+      accepted: ['(sudo\s+)?((/usr)?/bin/)?ps(\s+-[fFlj]+)?\s+((-[fFlj]*p\s*|--pid(\s+|=)|p\s*|-q\s*)(811,1247|1247,811|"811 1247"|''811 1247'')|-p\s*811\s+-p\s*1247|811\s+1247)(\s+-?[fFljuv]+)?']
       match: regex
       case_sensitive: true
     explanation: >
-      ps selects processes by user in all three option styles: `ps -u www-data` (UNIX),
-      `ps U www-data` (BSD) and `ps --user www-data` (GNU). -U and --User select by real user ID
-      instead of effective user ID, which gives the same list for ordinary daemon processes.
+      -p (GNU --pid, BSD p) selects processes by PID and takes a comma- or space-separated list.
+      Add -f for the full format.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: "An Explanation of ps Option Syntax and Output" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
-    tags: [ps, user]
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Replaced: restated Guided Ex. 6. Now ps by PID list; regex from the reviewer, tested live; re-tested accept/reject (rejects ps -p 811)." }
+    tags: [ps, pid]
 
   - id: 101-103.5-0025
     type: fill_in
@@ -746,9 +769,10 @@ questions:
       2 seconds. Options for watch go before the command it should run.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: Process Monitoring }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [watch]
 
   - id: 101-103.5-0026
@@ -759,7 +783,7 @@ questions:
       A tmux session named `deploy` is no longer needed. Type the tmux command that ends this
       session (and every window in it) from a shell prompt.
     fill_in:
-      accepted: ['tmux\s+kill-session\s+-t\s*(deploy|''deploy''|"deploy")']
+      accepted: ['tmux\s+kill-session\s+-t\s*=?(deploy|''deploy''|"deploy")']
       match: regex
       case_sensitive: true
     explanation: >
@@ -767,9 +791,10 @@ questions:
       it inside that session, you drop back to the terminal you started tmux from.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 2, section: "tmux: Sessions" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Regex also accepts -t=deploy; re-tested accept/reject." }
     tags: [tmux, sessions]
 
   - id: 101-103.5-0027
@@ -803,9 +828,10 @@ questions:
       one. %n, %+ (or %%), %-, %string and %?string are all valid job specifications.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: Job Specification }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [bg, jobspec]
 
   - id: 101-103.5-0028
@@ -842,9 +868,10 @@ questions:
       and + (foreground process group).
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: "An Explanation of ps Option Syntax and Output" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [ps, stat, zombie]
 
   - id: 101-103.5-0029
@@ -852,22 +879,23 @@ questions:
     difficulty: 4
     pool: holdout
     stem: >
-      Several processes named `backupd` ignore SIGTERM. Type one `kill` command line that sends all
-      of them SIGKILL, using `pgrep` in a command substitution to supply their PIDs.
+      Every job started from your current shell must be ended immediately, even those that ignore
+      SIGTERM. Type one `kill` command line that sends them SIGKILL, using `jobs -p` in a command
+      substitution to supply their PIDs.
     fill_in:
-      accepted: ['(sudo\s+)?((/usr)?/bin/)?kill\s+(-9|-KILL|-SIGKILL|-s\s+(9|KILL|SIGKILL)|-s(KILL|SIGKILL))\s+(\$\(\s*pgrep\s+(-x\s+)?backupd\s*\)|`\s*pgrep\s+(-x\s+)?backupd\s*`)']
+      accepted: ['(sudo\s+)?((/usr)?/bin/)?kill\s+(-9|-KILL|-SIGKILL|-s\s*(9|KILL|SIGKILL))\s+(\$\(\s*jobs\s+-p\s*\)|`\s*jobs\s+-p\s*`)']
       match: regex
       case_sensitive: true
     explanation: >
-      `kill -9 $(pgrep backupd)` runs pgrep first and passes its PIDs to kill. Backquotes do the same
-      as $( ). The signal can also be written -KILL, -SIGKILL or -s KILL. `pkill -9 backupd` or
-      `killall -9 backupd` would do the job in one command.
+      `kill -9 $(jobs -p)` runs jobs -p first and passes the PIDs of all the shell's jobs to kill.
+      Backquotes do the same as $( ). The signal can also be written -KILL, -SIGKILL or -s KILL.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: "Sending Signals to Processes: kill" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
-    tags: [kill, pgrep, command-substitution]
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Replaced: restated Guided Ex. 4. Now kill -9 $(jobs -p); regex from the reviewer, tested live; re-tested accept/reject." }
+    tags: [kill, jobs, command-substitution]
 
   - id: 101-103.5-0030
     type: fill_in
@@ -886,9 +914,10 @@ questions:
       is handy in scripts. Attach to it later with `screen -r build`.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 2, section: "GNU Screen: Session Detachment" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [screen, sessions]
 
   - id: 101-103.5-0031
@@ -923,9 +952,10 @@ questions:
       of free. It is larger than free because most buffer and cache memory can be reclaimed.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: An Explanation of the output of top }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [top, memory]
 
   - id: 101-103.5-0032
@@ -957,9 +987,10 @@ questions:
       standard error to wherever standard output goes.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: "Detached Jobs: nohup" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Correct option shortened; it was the longest option." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [nohup, redirection]
 
   - id: 101-103.5-0033
@@ -977,7 +1008,7 @@ questions:
       [2]+  Terminated              sleep 802
     options:
       - id: a
-        text: killall compares whole process names, while pkill treats its argument as a pattern
+        text: killall needs the exact name; pkill matches a pattern
         rationale: Correct. "sle" is not the name of any process, but it matches part of "sleep", which is enough for pkill.
       - id: b
         text: killall needs root to signal processes, while pkill does not
@@ -995,9 +1026,10 @@ questions:
       demand an exact name too.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: "Sending Signals to Processes: kill" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Correct option shortened to avoid a length giveaway." }
     tags: [pkill, killall]
 
   - id: 101-103.5-0034
@@ -1005,13 +1037,13 @@ questions:
     difficulty: 4
     pool: holdout
     stem: >
-      Your tmux session `ops` is still attached on a terminal in the office. From home you want to
-      attach to it and at the same time detach it from that office terminal. Which command does
-      this?
+      You left the tmux session `ops` attached in a terminal window on your desktop and now sit at a
+      laptop logged in to the same host. You want `ops` on the laptop only, with the desktop's
+      client cut off as you join. Which command does this?
     options:
       - id: a
         text: "`tmux attach -t ops`"
-        rationale: Wrong. This attaches a second client; the office terminal stays attached too.
+        rationale: Wrong. This attaches a second client; the desktop stays attached too.
       - id: b
         text: "`tmux attach -d -t ops`"
         rationale: Correct. -d detaches any other clients from the session as you attach.
@@ -1027,9 +1059,10 @@ questions:
       `tmux attach -d -t NAME` also detaches the others. attach can be shortened to at or a.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 2, section: "tmux: Sessions Detachment" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Scenario reworded (desktop/laptop) away from the lesson's Guided step; key unchanged." }
     tags: [tmux, attach]
 
   - id: 101-103.5-0035
@@ -1060,16 +1093,17 @@ questions:
       untouched, so kill PID still works.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: "Detached Jobs: nohup" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [nohup]
 
   - id: 101-103.5-0036
     type: multi_choice
     difficulty: 5
     pool: holdout
-    stem: Based on the output below, which **TWO** commands reattach the session called `work`?
+    stem: You want to get back into your `work` session. Given the output below, which **TWO** commands do that?
     exhibit: |
       $ screen -r
       There are several suitable screens on:
@@ -1097,9 +1131,10 @@ questions:
       (272.work).
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 2, section: "GNU Screen: Session Detachment" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Stem reworded away from the lesson's Guided step; key unchanged." }
     tags: [screen, attach]
 
   - id: 101-103.5-0037
@@ -1129,9 +1164,10 @@ questions:
       process you did not mean.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: "Sending Signals to Processes: kill" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [pgrep]
 
   - id: 101-103.5-0038
@@ -1164,9 +1200,10 @@ questions:
       job. A bare number given to kill is a PID.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: Job Specification }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [kill, jobspec]
 
   - id: 101-103.5-0039
@@ -1196,9 +1233,10 @@ questions:
       it with `top -o %MEM`.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: "An Explanation of ps Option Syntax and Output" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [ps, sorting]
 
   - id: 101-103.5-0040
@@ -1229,9 +1267,10 @@ questions:
       starting new sessions in the background.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 2, section: "GNU Screen: Session Detachment" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [screen, attach]
 
   # --------------------------------------------------------------------------- practice (CLI)
@@ -1260,9 +1299,10 @@ questions:
       single keys. ps is static: it reports the state at the moment you run it.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: top and ps }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [top, ps]
 
   - id: 101-103.5-0042
@@ -1289,9 +1329,10 @@ questions:
       with a trailing &), and fg brings it back to the foreground.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: "Job Status: Suspension, Foreground and Background" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [bg]
 
   - id: 101-103.5-0043
@@ -1318,9 +1359,10 @@ questions:
       a session name and a first window name of your choice.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 2, section: "tmux: Windows" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [tmux]
 
   - id: 101-103.5-0044
@@ -1350,9 +1392,10 @@ questions:
       command: bash -c 'kill -l 9'
       expect: { exit_code: 0, stdout_contains: "KILL" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [kill, signals]
 
   - id: 101-103.5-0045
@@ -1379,9 +1422,10 @@ questions:
       send SIGTERM or type another signal, such as 9.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: Interacting with top }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [top]
 
   - id: 101-103.5-0046
@@ -1408,16 +1452,17 @@ questions:
       Ctrl+a followed by a digit jumps to that window.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 2, section: "GNU Screen: Windows" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [screen, windows]
 
   - id: 101-103.5-0047
     type: single_choice
     difficulty: 2
     pool: practice
-    stem: Besides `pgrep`, which command prints the PIDs of a running program when given its name?
+    stem: A monitoring script needs the PIDs of all running `rsyslogd` processes, given only the program name. Apart from `pgrep`, which command provides them?
     options:
       - id: a
         text: "`killall`"
@@ -1437,9 +1482,10 @@ questions:
       PIDs on one line; pgrep matches a pattern and prints one PID per line.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: "Sending Signals to Processes: kill" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Scenario reworded (monitoring script, rsyslogd) away from the lesson's Guided step; key unchanged." }
     tags: [pidof]
 
   - id: 101-103.5-0048
@@ -1467,9 +1513,10 @@ questions:
       columns differ: aux shows %CPU, %MEM, VSZ, RSS and STAT; -ef shows UID, PPID and STIME.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: "An Explanation of ps Option Syntax and Output" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [ps]
 
   - id: 101-103.5-0049
@@ -1496,9 +1543,10 @@ questions:
       between highest-first and lowest-first.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: Interacting with top }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [top, sorting]
 
   - id: 101-103.5-0050
@@ -1525,9 +1573,10 @@ questions:
       whose status changed since you were last told.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: Job Control }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [jobs]
 
   - id: 101-103.5-0051
@@ -1554,29 +1603,30 @@ questions:
       directly.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 2, section: "tmux: Windows" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [tmux, windows]
 
   - id: 101-103.5-0052
     type: fill_in
     difficulty: 3
     pool: practice
-    stem: Type a `top` command that starts top with the task list already sorted by the `%MEM` field.
+    stem: Type a `top` command that monitors only the processes with the PIDs 811 and 1247.
     fill_in:
-      accepted: ['top\s+(-o\s*%MEM|--sort-override(\s+|=)%MEM)']
+      accepted: ['(sudo\s+)?((/usr)?/bin/)?top\s+(-p\s*|--pid(\s+|=))(811,1247|1247,811)|(sudo\s+)?((/usr)?/bin/)?top\s+-p\s*811\s+-p\s*1247']
       match: regex
       case_sensitive: true
     explanation: >
-      top -o (long form --sort-override) takes a field name, here %MEM. Field names are case
-      sensitive; `top -O` lists them. Inside top, M sorts by memory too.
+      top -p (--pid) limits the task list to the PIDs given, either as a comma list or as repeated -p.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: Interacting with top }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
-    tags: [top, sorting]
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Replaced: restated Explorational Ex. 3. Now top -p with a PID list; regex from the reviewer, tested live; re-tested accept/reject." }
+    tags: [top, pid]
 
   - id: 101-103.5-0053
     type: multi_choice
@@ -1604,9 +1654,10 @@ questions:
       the current window.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 2, section: "GNU Screen: Windows" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [screen, windows]
 
   - id: 101-103.5-0054
@@ -1623,9 +1674,10 @@ questions:
       picks a readable unit for each value. Combine with watch, as in `watch free -m`, to follow it.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: Process Monitoring }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [free]
 
   - id: 101-103.5-0055
@@ -1657,9 +1709,10 @@ questions:
       act on it when no job is named; %+ and %% name it explicitly.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: Job Specification }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [fg, jobspec]
 
   - id: 101-103.5-0056
@@ -1689,9 +1742,10 @@ questions:
       you can reattach later (tmux attach, screen -r) and work with the program interactively again.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 2, section: Features of Terminal Multiplexers }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [nohup, screen, tmux]
 
   - id: 101-103.5-0057
@@ -1700,7 +1754,7 @@ questions:
     pool: practice
     stem: Type the tmux command that attaches your terminal to the existing session named `build`.
     fill_in:
-      accepted: ['tmux\s+(a|at|attach|attach-session)\s+(-d\s+)?-t\s*(build|"build"|''build'')']
+      accepted: ['tmux\s+(a|at|attach|attach-session)\s+((-d\s+)?-t\s*(build|"build"|''build'')|-t\s*(build|"build"|''build'')\s+-d)']
       match: regex
       case_sensitive: true
     explanation: >
@@ -1708,9 +1762,10 @@ questions:
       detaches any other clients first. With only one session, `tmux a` is enough.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 2, section: "tmux: Sessions Detachment" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Regex also accepts -d after -t build; re-tested accept/reject." }
     tags: [tmux, attach]
 
   - id: 101-103.5-0058
@@ -1737,9 +1792,10 @@ questions:
       when its parent waits for it or when the parent itself exits. Sending it signals does nothing.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: An Explanation of the output of top }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: fixed, notes: "Correct option shortened; it was the longest option." }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [top, zombie]
 
   - id: 101-103.5-0059
@@ -1768,9 +1824,10 @@ questions:
       that has changed since watch started.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: Process Monitoring }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: ok, notes: "Answered cold, matches key; checked." }
     tags: [watch]
 
   - id: 101-103.5-0060
@@ -1783,8 +1840,8 @@ questions:
     select_count: 2
     options:
       - id: a
-        text: "`pkill -u apache httpd`"
-        rationale: Correct. pkill combines the user filter with the name pattern.
+        text: "`pkill -x -u apache httpd`"
+        rationale: Correct. -u limits the match to apache's processes and -x to the exact name httpd.
       - id: b
         text: "`pgrep -u apache httpd`"
         rationale: Wrong. This selects the right processes but only prints their PIDs.
@@ -1800,7 +1857,8 @@ questions:
       pgrep with the same options shows you first which processes would be hit.
     source: { material: LPI Learning Materials 101-500, material_version: "2025-03-12", objective: "103.5", lesson: 1, section: "Sending Signals to Processes: kill" }
     review:
-      status: pass1
+      status: pass2
       history:
         - { stage: pass1, by: claude-writer, date: "2026-10-26", result: ok }
+        - { stage: pass2, by: claude-reviewer, date: "2026-10-26", result: fixed, notes: "Option a now pkill -x -u apache httpd so it matches httpd exactly, like killall." }
     tags: [pkill, killall]
