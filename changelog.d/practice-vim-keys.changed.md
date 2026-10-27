@@ -1,0 +1,1 @@
+- `lpic practice` has vim keys: `j`/`k` (and `g`/`G`) move between options, Space or `l` toggles a choice, Enter submits and shows the answer, and Enter again goes to the next question. `j`/`k` also scroll the feedback screen.
